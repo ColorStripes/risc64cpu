@@ -1,5 +1,4 @@
 
-/* verilator lint_off UNUSED */
 //--xuezhen--
 
 `timescale 1ns / 1ps
@@ -23,7 +22,6 @@ wire rs1_r_ena;
 wire [4 : 0]rs1_r_addr;
 wire rs2_r_ena;
 wire [4 : 0]rs2_r_addr;
-// id_stage -> wb_stage
 wire rd_w_ena;
 wire [4 : 0]rd_w_addr;
 // id_stage -> exe_stage
@@ -36,34 +34,11 @@ wire [`REG_BUS]op2;
 wire [`REG_BUS] r_data1;
 wire [`REG_BUS] r_data2;
 
-
 // exe_stage
-// exe_stage -> men_stage
+// exe_stage -> other stage
 wire [4 : 0]inst_type_o;
-wire [`REG_BUS] men_addr_i;
-wire [`REG_BUS] men_data_i;
-
-// exe_stage -> wb_stage
+// exe_stage -> regfile
 wire [`REG_BUS]rd_data;
-
-// men_stage
-// men_stage -> memory
-wire [`REG_BUS] men_addr_o;
-wire [`REG_BUS] men_data_o;
-wire men_w_ena;
-wire men_ld_ena;
-
-// memory -> wb_stage
-//
-
-
-// wb_stage
-// wb_stage -> regfile
-wire wb_ena_o;
-wire [`REG_BUS] wb_data_o;
-wire [4:0] wb_addr_o;
-
-
 
 if_stage If_stage(
   .clk(clk),
@@ -102,37 +77,12 @@ exe_stage Exe_stage(
   .rd_data(rd_data)
 );
 
-men_stage Men_stage(
-    .rst(rst),
-    .inst_type_m(inst_type_o),
-    .men_addr_i(men_addr_i),
-    .men_data_i(men_data_i),
-
-    .men_w_ena(men_w_ena),
-    .men_ld_ena(men_ld_ena),
-    .men_addr_o(men_addr_o),
-    .men_data_o(men_data_o)
-);
-
-wb_stage Wb_stage(
-    .rst(rst),
-    .wb_ena_i(rd_w_ena),
-    .wb_data(rd_data),
-    .wb_addr_i(rd_w_addr),
-
-    .wb_ena_o(wb_ena_o),
-    .wb_data_o(wb_data_o),
-    .wb_addr_o(wb_addr_o)
-
-);
-
-
 regfile Regfile(
   .clk(clk),
   .rst(rst),
-  .w_addr(wb_addr_o),
-  .w_data(wb_data_o),
-  .w_ena(wb_ena_o),
+  .w_addr(rd_w_addr),
+  .w_data(rd_data),
+  .w_ena(rd_w_ena),
   
   .r_addr1(rs1_r_addr),
   .r_data1(r_data1),
