@@ -12,8 +12,8 @@ module rvcpu(
   input wire            rst,
   input wire  [31 : 0]  inst,
   
-  output wire [63 : 0]  inst_addr, 
-  output wire           inst_ena
+  output wire [63 : 0]  instr_addr, 
+  output wire           instr_ena
 );
 
 
@@ -69,8 +69,8 @@ if_stage If_stage(
   .clk(clk),
   .rst(rst),
   
-  .inst_addr(inst_addr),
-  .inst_ena(inst_ena)
+  .inst_addr(instr_addr),
+  .inst_ena(instr_ena)
 );
 
 id_stage Id_stage(

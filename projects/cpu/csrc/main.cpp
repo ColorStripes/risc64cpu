@@ -64,7 +64,7 @@ int main(int argc, char **argv)
 	  {
 	    top->rst = 0;
 		if( main_time % 10 == 5 )
-		  top->inst = (top->inst_ena == 1) ? inst_rom[ (top->inst_addr) >> 2 ] : 0;
+		  top->inst = (top->instr_ena == 1) ? inst_rom[ (top->instr_addr) >> 2 ] : 0;
 	  }
 	  top->eval();
 	  tfp->dump(main_time);
