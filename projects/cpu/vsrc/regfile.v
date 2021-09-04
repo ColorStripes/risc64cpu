@@ -1,4 +1,3 @@
-
 `include "defines.v"
 
 module regfile(
@@ -10,12 +9,13 @@ module regfile(
 	input  wire 		  w_ena,
 	
 	input  wire  [4  : 0] r_addr1,
-	output reg   [`REG_BUS] r_data1,
 	input  wire 		  r_ena1,
-	
+	output reg   [`REG_BUS] r_data1,  //OUT1
+
 	input  wire  [4  : 0] r_addr2,
-	output reg   [`REG_BUS] r_data2,
-	input  wire 		  r_ena2
+	input  wire 		  r_ena2,
+	output reg   [`REG_BUS] r_data2  //OUT2
+
     );
 
     // 32 registers
@@ -25,7 +25,7 @@ module regfile(
 	begin
 		if ( rst == 1'b1 ) 
 		begin
-			regs[ 0] <= `ZERO_WORD;
+			regs[ 0] <= `ZERO_WORD;  //0
 			regs[ 1] <= `ZERO_WORD;
 			regs[ 2] <= `ZERO_WORD;
 			regs[ 3] <= `ZERO_WORD;
@@ -66,21 +66,39 @@ module regfile(
 	end
 	
 	always @(*) begin
-		if (rst == 1'b1)
+		if (rst == 1'b1) begin
 			r_data1 = `ZERO_WORD;
-		else if (r_ena1 == 1'b1)
-			r_data1 = regs[r_addr1];
-		else
+		end
+		else if (r_ena1 == 1'b1) begin
+			if((r_addr1 == w_addr) && (w_addr != 5'h00)) begin
+				r_data1 = w_data;
+			end
+			else begin
+				r_data1 = regs[r_addr1];
+			end
+		end
+			
+		else begin
 			r_data1 = `ZERO_WORD;
+		end
 	end
 	
 	always @(*) begin
-		if (rst == 1'b1)
+		if (rst == 1'b1) begin
 			r_data2 = `ZERO_WORD;
-		else if (r_ena2 == 1'b1)
-			r_data2 = regs[r_addr2];
-		else
+		end
+		else if (r_ena2 == 1'b1) begin
+			if((r_addr2 == w_addr) && (w_addr != 5'h00)) begin
+				r_data2 = w_data;
+				end
+			else begin
+				r_data2 = regs[r_addr2];
+				end
+		end
+			
+		else begin
 			r_data2 = `ZERO_WORD;
+		end
 	end
 
 endmodule
