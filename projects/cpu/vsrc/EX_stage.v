@@ -49,6 +49,7 @@ ALU ALU(
             ex_stor_data = `ZERO_WORD;
             ex_mem_wr = 1'b0;
             ex_mem_ena = 1'b0;
+            ex_mem_addr = `ZERO_WORD;
             ex_memop = 5'h00;
         end
         else begin

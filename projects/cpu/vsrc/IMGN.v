@@ -20,27 +20,27 @@ module IMGN (
         case(op)
              5'b10000://I-type
              begin
-                 imm <= {{52{instr[31]}}, instr[31:20]};
+                 imm = {{52{instr[31]}}, instr[31:20]};
              end
              5'b01000://S-type
              begin
-                 imm <= {{52{instr[31]}}, instr[31:25], instr[11:7]};
+                 imm = {{52{instr[31]}}, instr[31:25], instr[11:7]};
              end
              5'b00100://B-type
              begin
-                 imm <= {{52{instr[31]}}, instr[31], instr[7], instr[30:25], instr[11:8]};
+                 imm = {{52{instr[31]}}, instr[31], instr[7], instr[30:25], instr[11:8]};
              end
              5'b00010://J-type
              begin
-                 imm <= {{44{instr[31]}}, instr[31], instr[19 : 12], instr[20], instr[30 : 21]};
+                 imm = {{44{instr[31]}}, instr[31], instr[19 : 12], instr[20], instr[30 : 21]};
              end
              5'b00001://U_type
              begin
-                 imm <= {{44{instr[31]}}, instr[31 : 12]};
+                 imm = {{44{instr[31]}}, instr[31 : 12]};
              end
              default:
              begin
-                 
+                 imm = `ZERO_WORD;
              end
          endcase
     end
