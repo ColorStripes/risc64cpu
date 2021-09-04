@@ -9,7 +9,8 @@ module ex_mem (
     input wire  [`REG_BUS] ex_w_data,
     input wire ex_w_ena,
     input wire [4 : 0] ex_w_addr,
-    input wire [`REG_BUS] ex_mem_addr,
+    input wire [`REG_BUS] ex_mem_waddr,
+    input wire [`REG_BUS] ex_mem_raddr,
     input wire [4 : 0] ex_memop,
     input wire [`REG_BUS] ex_stor_data,
     input wire ex_mem_wr,
@@ -19,7 +20,8 @@ module ex_mem (
     output reg mem_w_ena,
     output reg [4 : 0] mem_w_addr,
 
-    output reg [`REG_BUS] mem_mem_addr,
+    output reg [`REG_BUS] mem_mem_waddr,
+    output reg [`REG_BUS] mem_mem_raddr,
     output reg [4 : 0] mem_memop,
     output reg [`REG_BUS] mem_stor_data,
     output reg mem_mem_wr,
@@ -33,7 +35,8 @@ module ex_mem (
             mem_w_ena <= 1'b0;
             mem_w_addr <= `ZERO_REG_ADDR;
             men_pc <= `ZERO_WORD;
-            mem_mem_addr <= `ZERO_WORD;
+            mem_mem_waddr <= `ZERO_WORD;
+            mem_mem_raddr <= `ZERO_WORD;
             mem_memop <= 5'b00000;
             mem_stor_data <= `ZERO_WORD;
             mem_mem_wr <= 1'b0;
@@ -44,7 +47,8 @@ module ex_mem (
             mem_w_ena <= ex_w_ena;
             mem_w_addr <= ex_w_addr;
             men_pc <= ex_pc;
-            mem_mem_addr <= ex_mem_addr;
+            mem_mem_waddr <= ex_mem_waddr;
+            mem_mem_raddr <= ex_mem_raddr;
             mem_memop <= ex_memop;
             mem_stor_data <= ex_stor_data;
             mem_mem_wr <= ex_mem_wr;

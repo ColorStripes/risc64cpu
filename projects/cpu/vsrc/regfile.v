@@ -14,7 +14,9 @@ module regfile(
 
 	input  wire  [4  : 0] r_addr2,
 	input  wire 		  r_ena2,
-	output reg   [`REG_BUS] r_data2  //OUT2
+	output reg   [`REG_BUS] r_data2,  //OUT2
+
+	output wire [`REG_BUS] regs_o[0 : 31] 
 
     );
 
@@ -94,11 +96,18 @@ module regfile(
 			else begin
 				r_data2 = regs[r_addr2];
 				end
-		end
-			
+		end	
 		else begin
 			r_data2 = `ZERO_WORD;
 		end
 	end
+
+
+	genvar i;
+	generate
+		for (i = 0; i < 32; i = i + 1) begin
+			assign regs_o[i] = (w_ena & w_addr == i & i != 0) ? w_data : regs[i];
+		end
+	endgenerate
 
 endmodule

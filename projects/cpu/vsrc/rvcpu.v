@@ -69,7 +69,8 @@ wire EX_w_ena;
 wire [4 : 0] EX_w_addr;
 wire [`PC_BUS] EX_pc;
 wire [4 : 0] EX_memop;
-wire [`REG_BUS] ex_mem_addr;
+wire [`REG_BUS] ex_mem_waddr;
+wire [`REG_BUS] ex_mem_raddr;
 wire [`REG_BUS] ex_stor_data;
 wire EX_mem_wr;
 wire EX_mem_ena;
@@ -79,7 +80,8 @@ wire [`REG_BUS] mem_w_data;
 wire mem_w_ena;
 wire [4 : 0] mem_w_addr;
 wire [`PC_BUS] men_pc;
-wire [`REG_BUS] mem_mem_addr;
+wire [`REG_BUS] mem_mem_waddr;
+wire [`REG_BUS] mem_mem_raddr;
 wire [4 : 0] mem_memop;
 wire [`REG_BUS] mem_stor_data;
 wire mem_mem_wr;
@@ -91,7 +93,8 @@ wire MEM_w_ena;
 wire [4 : 0] MEM_w_addr;
 
 //MEM_stage -> DATA_MEM
-wire [`REG_BUS] MEM_mem_addr;
+wire [`REG_BUS] MEM_mem_waddr;
+wire [`REG_BUS] MEM_mem_raddr;
 wire [7 : 0] mem_sel;
 wire [`REG_BUS] MEM_stor_data;
 wire mem_wr;
@@ -263,7 +266,8 @@ wire [4 : 0] WB_w_addr;
     .ex_w_addr(EX_w_addr),
 
     .ex_memop(EX_memop),
-    .ex_mem_addr(ex_mem_addr),
+    .ex_mem_waddr(ex_mem_waddr),
+    .ex_mem_raddr(ex_mem_raddr),
     .ex_stor_data(ex_stor_data),
     .ex_mem_wr(EX_mem_wr),
     .ex_mem_ena(EX_mem_ena),
@@ -278,7 +282,8 @@ wire [4 : 0] WB_w_addr;
     .ex_w_data(ex_w_data),
     .ex_w_ena(EX_w_ena),
     .ex_w_addr(EX_w_addr),
-    .ex_mem_addr(ex_mem_addr),
+    .ex_mem_waddr(ex_mem_waddr),
+    .ex_mem_raddr(ex_mem_raddr),
     .ex_memop(EX_memop),
     .ex_stor_data(ex_stor_data),
     .ex_mem_wr(EX_mem_wr),
@@ -288,7 +293,8 @@ wire [4 : 0] WB_w_addr;
     .mem_w_ena(mem_w_ena),
     .mem_w_addr(mem_w_addr),
 
-    .mem_mem_addr(mem_mem_addr),
+    .mem_mem_waddr(mem_mem_waddr),
+    .mem_mem_raddr(mem_mem_raddr),
     .mem_memop(mem_memop),
     .mem_stor_data(mem_stor_data),
     .mem_mem_wr(mem_mem_wr),
@@ -302,7 +308,8 @@ wire [4 : 0] WB_w_addr;
     .ex_w_data(mem_w_data),
     .ex_w_ena(mem_w_ena),
     .ex_w_addr(mem_w_addr),
-    .ex_mem_addr(mem_mem_addr),
+    .ex_mem_waddr(mem_mem_waddr),
+    .ex_mem_raddr(mem_mem_raddr),
     .ex_memop(mem_memop),
     .mem_data(data),
     .ex_stor_data(mem_stor_data),
@@ -313,7 +320,8 @@ wire [4 : 0] WB_w_addr;
     .mem_w_ena(MEM_w_ena),
     .mem_w_addr(MEM_w_addr),
 
-    .mem_mem_addr(MEM_mem_addr),
+    .mem_mem_waddr(MEM_mem_waddr),
+    .mem_mem_raddr(MEM_mem_raddr),
     .mem_sel(mem_sel),
     .mem_stor_data(MEM_stor_data),
     .mem_wr(mem_wr),

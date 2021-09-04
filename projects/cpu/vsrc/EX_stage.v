@@ -24,7 +24,8 @@ module EX_stage (
     output reg ex_w_ena,
     output reg [4 : 0] ex_w_addr,
 
-    output reg [`REG_BUS] ex_mem_addr,
+    output reg [`REG_BUS] ex_mem_raddr,
+    output reg [`REG_BUS] ex_mem_waddr,
     output reg [`REG_BUS] ex_stor_data,
     output reg [4 : 0] ex_memop,
     output reg ex_mem_wr,
@@ -49,14 +50,16 @@ ALU ALU(
             ex_stor_data = `ZERO_WORD;
             ex_mem_wr = 1'b0;
             ex_mem_ena = 1'b0;
-            ex_mem_addr = `ZERO_WORD;
+            ex_mem_raddr = `ZERO_WORD;
+            ex_mem_waddr = `ZERO_WORD;
             ex_memop = 5'h00;
         end
         else begin
             ex_w_ena = id_w_ena;
             ex_w_addr = id_w_addr;
             ex_w_data = `ZERO_WORD;
-            ex_mem_addr = `ZERO_WORD;
+            ex_mem_raddr = `ZERO_WORD;
+            ex_mem_waddr = `ZERO_WORD;
             ex_stor_data = `ZERO_WORD;
             ex_mem_wr = 1'b0;
             ex_mem_ena = 1'b0;
@@ -77,12 +80,12 @@ ALU ALU(
                       ex_w_data = ID_pc + 4;
                   end
                   `Load:begin
-                      ex_mem_addr = result;
+                      ex_mem_raddr = result;
                       ex_mem_wr = id_mem_wr;
                       ex_mem_ena = id_mem_ena;
                   end
                   `Store:begin
-                      ex_mem_addr = id_reg1_data + id_imm;
+                      ex_mem_waddr = id_reg1_data + id_imm;
                       ex_stor_data = id_reg2_data;
                       ex_mem_wr = id_mem_wr;
                       ex_mem_ena = id_mem_ena;
@@ -95,7 +98,8 @@ ALU ALU(
                   end
                   default: begin
                       ex_w_data = `ZERO_WORD;
-                      ex_mem_addr = `ZERO_WORD;
+                      ex_mem_waddr = `ZERO_WORD;
+                      ex_mem_raddr = `ZERO_WORD;
                       ex_stor_data = `ZERO_WORD;
                   end
             endcase

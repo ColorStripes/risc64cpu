@@ -8,7 +8,8 @@ module MEM_stage (
     input wire ex_w_ena,
     input wire [4 : 0] ex_w_addr,
     
-    input wire [`REG_BUS] ex_mem_addr,
+    input wire [`REG_BUS] ex_mem_waddr,
+    input wire [`REG_BUS] ex_mem_raddr,
     input wire [`REG_BUS] ex_stor_data,
     input wire [4 : 0] ex_memop,
 
@@ -20,7 +21,8 @@ module MEM_stage (
     output reg mem_w_ena,
     output reg [4 : 0] mem_w_addr,
 
-    output reg [`REG_BUS] mem_mem_addr,
+    output reg [`REG_BUS] mem_mem_waddr,
+    output reg [`REG_BUS] mem_mem_raddr,
     output reg [7 : 0] mem_sel,
     output reg [`REG_BUS] mem_stor_data,
     output reg mem_wr,
@@ -31,7 +33,8 @@ module MEM_stage (
             mem_w_data = `ZERO_WORD;
             mem_w_ena = 1'b0;
             mem_w_addr = `ZERO_REG_ADDR;
-            mem_mem_addr = `ZERO_WORD;
+            mem_mem_waddr = `ZERO_WORD;
+            mem_mem_raddr = `ZERO_WORD;
             mem_sel = 8'b0000_0000;
             mem_stor_data = `ZERO_WORD;
             mem_wr = 1'b0;
@@ -41,7 +44,8 @@ module MEM_stage (
             mem_w_data = ex_w_data;
             mem_w_ena = ex_w_ena;
             mem_w_addr = ex_w_addr;
-            mem_mem_addr = ex_mem_addr;
+            mem_mem_waddr = ex_mem_waddr;
+            mem_mem_raddr = ex_mem_raddr;
             mem_stor_data = ex_stor_data;
             mem_sel = 8'b0000_0000;
             mem_wr = ex_mem_wr;
