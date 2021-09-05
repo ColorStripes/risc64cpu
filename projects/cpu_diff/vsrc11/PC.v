@@ -13,7 +13,7 @@ module PC(
   output reg I_M_e,
   output reg [`PC_BUS] pc 
 );
-parameter PC_START_RESET = `PC_START-4;
+parameter PC_START_RESET = `PC_START;
 
 always@( posedge clk )
 begin
