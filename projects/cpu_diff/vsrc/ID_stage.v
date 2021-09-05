@@ -426,7 +426,7 @@ module ID_stage (
                     w_ena = 1'b0;
                     reg1_r_ena = 1'b1;
                     reg2_r_ena = 1'b1;
-                    branch = IF_pc + (imm << 1'b1);
+                    branch = IF_pc + imm ;
 
                     case(funct3)
                          `beq:begin
