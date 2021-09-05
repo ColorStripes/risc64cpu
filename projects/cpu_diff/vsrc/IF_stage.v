@@ -18,18 +18,9 @@ module IF_stage (
 
 wire [63 : 0] sum;
 wire [63 : 0] pc_i;
-wire I_M_e
+wire I_M_e;
 
-PC PC(
-  .clk(clk),
-  .rst(rst),
-  .pc_i(pc_i),
-  .pc_con(pc_con),
 
-  .I_M_e(I_M_e),
-  .pc(IF_pc)
-  
-);
 
 
 reg [63:0] rdata;
@@ -44,9 +35,18 @@ RAMHelper ROM(
   .wen              (0)
 );
 
-assign instr = pc[2] ? rdata[63 : 32] : rdata[31 : 0];
+assign instr = IF_pc[2] ? rdata[63 : 32] : rdata[31 : 0];
 
+PC PC(
+  .clk(clk),
+  .rst(rst),
+  .pc_i(pc_i),
+  .pc_con(pc_con),
 
+  .I_M_e(I_M_e),
+  .pc(IF_pc)
+  
+);
 
 ADD ADD (
     .num1(64'd4),
