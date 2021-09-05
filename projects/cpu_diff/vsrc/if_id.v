@@ -16,12 +16,12 @@ module if_id (
 );
     always @(posedge clk) begin
         if(rst == 1'b1) begin
-            id_pc <= `ZERO_WORD;
+            id_pc <= `PC_START;
             id_instr <= `ZERO_INST;
         end
         else begin
             if(wash == 1'b1) begin
-                id_pc <= `ZERO_WORD;
+                id_pc <= `PC_START;
                 id_instr <= `ZERO_INST;
             end
             else begin
