@@ -435,9 +435,9 @@ always @(negedge clock) begin
   else if (~trap) begin
     cmt_wen <= WB_w_ena;//
     cmt_wdest <= {3'd0, WB_w_addr};//
-    cmt_wdata <= 1;//
-    cmt_pc <= 1;//
-    cmt_inst <= 1;//
+    cmt_wdata <= WB_w_data;//
+    cmt_pc <= pc;//
+    cmt_inst <= instr;//
     cmt_valid <= inst_valid;
 
 		regs_diff <= regs;
