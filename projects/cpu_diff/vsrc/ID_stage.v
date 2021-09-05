@@ -513,7 +513,7 @@ module ID_stage (
                   aluop = `NO;
                   alusel = `Jump;
                   pc = reg_data1 + imm;
-                  branch = {pc[63 : 1], 1'b0}; 
+                  branch = {IF_pc[63 : 1], 1'b0}; 
               end
 
               //S
