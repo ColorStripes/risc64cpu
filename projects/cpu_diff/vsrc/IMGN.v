@@ -28,15 +28,15 @@ module IMGN (
              end
              5'b00100://B-type
              begin
-                 imm = {{52{instr[31]}}, instr[31], instr[7], instr[30:25], instr[11:8]};
+                 imm = {{51{instr[31]}}, instr[31], instr[7], instr[30:25], instr[11:8], 1'b0};
              end
              5'b00010://J-type
              begin
-                 imm = {{44{instr[31]}}, instr[31], instr[19 : 12], instr[20], instr[30 : 21]};
+                 imm = {{43{instr[31]}}, instr[31], instr[19 : 12], instr[20], instr[30 : 21], 1'b0};
              end
              5'b00001://U_type
              begin
-                 imm = {{44{instr[31]}}, instr[31 : 12]};
+                 imm = {{32{instr[31]}}, instr[31 : 12], 12'h000};
              end
              default:
              begin
