@@ -6,6 +6,7 @@ module ex_mem (
     input wire rst,
     input wire clk,
     input wire [`PC_BUS] ex_pc,
+    input wire [`INST_BUS] ex_instr,
     input wire  [`REG_BUS] ex_w_data,
     input wire ex_w_ena,
     input wire [4 : 0] ex_w_addr,
@@ -27,6 +28,7 @@ module ex_mem (
     output reg mem_mem_wr,
     output reg mem_mem_ena,
 
+    output reg [`INST_BUS] men_instr,
     output reg [`PC_BUS] men_pc 
 );
     always @(posedge clk) begin
@@ -41,6 +43,8 @@ module ex_mem (
             mem_stor_data <= `ZERO_WORD;
             mem_mem_wr <= 1'b0;
             mem_mem_ena <= 1'b0;
+            men_pc <= `PC_START;
+            men_instr <= `ZERO_INST;
         end
         else begin
             mem_w_data <= ex_w_data;
@@ -53,6 +57,7 @@ module ex_mem (
             mem_stor_data <= ex_stor_data;
             mem_mem_wr <= ex_mem_wr;
             mem_mem_ena <= ex_mem_ena;
+            men_instr <= ex_instr;
         end
     end
 endmodule

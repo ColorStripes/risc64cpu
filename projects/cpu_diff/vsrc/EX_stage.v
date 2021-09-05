@@ -6,6 +6,7 @@ module EX_stage (
     input wire rst,
 
     input wire [`PC_BUS] ID_pc,//未写
+    input wire [`INST_BUS] ID_instr,
 
     input wire [4 : 0] id_w_addr,
     input wire id_w_ena,
@@ -30,10 +31,13 @@ module EX_stage (
     output reg [4 : 0] ex_memop,
     output reg ex_mem_wr,
     output reg ex_mem_ena,
-    
-    output wire [`PC_BUS] EX_pc //未写
+
+    output wire [`INST_BUS] EX_instr,
+    output wire [`PC_BUS] EX_pc
 );
     wire [`REG_BUS] result;
+    assign EX_pc = ID_pc;
+    assign EX_instr = ID_instr;
 
 ALU ALU(
     .num1(id_reg1_data),

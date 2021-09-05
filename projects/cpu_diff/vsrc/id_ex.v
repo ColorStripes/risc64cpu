@@ -8,6 +8,7 @@ module id_ex (
     input wire [63 : 0] id_imm,
 
     input wire [`PC_BUS] id_pc,
+    input wire [`INST_BUS] id_instr,
 
     input wire [4 : 0] id_memop,
     input wire [6 : 0] id_aluop,
@@ -34,6 +35,7 @@ module id_ex (
     output reg ex_mem_wr,
     output reg ex_mem_ena,
 
+    output reg [`INST_BUS] ex_instr,
     output reg [`PC_BUS] ex_pc
 
 ); 
@@ -53,7 +55,8 @@ always @(posedge clk) begin
         ex_mem_wr <= 1'b0;
         ex_mem_ena <= 1'b0;
 
-        ex_pc = `ZERO_WORD;
+        ex_pc <= `PC_START;
+        ex_instr <= `ZERO_INST;
     end
     else begin
         ex_w_addr <= id_w_addr;
@@ -69,7 +72,8 @@ always @(posedge clk) begin
         ex_mem_wr <= id_mem_wr;
         ex_mem_ena <= id_mem_ena;
 
-        ex_pc = id_pc;
+        ex_pc <= id_pc;
+        ex_instr <= id_instr;
     end
   end
 endmodule

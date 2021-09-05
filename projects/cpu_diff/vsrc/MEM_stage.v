@@ -17,6 +17,12 @@ module MEM_stage (
     input wire ex_mem_ena,
     input wire [`REG_BUS] mem_data,
 
+    input wire [`PC_BUS] ex_pc,
+    input wire [`INST_BUS] ex_instr,
+
+    output wire [`INST_BUS] mem_instr,
+    output wire [`PC_BUS] mem_pc,
+
     output reg [`REG_BUS] mem_w_data,
     output reg mem_w_ena,
     output reg [4 : 0] mem_w_addr,
@@ -28,6 +34,9 @@ module MEM_stage (
     output reg mem_wr,
     output reg mem_mem_ena
 );
+    assign mem_pc = ex_pc;
+    assign mem_instr = ex_instr;
+
     always @(*) begin
         if(rst == 1'b1) begin
             mem_w_data = `ZERO_WORD;

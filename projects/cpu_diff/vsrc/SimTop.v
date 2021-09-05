@@ -53,6 +53,7 @@ wire mux_pc;
 
 //ID_stage -> id_ex
 wire [`PC_BUS] ID_pc; 
+wire [`INST_BUS] ID_instr; 
 wire [6 : 0] aluop;
 wire [2 : 0] alusel;
 wire [`REG_BUS] reg1_data;
@@ -73,6 +74,7 @@ wire [`REG_BUS] ex_reg2_data;
 wire [6 : 0] ex_aluop;
 wire [2 : 0] ex_alusel;
 wire [`PC_BUS] ex_pc;
+wire [`INST_BUS] ex_instr;
 wire [4 : 0] ex_memop;
 wire [63 : 0] ex_imm;
 //id_ex -> ID_stage too
@@ -85,6 +87,7 @@ wire [`REG_BUS] ex_w_data;
 wire EX_w_ena;
 wire [4 : 0] EX_w_addr;
 wire [`PC_BUS] EX_pc;
+wire [`INST_BUS] EX_instr;
 wire [4 : 0] EX_memop;
 wire [`REG_BUS] ex_mem_waddr;
 wire [`REG_BUS] ex_mem_raddr;
@@ -97,6 +100,7 @@ wire [`REG_BUS] mem_w_data;
 wire mem_w_ena;
 wire [4 : 0] mem_w_addr;
 wire [`PC_BUS] men_pc;
+wire [`INST_BUS] men_instr;
 wire [`REG_BUS] mem_mem_waddr;
 wire [`REG_BUS] mem_mem_raddr;
 wire [4 : 0] mem_memop;
@@ -108,6 +112,8 @@ wire mem_mem_ena;
 wire [`REG_BUS] MEM_w_data;
 wire MEM_w_ena;
 wire [4 : 0] MEM_w_addr;
+wire [`PC_BUS] MEM_pc;
+wire [`INST_BUS] MEM_instr;
 
 //MEM_stage -> DATA_MEM
 wire [`REG_BUS] MEM_mem_waddr;
@@ -124,6 +130,8 @@ wire [63 : 0] data;
 wire [`REG_BUS] wb_w_data;
 wire wb_w_ena;
 wire [4 : 0] wb_w_addr;
+wire [`PC_BUS] wb_pc;
+wire [`INST_BUS] wb_instr;
 
 //WB_stage -> regfile
 wire WB_w_ena;
@@ -219,6 +227,7 @@ assign rst = reset;
     .w_ena(w_ena),                  //write enable
 
     .ID_pc(ID_pc),       //pc now
+    .ID_instr(ID_instr), 
     .branch(branch),    //pc next
     .mux_pc(mux_pc),
     .pc_con(pc_con),
@@ -235,6 +244,7 @@ assign rst = reset;
     .clk(clk),
 
     .id_pc(ID_pc),
+    .id_instr(ID_instr),
 
     .id_aluop(aluop),
     .id_alusel(alusel),
@@ -263,6 +273,7 @@ assign rst = reset;
     .ex_mem_wr(ex_mem_wr),
     .ex_mem_ena(ex_mem_ena),
 
+    .ex_instr(ex_instr),
     .ex_pc(ex_pc)
     
 ); 
@@ -270,7 +281,8 @@ assign rst = reset;
     EX_stage EX_stage (
     .rst(rst),
 
-    .ID_pc(ex_pc),//未写
+    .ID_pc(ex_pc),
+    .ID_instr(ex_instr),
 
     .id_w_addr(ex_w_addr),
     .id_w_ena(ex_w_ena),
@@ -296,13 +308,15 @@ assign rst = reset;
     .ex_mem_wr(EX_mem_wr),
     .ex_mem_ena(EX_mem_ena),
 
-    .EX_pc(EX_pc) //未写
+    .EX_instr(EX_instr),
+    .EX_pc(EX_pc) //
 );
 
     ex_mem ex_mem (
     .rst(rst),
     .clk(clk),
     .ex_pc(EX_pc),
+    .ex_instr(EX_instr),
     .ex_w_data(ex_w_data),
     .ex_w_ena(EX_w_ena),
     .ex_w_addr(EX_w_addr),
@@ -324,7 +338,8 @@ assign rst = reset;
     .mem_mem_wr(mem_mem_wr),
     .mem_mem_ena(mem_mem_ena),
 
-    .men_pc() //未连
+    .men_instr(men_instr),
+    .men_pc(men_pc) //
 );
 
     MEM_stage MEM_stage (
@@ -339,6 +354,12 @@ assign rst = reset;
     .ex_stor_data(mem_stor_data),
     .ex_mem_wr(mem_mem_wr),
     .ex_mem_ena(mem_mem_ena),
+
+    .ex_pc(men_pc),
+    .ex_instr(men_instr),
+
+    .mem_instr(MEM_instr),
+    .mem_pc(MEM_pc),
 
     .mem_w_data(MEM_w_data),
     .mem_w_ena(MEM_w_ena),
@@ -370,7 +391,11 @@ assign rst = reset;
     .mem_w_data(MEM_w_data),
     .mem_w_ena(MEM_w_ena),
     .mem_w_addr(MEM_w_addr),
-
+    .mem_pc(MEM_pc),
+    .mem_instr(MEM_instr),
+    
+    .wb_instr(wb_instr),
+    .wb_pc(wb_pc),
     .wb_w_data(wb_w_data),
     .wb_w_ena(wb_w_ena),
     .wb_w_addr(wb_w_addr)
@@ -414,7 +439,7 @@ reg [63:0] cycleCnt;
 reg [63:0] instrCnt;
 reg [`REG_BUS] regs_diff [0 : 31];
 
-wire inst_valid = 0;//(pc != `PC_START) | (instr != 0);
+wire inst_valid = (wb_pc != `PC_START) | (wb_instr != 0);
 
 always @(negedge clock) begin
   if (reset) begin
@@ -424,8 +449,8 @@ always @(negedge clock) begin
     cmt_wen <= WB_w_ena;//
     cmt_wdest <= {3'd0, WB_w_addr};//
     cmt_wdata <= WB_w_data;//
-    cmt_pc <= pc;//
-    cmt_inst <= instr;//
+    cmt_pc <= wb_pc;//
+    cmt_inst <= wb_instr;//
     cmt_valid <= inst_valid;
 
 		regs_diff <= regs;

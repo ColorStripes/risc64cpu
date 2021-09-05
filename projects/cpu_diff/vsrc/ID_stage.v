@@ -38,6 +38,7 @@ module ID_stage (
     output reg w_ena,                  //write enable
 
     output wire [`PC_BUS] ID_pc,    //pc now
+    output wire [`INST_BUS] ID_instr,
     output reg [`PC_BUS] branch,    //pc next
     output reg mux_pc,
     output reg pc_con,
@@ -54,6 +55,7 @@ module ID_stage (
     reg [63 : 0] pc;
     
     assign ID_pc = IF_pc;
+    assign ID_instr = IF_instr;
     assign opcode = IF_instr[6:0];
     assign funct3 = IF_instr[14 : 12];
     assign funct7 = IF_instr[31 : 25];
