@@ -31,7 +31,7 @@ always@( posedge clk )
 begin
   if( I_M_e == 1'b0 )
   begin
-    pc <= PC_START_RESET ;
+    pc <= `ZERO_WORD ;
   end
   else
   begin
