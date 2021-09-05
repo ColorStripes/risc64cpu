@@ -13,12 +13,12 @@ module IF_stage (
 
     output wire wash,
     output wire [63 : 0] IF_pc,
-    output wire I_M_e
+    output wire [31 : 0] instr
 );
 
 wire [63 : 0] sum;
 wire [63 : 0] pc_i;
-
+wire I_M_e
 
 PC PC(
   .clk(clk),
@@ -30,6 +30,23 @@ PC PC(
   .pc(IF_pc)
   
 );
+
+
+reg [63:0] rdata;
+RAMHelper ROM(
+  .clk              (clk),
+  .en               (I_M_e),
+  .rIdx             ((IF_pc - `PC_START) >> 3),
+  .rdata            (rdata),
+  .wIdx             (0),
+  .wdata            (0),
+  .wmask            (0),
+  .wen              (0)
+);
+
+assign instr = pc[2] ? rdata[63 : 32] : rdata[31 : 0];
+
+
 
 ADD ADD (
     .num1(64'd4),

@@ -25,6 +25,8 @@ wire rst;
 
 //IF_stage -> if_id
 wire wash;
+wire [`PC_BUS] pc;
+wire [31 : 0] instr;
 
 //if_id -> ID_stage
 wire [`INST_BUS] id_instr;
@@ -129,8 +131,7 @@ wire [`REG_BUS] WB_w_data;
 wire [4 : 0] WB_w_addr;
 
 //radehelper ->instr
-wire IN_MEM_ENA;
-wire [`PC_BUS] pc;
+
 
 assign clk = clock;
 assign rst = reset;
@@ -145,22 +146,9 @@ assign rst = reset;
 
     .wash(wash),
     .IF_pc(pc),
-    .I_M_e(IN_MEM_ENA)
+    .instr(instr)
 );
 
-reg [63:0] rdata;
-RAMHelper rom(
-  .clk              (clk),
-  .en               (IN_MEM_ENA),
-  .rIdx             ((pc - `PC_START) >> 3),
-  .rdata            (rdata),
-  .wIdx             (0),
-  .wdata            (0),
-  .wmask            (0),
-  .wen              (0)
-);
-wire [31 : 0] instr;
-assign instr = pc[2] ? rdata[63 : 32] : rdata[31 : 0];
 
 
     if_id if_id (
