@@ -10,7 +10,7 @@ module IMGN (
 );
 
     wire [4 : 0] op;
-    assign op[4] = (~instr[6] & ~instr[5] & ~instr[2]) | (instr[6] & instr[5] & instr[2]);
+    assign op[4] = (~instr[6] & ~instr[5] & ~instr[2]) | (instr[6] & instr[5] & ~instr[3] & instr[2]);
     assign op[3] = ~instr[6] & instr[5] & ~instr[4];
     assign op[2] = instr[6] & instr[5] & ~instr[2];
     assign op[1] = instr[6] & instr[5] & instr[3];
