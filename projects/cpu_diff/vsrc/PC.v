@@ -13,6 +13,7 @@ module PC(
   output reg I_M_e,
   output reg [`PC_BUS] pc 
 );
+parameter PC_START_RESET = `PC_START - 4;
 
 always@( posedge clk )
 begin
@@ -30,7 +31,7 @@ always@( posedge clk )
 begin
   if( I_M_e == 1'b0 )
   begin
-    pc <= `ZERO_WORD ;
+    pc <= PC_START_RESET ;
   end
   else
   begin

@@ -152,7 +152,7 @@ reg [63:0] rdata;
 RAMHelper rom(
   .clk              (clk),
   .en               (IN_MEM_ENA),
-  .rIdx             (pc >> 3),
+  .rIdx             ((pc - `PC_START) >> 3),
   .rdata            (rdata),
   .wIdx             (0),
   .wdata            (0),
