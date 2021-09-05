@@ -569,8 +569,6 @@ module ID_stage (
                     reg2_r_ena = 1'b0;
                     aluop = `LEFT12;
                     alusel = `Long;
-                    branch = IF_pc + (imm << 12);
-                    mux_pc = 1'b1;
               end
               default:begin
                     reg1_r_ena = `ZERO_ENA;
