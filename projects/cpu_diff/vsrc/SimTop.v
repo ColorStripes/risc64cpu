@@ -424,8 +424,8 @@ always @(negedge clock) begin
     cmt_wen <= WB_w_ena;//
     cmt_wdest <= {3'd0, WB_w_addr};//
     cmt_wdata <= WB_w_data;//
-    cmt_pc <= id_pc;//
-    cmt_inst <= id_instr;//
+    cmt_pc <= pc;//
+    cmt_inst <= instr;//
     cmt_valid <= inst_valid;
 
 		regs_diff <= regs;
