@@ -508,12 +508,12 @@ module ID_stage (
               7'b1100111:begin
                   mux_pc = 1'b1;
                   w_ena = 1'b1;
-                  reg1_r_ena = 1'b0;
+                  reg1_r_ena = 1'b1;
                   reg2_r_ena = 1'b0;
                   aluop = `NO;
                   alusel = `Jump;
-                  pc = reg_data1 + imm;
-                  branch = {IF_pc[63 : 1], 1'b0}; 
+                  //pc = reg_data1 + imm;
+                  branch = ((reg_data1 + imm) & 64'hffff_fffe);
               end
 
               //S
