@@ -113,37 +113,35 @@ module ID_stage (
                     
                     case (funct3) 
                           `addi:begin
-                           aluop = `ADD;
-                           alusel = `Arith;
+                                aluop = `ADD;
+                                alusel = `Arith;
                            end
                           `andi:begin
-                           aluop = `AND;
-                           alusel = `Arith;
+                                aluop = `AND;
+                                alusel = `Arith;
                            end
                            `xori:begin
-                            aluop = `XOR;
-                            alusel = `Arith;
+                                aluop = `XOR;
+                                alusel = `Arith;
                            end
                            `ori:begin
-                            aluop = `OR;
-                            alusel = `Arith;
+                                aluop = `OR;
+                                alusel = `Arith;
                            end
                            `slti:begin
-                            aluop = `COM;
-                            alusel = `Logic;
+                                aluop = `COM;
+                                alusel = `Logic;
                            end
                            `sltiu:begin
-                            aluop = `COMu;
-                            alusel = `Logic;
+                                aluop = `COMu;
+                                alusel = `Logic;
                            end
                            `slli:begin
-                               if(IF_instr[25] == 0) begin
-                                   aluop = `SHIL;
-                                   alusel = `Arith;
-                               end
+                                aluop = `SHIL;
+                                alusel = `Arith;
                            end
                            `srlisrai:begin
-                            alusel = `Arith;
+                                alusel = `Arith;
                             case (funct7[6 : 1])
                                 `srli:begin
                                  aluop = `SHIR;
