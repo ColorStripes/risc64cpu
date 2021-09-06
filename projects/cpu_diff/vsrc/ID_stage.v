@@ -52,7 +52,6 @@ module ID_stage (
     wire [2 : 0] funct3;
     wire [6 : 0] funct7;
     
-    reg [63 : 0] pc;
     
     assign ID_pc = IF_pc;
     assign ID_instr = IF_instr;
@@ -80,7 +79,6 @@ module ID_stage (
 
             mux_pc = 1'b0;
             branch = `ZERO_WORD;
-            pc = `ZERO_WORD;
             memop = 5'b00000;
             id_mem_wr = 1'b0;
             id_mem_ena = 1'b0;
@@ -100,7 +98,6 @@ module ID_stage (
 
             mux_pc = 1'b0;
             branch = IF_pc;
-            pc = `ZERO_WORD;
 
             memop = 5'b00000;
             id_mem_wr = 1'b0;
@@ -504,6 +501,7 @@ module ID_stage (
                   branch = IF_pc + imm;
                   mux_pc = 1'b1;
               end
+
               //jalr
               7'b1100111:begin
                   mux_pc = 1'b1;
@@ -512,13 +510,12 @@ module ID_stage (
                   reg2_r_ena = 1'b0;
                   aluop = `NO;
                   alusel = `Jump;
-                  //pc = reg_data1 + imm;
                   branch = ((reg_data1 + imm) & 64'hffff_fffe);
               end
 
               //S
               7'b0100011:begin
-                    w_ena = 1'b1;
+                    w_ena = 1'b0;
                     reg1_r_ena = 1'b1;
                     reg2_r_ena = 1'b1;
                     id_mem_wr = 1'b1;
