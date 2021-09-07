@@ -276,6 +276,7 @@ module MEM_stage (
                  `W_EIG:begin
                      mem_sel = 64'hffff_ffff_ffff_ffff;
                      mem_mem_ena = 1'b1;
+                     mem_stor_data = ex_stor_data;
                  end
                  default:begin
                      mem_w_data = ex_w_data;
