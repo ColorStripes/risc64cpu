@@ -78,7 +78,7 @@ module MEM_stage (
                  end
                  `R_FOR:begin
                      mem_sel = 64'h0000_0000_ffff_ffff;
-                     mem_w_data = {{32{mem_data[63]}} , mem_data[63 : 32]};
+                     mem_w_data = {{32{mem_data[31]}} , mem_data[31 : 0]};
                  end
                  `R_FORu:begin
                      mem_sel = 64'h0000_0000_ffff_ffff;
