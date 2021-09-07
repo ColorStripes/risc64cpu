@@ -244,19 +244,19 @@ module MEM_stage (
                      case(ex_mem_waddr[2 : 1])
                          2'b00:begin
                              mem_sel = 64'h0000_0000_0000_ffff;
-                             mem_stor_data = {48'b0, ex_stor_data[15 : 0]};
+                             //mem_stor_data = {48'b0, ex_stor_data[15 : 0]};
                          end
                          2'b01:begin
                              mem_sel = 64'h0000_0000_ffff_0000;
-                             mem_stor_data = {32'b0, ex_stor_data[15 : 0], 16'b0};
+                             //mem_stor_data = {32'b0, ex_stor_data[15 : 0], 16'b0};
                          end
                          2'b10:begin
                              mem_sel = 64'h0000_ffff_0000_0000;
-                             mem_stor_data = {16'b0, ex_stor_data[15 : 0], 32'b0};
+                             //mem_stor_data = {16'b0, ex_stor_data[15 : 0], 32'b0};
                          end
                          2'b11:begin
                              mem_sel = 64'hffff_0000_0000_0000;
-                             mem_stor_data = {ex_stor_data[15 : 0], 48'b0};
+                             //mem_stor_data = {ex_stor_data[15 : 0], 48'b0};
                          end 
                      endcase
                  end
