@@ -62,23 +62,23 @@ module MEM_stage (
             case(ex_memop)
                  `R_ONE:begin
                      mem_sel = 64'h0000_0000_0000_00ff;
-                     mem_w_data = {{56{mem_data[7]}} , mem_data[7 : 0]};
+                     mem_w_data = {{56{mem_data[63]}} , mem_data[63 : 56]};
                  end
                  `R_ONEu:begin
                      mem_sel = 64'h0000_0000_0000_00ff;
-                     mem_w_data = {{56{1'b0}} , mem_data[7 : 0]};
+                     mem_w_data = {{56{1'b0}} , mem_data[63 : 56]};
                  end
                  `R_DOU:begin
                      mem_sel = 64'h0000_0000_0000_ffff;
-                     mem_w_data = {{48{mem_data[15]}} , mem_data[15 : 0]};
+                     mem_w_data = {{48{mem_data[63]}} , mem_data[63 : 48]};
                  end
                  `R_DOUu:begin
                      mem_sel = 64'h0000_0000_0000_ffff;
-                     mem_w_data = {{48{1'b0}} , mem_data[15 : 0]};
+                     mem_w_data = {{48{1'b0}} , mem_data[63 : 48]};
                  end
                  `R_FOR:begin
-                     mem_sel = 64'hffff_ffff_0000_0000;
-                     mem_w_data = {{32{mem_data[31]}} , mem_data[31 : 0]};
+                     mem_sel = 64'h0000_0000_ffff_ffff;
+                     mem_w_data = {{32{mem_data[63]}} , mem_data[63 : 32]};
                  end
                  `R_FORu:begin
                      mem_sel = 64'h0000_0000_ffff_ffff;
