@@ -44,7 +44,7 @@ module MEM_stage (
             mem_w_addr = `ZERO_REG_ADDR;
             mem_mem_waddr = `ZERO_WORD;
             mem_mem_raddr = `ZERO_WORD;
-            mem_sel = 8'b0000_0000;
+            mem_sel = 64'h0000_0000_0000_0000;
             mem_stor_data = `ZERO_WORD;
             mem_wr = 1'b0;
             mem_mem_ena = 1'b0;
@@ -56,7 +56,7 @@ module MEM_stage (
             mem_mem_waddr = ex_mem_waddr;
             mem_mem_raddr = ex_mem_raddr;
             mem_stor_data = ex_stor_data;
-            mem_sel = 8'b0000_0000;
+            mem_sel = 64'h0000_0000_0000_0000;
             mem_wr = ex_mem_wr;
             mem_mem_ena = ex_mem_ena;
             case(ex_memop)
