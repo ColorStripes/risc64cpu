@@ -61,7 +61,7 @@ module MEM_stage (
             mem_mem_ena = ex_mem_ena;
             case(ex_memop)
                  `R_ONE:begin
-                     mem_sel = 64'h0000_0000_0000_00ff;
+                     mem_sel = 64'hff0000_0000_0000_00;
                      mem_w_data = {{56{mem_data[7]}} , mem_data[7 : 0]};
                  end
                  `R_ONEu:begin
