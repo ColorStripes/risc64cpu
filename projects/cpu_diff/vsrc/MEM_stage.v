@@ -207,35 +207,35 @@ module MEM_stage (
                      case(ex_mem_waddr[2 : 0])
                          3'b000:begin
                              mem_sel = 64'h0000_0000_0000_00ff;
-                            // mem_stor_data = {56'b0, ex_stor_data[7 : 0]};
+                             mem_stor_data = {56'b0, ex_stor_data[7 : 0]};
                          end
                          3'b001:begin
                              mem_sel = 64'h0000_0000_0000_ff00;
-                            // mem_stor_data = {48'b0, ex_stor_data[7 : 0], 8'b0};
+                             mem_stor_data = {48'b0, ex_stor_data[7 : 0], 8'b0};
                          end
                          3'b010:begin
                              mem_sel = 64'h0000_0000_00ff_0000;
-                            // mem_stor_data = {40'b0, ex_stor_data[7 : 0], 16'b0};
+                             mem_stor_data = {40'b0, ex_stor_data[7 : 0], 16'b0};
                          end
                          3'b011:begin
                              mem_sel = 64'h0000_0000_ff00_0000;
-                             //mem_stor_data = {32'b0, ex_stor_data[7 : 0], 24'b0};
+                             mem_stor_data = {32'b0, ex_stor_data[7 : 0], 24'b0};
                          end
                          3'b100:begin
                              mem_sel = 64'h0000_00ff_0000_0000;
-                            // mem_stor_data = {24'b0, ex_stor_data[7 : 0], 24'b0};
+                             mem_stor_data = {24'b0, ex_stor_data[7 : 0], 24'b0};
                          end
                          3'b101:begin
                              mem_sel = 64'h0000_ff00_0000_0000;
-                            // mem_stor_data = {16'b0, ex_stor_data[7 : 0], 32'b0};
+                             mem_stor_data = {16'b0, ex_stor_data[7 : 0], 32'b0};
                          end
                          3'b110:begin
                              mem_sel = 64'h00ff_0000_0000_0000;
-                           //  mem_stor_data = {8'b0, ex_stor_data[7 : 0], 40'b0};
+                             mem_stor_data = {8'b0, ex_stor_data[7 : 0], 40'b0};
                          end
                          3'b111:begin
                              mem_sel = 64'hff00_0000_0000_0000;
-                           //  mem_stor_data = {ex_stor_data[7 : 0], 56'b0};
+                             mem_stor_data = {ex_stor_data[7 : 0], 56'b0};
                          end
                      endcase  
                  end
@@ -244,19 +244,19 @@ module MEM_stage (
                      case(ex_mem_waddr[2 : 1])
                          2'b00:begin
                              mem_sel = 64'h0000_0000_0000_ffff;
-                             //mem_stor_data = {48'b0, ex_stor_data[15 : 0]};
+                             mem_stor_data = {48'b0, ex_stor_data[15 : 0]};
                          end
                          2'b01:begin
                              mem_sel = 64'h0000_0000_ffff_0000;
-                             //mem_stor_data = {32'b0, ex_stor_data[15 : 0], 16'b0};
+                             mem_stor_data = {32'b0, ex_stor_data[15 : 0], 16'b0};
                          end
                          2'b10:begin
                              mem_sel = 64'h0000_ffff_0000_0000;
-                             //mem_stor_data = {16'b0, ex_stor_data[15 : 0], 32'b0};
+                             mem_stor_data = {16'b0, ex_stor_data[15 : 0], 32'b0};
                          end
                          2'b11:begin
                              mem_sel = 64'hffff_0000_0000_0000;
-                             //mem_stor_data = {ex_stor_data[15 : 0], 48'b0};
+                             mem_stor_data = {ex_stor_data[15 : 0], 48'b0};
                          end 
                      endcase
                  end
@@ -265,11 +265,11 @@ module MEM_stage (
                      case(ex_mem_waddr[2])
                          1'b0:begin
                              mem_sel = 64'h0000_0000_ffff_ffff;
-                             //mem_stor_data = {32'b0, ex_stor_data[31 : 0]};
+                             mem_stor_data = {32'b0, ex_stor_data[31 : 0]};
                          end
                          1'b1:begin
                              mem_sel = 64'hffff_ffff_0000_0000;
-                             //mem_stor_data = {ex_stor_data[31 : 0], 32'b0};
+                             mem_stor_data = {ex_stor_data[31 : 0], 32'b0};
                          end
                      endcase
                  end
