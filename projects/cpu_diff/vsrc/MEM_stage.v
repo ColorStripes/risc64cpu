@@ -233,7 +233,7 @@ module MEM_stage (
                  end
                  `W_DOU:begin
                      mem_mem_ena = 1'b1;
-                     case(ex_mem_raddr[2 : 1])
+                     case(ex_mem_waddr[2 : 1])
                          2'b00:begin
                              mem_sel = 64'h0000_0000_0000_ffff;
                          end
@@ -250,7 +250,7 @@ module MEM_stage (
                  end
                  `W_FOR:begin
                      mem_mem_ena = 1'b1;
-                     case(ex_mem_raddr[2])
+                     case(ex_mem_waddr[2])
                          1'b0:begin
                              mem_sel = 64'h0000_0000_ffff_ffff;
                          end
