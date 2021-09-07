@@ -251,10 +251,10 @@ module MEM_stage (
                  `W_FOR:begin
                      mem_mem_ena = 1'b1;
                      case(ex_mem_waddr[2])
-                         1'b1:begin
+                         1'b0:begin
                              mem_sel = 64'h0000_0000_ffff_ffff;
                          end
-                         1'b0:begin
+                         1'b1:begin
                              mem_sel = 64'hffff_ffff_0000_0000;
                          end
                      endcase
