@@ -579,8 +579,9 @@ module ID_stage (
             id_mem_ena = 1'b0;
             w_ena = 1'b0;
             pc_con = 1'b1;
-            ID_pc = `PC_START;
+            ID_pc = `PC_START; 
             ID_instr = `ZERO_INST;
+            //skip = 1'b1;  //difftest
          end
     end
 end

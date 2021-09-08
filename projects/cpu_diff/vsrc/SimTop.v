@@ -455,7 +455,7 @@ always @(negedge clock) begin
 
 		regs_diff <= regs;
 
-    trap <= id_instr[6:0] == 7'h6b;
+    trap <= id_instr[6:0] == 7'h6b;      /////////////////////duo  xie  le   wb_instr
     trap_code <= regs[10][7:0];
     cycleCnt <= cycleCnt + 1;
     instrCnt <= instrCnt + inst_valid;
@@ -469,7 +469,7 @@ DifftestInstrCommit DifftestInstrCommit(
   .valid              (cmt_valid),
   .pc                 (cmt_pc),
   .instr              (cmt_inst),
-  .skip               (0),
+  .skip               (0),                       //fffffffffffffffffffffffffffffff
   .isRVC              (0),
   .scFailed           (0),
   .wen                (cmt_wen),

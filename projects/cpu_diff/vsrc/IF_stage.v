@@ -62,6 +62,7 @@ forecase forecase (
     .pc_id(pc_id),
     .add_pc(sum),
     .branch(branch),
+    .pc_con(pc_con),
 
 
     .wash(wash),
