@@ -84,7 +84,7 @@ module MEM_stage (
                          end
                          3'b101:begin
                              mem_sel = 64'h0000_ff00_0000_0000;
-                             mem_w_data = {{56{mem_data[48]}} , mem_data[47 : 40]};
+                             mem_w_data = {{56{mem_data[47]}} , mem_data[47 : 40]};
                          end
                          3'b110:begin
                              mem_sel = 64'h00ff_0000_0000_0000;
@@ -223,15 +223,15 @@ module MEM_stage (
                          end
                          3'b100:begin
                              mem_sel = 64'h0000_00ff_0000_0000;
-                             mem_stor_data = {24'b0, ex_stor_data[7 : 0], 24'b0};
+                             mem_stor_data = {24'b0, ex_stor_data[7 : 0], 32'b0};
                          end
                          3'b101:begin
                              mem_sel = 64'h0000_ff00_0000_0000;
-                             mem_stor_data = {16'b0, ex_stor_data[7 : 0], 32'b0};
+                             mem_stor_data = {16'b0, ex_stor_data[7 : 0], 40'b0};
                          end
                          3'b110:begin
                              mem_sel = 64'h00ff_0000_0000_0000;
-                             mem_stor_data = {8'b0, ex_stor_data[7 : 0], 40'b0};
+                             mem_stor_data = {8'b0, ex_stor_data[7 : 0], 48'b0};
                          end
                          3'b111:begin
                              mem_sel = 64'hff00_0000_0000_0000;
