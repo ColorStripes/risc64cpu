@@ -418,7 +418,7 @@ module ID_stage (
 
               //B
               7'b1100011:begin
-                    w_ena = 1'b0;
+                    w_ena = 1'b1;
                     reg1_r_ena = 1'b1;
                     reg2_r_ena = 1'b1;
                     branch = IF_pc + imm ;
