@@ -455,7 +455,7 @@ always @(negedge clock) begin
 
 		regs_diff <= regs;
 
-    trap <= id_instr[6:0] == 7'h6b;      /////////////////////duo  xie  le   wb_instr
+    trap <= wb_instr[6:0] == 7'h6b;      /////////////////////duo  xie  le   wb_instr
     trap_code <= regs[10][7:0];
     cycleCnt <= cycleCnt + 1;
     instrCnt <= instrCnt + inst_valid;
