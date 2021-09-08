@@ -508,7 +508,7 @@ module ID_stage (
                   reg2_r_ena = 1'b0;
                   aluop = `NO;
                   alusel = `Jump;
-                  branch = ((reg_data1 + imm) & 64'hffff_ffff_ffff_fffe);
+                  branch = ((reg1_data + imm) & 64'hffff_ffff_ffff_fffe);
               end
 
               //S
