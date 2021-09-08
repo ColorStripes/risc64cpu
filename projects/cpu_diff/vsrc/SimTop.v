@@ -136,7 +136,7 @@ always @(negedge clock) begin
 
     trap <= inst[6:0] == 7'h6b;
     trap_code <= regs[10][7:0];
-    cycleCnt <= cycleCnt ;
+    cycleCnt <= cycleCnt +2;
     instrCnt <= instrCnt + inst_valid;
   end
 end
