@@ -32,8 +32,7 @@ RAMHelper ROM(
   .wIdx             (0),
   .wdata            (0),
   .wmask            (0),
-  .wen              (0),
-  .pc(64'hffefefadad)
+  .wen              (0)
 );
 
 assign instr = IF_pc[2] ? rdata[63 : 32] : rdata[31 : 0];

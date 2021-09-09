@@ -382,8 +382,7 @@ assign rst = reset;
     .wIdx({3'b000,(MEM_mem_waddr-64'h0000_0000_8000_0000)>>3}),
     .wdata(MEM_stor_data),
     .wmask(mem_sel),          //!!!!!!!!!!!
-    .wen(mem_wr),
-    .pc(MEM_pc)
+    .wen(mem_wr)
 );
 
     mem_wb mem_wb (
