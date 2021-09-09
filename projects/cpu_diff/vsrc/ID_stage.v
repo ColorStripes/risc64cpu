@@ -154,6 +154,7 @@ module ID_stage (
                                  reg2_r_ena = `ZERO_ENA;
                                  id_mem_ena = 1'b0;
                                  w_ena = 1'b0;
+                                 id_mem_wr = 1'b0;
                                 end
                             endcase        
                            end
