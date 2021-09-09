@@ -452,7 +452,6 @@ always @(negedge clock) begin
     cmt_pc <= wb_pc;//
     cmt_inst <= wb_instr;//
     cmt_valid <= inst_valid;
-
 		regs_diff <= regs;
 
     trap <= wb_instr[6:0] == 7'h6b;      /////////////////////duo  xie  le   wb_instr
@@ -517,7 +516,7 @@ DifftestArchIntRegState DifftestArchIntRegState (
 DifftestTrapEvent DifftestTrapEvent(
   .clock              (clock),
   .coreid             (0),
-  .valid              (trap),
+  .valid              (0),//(trap),
   .code               (trap_code),
   .pc                 (cmt_pc),
   .cycleCnt           (cycleCnt),
