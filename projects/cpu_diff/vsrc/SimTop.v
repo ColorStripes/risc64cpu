@@ -451,7 +451,7 @@ always @(negedge clock) begin
     cmt_wdata <= WB_w_data;//
     cmt_pc <= wb_pc;//
     cmt_inst <= wb_instr;//
-    cmt_valid <= inst_valid;
+    cmt_valid <= 0;//inst_valid;
 
 		regs_diff <= regs;
 
