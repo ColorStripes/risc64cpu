@@ -516,7 +516,7 @@ DifftestArchIntRegState DifftestArchIntRegState (
 DifftestTrapEvent DifftestTrapEvent(
   .clock              (clock),
   .coreid             (0),
-  .valid              (0),//(trap),
+  .valid              (trap),
   .code               (trap_code),
   .pc                 (cmt_pc),
   .cycleCnt           (cycleCnt),
