@@ -383,7 +383,7 @@ assign rst = reset;
     .wdata(MEM_stor_data),
     .wmask(mem_sel),          //!!!!!!!!!!!
     .wen(mem_wr),
-    .pc(wb_pc)
+    .pc(MEM_pc)
 );
 
     mem_wb mem_wb (
