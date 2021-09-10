@@ -44,9 +44,7 @@ always @(posedge clk) begin
                 if((pc_now[add_pc[3 : 2]]) == add_pc)  begin
                     test <= 1'b1;
                 end
-                else begin
-                    test <= 1'b0;
-                end
+
 
         if(pc_con != 1'b1) begin
             if(mux_pc == 1'b1) begin
