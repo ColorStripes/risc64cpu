@@ -23,7 +23,7 @@ module forecase (
 
 always @(posedge clk) begin
     if(rst == 1'b1) begin
-        fore = 2'b00;
+        fore <= 2'b00;
         for(i=0; i<4; i=i+1) begin
             pc_now[i] <= `ZERO_WORD; 
         end
@@ -35,18 +35,19 @@ always @(posedge clk) begin
         if(pc_con != 1'b1) begin
             if(mux_pc == 1'b1) begin
                 if(fore_branch[pc_id[`FORECASE_LOG+1 : 2]] != branch) begin
-                    fore_branch[pc_id[`FORECASE_LOG+1 : 2]] = branch; 
-                    pc_now[pc_id[3 : 2]] = pc_id;
+                    fore_branch[pc_id[`FORECASE_LOG+1 : 2]] <= branch; 
+                    pc_now[pc_id[3 : 2]] <= pc_id;
                 end
                 if(fore < 2'b11) begin
-                    fore = fore + 1;
+                    fore <= fore + 1;
                 end
             end
             
             else begin
                 if(add_pc == pc_now[add_pc[3 : 2]] + 4) begin
+                    
                     if(fore > 2'b00) begin
-                        fore = fore - 1;
+                        fore <= fore - 1;
                     end
                 end
             end
