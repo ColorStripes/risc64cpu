@@ -19,32 +19,30 @@ module forecase (
     reg [1 : 0] fore;
     reg [`PC_BUS] fore_branch[`FORECASE-1 : 0];
     reg [`PC_BUS] pc_now[3 : 0];
+
+    reg [1 : 0] fore_reg;
+    reg [`PC_BUS] fore_branch_reg[`FORECASE-1 : 0];
+    reg [`PC_BUS] pc_now_reg[3 : 0];
     reg if_forecase;
 
 
     reg test;
+    reg test1;
     reg [63 :0] pp;
     reg [63 :0] p;
 
 
-always @(posedge clk) begin
+
+
+
+
+always @(*) begin
     if(rst == 1'b1) begin
-        
-    end
-    else begin
-        
-    end
-end
-
-
-
-always @(posedge clk) begin
-    if(rst == 1'b1) begin
-        //test = 1'b0;
+        test = 1'b0;
         //pp = 64'b0;
         //p = 64'b0;
         fore = 2'b00;
-        for(i=0; i<4; i=i+1) begin
+        for(i=0; i<`PC; i=i+1) begin
             pc_now[i] = `ZERO_WORD; 
         end
         for(i=0; i<`FORECASE; i=i+1) begin
@@ -52,19 +50,23 @@ always @(posedge clk) begin
         end
     end
     else begin
+        fore = fore_reg;
+        pc_now = pc_now_reg;
+        fore_branch = fore_branch_reg;
+        test = 1'b0;
         //pp = pc_id;
                 //p = pc_now[add_pc[3 : 2]];
                 //test = test;
-                //if(pc_now[add_pc[3 : 2]] -4 == add_pc )  begin
-                    //test = test;
-                //end
+                if(pc_now[add_pc[3 : 2]] -4 == add_pc )  begin
+                    test = 1'b1;
+                end
 
 
         if(pc_con != 1'b1) begin
             if(mux_pc == 1'b1) begin
                 if(fore_branch[pc_id[`FORECASE_LOG+1 : 2]] != branch) begin
                     fore_branch[pc_id[`FORECASE_LOG+1 : 2]] = branch; 
-                    pc_now[pc_id[3 : 2]] = pc_id;
+                    pc_now[pc_id[`PC_LOG+1 : 2]] = pc_id;
                 end
                 if(fore < 2'b11) begin
                     fore = fore + 1;
@@ -73,7 +75,7 @@ always @(posedge clk) begin
             end
             
             else begin
-                if(add_pc == pc_now[add_pc[3 : 2]] + 4) begin
+                if(add_pc == pc_now[add_pc[`PC_LOG+1 : 2]] + 4) begin
                     if(fore > 2'b00) begin
                         fore = fore - 1;
                     end
@@ -83,7 +85,11 @@ always @(posedge clk) begin
     end
 end
 
-
+always @(posedge clk) begin
+        fore_reg = fore;
+        pc_now_reg = pc_now;
+        fore_branch_reg = fore_branch;
+end
 
     always @(*) begin
         if(rst == 1'b1) begin
@@ -106,7 +112,7 @@ end
                     pc = add_pc;
                 end
 
-                if(add_pc == pc_now[add_pc[`FORECASE_LOG + 1 : 2]] + 4) begin
+                if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]] + 4) begin
                     if(fore >= 2'b10) begin
                         pc = fore_branch[add_pc[`FORECASE_LOG + 1 : 2]];
                         if_forecase = 1'b1;
