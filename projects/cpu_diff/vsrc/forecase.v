@@ -33,12 +33,9 @@ module forecase (
     reg ifa;
 
 always @(posedge clk) begin
-    if(rst == 0) begin
-        ifa <= 1'b0;
-    end
-    else begin
+
         ifa <= if_forecase;
-    end
+
 
 end
 
