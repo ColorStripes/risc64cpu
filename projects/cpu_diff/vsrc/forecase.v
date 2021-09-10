@@ -129,7 +129,7 @@ end
                         end
                     end
 
-            if(add_pc == 4) pc = add_pc;
+            //if(add_pc == 4) pc = add_pc;
                 
 
                 if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]]) begin
