@@ -78,7 +78,7 @@ wire test;
                     pc = add_pc;
                 end
 
-                if(add_pc == pc_now[add_pc[3 : 2]] + 8) begin
+                if(add_pc == pc_now[add_pc[3 : 2]] ) begin
                     if(fore >= 2'b10) begin
                         pc = fore_branch[add_pc[`FORECASE_LOG+1 : 2]];
                         if_forecase = 1'b1;
