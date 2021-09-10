@@ -30,8 +30,8 @@ module forecase (
     reg test1;
     reg [63 :0] pc_s;
     reg [63 :0] p;
-
-
+wire [`PC_BUS] add_pc1;
+assign add_pc1 = add_pc - 4;
 
 
 
@@ -57,9 +57,9 @@ always @(*) begin
         test = 1'b0;
         pc_s = `ZERO_WORD;
         //pp = pc_id;
-                //p = pc_now[add_pc[3 : 2]];
+                //p = pc_now[add_pc1[3 : 2]];
                 //test = test;
-                if(pc_now[add_pc[3 : 2]]  == add_pc )  begin
+                if(pc_now[add_pc1[3 : 2]]  == add_pc1 )  begin
                     test = 1'b1;
                 end
 
@@ -78,7 +78,7 @@ always @(*) begin
             end
             
             else begin
-                if(add_pc == pc_now[add_pc[`PC_LOG+1 : 2]]) begin
+                if(add_pc1 == pc_now[add_pc1[`PC_LOG+1 : 2]]) begin
                     if(fore > 2'b00) begin
                         fore = fore - 1;
                     end
@@ -106,22 +106,39 @@ end
             if_forecase = 1'b0;
             if(pc_con != 1'b1) begin
                 
-                if((mux_pc != if_forecase) ) begin
-                    wash = 1'b1;
-                    pc = branch;
-                end
-                else begin
-                    wash = 1'b0;
-                    pc = add_pc;
-                end
+                   
+                    if(mux_pc == 1'b1) begin
+                        if(mux_pc != if_forecase) begin
+                            wash = 1'b1;
+                            pc = branch;
+                        end
+                        else begin
+                            wash = 1'b0;
+                            pc = add_pc1;
+                        end
+                        
+                    end
+                    else begin
+                        if(mux_pc != if_forecase) begin
+                            wash = 1'b0;
+                            pc = add_pc1 + 4;
+                        end
+                        else begin
+                            wash = 1'b1;
+                            pc = branch;
+                        end
+                    end
 
-                if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]]) begin
+            
+                
+
+                if(add_pc1 == pc_now[add_pc1[`PC_LOG + 1 : 2]]) begin
                     if(fore >= 2'b10) begin
-                        pc = fore_branch[add_pc[`FORECASE_LOG + 1 : 2]];
+                        pc = fore_branch[add_pc1[`FORECASE_LOG + 1 : 2]];
                         if_forecase = 1'b1;
                     end
                     else begin
-                        pc = add_pc;
+                        pc = add_pc1 + 4;
                         if_forecase = 1'b0;
                     end
                 end
