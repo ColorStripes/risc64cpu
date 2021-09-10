@@ -26,6 +26,18 @@ module forecase (
     reg [63 :0] pp;
     reg [63 :0] p;
 
+
+always @( * ) begin
+    if(rst == 1'b1) begin
+        
+    end
+    else begin
+        
+    end
+end
+
+
+
 always @(posedge clk) begin
     if(rst == 1'b1) begin
         //test = 1'b0;
@@ -71,18 +83,15 @@ always @(posedge clk) begin
     end
 end
 
-wire test;
 
 
     always @(*) begin
         if(rst == 1'b1) begin
-            test =  1'b0;
             wash = 1'b0;
             pc = `ZERO_WORD;
             if_forecase = 1'b0;
         end
         else begin
-            test = 1'b0;
             wash = 1'b0;
             pc = `ZERO_WORD;
             if_forecase = 1'b0;
@@ -110,8 +119,6 @@ wire test;
                 else begin
                     if_forecase = 1'b0;
                 end
-
-
             end
         end
     end
