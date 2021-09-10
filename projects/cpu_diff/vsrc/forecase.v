@@ -98,12 +98,12 @@ end
         if(rst == 1'b1) begin
             wash = 1'b0;
             pc = `ZERO_WORD;
-            if_forecase = 1'b1;
+            if_forecase = 1'b0;
         end
         else begin
             wash = 1'b0;
             pc = `ZERO_WORD;
-            if_forecase = 1'b1;
+            if_forecase = 1'b0;
             if(pc_con != 1'b1) begin
                 
                    
@@ -120,16 +120,16 @@ end
                     end
                     else begin
                         if(mux_pc != if_forecase) begin
-                            wash = 1'b0;
+                            wash = 1'b1;
                             pc = add_pc;
                         end
                         else begin
-                             wash = 1'b1;
+                             wash = 1'b0;
                              pc = branch;
                         end
                     end
 
-            
+            if(add_pc == 4) pc = add_pc;
                 
 
                 if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]]) begin
