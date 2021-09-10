@@ -24,10 +24,12 @@ module forecase (
 
     reg test;
     reg [63 :0] pp;
+    reg [63 :0] p;
 
 always @(posedge clk) begin
     if(rst == 1'b1) begin
         pp <= 64'b0;
+        p <= 64'b0;
         fore <= 2'b00;
         for(i=0; i<4; i=i+1) begin
             pc_now[i] <= `ZERO_WORD; 
@@ -47,6 +49,7 @@ always @(posedge clk) begin
                 if(fore < 2'b11) begin
                     fore <= fore + 1;
                 end
+                p <= pc_now[add_pc[3 : 2]];
                 if(add_pc == pc_now[add_pc[3 : 2]]) begin
                     test <= 1'b1;
                 end
