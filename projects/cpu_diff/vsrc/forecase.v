@@ -44,17 +44,19 @@ always @(posedge clk) begin
                 if(fore < 2'b11) begin
                     fore <= fore + 1;
                 end
+                if(add_pc == pc_now[add_pc[3 : 2]] + 4) begin
+                    test <= 1'b0;
+                end
+                else begin
+                    test <= 1'b0;
+                end
             end
             
             else begin
                 if(add_pc == pc_now[add_pc[3 : 2]] + 4) begin
-                    test <= 1'b0;
                     if(fore > 2'b00) begin
                         fore <= fore - 1;
                     end
-                end
-                else begin
-                    test <= 1'b0;
                 end
             end
         end
