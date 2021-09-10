@@ -38,17 +38,18 @@ always @(posedge clk) begin
                     fore_branch[pc_id[`FORECASE_LOG+1 : 2]] = branch; 
                     pc_now[pc_id[3 : 2]] = pc_id;
                 end
-            end
-                if(mux_pc == 1'b1) begin
-                    if(fore < 2'b11) begin
+                if(fore < 2'b11) begin
                         fore = fore + 1;
-                    end
                 end
-                else begin
+            end
+            
+            else begin
+                if(add_pc == pc_now[add_pc[3 : 2]] + 4) begin
                     if(fore > 2'b00) begin
                         fore = fore - 1;
                     end
                 end
+            end
         end
     end
 end
