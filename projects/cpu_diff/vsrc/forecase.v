@@ -41,7 +41,7 @@ always @(posedge clk) begin
     else begin
         pp <= pc_id;
                 p <= pc_now[add_pc[3 : 2]];
-                if({pc_now[add_pc[3 : 2]]} == add_pc )  begin
+                if(pc_now[add_pc[3 : 2]] -4 == add_pc )  begin
                     test <= 1'b1;
                 end
 
