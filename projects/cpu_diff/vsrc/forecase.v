@@ -40,6 +40,14 @@ always @(posedge clk) begin
     end
     else begin
         pp <= pc_id;
+                p <= pc_now[add_pc[3 : 2]];
+                if(add_pc == pc_now[add_pc[3 : 2]]) begin
+                    test <= 1'b1;
+                end
+                else begin
+                    test <= 1'b0;
+                end
+
         if(pc_con != 1'b1) begin
             if(mux_pc == 1'b1) begin
                 if(fore_branch[pp[`FORECASE_LOG+1 : 2]] != branch) begin
@@ -49,13 +57,7 @@ always @(posedge clk) begin
                 if(fore < 2'b11) begin
                     fore <= fore + 1;
                 end
-                p <= pc_now[add_pc[3 : 2]];
-                if(add_pc == pc_now[add_pc[3 : 2]]) begin
-                    test <= 1'b1;
-                end
-                else begin
-                    test <= 1'b0;
-                end
+
             end
             
             else begin
