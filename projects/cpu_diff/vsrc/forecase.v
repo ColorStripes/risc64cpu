@@ -21,6 +21,9 @@ module forecase (
     reg [`PC_BUS] pc_now[3 : 0];
     reg if_forecase;
 
+
+    reg test;
+
 always @(posedge clk) begin
     if(rst == 1'b1) begin
         fore <= 2'b00;
@@ -45,10 +48,13 @@ always @(posedge clk) begin
             
             else begin
                 if(add_pc == pc_now[add_pc[3 : 2]] + 4) begin
-                    
+                    test <= 1'b0;
                     if(fore > 2'b00) begin
                         fore <= fore - 1;
                     end
+                end
+                else begin
+                    test <= 1'b0;
                 end
             end
         end
@@ -83,7 +89,6 @@ wire test;
                     if(fore >= 2'b10) begin
                         pc = fore_branch[add_pc[`FORECASE_LOG+1 : 2]];
                         if_forecase = 1'b1;
-                        
                     end
                     else begin
                         pc = add_pc;
