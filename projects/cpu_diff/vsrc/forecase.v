@@ -66,9 +66,9 @@ always @(*) begin
 
         if(pc_con != 1'b1) begin
             if(mux_pc == 1'b1) begin
-                if(fore_branch[pc_id[`FORECASE_LOG+1 : 2]] != branch) begin
-                    fore_branch[pc_id[`FORECASE_LOG+1 : 2]] = branch; 
-                    pc_s = pc_id + 4;
+                pc_s = pc_id + 4;
+                if(fore_branch[pc_s[`FORECASE_LOG+1 : 2]] != branch) begin
+                    fore_branch[pc_s[`FORECASE_LOG+1 : 2]] = branch; 
                     pc_now[pc_s[`PC_LOG+1 : 2]] = pc_id + 4;
                 end
                 if(fore < 2'b11) begin
