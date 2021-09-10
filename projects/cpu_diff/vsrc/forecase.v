@@ -76,13 +76,13 @@ wire test;
 
     always @(*) begin
         if(rst == 1'b1) begin
-            //test =  1'b0;
+            test =  1'b0;
             wash = 1'b0;
             pc = `ZERO_WORD;
             if_forecase = 1'b0;
         end
         else begin
-            //test =test;
+            test = 1'b0;
             wash = 1'b0;
             pc = `ZERO_WORD;
             if_forecase = 1'b0;
