@@ -106,7 +106,7 @@ end
             if_forecase = 1'b0;
             if(pc_con != 1'b1) begin
                 
-                if((mux_pc != if_forecase) || (fore_branch[pc_id[`FORECASE_LOG+1 : 2]] != branch)) begin
+                if((mux_pc != if_forecase) ) begin
                     wash = 1'b1;
                     pc = branch;
                 end
