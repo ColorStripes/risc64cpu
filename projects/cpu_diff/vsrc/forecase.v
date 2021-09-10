@@ -107,29 +107,18 @@ end
             if(pc_con != 1'b1) begin
                 
                    
-                    if(mux_pc == 1'b1) begin
-                        if(mux_pc != if_forecase) begin
-                            wash = 1'b1;
-                            pc = branch;
-                        end
-                        else begin
-                            wash = 1'b0;
-                            pc = add_pc;
-                        end
-                        
-                    end
-                    else begin
-                        if(mux_pc != if_forecase) begin
-                            wash = 1'b1;
-                            pc = add_pc;
-                        end
-                        else begin
-                             wash = 1'b0;
-                             pc = branch;
-                        end
-                    end
+
 
             //if(add_pc == 4) pc = add_pc;
+
+                if(mux_pc != if_forecase) begin
+                    wash = 1'b1;
+                    pc = branch;
+                end
+                else begin
+                    wash = 1'b0;
+                    pc = add_pc;
+                end
                 
 
                 if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]]) begin
