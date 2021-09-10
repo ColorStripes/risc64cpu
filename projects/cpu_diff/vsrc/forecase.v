@@ -30,8 +30,8 @@ module forecase (
     reg test1;
     reg [63 :0] pc_s;
     reg [63 :0] p;
-//wire [`PC_BUS] add_pc;
-//assign add_pc = add_pc - 4;
+
+
 
 
 
@@ -120,11 +120,11 @@ end
                     end
                     else begin
                         if(mux_pc != if_forecase) begin
-                            wash = 1'b0;
+                           wash = 1'b0;
                             pc = add_pc;
                         end
                         else begin
-                            wash = 1'b1;
+                             wash = 1'b1;
                             pc = branch;
                         end
                     end
