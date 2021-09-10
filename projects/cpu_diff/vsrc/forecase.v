@@ -27,7 +27,7 @@ module forecase (
     reg [63 :0] p;
 
 
-always @( * ) begin
+always @(posedge clk) begin
     if(rst == 1'b1) begin
         
     end
@@ -54,10 +54,10 @@ always @(posedge clk) begin
     else begin
         //pp = pc_id;
                 //p = pc_now[add_pc[3 : 2]];
-                test = test;
-                if(pc_now[add_pc[3 : 2]] -4 == add_pc )  begin
-                    test = test;
-                end
+                //test = test;
+                //if(pc_now[add_pc[3 : 2]] -4 == add_pc )  begin
+                    //test = test;
+                //end
 
 
         if(pc_con != 1'b1) begin
