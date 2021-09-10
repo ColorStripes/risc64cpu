@@ -39,18 +39,16 @@ always @(posedge clk) begin
                     pc_now[pc_id[3 : 2]] = pc_id;
                 end
             end
-            if(add_pc == pc_now[add_pc[3 : 2]] + 4) begin
-                if(mux_pc >= 1'b1) begin
+                if(mux_pc == 1'b1) begin
                     if(fore < 2'b11) begin
                         fore = fore + 1;
                     end
                 end
                 else begin
                     if(fore > 2'b00) begin
-                    fore = fore - 1;
+                        fore = fore - 1;
                     end
                 end
-            end
         end
     end
 end
