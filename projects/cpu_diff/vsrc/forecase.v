@@ -57,7 +57,7 @@ always @(*) begin
         //pp = pc_id;
                 //p = pc_now[add_pc[3 : 2]];
                 //test = test;
-                if(pc_now[add_pc[3 : 2]] + 4  == add_pc )  begin
+                if(pc_now[add_pc[3 : 2]]  == add_pc )  begin
                     test = 1'b1;
                 end
 
@@ -66,7 +66,7 @@ always @(*) begin
             if(mux_pc == 1'b1) begin
                 if(fore_branch[pc_id[`FORECASE_LOG+1 : 2]] != branch) begin
                     fore_branch[pc_id[`FORECASE_LOG+1 : 2]] = branch; 
-                    pc_now[pc_id[`PC_LOG+1 : 2]] = pc_id;
+                    pc_now[pc_id[`PC_LOG+1 : 2] + 1] = pc_id + 4;
                 end
                 if(fore < 2'b11) begin
                     fore = fore + 1;
