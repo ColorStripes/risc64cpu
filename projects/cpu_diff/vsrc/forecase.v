@@ -117,7 +117,7 @@ end
                 end
                 else begin
                     wash = 1'b0;
-                    pc = add_pci;
+                    pc = add_pci +4;
                 end
                 
 
@@ -127,7 +127,7 @@ end
                         if_forecase = 1'b1;
                     end
                     else begin
-                        pc = add_pci;
+                        pc = add_pci +4;
                         if_forecase = 1'b0;
                     end
                 end
