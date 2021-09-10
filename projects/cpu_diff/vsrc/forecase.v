@@ -30,8 +30,17 @@ module forecase (
     reg test1;
     reg [63 :0] pc_s;
     //reg [63 :0] add_pc;
+    reg ifa;
 
+always @(posedge clk) begin
+    if(rst == 0) begin
+        ifa <= 1'b0;
+    end
+    else begin
+        ifa <= if_forecase;
+    end
 
+end
 
 
 
@@ -110,7 +119,7 @@ end
 
 
 
-                if(mux_pc != if_forecase) begin
+                if(mux_pc != ifa) begin
                     wash = 1'b1;
                     pc = branch;
                 end
