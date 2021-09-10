@@ -29,14 +29,9 @@ module forecase (
     reg test;
     reg test1;
     reg [63 :0] pc_s;
-    reg [63 :0] add;
+    //reg [63 :0] add_pc;
 
-always @(posedge clk) begin
-    if(rst == 0)
- add <= 64'h4;
- else
-     add <= add_pc;
-end
+
 
 
 
@@ -62,9 +57,9 @@ always @(*) begin
         test = 1'b0;
         pc_s = `ZERO_WORD;
         //pp = pc_id;
-                //p = pc_now[add[3 : 2]];
+                //p = pc_now[add_pc[3 : 2]];
                 //test = test;
-                if(pc_now[add[3 : 2]]  == add )  begin
+                if(pc_now[add_pc[3 : 2]]  == add_pc )  begin
                     test = 1'b1;
                 end
 
@@ -83,7 +78,7 @@ always @(*) begin
             end
             
             else begin
-                if(add == pc_now[add[`PC_LOG+1 : 2]]) begin
+                if(add_pc == pc_now[add_pc[`PC_LOG+1 : 2]]) begin
                     if(fore > 2'b00) begin
                         fore = fore - 1;
                     end
@@ -125,9 +120,9 @@ end
                 end
                 
 
-                if(add == pc_now[add[`PC_LOG + 1 : 2]]) begin
+                if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]]) begin
                     if(fore >= 2'b10) begin
-                        pc = fore_branch[add[`FORECASE_LOG + 1 : 2]];
+                        pc = fore_branch[add_pc[`FORECASE_LOG + 1 : 2]];
                         if_forecase = 1'b1;
                     end
                     else begin
