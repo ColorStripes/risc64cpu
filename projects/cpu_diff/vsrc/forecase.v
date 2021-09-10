@@ -45,7 +45,7 @@ always @(posedge clk) begin
                     fore <= fore + 1;
                 end
                 if(add_pc == pc_now[add_pc[3 : 2]] + 4) begin
-                    test <= 1'b0;
+                    test <= 1'b1;
                 end
                 else begin
                     test <= 1'b0;
