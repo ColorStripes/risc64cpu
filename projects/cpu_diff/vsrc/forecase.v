@@ -31,7 +31,8 @@ module forecase (
     reg [63 :0] pc_s;
     reg [63 :0] p;
 
-
+    wire [`PC_BUS] add_pci;
+    assign add_pci = add_pc -4;
 
 
 
@@ -57,9 +58,9 @@ always @(*) begin
         test = 1'b0;
         pc_s = `ZERO_WORD;
         //pp = pc_id;
-                //p = pc_now[add_pc[3 : 2]];
+                //p = pc_now[add_pci[3 : 2]];
                 //test = test;
-                if(pc_now[add_pc[3 : 2]]  == add_pc )  begin
+                if(pc_now[add_pci[3 : 2]]  == add_pci )  begin
                     test = 1'b1;
                 end
 
@@ -78,7 +79,7 @@ always @(*) begin
             end
             
             else begin
-                if(add_pc == pc_now[add_pc[`PC_LOG+1 : 2]]) begin
+                if(add_pci == pc_now[add_pci[`PC_LOG+1 : 2]]) begin
                     if(fore > 2'b00) begin
                         fore = fore - 1;
                     end
@@ -109,7 +110,6 @@ end
                    
 
 
-            //if(add_pc == 4) pc = add_pc;
 
                 if(mux_pc != if_forecase) begin
                     wash = 1'b1;
@@ -117,17 +117,17 @@ end
                 end
                 else begin
                     wash = 1'b0;
-                    pc = add_pc;
+                    pc = add_pci;
                 end
                 
 
-                if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]]) begin
+                if(add_pci == pc_now[add_pci[`PC_LOG + 1 : 2]]) begin
                     if(fore >= 2'b10) begin
-                        pc = fore_branch[add_pc[`FORECASE_LOG + 1 : 2]];
+                        pc = fore_branch[add_pci[`FORECASE_LOG + 1 : 2]];
                         if_forecase = 1'b1;
                     end
                     else begin
-                        pc = add_pc;
+                        pc = add_pci;
                         if_forecase = 1'b0;
                     end
                 end
