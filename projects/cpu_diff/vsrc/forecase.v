@@ -78,7 +78,7 @@ always @(*) begin
             end
             
             else begin
-                if(add_pc == pc_now[add_pc[`PC_LOG+1 : 2]] + 4) begin
+                if(add_pc == pc_now[add_pc[`PC_LOG+1 : 2]]) begin
                     if(fore > 2'b00) begin
                         fore = fore - 1;
                     end
@@ -106,7 +106,7 @@ end
             if_forecase = 1'b0;
             if(pc_con != 1'b1) begin
                 
-                if((mux_pc != if_forecase) ) begin
+                if((mux_pc != if_forecase) || (fore_branch[pc_s[`FORECASE_LOG+1 : 2]] != branch)) begin
                     wash = 1'b1;
                     pc = branch;
                 end
