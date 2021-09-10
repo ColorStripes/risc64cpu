@@ -121,7 +121,7 @@ end
                 end
                 else begin
                     wash = 1'b0;
-                    pc = add;
+                    pc = add_pc;
                 end
                 
 
@@ -131,7 +131,7 @@ end
                         if_forecase = 1'b1;
                     end
                     else begin
-                        pc = add;
+                        pc = add_pc;
                         if_forecase = 1'b0;
                     end
                 end
