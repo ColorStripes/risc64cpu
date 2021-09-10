@@ -28,32 +28,34 @@ module forecase (
 
 always @(posedge clk) begin
     if(rst == 1'b1) begin
-        pp <= 64'b0;
-        p <= 64'b0;
-        fore <= 2'b00;
+        //test = 1'b0;
+        //pp = 64'b0;
+        //p = 64'b0;
+        fore = 2'b00;
         for(i=0; i<4; i=i+1) begin
-            pc_now[i] <= `ZERO_WORD; 
+            pc_now[i] = `ZERO_WORD; 
         end
         for(i=0; i<`FORECASE; i=i+1) begin
-            fore_branch[i] <= `ZERO_WORD; 
+            fore_branch[i] = `ZERO_WORD; 
         end
     end
     else begin
-        pp <= pc_id;
-                p <= pc_now[add_pc[3 : 2]];
+        //pp = pc_id;
+                //p = pc_now[add_pc[3 : 2]];
+                test = test;
                 if(pc_now[add_pc[3 : 2]] -4 == add_pc )  begin
-                    test <= 1'b1;
+                    test = test;
                 end
 
 
         if(pc_con != 1'b1) begin
             if(mux_pc == 1'b1) begin
-                if(fore_branch[pp[`FORECASE_LOG+1 : 2]] != branch) begin
-                    fore_branch[pp[`FORECASE_LOG+1 : 2]] <= branch; 
-                    pc_now[pp[3 : 2]] <= pc_id;
+                if(fore_branch[pc_id[`FORECASE_LOG+1 : 2]] != branch) begin
+                    fore_branch[pc_id[`FORECASE_LOG+1 : 2]] = branch; 
+                    pc_now[pc_id[3 : 2]] = pc_id;
                 end
                 if(fore < 2'b11) begin
-                    fore <= fore + 1;
+                    fore = fore + 1;
                 end
 
             end
@@ -61,7 +63,7 @@ always @(posedge clk) begin
             else begin
                 if(add_pc == pc_now[add_pc[3 : 2]] + 4) begin
                     if(fore > 2'b00) begin
-                        fore <= fore - 1;
+                        fore = fore - 1;
                     end
                 end
             end
@@ -74,11 +76,13 @@ wire test;
 
     always @(*) begin
         if(rst == 1'b1) begin
+            //test =  1'b0;
             wash = 1'b0;
             pc = `ZERO_WORD;
             if_forecase = 1'b0;
         end
         else begin
+            //test =test;
             wash = 1'b0;
             pc = `ZERO_WORD;
             if_forecase = 1'b0;
@@ -106,6 +110,8 @@ wire test;
                 else begin
                     if_forecase = 1'b0;
                 end
+
+
             end
         end
     end
