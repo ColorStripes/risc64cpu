@@ -28,7 +28,7 @@ module forecase (
 
     reg test;
     reg test1;
-    reg [63 :0] pp;
+    reg [63 :0] pc_s;
     reg [63 :0] p;
 
 
@@ -42,6 +42,7 @@ always @(*) begin
         //pp = 64'b0;
         //p = 64'b0;
         fore = 2'b00;
+        pc_s = `ZERO_WORD;
         for(i=0; i<`PC; i=i+1) begin
             pc_now[i] = `ZERO_WORD; 
         end
@@ -54,6 +55,7 @@ always @(*) begin
         pc_now = pc_now_reg;
         fore_branch = fore_branch_reg;
         test = 1'b0;
+        pc_s = `ZERO_WORD;
         //pp = pc_id;
                 //p = pc_now[add_pc[3 : 2]];
                 //test = test;
@@ -66,7 +68,8 @@ always @(*) begin
             if(mux_pc == 1'b1) begin
                 if(fore_branch[pc_id[`FORECASE_LOG+1 : 2]] != branch) begin
                     fore_branch[pc_id[`FORECASE_LOG+1 : 2]] = branch; 
-                    pc_now[pc_id[`PC_LOG+1 : 2] + 1] = pc_id + 4;
+                    pc_s = pc_id + 4;
+                    pc_now[pc_s[`PC_LOG+1 : 2]] = pc_id + 4;
                 end
                 if(fore < 2'b11) begin
                     fore = fore + 1;
@@ -103,7 +106,7 @@ end
             if_forecase = 1'b0;
             if(pc_con != 1'b1) begin
                 
-                if(mux_pc != if_forecase) begin
+                if((mux_pc != if_forecase) || (fore_branch[pc_id[`FORECASE_LOG+1 : 2]] != branch)) begin
                     wash = 1'b1;
                     pc = branch;
                 end
