@@ -78,7 +78,7 @@ always @(*) begin
         end
     end
 end
-
+reg [63 : 0] pc_reg;
 
 always @(posedge clk) begin
         fore_reg = fore;
@@ -90,7 +90,7 @@ end
     always @(*) begin
         if(rst == 1'b1) begin
             wash = 1'b0;
-            pc = `ZERO_WORD;
+            pc = pc_reg;
             if_forecase = 1'b0;
         end
         else begin
@@ -145,7 +145,7 @@ always @(posedge clk) begin
                timeo <= timeo + 1 ;
            end
         end
-    
+    pc_reg <= pc;
     end
 end
 
