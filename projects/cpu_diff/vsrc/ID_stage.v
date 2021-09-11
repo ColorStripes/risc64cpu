@@ -103,6 +103,7 @@ reg test;
             id_mem_wr = 1'b0;
             id_mem_ena = 1'b0;
             pc_con = 1'b0;
+            test = 1'b0;
 
         case (opcode)
             //I
