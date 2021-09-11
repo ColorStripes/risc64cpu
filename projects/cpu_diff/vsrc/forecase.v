@@ -40,7 +40,61 @@ always @(posedge clk) begin
 end
 
 
+    always @(*) begin
+        if(rst == 1'b1) begin
+            wash = 1'b0;
+            pc = `ZERO_WORD;
+            if_forecase = 1'b0;
+        end
+        else begin
+            wash = 1'b0;
+            pc = `ZERO_WORD;
+            if_forecase = 1'b0;
+            if(pc_con != 1'b1) begin
+                
+                   
 
+
+
+
+                
+
+                if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]]) begin
+                    if(fore >= 2'b10) begin
+                        pc = fore_branch[add_pc[`FORECASE_LOG + 1 : 2]];
+                        if_forecase = 1'b1;
+                    end
+                    else begin
+                        pc = add_pc;
+                        if_forecase = 1'b0;
+                    end
+                end
+                else begin
+                    if_forecase = 1'b0;
+                    pc = add_pc;
+                end
+                
+                
+                if(mux_pc == 1'b1) begin
+                    if((mux_pc != ifa)|| (fore_branch[pc_s[`FORECASE_LOG+1 : 2]] != branch))  begin /////////   
+                       wash = 1'b1;
+                       pc = branch;
+                    end
+                end
+                
+
+
+                if(mux_pc == 1'b0) begin
+                    if(mux_pc != ifa) begin
+                        wash = 1'b1;
+                        pc = pc_id + 4;
+                    end
+                end
+
+
+            end
+        end
+    end
 
 always @(*) begin
     if(rst == 1'b1) begin
@@ -100,61 +154,7 @@ always @(posedge clk) begin
         fore_branch_reg = fore_branch;
 end
 
-    always @(*) begin
-        if(rst == 1'b1) begin
-            wash = 1'b0;
-            pc = `ZERO_WORD;
-            if_forecase = 1'b0;
-        end
-        else begin
-            wash = 1'b0;
-            pc = `ZERO_WORD;
-            if_forecase = 1'b0;
-            if(pc_con != 1'b1) begin
-                
-                   
 
-
-
-
-                
-
-                if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]]) begin
-                    if(fore >= 2'b10) begin
-                        pc = fore_branch[add_pc[`FORECASE_LOG + 1 : 2]];
-                        if_forecase = 1'b1;
-                    end
-                    else begin
-                        pc = add_pc;
-                        if_forecase = 1'b0;
-                    end
-                end
-                else begin
-                    if_forecase = 1'b0;
-                    pc = add_pc;
-                end
-                
-                
-                if(mux_pc == 1'b1) begin
-                    if((mux_pc != ifa)|| (fore_branch[pc_s[`FORECASE_LOG+1 : 2]] != branch))  begin /////////   
-                       wash = 1'b1;
-                       pc = branch;
-                    end
-                end
-                
-
-
-                if(mux_pc == 1'b0) begin
-                    if(mux_pc != ifa) begin
-                        wash = 1'b1;
-                        pc = pc_id + 4;
-                    end
-                end
-
-
-            end
-        end
-    end
 
 
 
