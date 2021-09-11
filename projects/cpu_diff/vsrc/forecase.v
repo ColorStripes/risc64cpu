@@ -19,11 +19,14 @@ module forecase (
     reg [1 : 0] fore;
     reg [`PC_BUS] fore_branch[`FORECASE-1 : 0];
     reg [`PC_BUS] pc_now[3 : 0];
+    reg if_forecase;
 
     reg [1 : 0] fore_reg;
     reg [`PC_BUS] fore_branch_reg[`FORECASE-1 : 0];
     reg [`PC_BUS] pc_now_reg[3 : 0];
-    reg if_forecase;
+    reg if_forecase_reg;
+    reg [`PC_BUS] pc_reg;
+    reg wash_reg;
 
     reg [63 :0] pc_s; // pc_id + 4
     reg ifa;  //former if_forecase
@@ -88,6 +91,9 @@ always @(posedge clk) begin
         fore_reg = fore;
         pc_now_reg = pc_now;
         fore_branch_reg = fore_branch;
+        wash_reg = wash;
+        pc_reg = pc;
+        if_forecase_reg = if_forecase;
 end
 
     always @(*) begin
@@ -97,9 +103,12 @@ end
             if_forecase = 1'b0;        
         end
         else begin;
-            wash = 1'b0;
-            pc = `ZERO_WORD;
-            if_forecase = 1'b0;
+            //wash = 1'b0;
+            //pc = `ZERO_WORD;
+            //if_forecase = 1'b0;
+        wash = wash_reg;
+        pc = pc_reg;
+        if_forecase = if_forecase_reg;
             if((pc_id != `PC_START) || (timeo == 1'b0)) begin
                 if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]]) begin
                     if(fore >= 2'b10) begin
