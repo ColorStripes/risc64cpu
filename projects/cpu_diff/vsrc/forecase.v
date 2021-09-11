@@ -31,6 +31,7 @@ module forecase (
     reg [63 :0] pc_s;
     //reg [63 :0] add_pc;
     reg ifa;
+    reg error_branch;
 
 always @(posedge clk) begin
 
@@ -48,7 +49,8 @@ always @(*) begin
         //pp = 64'b0;
         //p = 64'b0;
         fore = 2'b00;
-        pc_s = `ZERO_WORD;
+        pc_s = `ZERO_WORD;        
+        error_branch = 1'b0;
         for(i=0; i<`PC; i=i+1) begin
             pc_now[i] = `ZERO_WORD; 
         end
@@ -62,6 +64,7 @@ always @(*) begin
         fore_branch = fore_branch_reg;
         test = 1'b0;
         pc_s = `ZERO_WORD;
+        error_branch = 1'b0;
         //pp = pc_id;
                 //p = pc_now[add_pc[3 : 2]];
                 //test = test;
@@ -74,6 +77,7 @@ always @(*) begin
             if(mux_pc == 1'b1) begin
                 pc_s = pc_id + 4;
                 if(fore_branch[pc_s[`FORECASE_LOG+1 : 2]] != branch) begin
+                    error_branch = 1'b1;
                     fore_branch[pc_s[`FORECASE_LOG+1 : 2]] = branch; 
                     pc_now[pc_s[`PC_LOG+1 : 2]] = pc_id + 4;
                 end
@@ -140,7 +144,7 @@ end
                        wash = 1'b1;
                        pc = branch;
                     end
-                    if(fore_branch[pc_s[`FORECASE_LOG+1 : 2]] != branch) begin
+                    if(error_branch) begin
                         wash = 1'b1;
                         pc = branch;
                     end
