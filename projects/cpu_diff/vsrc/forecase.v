@@ -53,7 +53,7 @@ always @(*) begin
         pc_s = `ZERO_WORD;
         error_branch = 1'b0;
 
-        if(pc_con != 1'b1) begin
+        //if(pc_con != 1'b1) begin
             if(mux_pc == 1'b1) begin
                 pc_s = pc_id + 4;
                 if(fore_branch[pc_s[`FORECASE_LOG+1 : 2]] != branch) begin
@@ -73,7 +73,7 @@ always @(*) begin
                     end
                 end
             end
-        end
+        //end
     end
 end
 
@@ -97,7 +97,7 @@ reg test;
             wash = 1'b0;
             pc = `ZERO_WORD;
             if_forecase = 1'b0;
-            if(pc_con != 1'b1) begin
+            //if(pc_con != 1'b1) begin
                 if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]]) begin
                     if(fore >= 2'b10) begin
                         pc = fore_branch[add_pc[`FORECASE_LOG + 1 : 2]];
@@ -131,10 +131,7 @@ reg test;
                         pc = pc_id + 4;
                     end
                 end
-
-
-
-            end
+            //end
         end
     end
 
