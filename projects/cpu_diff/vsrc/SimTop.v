@@ -151,7 +151,7 @@ assign rst = reset;
     .mux_pc(mux_pc),
     .pc_con(pc_con),
     .pc_id(id_pc),
-    .instr_id(instr),
+    .instr_id(id_instr),
 
     .wash(wash),
     .IF_pc(pc),
