@@ -126,17 +126,7 @@ end
                 end
 
 
-                if(mux_pc != if_forecase) begin
-                    wash = 1'b1;
-                    pc = branch;
-                end
-                else begin
-                    wash = 1'b0;
-                    pc = add_pc;
-                end
 
-
-                
             end
         end
     end
