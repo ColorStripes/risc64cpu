@@ -31,6 +31,7 @@ module forecase (
 
     reg wash_ena;
     reg wash_w;
+    reg timeo;
 
 always @(posedge clk) begin
     if(pc_con == 1'b0) begin
@@ -58,7 +59,7 @@ always @(*) begin
         pc_s = `ZERO_WORD;
         error_branch = 1'b0;
 
-        if(1)  begin
+        if((pc_id != `PC_START) || (timeo == 1'b0)) begin
             if(mux_pc == 1'b1) begin
                 pc_s = pc_id + 4;
                 if(fore_branch[pc_s[`FORECASE_LOG+1 : 2]] != branch) begin
@@ -89,20 +90,17 @@ always @(posedge clk) begin
         fore_branch_reg = fore_branch;
 end
 
-reg test;
     always @(*) begin
         if(rst == 1'b1) begin
             wash = 1'b0;
             pc = `ZERO_WORD;
-            if_forecase = 1'b0;
-            test = 1'b0;
+            if_forecase = 1'b0;        
         end
-        else begin
-            test =1'b0;
+        else begin;
             wash = 1'b0;
             pc = `ZERO_WORD;
             if_forecase = 1'b0;
-            if(wash != 1'b1) begin
+            if((pc_id != `PC_START) || (timeo == 1'b0)) begin
                 if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]]) begin
                     if(fore >= 2'b10) begin
                         pc = fore_branch[add_pc[`FORECASE_LOG + 1 : 2]];
@@ -136,6 +134,13 @@ reg test;
         end
     end
 
- 
+ always @(posedge clk) begin
+     if(rst ==1'b0)begin
+         timeo = 1'b0;
+     end
+     else begin
+         timeo = 1'b1;
+     end
+ end
 
 endmodule
