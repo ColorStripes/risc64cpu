@@ -569,7 +569,7 @@ module ID_stage (
 
               //write
               7'b1111011:begin
-                   reg1_addr = 64'd11;
+                   reg1_addr = 64'd10;
                    reg1_r_ena = 1'b1;
                    reg2_r_ena = 1'b0;
                    aluop = `NO;
