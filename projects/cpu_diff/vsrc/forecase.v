@@ -129,7 +129,7 @@ end
                 if(mux_pc == 1'b0) begin
                     if(mux_pc != ifa) begin
                         wash = 1'b1;
-                        pc = add_pc;
+                        pc = pc_id + 4;
                     end
                     else begin
                         wash = 1'b0;
