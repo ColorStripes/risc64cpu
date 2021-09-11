@@ -20,6 +20,7 @@ module if_id (
             id_instr <= `ZERO_INST;
         end
         else begin
+            
             if(wash == 1'b1) begin
                 id_pc <= `PC_START;
                 id_instr <= `ZERO_INST;

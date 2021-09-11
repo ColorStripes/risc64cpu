@@ -124,6 +124,18 @@ end
                     wash = 1'b0;
                     pc = add_pc;
                 end
+
+
+                if(mux_pc == 1'b0) begin
+                    if(mux_pc != ifa) begin
+                        wash = 1'b1;
+                        pc = add_pc;
+                    end
+                    else begin
+                        wash = 1'b0;
+                        pc = add_pc;
+                    end
+                end
                 
 
                 if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]]) begin
