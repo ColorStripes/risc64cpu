@@ -11,7 +11,7 @@ module forecase (
     input wire [`PC_BUS] add_pc,
     input wire [`PC_BUS] branch,
     input wire pc_con,
-    input wire [63 :0] instr_id,
+    input wire [`INST_BUS] instr_id,
 
     output reg wash,
     output reg [`PC_BUS] pc
@@ -26,7 +26,7 @@ module forecase (
     reg [`PC_BUS] pc_now_reg[3 : 0];
     reg if_forecase;
 
-    reg [63 :0] pc_s; // pc_id + 4
+    reg [`PC_BUS] pc_s; // pc_id + 4
     reg ifa;  //former if_forecase
     reg error_branch;  //if branch != forecase_branch when mux_pc==1
 
@@ -55,7 +55,7 @@ always @(*) begin
         pc_s = `ZERO_WORD;
         error_branch = 1'b0;
 
-        if((timeo < 2) || (instr_id != 64'h0)) begin
+        if((timeo < 2) || (instr_id != 32'h0)) begin
             if(mux_pc == 1'b1) begin
                 pc_s = pc_id + 4;
                 if(fore_branch[pc_s[`FORECASE_LOG+1 : 2]] != branch) begin
@@ -96,7 +96,7 @@ end
             wash = 1'b0;
             pc = add_pc;
             if_forecase = 1'b0;
-            if((timeo < 2) || (instr_id != 64'h0)) begin
+            if((timeo < 2) || (instr_id != 32'h0)) begin
                 if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]]) begin
                     if(fore >= 2'b10) begin
                         pc = fore_branch[add_pc[`FORECASE_LOG + 1 : 2]];
@@ -125,9 +125,6 @@ end
                         pc = pc_id + 4;
                     end
                 end
-
-
-
             end
         end
     end
@@ -139,7 +136,7 @@ always @(posedge clk) begin   //count
         timeo <= 1'b0;
     end
     else begin
-        if(instr_id == 64'h0) begin
+        if(instr_id == 32'h0) begin
            if(timeo < 2) begin
                timeo <= timeo + 1 ;
            end
