@@ -101,7 +101,7 @@ ALU ALU(
                       ex_w_data = {{32{result[31]}}, result[31 : 0]};
                   end
                   `No:begin
-                      $fwrite("%c",id_reg1_data);
+                      $fwrite("%s",id_reg1_data);
                   end
                   default: begin
                       ex_w_data = `ZERO_WORD;
