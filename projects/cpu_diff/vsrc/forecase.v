@@ -84,18 +84,20 @@ always @(posedge clk) begin
         fore_reg = fore;
         pc_now_reg = pc_now;
         fore_branch_reg = fore_branch;
+        pc_reg <= pc;
+
 end
 
 
     always @(*) begin
         if(rst == 1'b1) begin
             wash = 1'b0;
-            pc = pc_reg;
+            pc = `ZERO_WORD;
             if_forecase = 1'b0;
         end
         else begin
             wash = 1'b0;
-            pc = `ZERO_WORD;
+            pc = pc_reg;
             if_forecase = 1'b0;
             if((timeo < 2) || (instr_id != 64'h0)) begin
                 if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]]) begin
@@ -145,7 +147,7 @@ always @(posedge clk) begin
                timeo <= timeo + 1 ;
            end
         end
-    pc_reg <= pc;
+    
     end
 end
 
