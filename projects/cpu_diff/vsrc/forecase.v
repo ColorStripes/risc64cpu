@@ -38,16 +38,6 @@ always @(posedge clk) begin
     end
         
 end
-always @(*) begin
-    wash_w =1'b0;
-    if(wash == wash_ena) begin
-        if(wash == 1'b1)
-        wash_w = 1'b1;
-    end
-    else begin
-        wash_w =1'b0;
-    end
-end
 
 always @(*) begin
     if(rst == 1'b1) begin
@@ -112,7 +102,7 @@ reg test;
             wash = 1'b0;
             pc = `ZERO_WORD;
             if_forecase = 1'b0;
-            if(1) begin
+            if(wash != 1'b1) begin
                 if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]]) begin
                     if(fore >= 2'b10) begin
                         pc = fore_branch[add_pc[`FORECASE_LOG + 1 : 2]];
@@ -145,14 +135,7 @@ reg test;
             end
         end
     end
- always @(posedge clk) begin
-     if(rst == 1'b1) begin
-         wash_ena <= 1'b0;
-     end
-     else begin
-         wash_ena <= wash;
-     end
- end
+
  
 
 endmodule
