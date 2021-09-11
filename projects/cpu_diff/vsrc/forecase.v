@@ -113,7 +113,7 @@ reg test;
                     pc = add_pc;
                 end
 
-                if(mux_pc == 1'b1) begin
+                if(mux_pc == 1'b0) begin
                     if(mux_pc != ifa) begin
                         test =1'b1;
                     end
