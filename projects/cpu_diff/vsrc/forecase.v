@@ -78,14 +78,11 @@ always @(*) begin
         end
     end
 end
-reg [63 : 0] pc_reg;
 
 always @(posedge clk) begin
         fore_reg = fore;
         pc_now_reg = pc_now;
         fore_branch_reg = fore_branch;
-        pc_reg <= pc;
-
 end
 
 
