@@ -140,13 +140,9 @@ end
                 
                 
                 if(mux_pc == 1'b1) begin
-                    if(mux_pc != ifa)  begin /////////   
+                    if((mux_pc != ifa) || (error_branch)) begin  
                        wash = 1'b1;
                        pc = branch;
-                    end
-                    if(error_branch) begin
-                        wash = 1'b1;
-                        pc = branch;
                     end
                 end
                 
