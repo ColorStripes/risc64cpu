@@ -31,7 +31,6 @@ module forecase (
 
 always @(posedge clk) begin
     if(pc_con == 1'b0) begin
-        if(wash == 1'b0)
         ifa <= if_forecase;
     end
         
