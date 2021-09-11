@@ -132,11 +132,17 @@ end
                        wash = 1'b1;
                        pc = branch;
                     end
+                    else begin
+                        wash = 1'b0;
+                    end
                 end
                 else begin
                     if(mux_pc != ifa) begin
                         wash = 1'b1;
                         pc = pc_id + 4;
+                    end
+                    else begin
+                        wash = 1'b0;
                     end
                 end
             end
