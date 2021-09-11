@@ -97,7 +97,7 @@ end
         end
         else begin
             wash = 1'b0;
-            pc = `PC_START;
+            pc = add_pc;
             if_forecase = 1'b0;
             if((timeo < 2) || (instr_id != 64'h0)) begin
                 if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]]) begin
