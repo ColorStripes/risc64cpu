@@ -30,13 +30,11 @@ module forecase (
     reg error_branch;  //if branch != forecase_branch when mux_pc==1
 
 always @(posedge clk) begin
-    if(pc_con == 1'b0)begin
+    if(pc_con == 1'b0) begin
+        if(wash == 1'b0)
         ifa <= if_forecase;
     end
         
-    //if(wash == 1'b0)begin
-        //ifa <= if_forecase;
-    //end
 end
 
 
