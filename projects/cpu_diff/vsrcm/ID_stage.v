@@ -64,7 +64,7 @@ module ID_stage (
 
     .imm(imm)
 );
-
+reg test;
     always @(*) begin                 //ID
         if(rst == 1) begin
             reg1_r_ena = `ZERO_ENA;
@@ -103,6 +103,7 @@ module ID_stage (
             id_mem_wr = 1'b0;
             id_mem_ena = 1'b0;
             pc_con = 1'b0;
+            test = 1'b0;
 
         case (opcode)
             //I
@@ -565,6 +566,16 @@ module ID_stage (
                     reg2_r_ena = 1'b0;
                     aluop = `LEFT12;
                     alusel = `Long;
+              end
+
+              //write
+              7'b1111011:begin
+                   reg1_addr = 64'd10;
+                   reg1_r_ena = 1'b1;
+                   reg2_r_ena = 1'b0;
+                   aluop = `NO;
+                   alusel = `No;
+                   test = 1'b1;
               end
               default:begin
                     reg1_r_ena = `ZERO_ENA;
