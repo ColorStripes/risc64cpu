@@ -135,7 +135,7 @@ end
     end
 
  always @(posedge clk) begin
-     if(rst ==1'b0)begin
+     if(rst ==1'b1)begin
          timeo = 1'b0;
      end
      else begin
