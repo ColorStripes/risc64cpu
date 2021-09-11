@@ -29,6 +29,8 @@ module forecase (
     reg ifa;  //former if_forecase
     reg error_branch;  //if branch != forecase_branch when mux_pc==1
 
+    reg wash_ena;
+
 always @(posedge clk) begin
     if(pc_con == 1'b0) begin
         ifa <= if_forecase;
@@ -56,7 +58,7 @@ always @(*) begin
         pc_s = `ZERO_WORD;
         error_branch = 1'b0;
 
-        if(pc_con != 1'b1)  begin
+        if(wash_ena != 1'b1)  begin
             if(mux_pc == 1'b1) begin
                 pc_s = pc_id + 4;
                 if(fore_branch[pc_s[`FORECASE_LOG+1 : 2]] != branch) begin
@@ -100,7 +102,7 @@ reg test;
             wash = 1'b0;
             pc = `ZERO_WORD;
             if_forecase = 1'b0;
-            if(pc_con != 1'b1) begin
+            if(wash_ena != 1'b1) begin
                 if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]]) begin
                     if(fore >= 2'b10) begin
                         pc = fore_branch[add_pc[`FORECASE_LOG + 1 : 2]];
@@ -118,10 +120,7 @@ reg test;
 
                 
 
-                
-
-                if(pc_id == `PC_START) begin
-                    if(mux_pc == 1'b1) begin
+                if(mux_pc == 1'b1) begin
                     if((mux_pc != ifa) || (error_branch)) begin  
                        wash = 1'b1;
                        pc = branch;
@@ -133,12 +132,18 @@ reg test;
                         pc = pc_id + 4;
                     end
                 end
-                end
-
             end
         end
     end
-
+ always @(posedge clk) begin
+     if(rst == 1'b1) begin
+         wash_ena <= 1'b0;
+     end
+     else begin
+         wash_ena <= wash;
+     end
+     
+ end
 
 
 endmodule
