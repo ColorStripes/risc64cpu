@@ -19,29 +19,20 @@ module forecase (
     reg [1 : 0] fore;
     reg [`PC_BUS] fore_branch[`FORECASE-1 : 0];
     reg [`PC_BUS] pc_now[3 : 0];
-    reg if_forecase;
 
     reg [1 : 0] fore_reg;
     reg [`PC_BUS] fore_branch_reg[`FORECASE-1 : 0];
     reg [`PC_BUS] pc_now_reg[3 : 0];
-    reg if_forecase_reg;
-    reg [`PC_BUS] pc_reg;
-    reg wash_reg;
+    reg if_forecase;
 
     reg [63 :0] pc_s; // pc_id + 4
     reg ifa;  //former if_forecase
     reg error_branch;  //if branch != forecase_branch when mux_pc==1
 
-    reg wash_ena;
-    reg wash_w;
-    reg timeo;
-
 always @(posedge clk) begin
-    if(pc_con == 1'b0) begin
         ifa <= if_forecase;
-    end
-        
 end
+
 
 always @(*) begin
     if(rst == 1'b1) begin
@@ -62,7 +53,7 @@ always @(*) begin
         pc_s = `ZERO_WORD;
         error_branch = 1'b0;
 
-        if((pc_id != `PC_START) || (timeo == 1'b0)) begin
+        if(pc_con != 1'b1) begin
             if(mux_pc == 1'b1) begin
                 pc_s = pc_id + 4;
                 if(fore_branch[pc_s[`FORECASE_LOG+1 : 2]] != branch) begin
@@ -91,25 +82,20 @@ always @(posedge clk) begin
         fore_reg = fore;
         pc_now_reg = pc_now;
         fore_branch_reg = fore_branch;
-        wash_reg = wash;
-        pc_reg = pc;
-        if_forecase_reg = if_forecase;
 end
+
 
     always @(*) begin
         if(rst == 1'b1) begin
             wash = 1'b0;
             pc = `ZERO_WORD;
-            if_forecase = 1'b0;        
+            if_forecase = 1'b0;
         end
-        else begin;
-            //wash = 1'b0;
-            //pc = `ZERO_WORD;
-            //if_forecase = 1'b0;
-        wash = wash_reg;
-        pc = pc_reg;
-        if_forecase = if_forecase_reg;
-            if((pc_id != `PC_START) || (timeo == 1'b0)) begin
+        else begin
+            wash = 1'b0;
+            pc = `ZERO_WORD;
+            if_forecase = 1'b0;
+            if(pc_con != 1'b1) begin
                 if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]]) begin
                     if(fore >= 2'b10) begin
                         pc = fore_branch[add_pc[`FORECASE_LOG + 1 : 2]];
@@ -125,37 +111,26 @@ end
                     pc = add_pc;
                 end
 
-                
-
                 if(mux_pc == 1'b1) begin
                     if((mux_pc != ifa) || (error_branch)) begin  
                        wash = 1'b1;
                        pc = branch;
                     end
-                    else begin
-                        wash = 1'b0;
-                    end
                 end
-                else begin
+                
+                if(mux_pc == 1'b0) begin
                     if(mux_pc != ifa) begin
                         wash = 1'b1;
                         pc = pc_id + 4;
                     end
-                    else begin
-                        wash = 1'b0;
-                    end
                 end
+
+
+
             end
         end
     end
 
- always @(posedge clk) begin
-     if(rst ==1'b1)begin
-         timeo = 1'b0;
-     end
-     else begin
-         timeo = 1'b1;
-     end
- end
+
 
 endmodule
