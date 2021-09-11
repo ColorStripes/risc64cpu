@@ -141,7 +141,7 @@ always @(posedge clk) begin
     end
     else begin
         if(instr_id == 64'h0) begin
-           if(timeo < 1) begin
+           if(timeo < 2) begin
                timeo <= timeo + 1 ;
            end
         end
