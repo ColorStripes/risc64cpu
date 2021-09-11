@@ -19,35 +19,61 @@ module forecase (
     reg [1 : 0] fore;
     reg [`PC_BUS] fore_branch[`FORECASE-1 : 0];
     reg [`PC_BUS] pc_now[3 : 0];
+
+    reg [1 : 0] fore_reg;
+    reg [`PC_BUS] fore_branch_reg[`FORECASE-1 : 0];
+    reg [`PC_BUS] pc_now_reg[3 : 0];
     reg if_forecase;
 
+    reg [63 :0] pc_s; // pc_id + 4
+    reg ifa;  //former if_forecase
+    reg error_branch;  //if branch != forecase_branch when mux_pc==1
+
 always @(posedge clk) begin
+    if(pc_con == 1'b0) begin
+        if(wash == 1'b0)
+        ifa <= if_forecase;
+    end
+        
+end
+
+
+always @(*) begin
     if(rst == 1'b1) begin
         fore = 2'b00;
-        for(i=0; i<4; i=i+1) begin
-            pc_now[i] <= `ZERO_WORD; 
+        pc_s = `ZERO_WORD;        
+        error_branch = 1'b0;
+        for(i=0; i<`PC; i=i+1) begin
+            pc_now[i] = `ZERO_WORD; 
         end
         for(i=0; i<`FORECASE; i=i+1) begin
-            fore_branch[i] <= `ZERO_WORD; 
+            fore_branch[i] = `ZERO_WORD; 
         end
     end
     else begin
+        fore = fore_reg;
+        pc_now = pc_now_reg;
+        fore_branch = fore_branch_reg;
+        pc_s = `ZERO_WORD;
+        error_branch = 1'b0;
+
         if(pc_con != 1'b1) begin
             if(mux_pc == 1'b1) begin
-                if(fore_branch[pc_id[`FORECASE_LOG+1 : 2]] != branch) begin
-                    fore_branch[pc_id[`FORECASE_LOG+1 : 2]] = branch; 
-                    pc_now[pc_id[3 : 2]] = pc_id;
+                pc_s = pc_id + 4;
+                if(fore_branch[pc_s[`FORECASE_LOG+1 : 2]] != branch) begin
+                    error_branch = 1'b1;
+                    fore_branch[pc_s[`FORECASE_LOG+1 : 2]] = branch; 
+                    pc_now[pc_s[`PC_LOG+1 : 2]] = pc_id + 4;
+                end
+                if(fore < 2'b11) begin
+                    fore = fore + 1;
                 end
             end
-            if(add_pc == pc_now[add_pc[3 : 2]] + 4) begin
-                if(mux_pc >= 1'b1) begin
-                    if(fore < 2'b11) begin
-                        fore = fore + 1;
-                    end
-                end
-                else begin
+            
+            else begin
+                if(add_pc == pc_now[add_pc[`PC_LOG+1 : 2]]) begin
                     if(fore > 2'b00) begin
-                    fore = fore - 1;
+                        fore = fore - 1;
                     end
                 end
             end
@@ -56,32 +82,29 @@ always @(posedge clk) begin
 end
 
 
+always @(posedge clk) begin
+        fore_reg = fore;
+        pc_now_reg = pc_now;
+        fore_branch_reg = fore_branch;
+end
 
-
+reg test;
     always @(*) begin
         if(rst == 1'b1) begin
             wash = 1'b0;
             pc = `ZERO_WORD;
             if_forecase = 1'b0;
+            test = 1'b0;
         end
         else begin
+            test =1'b0;
             wash = 1'b0;
             pc = `ZERO_WORD;
             if_forecase = 1'b0;
-            if(pc_con != 1'b1) begin
-                
-                if(mux_pc != if_forecase) begin
-                    wash = 1'b1;
-                    pc = branch;
-                end
-                else begin
-                    wash = 1'b0;
-                    pc = add_pc;
-                end
-
-                if(add_pc == pc_now[add_pc[3 : 2]] + 4) begin
+            //if(pc_con != 1'b1) begin
+                if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]]) begin
                     if(fore >= 2'b10) begin
-                        pc = fore_branch[add_pc[`FORECASE_LOG+1 : 2]];
+                        pc = fore_branch[add_pc[`FORECASE_LOG + 1 : 2]];
                         if_forecase = 1'b1;
                     end
                     else begin
@@ -91,8 +114,28 @@ end
                 end
                 else begin
                     if_forecase = 1'b0;
+                    pc = add_pc;
                 end
-            end
+
+                if(mux_pc != ifa) begin
+                    if(mux_pc == 1'b0) begin
+                        test =1'b1;
+                    end
+                end
+
+                if(mux_pc == 1'b1) begin
+                    if((mux_pc != ifa) || (error_branch)) begin  
+                       wash = 1'b1;
+                       pc = branch;
+                    end
+                end
+                else begin
+                    if(mux_pc != ifa) begin
+                        wash = 1'b1;
+                        pc = pc_id + 4;
+                    end
+                end
+            //end
         end
     end
 

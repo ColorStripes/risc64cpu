@@ -123,6 +123,8 @@
 //forecase
 `define FORECASE 4
 `define FORECASE_LOG 2
+`define PC 4
+`define PC_LOG 2
 
 //difftest
 `define PC_START   64'h00000000_80000000 
