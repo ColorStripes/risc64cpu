@@ -112,8 +112,7 @@ end
                 end
 
                 if(mux_pc == 1'b1) begin
-                    if(1)begin
-                    //((mux_pc != ifa) || (error_branch)) begin  
+                    if((mux_pc != ifa) || (error_branch)) begin  
                        wash = 1'b1;
                        pc = branch;
                     end
@@ -125,6 +124,19 @@ end
                         pc = pc_id + 4;
                     end
                 end
+
+
+                if(mux_pc != if_forecase) begin
+                    wash = 1'b1;
+                    pc = branch;
+                end
+                else begin
+                    wash = 1'b0;
+                    pc = add_pc;
+                end
+
+
+                
             end
         end
     end
