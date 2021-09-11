@@ -136,7 +136,7 @@ end
                 
                 
                 if(mux_pc == 1'b1) begin
-                    if(mux_pc != ifa)  begin /////////   || ()
+                    if((mux_pc != ifa)|| (fore_branch[pc_s[`FORECASE_LOG+1 : 2]] != branch))  begin /////////   
                        wash = 1'b1;
                        pc = branch;
                     end
