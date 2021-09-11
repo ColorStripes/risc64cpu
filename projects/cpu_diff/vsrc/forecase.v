@@ -25,29 +25,17 @@ module forecase (
     reg [`PC_BUS] pc_now_reg[3 : 0];
     reg if_forecase;
 
-
-    reg test;
-    reg test1;
-    reg [63 :0] pc_s;
-    //reg [63 :0] add_pc;
-    reg ifa;
-    reg error_branch;
+    reg [63 :0] pc_s; // pc_id + 4
+    reg ifa;  //former if_forecase
+    reg error_branch;  //if branch != forecase_branch when mux_pc==1
 
 always @(posedge clk) begin
-
         ifa <= if_forecase;
-
-
 end
-
-
 
 
 always @(*) begin
     if(rst == 1'b1) begin
-        test = 1'b0;
-        //pp = 64'b0;
-        //p = 64'b0;
         fore = 2'b00;
         pc_s = `ZERO_WORD;        
         error_branch = 1'b0;
@@ -62,16 +50,8 @@ always @(*) begin
         fore = fore_reg;
         pc_now = pc_now_reg;
         fore_branch = fore_branch_reg;
-        test = 1'b0;
         pc_s = `ZERO_WORD;
         error_branch = 1'b0;
-        //pp = pc_id;
-                //p = pc_now[add_pc[3 : 2]];
-                //test = test;
-                if(pc_now[add_pc[3 : 2]]  == add_pc )  begin
-                    test = 1'b1;
-                end
-
 
         if(pc_con != 1'b1) begin
             if(mux_pc == 1'b1) begin
@@ -84,7 +64,6 @@ always @(*) begin
                 if(fore < 2'b11) begin
                     fore = fore + 1;
                 end
-
             end
             
             else begin
@@ -98,11 +77,13 @@ always @(*) begin
     end
 end
 
+
 always @(posedge clk) begin
         fore_reg = fore;
         pc_now_reg = pc_now;
         fore_branch_reg = fore_branch;
 end
+
 
     always @(*) begin
         if(rst == 1'b1) begin
@@ -115,14 +96,6 @@ end
             pc = `ZERO_WORD;
             if_forecase = 1'b0;
             if(pc_con != 1'b1) begin
-                
-                   
-
-
-
-
-                
-
                 if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]]) begin
                     if(fore >= 2'b10) begin
                         pc = fore_branch[add_pc[`FORECASE_LOG + 1 : 2]];
@@ -137,8 +110,7 @@ end
                     if_forecase = 1'b0;
                     pc = add_pc;
                 end
-                
-                
+
                 if(mux_pc == 1'b1) begin
                     if((mux_pc != ifa) || (error_branch)) begin  
                        wash = 1'b1;
@@ -146,16 +118,12 @@ end
                     end
                 end
                 
-
-
                 if(mux_pc == 1'b0) begin
                     if(mux_pc != ifa) begin
                         wash = 1'b1;
                         pc = pc_id + 4;
                     end
                 end
-
-
             end
         end
     end
