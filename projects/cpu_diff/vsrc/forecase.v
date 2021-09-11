@@ -34,9 +34,9 @@ always @(posedge clk) begin
         ifa <= if_forecase;
     end
         
-    if(wash == 1'b0)begin
-        ifa <= if_forecase;
-    end
+    //if(wash == 1'b0)begin
+        //ifa <= if_forecase;
+    //end
 end
 
 
