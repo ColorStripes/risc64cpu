@@ -135,15 +135,7 @@ reg test;
             end
         end
     end
- always @(posedge clk) begin
-     if(rst == 1'b1) begin
-         wash_ena <= 1'b0;
-     end
-     else begin
-         wash_ena <= wash;
-     end
-     
- end
+
 
 
 endmodule
