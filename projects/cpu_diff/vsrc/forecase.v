@@ -30,6 +30,7 @@ module forecase (
     reg error_branch;  //if branch != forecase_branch when mux_pc==1
 
     reg wash_ena;
+    reg wash_w;
 
 always @(posedge clk) begin
     if(pc_con == 1'b0) begin
@@ -37,7 +38,16 @@ always @(posedge clk) begin
     end
         
 end
-
+always @(*) begin
+    wash_w =1'b0;
+    if(wash == wash_ena) begin
+        if(wash == 1'b1)
+        wash_w = 1'b1;
+    end
+    else begin
+        wash_w =1'b0;
+    end
+end
 
 always @(*) begin
     if(rst == 1'b1) begin
@@ -142,8 +152,7 @@ reg test;
      else begin
          wash_ena <= wash;
      end
-     
  end
-
+ 
 
 endmodule
