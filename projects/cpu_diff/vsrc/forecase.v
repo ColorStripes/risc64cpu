@@ -134,7 +134,7 @@ end
 
     reg [1 : 0] timeo;
 
-always @(posedge clk) begin
+always @(posedge clk) begin   //count
     if(rst == 1'b1) begin
         timeo <= 1'b0;
     end
