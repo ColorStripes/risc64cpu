@@ -64,7 +64,7 @@ module ID_stage (
 
     .imm(imm)
 );
-
+reg test;
     always @(*) begin                 //ID
         if(rst == 1) begin
             reg1_r_ena = `ZERO_ENA;
@@ -574,6 +574,7 @@ module ID_stage (
                    reg2_r_ena = 1'b0;
                    aluop = `NO;
                    alusel = `No;
+                   test = 1'b1;
               end
               default:begin
                     reg1_r_ena = `ZERO_ENA;
