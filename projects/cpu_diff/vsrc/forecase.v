@@ -97,7 +97,7 @@ end
             wash = 1'b0;
             pc = `ZERO_WORD;
             if_forecase = 1'b0;
-            if((timeo < 1) || (instr_id != 64'h0)) begin
+            if((timeo < 2) || (instr_id != 64'h0)) begin
                 if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]]) begin
                     if(fore >= 2'b10) begin
                         pc = fore_branch[add_pc[`FORECASE_LOG + 1 : 2]];
@@ -133,7 +133,7 @@ end
         end
     end
 
-    reg timeo;
+    reg [1 : 0] timeo;
 
 always @(posedge clk) begin
     if(rst == 1'b1) begin
@@ -141,7 +141,7 @@ always @(posedge clk) begin
     end
     else begin
         if(instr_id == 64'h0) begin
-           if(timeo < 1) begin
+           if(timeo < 2) begin
                timeo <= timeo + 1 ;
            end
         end
