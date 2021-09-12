@@ -565,7 +565,16 @@ module ID_stage (
                     reg2_r_ena = 1'b0;
                     aluop = `LEFT12;
                     alusel = `Long;
-              end     
+              end
+
+              //write
+              7'b1111011:begin
+                   reg1_addr = 64'd10;
+                   reg1_r_ena = 1'b1;
+                   reg2_r_ena = 1'b0;
+                   aluop = `ADD;
+                   alusel = `Arith;
+              end
               
               default:begin
                     reg1_r_ena = `ZERO_ENA;
