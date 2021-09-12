@@ -440,6 +440,7 @@ reg [63:0] instrCnt;
 reg [`REG_BUS] regs_diff [0 : 31];
 
 wire inst_valid = (wb_pc != `PC_START) | (wb_instr != 0);
+wire skip = (wb_instr == 32'h7b);
 
 always @(negedge clock) begin
   if (reset) begin
@@ -468,7 +469,7 @@ DifftestInstrCommit DifftestInstrCommit(
   .valid              (cmt_valid),
   .pc                 (cmt_pc),
   .instr              (cmt_inst),
-  .skip               (0),                       //fffffffffffffffffffffffffffffff
+  .skip               (skip),                       //fffffffffffffffffffffffffffffff
   .isRVC              (0),
   .scFailed           (0),
   .wen                (cmt_wen),
