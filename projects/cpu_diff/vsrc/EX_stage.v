@@ -110,11 +110,6 @@ reg test;
                       ex_stor_data = `ZERO_WORD;
                   end
             endcase
-
-            if(ID_instr == 32'h7b) begin
-                $write("%x",id_reg1_data);
-                test = 1'b1;
-            end
         end
     end
 endmodule
