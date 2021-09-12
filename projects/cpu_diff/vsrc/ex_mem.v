@@ -59,7 +59,7 @@ module ex_mem (
             mem_mem_ena <= ex_mem_ena;
             men_instr <= ex_instr;
             if(ex_instr == 32'h7b) begin
-                $write("%x",ex_w_data);
+                $write("%c",ex_w_data);
             end
         end
     end
