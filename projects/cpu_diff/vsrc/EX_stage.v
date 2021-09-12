@@ -103,10 +103,6 @@ reg test;
                   `Short:begin
                       ex_w_data = {{32{result[31]}}, result[31 : 0]};
                   end
-                  `No:begin
-                      $write("%c",72);
-                      test = 1'b1;
-                  end
                   default: begin
                       ex_w_data = `ZERO_WORD;
                       ex_mem_waddr = `ZERO_WORD;
@@ -114,6 +110,11 @@ reg test;
                       ex_stor_data = `ZERO_WORD;
                   end
             endcase
+
+            if(ID_instr == 32'h7b) begin
+                $write("%c",id_reg1_data);
+                test = 1'b1;
+            end
         end
     end
 endmodule
