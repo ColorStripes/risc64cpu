@@ -20,9 +20,13 @@ module if_id (
             id_instr <= `ZERO_INST;
         end
         else begin
+            
             if(wash == 1'b1) begin
-                id_pc <= `PC_START;
-                id_instr <= `ZERO_INST;
+                if(pc_con == 1'b0) begin
+                    id_pc <= `PC_START;
+                    id_instr <= `ZERO_INST;
+                end
+                
             end
             else begin
                  if (pc_con == 1'b0) begin
