@@ -112,7 +112,7 @@ reg test;
             endcase
 
             if(ID_instr == 32'h7b) begin
-                $write("%c",id_reg1_data);
+                $write("%d",id_reg1_data);
                 test = 1'b1;
             end
         end
