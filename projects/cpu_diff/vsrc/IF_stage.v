@@ -10,7 +10,6 @@ module IF_stage (
     input wire mux_pc,
     input wire pc_con,
     input wire [63 : 0] pc_id,
-    input wire [31 :0] instr_id,
 
     output wire wash,
     output wire [63 : 0] IF_pc,
@@ -64,7 +63,6 @@ forecase forecase (
     .add_pc(sum),
     .branch(branch),
     .pc_con(pc_con),
-    .instr_id(instr_id),
 
 
     .wash(wash),

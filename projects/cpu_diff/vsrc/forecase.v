@@ -11,7 +11,6 @@ module forecase (
     input wire [`PC_BUS] add_pc,
     input wire [`PC_BUS] branch,
     input wire pc_con,
-    input wire [`INST_BUS] instr_id,
 
     output reg wash,
     output reg [`PC_BUS] pc
