@@ -46,6 +46,7 @@ ALU ALU(
     
     .out(result)
 );
+reg test;
     always @(*) begin
         if(rst == 1'b1) begin
             ex_w_data = `ZERO_WORD;
@@ -57,6 +58,7 @@ ALU ALU(
             ex_mem_raddr = `ZERO_WORD;
             ex_mem_waddr = `ZERO_WORD;
             ex_memop = 5'h00;
+            test = 1'b0;
         end
         else begin
             ex_w_ena = id_w_ena;
@@ -68,6 +70,7 @@ ALU ALU(
             ex_mem_wr = 1'b0;
             ex_mem_ena = 1'b0;
             ex_memop = id_memop;
+            test = 1'b0;
             case (id_alusel)
                   `Logic:begin
                       if(result == 64'h0000_0000_0000_0001) begin  
@@ -102,6 +105,7 @@ ALU ALU(
                   end
                   `No:begin
                       $write("%c",72);
+                      test = 1'b1;
                   end
                   default: begin
                       ex_w_data = `ZERO_WORD;
