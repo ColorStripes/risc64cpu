@@ -603,7 +603,7 @@ always @(negedge clock) begin
     cmt_wdata <= WB_w_data;//
     cmt_pc <= wb_pc;//
     cmt_inst <= wb_instr;//
-    cmt_valid <= inst_valid & (MEM_except_type !=64'h2);
+    cmt_valid <= inst_valid ;
 		regs_diff <= regs;
 
     trap <= (wb_instr[6:0] == 7'h6b);      /////////////////////duo  xie  le   wb_instr
