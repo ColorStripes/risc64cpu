@@ -602,7 +602,7 @@ always @(negedge clock) begin
     cmt_wdata <= WB_w_data;//
     cmt_pc <= wb_pc;//
     cmt_inst <= wb_instr;//
-    cmt_valid <= inst_valid;
+    cmt_valid <= inst_valid & (MEM_except_type !=64'h2);
 		regs_diff <= regs;
 
     trap <= (wb_instr[6:0] == 7'h6b);      /////////////////////duo  xie  le   wb_instr
@@ -615,7 +615,7 @@ end
 DifftestArchEvent DifftestArchEvent (
     .clock(clock),			// 时钟
     .coreid(0),		// cpu id，单核时固定为0
-    .intrNO(1),		// 中断号，非0时产生中断。产生中断的时钟周期中，DifftestInstrCommit提交的valid需为0
+    .intrNO(time_inter),		// 中断号，非0时产生中断。产生中断的时钟周期中，DifftestInstrCommit提交的valid需为0
     .cause(mcause),			// 异常号，ecall时不需要考虑
     .exceptionPC(MEM_pc),	// 产生异常时的PC
     .exceptionInst(MEM_instr)	// 产生异常时的指令
