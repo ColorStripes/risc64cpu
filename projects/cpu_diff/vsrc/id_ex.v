@@ -12,7 +12,7 @@ module id_ex (
 
     input wire [4 : 0] id_memop,
     input wire [6 : 0] id_aluop,
-    input wire [2 : 0] id_alusel,
+    input wire [3 : 0] id_alusel,
     input wire id_mem_wr,
     input wire id_mem_ena,
 
@@ -21,6 +21,7 @@ module id_ex (
 
     input wire id_w_ena,
     input wire [4 : 0] id_w_addr,
+    input wire flush,
 
     output reg [4 : 0] ex_w_addr,
     output reg ex_w_ena,
@@ -30,7 +31,7 @@ module id_ex (
 
     output reg [4 : 0] ex_memop,
     output reg [6 : 0] ex_aluop,
-    output reg [2 : 0] ex_alusel,
+    output reg [3 : 0] ex_alusel,
     output reg [63 : 0] ex_imm,
     output reg ex_mem_wr,
     output reg ex_mem_ena,
@@ -74,6 +75,23 @@ always @(posedge clk) begin
 
         ex_pc <= id_pc;
         ex_instr <= id_instr;
+        if(flush == 1'b1) begin
+           ex_w_addr <= `ZERO_REG_ADDR;
+           ex_w_ena <= 1'b0;
+
+           ex_reg1_data <= `ZERO_WORD;
+           ex_reg2_data <= `ZERO_WORD;
+
+           ex_memop <= 5'b00000;
+           ex_aluop <= 7'b0000000;
+           ex_alusel <= 3'b000;
+           ex_imm <= `ZERO_WORD;
+           ex_mem_wr <= 1'b0;
+           ex_mem_ena <= 1'b0;
+
+           ex_pc <= `PC_START;
+           ex_instr <= `ZERO_INST;
+        end
     end
   end
 endmodule

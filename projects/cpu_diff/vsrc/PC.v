@@ -9,9 +9,11 @@ module PC(
   input wire rst,
   input wire [`PC_BUS] pc_i,
   input wire pc_con,
+  input wire [`PC_BUS] new_pc,
+  input wire flush,
 
   output reg I_M_e,
-  output reg [`PC_BUS] pc 
+  output reg [`PC_BUS] pc
 );
 parameter PC_START_RESET = `PC_START;
 
@@ -27,16 +29,16 @@ begin
   end
 end
 
-always@( posedge clk )
-begin
-  if( I_M_e == 1'b0 )
-  begin
+always@( posedge clk ) begin
+  if( I_M_e == 1'b0 ) begin
     pc <= PC_START_RESET ;
   end
-  else
-  begin
+  else begin
     if (pc_con == 1'b0) begin
       pc <= pc_i;
+    end
+    else if(flush == 1'b1) begin
+      pc <= new_pc;
     end
   end
 end

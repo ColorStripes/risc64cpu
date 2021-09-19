@@ -17,6 +17,12 @@ module ex_mem (
     input wire ex_mem_wr,
     input wire ex_mem_ena,
 
+    input wire ex_csr_ena,               ///csr
+    input wire [11 : 0] ex_csr_addr,         
+    input wire [`REG_BUS] ex_w_csr_data,
+    input wire [`REG_BUS] ex_except_type,
+    input wire flush,
+
     output reg [`REG_BUS] mem_w_data,
     output reg mem_w_ena,
     output reg [4 : 0] mem_w_addr,
@@ -27,6 +33,11 @@ module ex_mem (
     output reg [`REG_BUS] mem_stor_data,
     output reg mem_mem_wr,
     output reg mem_mem_ena,
+
+    output reg mem_csr_ena,             ///csr o
+    output reg [11 : 0] mem_csr_addr,         
+    output reg [`REG_BUS] mem_w_csr_data,
+    output reg [`REG_BUS] mem_except_type,
 
     output reg [`INST_BUS] men_instr,
     output reg [`PC_BUS] men_pc 
@@ -45,6 +56,10 @@ module ex_mem (
             mem_mem_ena <= 1'b0;
             men_pc <= `PC_START;
             men_instr <= `ZERO_INST;
+            mem_csr_ena <= 1'b0;
+            mem_csr_addr <= 12'h000;
+            mem_w_csr_data <= `ZERO_WORD;
+            mem_except_type <= `ZERO_WORD;
         end
         else begin
             mem_w_data <= ex_w_data;
@@ -58,9 +73,35 @@ module ex_mem (
             mem_mem_wr <= ex_mem_wr;
             mem_mem_ena <= ex_mem_ena;
             men_instr <= ex_instr;
+            mem_csr_addr <= ex_csr_addr;
+            mem_w_csr_data <= ex_w_csr_data;
+            mem_csr_ena <= ex_csr_ena;
+            mem_except_type <= ex_except_type;
+            if(flush == 1'b1) begin
+                mem_w_data <= `ZERO_WORD;
+                mem_w_ena <= 1'b0;
+                mem_w_addr <= `ZERO_REG_ADDR;
+                men_pc <= `ZERO_WORD;
+                mem_mem_waddr <= `ZERO_WORD;
+                mem_mem_raddr <= `ZERO_WORD;
+                mem_memop <= 5'b00000;
+                mem_stor_data <= `ZERO_WORD;
+                mem_mem_wr <= 1'b0;
+                mem_mem_ena <= 1'b0;
+                men_pc <= `PC_START;
+                men_instr <= `ZERO_INST;
+                mem_csr_addr <= 12'h000;
+                mem_w_csr_data <= `ZERO_WORD;
+                mem_csr_ena <= 1'b0;
+                mem_except_type <= `ZERO_WORD;
+            end
+
+
+
             if(ex_instr == 32'h7b) begin
                 $write("%c",ex_w_data);
             end
+            
         end
     end
 endmodule

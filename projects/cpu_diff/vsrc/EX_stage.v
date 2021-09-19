@@ -19,7 +19,15 @@ module EX_stage (
     input wire id_mem_wr,
     input wire id_mem_ena,
     input wire [6 : 0] id_aluop,
-    input wire [2 : 0] id_alusel,
+    input wire [3 : 0] id_alusel,
+
+    input wire [`REG_BUS] csr_reg_data,     //csr
+    input wire[11 : 0] mem_csr_addr,
+    input wire [`REG_BUS] mem_w_csr_data,
+    input wire mem_csr_ena,
+    input wire [11 : 0] wb_csr_addr,
+    input wire [`REG_BUS] wb_w_csr_data,
+    input wire wb_csr_ena,
 
     output reg [`REG_BUS] ex_w_data,
     output reg ex_w_ena,
@@ -32,12 +40,23 @@ module EX_stage (
     output reg ex_mem_wr,
     output reg ex_mem_ena,
 
+    output reg [11 : 0] ex_csr_addr,         ///csr o
+    output reg [`REG_BUS] ex_w_csr_data,
+    output reg ex_csr_ena, 
+
     output wire [`INST_BUS] EX_instr,
-    output wire [`PC_BUS] EX_pc
+    output wire [`PC_BUS] EX_pc,
+
+    output wire [`REG_BUS] except_type
 );
     wire [`REG_BUS] result;
     assign EX_pc = ID_pc;
     assign EX_instr = ID_instr;
+
+    reg mret;
+    reg ebreak;
+    reg ecall;
+    assign except_type = {45'b0, mret, ebreak, ecall, 16'b0};
 
 ALU ALU(
     .num1(id_reg1_data),
@@ -46,6 +65,28 @@ ALU ALU(
     
     .out(result)
 );
+    reg [`REG_BUS] csr_data;
+    always @(*) begin
+        if(rst == 1'b1) begin
+            csr_data =`ZERO_WORD;
+        end
+        else begin
+            csr_data =`ZERO_WORD;
+            if(ex_csr_ena == 1'b1) begin
+                if((mem_csr_ena == 1'b1) && (ex_csr_addr == mem_csr_addr)) begin
+                    csr_data = mem_w_csr_data;
+                end
+                else if((wb_csr_ena == 1'b1) && (ex_csr_addr == wb_csr_addr)) begin
+                    csr_data = wb_w_csr_data;
+                end
+                else begin
+                    csr_data = csr_reg_data;
+                end
+            end
+        end
+    end
+
+ 
     always @(*) begin
         if(rst == 1'b1) begin
             ex_w_data = `ZERO_WORD;
@@ -57,6 +98,13 @@ ALU ALU(
             ex_mem_raddr = `ZERO_WORD;
             ex_mem_waddr = `ZERO_WORD;
             ex_memop = 5'h00;
+            ex_csr_ena = 1'b0;
+            ex_csr_addr = 12'h000;
+            ex_w_csr_data = `ZERO_WORD;
+            mret = 1'b0;
+            ebreak = 1'b0;
+            ecall = 1'b0;
+
         end
         else begin
             ex_w_ena = id_w_ena;
@@ -68,6 +116,13 @@ ALU ALU(
             ex_mem_wr = 1'b0;
             ex_mem_ena = 1'b0;
             ex_memop = id_memop;
+            ex_csr_ena = 1'b0;
+            ex_csr_addr = 12'h000;
+            ex_w_csr_data = `ZERO_WORD;
+            mret = 1'b0;
+            ebreak = 1'b0;
+            ecall = 1'b0;
+
             case (id_alusel)
                   `Logic:begin
                       if(result == 64'h0000_0000_0000_0001) begin  
@@ -100,11 +155,60 @@ ALU ALU(
                   `Short:begin
                       ex_w_data = {{32{result[31]}}, result[31 : 0]};
                   end
+                  `CSRRC:begin
+                      ex_w_data = csr_data;
+                      ex_w_csr_data = csr_data & (~id_reg1_data);
+                      ex_csr_addr = id_imm[11 : 0];
+                      ex_csr_ena = 1'b1;
+                  end
+                  `CSRRCI:begin
+                      ex_w_data = csr_data;
+                      ex_w_csr_data = csr_data & (~{59'b0, ID_instr[19 : 15]});
+                      ex_csr_addr = id_imm[11 : 0];
+                      ex_csr_ena = 1'b1;
+                  end
+                  `CSRRS:begin
+                      ex_w_data = csr_data;
+                      ex_w_csr_data = csr_data | id_reg1_data;
+                      ex_csr_addr = id_imm[11 : 0];
+                      ex_csr_ena = 1'b1;
+                  end
+                  `CSRRSI:begin
+                      ex_w_data = csr_data;
+                      ex_w_csr_data = csr_data | {59'b0, ID_instr[19 : 15]};
+                      ex_csr_addr = id_imm[11 : 0];
+                      ex_csr_ena = 1'b1;
+                  end
+                  `CSRRW:begin
+                      ex_w_data = csr_data;
+                      ex_w_csr_data = id_reg1_data;
+                      ex_csr_addr = id_imm[11 : 0];
+                      ex_csr_ena = 1'b1;
+                  end
+                  `CSRRWI:begin
+                      ex_w_data = csr_data;
+                      ex_w_csr_data = {59'b0, ID_instr[19 : 15]};
+                      ex_csr_addr = id_imm[11 : 0];
+                      ex_csr_ena = 1'b1;
+                  end
+                  `SYSTEM:begin
+                      ex_w_data = `ZERO_WORD;
+                      ex_w_csr_data = `ZERO_WORD;
+                      ex_csr_addr = id_imm[11 : 0];
+                      ex_csr_ena = 1'b0;
+                      mret =  ~id_imm[0] & id_imm[1] & id_imm[9] & id_imm[8];
+                      ebreak = id_imm[0] & ~id_imm[1] & ~id_imm[9] & ~id_imm[8];
+                      ecall = id_imm[0] & id_imm[1] & id_imm[9] & id_imm[8];
+                  end
                   default: begin
                       ex_w_data = `ZERO_WORD;
                       ex_mem_waddr = `ZERO_WORD;
                       ex_mem_raddr = `ZERO_WORD;
                       ex_stor_data = `ZERO_WORD;
+                      ex_w_csr_data = `ZERO_WORD;
+                      ex_csr_addr = 12'h000;
+                      ex_csr_ena = 1'b0;
+            
                   end
             endcase
         end

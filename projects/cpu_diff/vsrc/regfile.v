@@ -79,7 +79,6 @@ module regfile(
 				r_data1 = regs[r_addr1];
 			end
 		end
-			
 		else begin
 			r_data1 = `ZERO_WORD;
 		end
@@ -92,10 +91,10 @@ module regfile(
 		else if (r_ena2 == 1'b1) begin
 			if((r_addr2 == w_addr) && (w_addr != 5'h00) && (w_ena == 1'b1)) begin
 				r_data2 = w_data;
-				end
+			end
 			else begin
 				r_data2 = regs[r_addr2];
-				end
+			end
 		end	
 		else begin
 			r_data2 = `ZERO_WORD;

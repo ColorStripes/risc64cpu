@@ -8,8 +8,9 @@ module if_id (
     input wire clk,
     input wire [`PC_BUS] if_pc,
     input wire [`INST_BUS] if_instr,
-    input wire wash,
     input wire pc_con,
+    input wire wash,
+    input wire flush,
 
     output reg [`PC_BUS] id_pc,
     output reg [`INST_BUS] id_instr
@@ -20,20 +21,22 @@ module if_id (
             id_instr <= `ZERO_INST;
         end
         else begin
-            
             if(wash == 1'b1) begin
                 if(pc_con == 1'b0) begin
                     id_pc <= `PC_START;
                     id_instr <= `ZERO_INST;
                 end
-                
             end
             else begin
-                 if (pc_con == 1'b0) begin
+                if (pc_con == 1'b0) begin
                       id_pc <= if_pc;
                       id_instr <= if_instr;
-                end
-                
+                end 
+            end
+
+            if(flush == 1'b1) begin
+                id_pc <= `PC_START;
+                id_instr <= `ZERO_INST;
             end
             
         end

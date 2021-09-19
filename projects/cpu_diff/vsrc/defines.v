@@ -56,6 +56,14 @@
 `define bltu 3'b110
 `define bne 3'b001
 
+`define system 3'b000
+`define csrrw 3'b001
+`define csrrs 3'b010
+`define csrrc 3'b011
+`define csrrwi 3'b101
+`define csrrsi 3'b110
+`define csrrci 3'b111
+
 //funct7
 `define add 7'b0000000
 `define sub 7'b0100000
@@ -69,6 +77,9 @@
 `define srai 6'b010000
 `define srliw 6'b000000
 `define sraiw 6'b010000
+`define mret 12'b001100000010
+`define ebreak 12'b000000000001
+`define ecall 12'b000000000000
 
 //ALUOP
 `define NO 7'b0000_000
@@ -88,14 +99,22 @@
 `define SHIRw 7'b0011_001
 
 //ALUSEL
-`define No 3'b000
-`define Logic  3'b001
-`define Arith  3'b010
-`define Jump  3'b100
-`define Load  3'b011
-`define Store  3'b101
-`define Long  3'b110
-`define Short  3'b111
+`define No 4'b0000
+`define Logic  4'b0001
+`define Arith  4'b0010
+`define Jump  4'b0100
+`define Load  4'b0011
+`define Store  4'b0101
+`define Long  4'b0110
+`define Short  4'b0111
+`define CSRRC  4'b1001
+`define CSRRCI 4'b1010
+`define CSRRS  4'b1011
+`define CSRRSI  4'b1100
+`define CSRRW  4'b1101
+`define CSRRWI  4'b1110
+`define SYSTEM  4'b1111
+
 
 //MEMOP
 `define R_ONE  5'b00001
@@ -131,3 +150,44 @@
 `define RISCV_PRIV_MODE_U   0
 `define RISCV_PRIV_MODE_S   1
 `define RISCV_PRIV_MODE_M   3
+
+
+
+
+//CSR
+
+
+
+//CSR_ADDR
+`define mvendorid 12'hf11    //MRO
+`define marchid 12'hf12
+`define mimpid 12'hf13
+`define mhartid 12'hf14
+
+`define mstatus 12'h300
+`define misa 12'h301
+`define medeleg 12'h302
+`define mideleg 12'h303
+`define mie 12'h304
+`define mtvec 12'h305
+`define mcounteren 12'h306
+`define mscratch 12'h340
+`define mepc 12'h341
+`define mcause 12'h342
+`define mtval 12'h343
+`define mip 12'h344
+`define mcycle 12'hb00
+`define minstret 12'hb02
+`define mcycleh 12'hb80         //32
+`define minstreth 12'hb82       //32
+`define mcountinhibit 12'h320
+`define tselect 12'h7a0
+`define tdata1 12'h7a1
+`define tdata2 12'h7a2
+`define tdata3 12'h7a3
+
+
+//Clint
+`define msip 64'h0000
+`define mtimecmp 64'h4000
+`define mtime 64'hbff8

@@ -29,7 +29,7 @@ module ID_stage (
     output reg [4 : 0] reg2_addr,
 
     output reg [6 : 0] aluop,          //ALUoptions
-    output reg [2 : 0] alusel,
+    output reg [3 : 0] alusel,
 
     output reg [`REG_BUS] reg1_data,  //
     output reg [`REG_BUS] reg2_data,  //
@@ -42,11 +42,12 @@ module ID_stage (
     output reg [`PC_BUS] branch,    //pc next
     output reg mux_pc,
     output reg pc_con,
+    output wire [63 : 0] imm,
 
     output reg [4 : 0] memop,
-    output wire [63 : 0] imm,
     output reg id_mem_wr,
     output reg id_mem_ena
+
 );
     wire [6 : 0] opcode;
     wire [2 : 0] funct3;
@@ -58,6 +59,7 @@ module ID_stage (
     assign opcode = IF_instr[6:0];
     assign funct3 = IF_instr[14 : 12];
     assign funct7 = IF_instr[31 : 25];
+
 
     IMGN IMGN (
     .instr(IF_instr),
@@ -574,6 +576,88 @@ module ID_stage (
                    reg2_r_ena = 1'b0;
                    aluop = `ADD;
                    alusel = `Arith;
+              end
+
+              //CSR
+              7'b1110011:begin
+                  w_ena = 1'b1;
+                  case(funct3)
+                       `csrrw:begin
+                           aluop = `NO;
+                           alusel = `CSRRW;
+                           reg1_r_ena = 1'b1;
+                           reg2_r_ena = 1'b0;
+                       end
+                       `csrrs:begin
+                           aluop = `NO;
+                           alusel = `CSRRS;
+                           reg1_r_ena = 1'b1;
+                           reg2_r_ena = 1'b0;
+                       end
+                       `csrrc:begin
+                           aluop = `NO;
+                           alusel = `CSRRC;
+                           reg1_r_ena = 1'b1;
+                           reg2_r_ena = 1'b0;
+                       end
+                       `csrrwi:begin
+                           aluop = `NO;
+                           alusel = `CSRRWI;
+                           reg1_r_ena = 1'b0;
+                           reg2_r_ena = 1'b0;
+                       end
+                       `csrrsi:begin
+                           aluop = `NO;
+                           alusel = `CSRRC;
+                           reg1_r_ena = 1'b0;
+                           reg2_r_ena = 1'b0;
+                       end
+                       `csrrci:begin
+                           aluop = `NO;
+                           alusel = `CSRRCI;
+                           reg1_r_ena = 1'b0;
+                           reg2_r_ena = 1'b0;
+                       end
+                       `system:begin
+                           case(IF_instr[31 : 20])
+                                `mret:begin
+                                   aluop = `NO;
+                                   alusel = `SYSTEM;
+                                   reg1_r_ena = 1'b0;
+                                   reg2_r_ena = 1'b0;
+                                   w_ena = 1'b0; 
+                                end
+                                `ebreak:begin
+                                   aluop = `NO;
+                                   alusel = `SYSTEM;
+                                   reg1_r_ena = 1'b0;
+                                   reg2_r_ena = 1'b0;
+                                   w_ena = 1'b0;
+                                end
+                                `ecall:begin
+                                   aluop = `NO;
+                                   alusel = `SYSTEM;
+                                   reg1_r_ena = 1'b0;
+                                   reg2_r_ena = 1'b0;
+                                   w_ena = 1'b0;
+                                end
+                                default:begin
+                                   aluop = `NO;
+                                   alusel = `No;
+                                   reg1_r_ena = 1'b0;
+                                   reg2_r_ena = 1'b0;
+                                   w_ena = 1'b0;
+                                end
+                           endcase
+                       end
+
+                       default:begin
+                           aluop = `NO;
+                           alusel = `No;
+                           reg1_r_ena = 1'b0;
+                           reg2_r_ena = 1'b0;
+                       end
+                  endcase
               end
               
               default:begin

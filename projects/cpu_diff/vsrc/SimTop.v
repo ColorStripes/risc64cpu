@@ -55,7 +55,7 @@ wire mux_pc;
 wire [`PC_BUS] ID_pc; 
 wire [`INST_BUS] ID_instr; 
 wire [6 : 0] aluop;
-wire [2 : 0] alusel;
+wire [3 : 0] alusel;
 wire [`REG_BUS] reg1_data;
 wire [`REG_BUS] reg2_data;
 wire [4 : 0] w_addr;
@@ -72,7 +72,7 @@ wire ex_w_ena;
 wire [`REG_BUS] ex_reg1_data;
 wire [`REG_BUS] ex_reg2_data;
 wire [6 : 0] ex_aluop;
-wire [2 : 0] ex_alusel;
+wire [3 : 0] ex_alusel;
 wire [`PC_BUS] ex_pc;
 wire [`INST_BUS] ex_instr;
 wire [4 : 0] ex_memop;
@@ -94,6 +94,10 @@ wire [`REG_BUS] ex_mem_raddr;
 wire [`REG_BUS] ex_stor_data;
 wire EX_mem_wr;
 wire EX_mem_ena;
+wire [11 : 0] ex_csr_addr;    //csr read     ///csr o
+wire [`REG_BUS] ex_w_csr_data;
+wire ex_csr_ena;
+wire [`REG_BUS] except_type;
 
 //ex_men -> MEM_stage
 wire [`REG_BUS] mem_w_data;
@@ -107,6 +111,10 @@ wire [4 : 0] mem_memop;
 wire [`REG_BUS] mem_stor_data;
 wire mem_mem_wr;
 wire mem_mem_ena;
+wire mem_csr_ena;                 ///csr o
+wire [11 : 0] mem_csr_addr;         
+wire [`REG_BUS] mem_w_csr_data;
+wire [`REG_BUS] mem_except_type;
 
 //MEM_stage -> mem_wb
 wire [`REG_BUS] MEM_w_data;
@@ -114,6 +122,12 @@ wire MEM_w_ena;
 wire [4 : 0] MEM_w_addr;
 wire [`PC_BUS] MEM_pc;
 wire [`INST_BUS] MEM_instr;
+wire [11 : 0] MEM_csr_addr;         ///csr o
+wire [`REG_BUS] MEM_w_csr_data;
+wire MEM_csr_ena;
+wire [`REG_BUS] MEM_except_type;
+//MEM_stage -> IF_stage
+wire [`PC_BUS] new_pc;
 
 //MEM_stage -> DATA_MEM
 wire [`REG_BUS] MEM_mem_waddr;
@@ -132,13 +146,38 @@ wire wb_w_ena;
 wire [4 : 0] wb_w_addr;
 wire [`PC_BUS] wb_pc;
 wire [`INST_BUS] wb_instr;
+wire [11 : 0] wb_csr_addr;        ///csr_o
+wire [`REG_BUS] wb_w_csr_data;
+wire wb_csr_ena;
 
 //WB_stage -> regfile
 wire WB_w_ena;
 wire [`REG_BUS] WB_w_data;
 wire [4 : 0] WB_w_addr;
 
-//radehelper ->instr
+//WB_stage -> CSR_reg
+wire [11 : 0] WB_csr_addr;
+wire [`REG_BUS] WB_w_csr_data;
+wire WB_csr_ena;
+wire [`REG_BUS] WB_except_type;
+
+//CSR_reg -> EX_stage
+wire [`REG_BUS] csr_reg_data;
+//CSR_reg -> MEM_stage
+wire [`REG_BUS] mtvec;
+wire [`REG_BUS] mepc;
+wire [`REG_BUS] mie;
+wire [`REG_BUS] mip;
+wire [`REG_BUS] mstatus;
+//CSR_reg -> difftest
+wire [`REG_BUS] mcause;
+wire [`REG_BUS] mcycle;
+//CSR_reg -> ALL_stage
+wire flush;
+//Clint -> CSR_reg
+wire time_inter;
+//Clint -> MEM_reg
+wire [`REG_BUS] clint_data;
 
 
 assign clk = clock;
@@ -151,13 +190,13 @@ assign rst = reset;
     .mux_pc(mux_pc),
     .pc_con(pc_con),
     .pc_id(id_pc),
+    .new_pc(new_pc),
+    .flush(flush),
 
     .wash(wash),
     .IF_pc(pc),
     .instr(instr)
 );
-
-
 
     if_id if_id (
     .rst(rst),
@@ -166,6 +205,7 @@ assign rst = reset;
     .if_instr(instr),
     .pc_con(pc_con),
     .wash(wash),
+    .flush(flush),
 
     .id_pc(id_pc),
     .id_instr(id_instr)
@@ -199,23 +239,23 @@ assign rst = reset;
     .reg_data1(r_data1), //
     .reg_data2(r_data2), //
 
-    .reg1_r_ena(reg1_r_ena),
-    .reg2_r_ena(reg2_r_ena),
-
-    .reg1_addr(reg1_addr),
-    .reg2_addr(reg2_addr),
-
     .ex_w_data(ex_w_data),    //ex_stage for data
     .ex_w_ena(ex_w_ena),
     .ex_w_addr(ex_w_addr),
+
+    .mem_w_data(MEM_w_data),   //men_stage for data
+    .mem_w_ena(MEM_w_ena),
+    .mem_w_addr(MEM_w_addr),
 
     .idex_mem_ena(ex_mem_ena),          //id_ex memory enable
     .idex_mem_wr(ex_mem_wr),
 
 
-    .mem_w_data(MEM_w_data),   //men_stage for data
-    .mem_w_ena(MEM_w_ena),
-    .mem_w_addr(MEM_w_addr),
+    .reg1_r_ena(reg1_r_ena),
+    .reg2_r_ena(reg2_r_ena),
+
+    .reg1_addr(reg1_addr),
+    .reg2_addr(reg2_addr),
 
     .aluop(aluop),          //ALUoptions
     .alusel(alusel),
@@ -242,23 +282,24 @@ assign rst = reset;
     id_ex id_ex (
     .rst(rst),
     .clk(clk),
+    .id_imm(imm),
 
     .id_pc(ID_pc),
     .id_instr(ID_instr),
 
+    .id_memop(memop),
     .id_aluop(aluop),
     .id_alusel(alusel),
-    .id_imm(imm),
+    .id_mem_wr(id_mem_wr),
+    .id_mem_ena(id_mem_ena),
 
     .id_reg1_data(reg1_data),
     .id_reg2_data(reg2_data),
 
     .id_w_ena(w_ena),
     .id_w_addr(w_addr),
+    .flush(flush),
 
-    .id_memop(memop),
-    .id_mem_wr(id_mem_wr),
-    .id_mem_ena(id_mem_ena),
 
     .ex_w_addr(ex_w_addr),
     .ex_w_ena(ex_w_ena),
@@ -289,27 +330,42 @@ assign rst = reset;
 
     .id_reg1_data(ex_reg1_data),
     .id_reg2_data(ex_reg2_data),
-
-    .id_aluop(ex_aluop),
-    .id_alusel(ex_alusel),
-    .id_memop(ex_memop),
     .id_imm(ex_imm),
+
+    .id_memop(ex_memop),
     .id_mem_wr(ex_mem_wr),
     .id_mem_ena(ex_mem_ena),
+    .id_aluop(ex_aluop),
+    .id_alusel(ex_alusel),
+
+    .csr_reg_data(csr_reg_data),               //csr
+    .mem_csr_addr(mem_csr_addr),
+    .mem_w_csr_data(mem_w_csr_data),
+    .mem_csr_ena(mem_csr_ena),
+    .wb_csr_addr(wb_csr_addr),
+    .wb_w_csr_data(wb_w_csr_data),
+    .wb_csr_ena(wb_csr_ena),
+
 
     .ex_w_data(ex_w_data),
     .ex_w_ena(EX_w_ena),
     .ex_w_addr(EX_w_addr),
 
-    .ex_memop(EX_memop),
-    .ex_mem_waddr(ex_mem_waddr),
     .ex_mem_raddr(ex_mem_raddr),
+    .ex_mem_waddr(ex_mem_waddr),
     .ex_stor_data(ex_stor_data),
+    .ex_memop(EX_memop),
     .ex_mem_wr(EX_mem_wr),
     .ex_mem_ena(EX_mem_ena),
 
+    .ex_csr_addr(ex_csr_addr),         ///csr o
+    .ex_w_csr_data(ex_w_csr_data),
+    .ex_csr_ena(ex_csr_ena), 
+
     .EX_instr(EX_instr),
-    .EX_pc(EX_pc) //
+    .EX_pc(EX_pc),
+
+    .except_type(except_type)
 );
 
     ex_mem ex_mem (
@@ -327,6 +383,12 @@ assign rst = reset;
     .ex_mem_wr(EX_mem_wr),
     .ex_mem_ena(EX_mem_ena),
 
+    .ex_csr_ena(ex_csr_ena),               ///csr
+    .ex_csr_addr(ex_csr_addr),         
+    .ex_w_csr_data(ex_w_csr_data),
+    .ex_except_type(except_type),
+    .flush(flush),
+
     .mem_w_data(mem_w_data),
     .mem_w_ena(mem_w_ena),
     .mem_w_addr(mem_w_addr),
@@ -338,8 +400,13 @@ assign rst = reset;
     .mem_mem_wr(mem_mem_wr),
     .mem_mem_ena(mem_mem_ena),
 
+    .mem_csr_ena(mem_csr_ena),             ///csr o
+    .mem_csr_addr(mem_csr_addr),         
+    .mem_w_csr_data(mem_w_csr_data),
+    .mem_except_type(mem_except_type),
+
     .men_instr(men_instr),
-    .men_pc(men_pc) //
+    .men_pc(men_pc)
 );
 
     MEM_stage MEM_stage (
@@ -349,14 +416,38 @@ assign rst = reset;
     .ex_w_addr(mem_w_addr),
     .ex_mem_waddr(mem_mem_waddr),
     .ex_mem_raddr(mem_mem_raddr),
-    .ex_memop(mem_memop),
-    .mem_data(data),
     .ex_stor_data(mem_stor_data),
+    .ex_memop(mem_memop),
+    
     .ex_mem_wr(mem_mem_wr),
     .ex_mem_ena(mem_mem_ena),
+    .mem_data(data),
 
     .ex_pc(men_pc),
     .ex_instr(men_instr),
+
+    .ex_csr_addr(mem_csr_addr),         ///csr
+    .ex_w_csr_data(mem_w_csr_data),
+    .ex_csr_ena(mem_csr_ena),
+    .ex_except_type(mem_except_type),
+
+    .wb_csr_addr(wb_csr_addr),         //wb_csr
+    .wb_w_csr_data(wb_w_csr_data),
+    .wb_csr_ena(wb_csr_ena),
+    
+    .csr_mepc(mepc),        //csr_read
+    .csr_mip(mip),
+    .csr_mie(mie),
+    .csr_mtvec(mtvec),
+    .csr_mstatus(mstatus),
+
+    .clint_data(clint_data),      //clint
+
+    .mem_csr_addr(MEM_csr_addr),         ///csr o
+    .mem_w_csr_data(MEM_w_csr_data),
+    .mem_csr_ena(MEM_csr_ena),
+    .mem_except_type(MEM_except_type),
+    .new_pc(new_pc),
 
     .mem_instr(MEM_instr),
     .mem_pc(MEM_pc),
@@ -371,6 +462,7 @@ assign rst = reset;
     .mem_stor_data(MEM_stor_data),
     .mem_wr(mem_wr),
     .mem_mem_ena(MEM_mem_ena)
+
 );
 
 
@@ -394,6 +486,15 @@ assign rst = reset;
     .mem_pc(MEM_pc),
     .mem_instr(MEM_instr),
     
+    .mem_csr_addr(MEM_csr_addr),         //csr
+    .mem_w_csr_data(MEM_w_csr_data),
+    .mem_csr_ena(MEM_csr_ena),
+    .flush(flush),
+
+    .wb_csr_addr(wb_csr_addr),         ///csr o
+    .wb_w_csr_data(wb_w_csr_data),
+    .wb_csr_ena(wb_csr_ena),
+    
     .wb_instr(wb_instr),
     .wb_pc(wb_pc),
     .wb_w_data(wb_w_data),
@@ -406,13 +507,59 @@ assign rst = reset;
     .mem_w_ena(wb_w_ena),
     .mem_w_data(wb_w_data),
     .mem_w_addr(wb_w_addr),
+    .mem_csr_ena(wb_csr_ena),           //csr
+    .mem_csr_addr(wb_csr_addr),         
+    .mem_w_csr_data(wb_w_csr_data),
 
+    
+    .wb_csr_ena(WB_csr_ena),                 ///csr o
+    .wb_csr_addr(WB_csr_addr),         
+    .wb_w_csr_data(WB_w_csr_data),
     .wb_w_ena(WB_w_ena),
     .wb_w_data(WB_w_data),
     .wb_w_addr(WB_w_addr)
 );
 
+   CSR_reg CSR_reg (
+    .rst(rst),
+    .clk(clk),
+    .csr_r_addr(ex_csr_addr),
 
+    .csr_w_ena(WB_w_ena),
+    .csr_w_addr(WB_w_addr),
+    .csr_w_data(WB_w_data),
+   
+    .except_type(MEM_except_type),
+    .except_pc(MEM_pc),             //mem_pc
+    .time_inter(time_inter),
+
+    .csr_reg_data(csr_reg_data),
+    .mtvec(mtvec),
+    .mepc(mepc),
+    .mie(mie),
+    .mip(mip),
+    .mstatus(mstatus),
+
+    .mcause(mcause),
+    .mcycle(mcycle),
+
+    .flush(flush)
+
+);
+
+    Clint Clint (
+    .clk(clk),
+    .rst(rst),
+    .ex_mem_waddr(mem_mem_waddr),
+    .ex_mem_raddr(mem_mem_raddr),
+    .ex_stor_data(mem_stor_data),
+    .ex_mem_wr(mem_mem_wr),
+    .ex_mem_ena(mem_mem_ena),
+
+    .time_inter(time_inter),
+    .clint_data(clint_data)
+
+);
 
 
 
@@ -461,6 +608,9 @@ always @(negedge clock) begin
     instrCnt <= instrCnt + inst_valid;
   end
 end
+
+
+
 
 DifftestInstrCommit DifftestInstrCommit(
   .clock              (clock),
@@ -520,7 +670,7 @@ DifftestTrapEvent DifftestTrapEvent(
   .valid              (trap),
   .code               (trap_code),
   .pc                 (cmt_pc),
-  .cycleCnt           (cycleCnt),
+  .cycleCnt           (mcycle),   //
   .instrCnt           (instrCnt)
 );
 
@@ -528,19 +678,19 @@ DifftestCSRState DifftestCSRState(
   .clock              (clock),
   .coreid             (0),
   .priviledgeMode     (`RISCV_PRIV_MODE_M),
-  .mstatus            (0),
+  .mstatus            (mstatus),
   .sstatus            (0),
-  .mepc               (0),
+  .mepc               (mepc),
   .sepc               (0),
   .mtval              (0),
   .stval              (0),
-  .mtvec              (0),
+  .mtvec              (mtvec),
   .stvec              (0),
-  .mcause             (0),
+  .mcause             (mcause),
   .scause             (0),
   .satp               (0),
-  .mip                (0),
-  .mie                (0),
+  .mip                (mip),
+  .mie                (mie),
   .mscratch           (0),
   .sscratch           (0),
   .mideleg            (0),

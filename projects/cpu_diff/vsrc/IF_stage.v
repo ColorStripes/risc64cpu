@@ -10,6 +10,8 @@ module IF_stage (
     input wire mux_pc,
     input wire pc_con,
     input wire [63 : 0] pc_id,
+    input wire [`PC_BUS] new_pc,
+    input wire flush,
 
     output wire wash,
     output wire [63 : 0] IF_pc,
@@ -42,6 +44,8 @@ PC PC(
   .rst(rst),
   .pc_i(pc_i),
   .pc_con(pc_con),
+  .new_pc(new_pc),
+  .flush(flush),
 
   .I_M_e(I_M_e),
   .pc(IF_pc)
