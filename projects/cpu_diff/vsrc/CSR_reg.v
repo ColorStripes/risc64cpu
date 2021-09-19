@@ -204,6 +204,9 @@ assign mtvec = ((csr_w_ena == 1'b1) & (csr_w_addr == `mtvec)) ? csr_w_data : csr
             if(except_type != `ZERO_WORD) begin
                 flush <= 1'b1;
             end
+            else begin
+                flush <= 1'b0;
+            end
         end
     end
 
