@@ -167,13 +167,13 @@ module CSR_reg (
     end
 
 
-assign mstatus = ((csr_w_ena == 1'b1) & (csr_r_addr == `mstatus)) ? csr_w_data : csr_mstatus;
-assign mtvec = ((csr_w_ena == 1'b1) & (csr_r_addr == `mtvec)) ? csr_w_data : csr_mtvec;
-assign mie = ((csr_w_ena == 1'b1) & (csr_r_addr == `mie)) ? csr_w_data : csr_mie;
-assign mepc = ((csr_w_ena == 1'b1) & (csr_r_addr == `mepc)) ? csr_w_data : csr_mepc;
-assign mcause = ((csr_w_ena == 1'b1) & (csr_r_addr == `mcause)) ? csr_w_data : csr_mcause;
-assign mcycle = ((csr_w_ena == 1'b1) & (csr_r_addr == `mcycle)) ? csr_w_data : csr_mcycle;
-assign mip = ((csr_w_ena == 1'b1) & (csr_r_addr == `mip)) ? csr_w_data : csr_mip;
+assign mstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ? csr_w_data : csr_mstatus;
+assign mtvec = ((csr_w_ena == 1'b1) & (csr_w_addr == `mtvec)) ? csr_w_data : csr_mtvec;
+assign mie = ((csr_w_ena == 1'b1) & (csr_w_addr == `mie)) ? csr_w_data : csr_mie;
+assign mepc = ((csr_w_ena == 1'b1) & (csr_w_addr == `mepc)) ? csr_w_data : csr_mepc;
+assign mcause = ((csr_w_ena == 1'b1) & (csr_w_addr == `mcause)) ? csr_w_data : csr_mcause;
+assign mcycle = ((csr_w_ena == 1'b1) & (csr_w_addr == `mcycle)) ? csr_w_data : csr_mcycle;
+assign mip = ((csr_w_ena == 1'b1) & (csr_w_addr == `mip)) ? csr_w_data : csr_mip;
 
 
 
