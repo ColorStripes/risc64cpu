@@ -41,12 +41,12 @@ RAMHelper ROM(
 assign instr = IF_pc[2] ? rdata[63 : 32] : rdata[31 : 0];
 
 MUX MUX_PC(
-    .data1(pc_f),
+    .data1(pc_id),
     .data2(new_pc),
     .ch(flush),
 
 
-    .data(pc_i)
+    .data(pc_f)
 );
 
 PC PC(
@@ -73,14 +73,14 @@ forecase forecase (
     .rst(rst),
     .clk(clk),
     .mux_pc(mux_pc),
-    .pc_id(pc_id),
+    .pc_id(pc_f),
     .add_pc(sum),
     .branch(branch),
     .pc_con(pc_con),
 
 
     .wash(wash),
-    .pc(pc_f)
+    .pc(pc_i)
 );
 
 endmodule
