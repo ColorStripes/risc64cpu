@@ -590,7 +590,7 @@ reg [63:0] instrCnt;
 reg [`REG_BUS] regs_diff [0 : 31];
 
 wire inst_valid = (wb_pc != `PC_START) | (wb_instr != 0);
-wire skip = (wb_instr == 32'h7b);
+wire skip = (wb_instr == 32'h7b) | (MEM_except_type != 64'h0);
 
 always @(negedge clock) begin
   if (reset) begin
