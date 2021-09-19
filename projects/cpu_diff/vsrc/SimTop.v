@@ -168,10 +168,11 @@ wire [`REG_BUS] mtvec;
 wire [`REG_BUS] mepc;
 wire [`REG_BUS] mie;
 wire [`REG_BUS] mip;
-wire [`REG_BUS] mstatus;
+wire [`REG_BUS] exc_mstatus;
 //CSR_reg -> difftest
 wire [`REG_BUS] mcause;
 wire [`REG_BUS] mcycle;
+wire [`REG_BUS] mstatus;
 //CSR_reg -> ALL_stage
 wire flush;
 //Clint -> CSR_reg
@@ -439,7 +440,7 @@ assign rst = reset;
     .csr_mip(mip),
     .csr_mie(mie),
     .csr_mtvec(mtvec),
-    .csr_mstatus(mstatus),
+    .csr_mstatus(exc_mstatus),
 
     .clint_data(clint_data),      //clint
 
@@ -543,7 +544,9 @@ assign rst = reset;
     .mcause(mcause),
     .mcycle(mcycle),
 
-    .flush(flush)
+    .flush(flush),
+
+    .exc_mstatus(exc_mstatus) 
 
 );
 

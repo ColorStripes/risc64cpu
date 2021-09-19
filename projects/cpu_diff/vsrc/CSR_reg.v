@@ -17,25 +17,30 @@ module CSR_reg (
 
 
    output reg [`REG_BUS] csr_reg_data,
+   output wire [`REG_BUS] mstatus,
    output wire [`REG_BUS] mtvec,
    output wire [`REG_BUS] mepc,
    output wire [`REG_BUS] mie,
    output wire [`REG_BUS] mip,
-   output wire [`REG_BUS] mstatus,
+   output wire [`REG_BUS] mcause,
 
-   output wire [`REG_BUS] mcause,   ////////////////////////////////////////
-   output wire [`REG_BUS] mcycle,
+   output wire [`REG_BUS] mcycle,            ////////////////////
 
-   output reg flush
+   output reg flush,
+   
+   output wire [`REG_BUS] exc_mstatus          //MEM
 
 );
 
 
-   reg [`REG_BUS] csr_mtvec;
+   
    reg [`REG_BUS] csr_mepc;
-   reg [`REG_BUS] csr_mie;
+   reg [`REG_BUS] csr_mstatus;
    reg [`REG_BUS] csr_mip;
-   reg [`REG_BUS] csr_mstatus;        //////////
+   reg [`REG_BUS] csr_mie;
+   reg [`REG_BUS] csr_mtvec;
+   
+           
    reg [`REG_BUS] csr_mcause;   
    reg [`REG_BUS] csr_mcycle;
 
@@ -167,24 +172,24 @@ module CSR_reg (
     end
 
 
-//assign mstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ? csr_w_data :   
-        //((except_type == 64'h1) | (except_type == 64'h2) | (except_type == 64'h3)) ? 
-    //{csr_mstatus[63:13], 2'b11, csr_mstatus[10:8], csr_mstatus[3], csr_mstatus[6:4], 1'b0, csr_mstatus[2:0]} : (except_type == 64'h4) ?
-    //{csr_mstatus[63:13], 2'b00, csr_mstatus[10:8], 1'b0, csr_mstatus[6:4], csr_mstatus[7], csr_mstatus[2:0]} :
-                                        //csr_mstatus;     
+assign mstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ? csr_w_data :   
+        ((except_type == 64'h1) | (except_type == 64'h2) | (except_type == 64'h3)) ? 
+    {csr_mstatus[63:13], 2'b11, csr_mstatus[10:8], csr_mstatus[3], csr_mstatus[6:4], 1'b0, csr_mstatus[2:0]} : (except_type == 64'h4) ?
+    {csr_mstatus[63:13], 2'b00, csr_mstatus[10:8], 1'b0, csr_mstatus[6:4], csr_mstatus[7], csr_mstatus[2:0]} :
+                                        csr_mstatus;     
 
-//assign mepc = ((csr_w_ena == 1'b1) & (csr_w_addr == `mepc)) ? csr_w_data : 
-       // ((except_type == 64'h1) | (except_type == 64'h2) | (except_type == 64'h3)) ? except_pc : csr_mepc;
+assign mepc = ((csr_w_ena == 1'b1) & (csr_w_addr == `mepc)) ? csr_w_data : 
+        ((except_type == 64'h1) | (except_type == 64'h2) | (except_type == 64'h3)) ? except_pc : csr_mepc;
 
-//assign mcause = ((csr_w_ena == 1'b1) & (csr_w_addr == `mcause)) ? csr_w_data : (except_type == 64'h1) ?
-                //{1'b1, 63'h7} : (except_type == 64'h2) ? {1'b0, 59'h0, 4'b1011} : (except_type == 64'h3) ?
-               // {1'b0, 59'h0, 4'b0011} : (except_type == 64'h2) ? {1'b0, 59'h0, 4'b1100} : csr_mcause;
+assign mcause = ((csr_w_ena == 1'b1) & (csr_w_addr == `mcause)) ? csr_w_data : (except_type == 64'h1) ?
+                {1'b1, 63'h7} : (except_type == 64'h2) ? {1'b0, 59'h0, 4'b1011} : (except_type == 64'h3) ?
+               {1'b0, 59'h0, 4'b0011} : (except_type == 64'h2) ? {1'b0, 59'h0, 4'b1100} : csr_mcause;
 
- //assign mip = ((csr_w_ena == 1'b1) & (csr_w_addr == `mip)) ? csr_w_data : (time_inter == 1'b1) ?
-                                              //{csr_mip[63 : 8], time_inter, csr_mip[6 : 0]} :
-                                                        //csr_mip; 
+ assign mip = ((csr_w_ena == 1'b1) & (csr_w_addr == `mip)) ? csr_w_data : (time_inter == 1'b1) ?
+                                              {csr_mip[63 : 8], time_inter, csr_mip[6 : 0]} :
+                                                        csr_mip; 
 
-//assign mie = ((csr_w_ena == 1'b1) & (csr_w_addr == `mie)) ? csr_w_data : csr_mie;
+assign mie = ((csr_w_ena == 1'b1) & (csr_w_addr == `mie)) ? csr_w_data : csr_mie;
 assign mcycle = ((csr_w_ena == 1'b1) & (csr_w_addr == `mcycle)) ? csr_w_data : csr_mcycle;
 assign mtvec = ((csr_w_ena == 1'b1) & (csr_w_addr == `mtvec)) ? csr_w_data : csr_mtvec;
 
