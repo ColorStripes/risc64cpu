@@ -20,7 +20,6 @@ module IF_stage (
 
 wire [63 : 0] sum;
 wire [63 : 0] pc_i;
-wire [63 : 0] pc_f;
 wire I_M_e;
 
 
@@ -40,14 +39,7 @@ RAMHelper ROM(
 
 assign instr = IF_pc[2] ? rdata[63 : 32] : rdata[31 : 0];
 
-MUX MUX_PC(
-    .data1(pc_id),
-    .data2(new_pc),
-    .ch(flush),
 
-
-    .data(pc_f)
-);
 
 PC PC(
   .clk(clk),
@@ -73,7 +65,7 @@ forecase forecase (
     .rst(rst),
     .clk(clk),
     .mux_pc(mux_pc),
-    .pc_id(pc_f),
+    .pc_id(pc_id),
     .add_pc(sum),
     .branch(branch),
     .pc_con(pc_con),
