@@ -196,16 +196,16 @@ assign mcycle = ((csr_w_ena == 1'b1) & (csr_w_addr == `mcycle)) ? csr_w_data : c
 assign mtvec = ((csr_w_ena == 1'b1) & (csr_w_addr == `mtvec)) ? csr_w_data : csr_mtvec;
 
 
-    always @(*) begin                          //Ctrl
+    always @(posedge clk) begin                          //Ctrl
         if(rst == 1'b1) begin
-            flush = 1'b0;         
+            flush <= 1'b0;         
         end
         else begin
             if(except_type != `ZERO_WORD) begin
-                flush = 1'b1;
+                flush <= 1'b1;
             end
             else begin
-                flush = 1'b0;
+                flush <= 1'b0;
             end
         end
     end
