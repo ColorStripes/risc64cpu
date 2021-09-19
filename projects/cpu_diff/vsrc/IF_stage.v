@@ -20,6 +20,7 @@ module IF_stage (
 
 wire [63 : 0] sum;
 wire [63 : 0] pc_i;
+wire [63 : 0] pc_f;
 wire I_M_e;
 
 
@@ -38,6 +39,15 @@ RAMHelper ROM(
 );
 
 assign instr = IF_pc[2] ? rdata[63 : 32] : rdata[31 : 0];
+
+MUX MUX_PC(
+    .data1(pc_f),
+    .data2(new_pc),
+    .ch(flush),
+
+
+    .data(pc_i)
+);
 
 PC PC(
   .clk(clk),
@@ -70,7 +80,7 @@ forecase forecase (
 
 
     .wash(wash),
-    .pc(pc_i)
+    .pc(pc_f)
 );
 
 endmodule
