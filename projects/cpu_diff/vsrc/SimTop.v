@@ -525,9 +525,9 @@ assign rst = reset;
     .clk(clk),
     .csr_r_addr(ex_csr_addr),
 
-    .csr_w_ena(WB_w_ena),
-    .csr_w_addr(WB_w_addr),
-    .csr_w_data(WB_w_data),
+    .csr_w_ena(WB_csr_ena),
+    .csr_w_addr(WB_csr_addr),
+    .csr_w_data(WB_w_csr_data),
    
     .except_type(MEM_except_type),
     .except_pc(MEM_pc),             //mem_pc
@@ -609,7 +609,14 @@ always @(negedge clock) begin
   end
 end
 
-
+DifftestArchEvent DifftestArchEvent (
+    .clock(clock),			// 时钟
+    .coreid(0),		// cpu id，单核时固定为0
+    .intrNO(time_inter),		// 中断号，非0时产生中断。产生中断的时钟周期中，DifftestInstrCommit提交的valid需为0
+    .cause(mcause),			// 异常号，ecall时不需要考虑
+    .exceptionPC(MEM_pc),	// 产生异常时的PC
+    .exceptionInst(MEM_instr)	// 产生异常时的指令
+);
 
 
 DifftestInstrCommit DifftestInstrCommit(
