@@ -196,9 +196,9 @@ ALU ALU(
                       ex_w_csr_data = `ZERO_WORD;
                       ex_csr_addr = id_imm[11 : 0];
                       ex_csr_ena = 1'b0;
-                      mret =  ~id_imm[0] & id_imm[1] & id_imm[9] & id_imm[8];
-                      ebreak = id_imm[0] & ~id_imm[1] & ~id_imm[9] & ~id_imm[8];
-                      ecall = id_imm[0] & id_imm[1] & id_imm[9] & id_imm[8];
+                      mret =  ~id_imm[0] & id_imm[1] & id_imm[8] & id_imm[9];
+                      ebreak = id_imm[0] & ~id_imm[1] & ~id_imm[8] & ~id_imm[9];
+                      ecall = ~id_imm[0] & ~id_imm[1] & ~id_imm[8] & ~id_imm[9];
                   end
                   default: begin
                       ex_w_data = `ZERO_WORD;
