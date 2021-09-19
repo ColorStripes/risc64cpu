@@ -173,18 +173,18 @@ module CSR_reg (
 
 
 assign mstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ? csr_w_data :   
-        //((except_type == 64'h1) | (except_type == 64'h2) | (except_type == 64'h3)) ? 
-    //{csr_mstatus[63:13], 2'b11, csr_mstatus[10:8], csr_mstatus[3], csr_mstatus[6:4], 1'b0, csr_mstatus[2:0]} : (except_type == 64'h4) ?
-    //{csr_mstatus[63:13], 2'b00, csr_mstatus[10:8], 1'b0, csr_mstatus[6:4], csr_mstatus[7], csr_mstatus[2:0]} :
+        ((except_type == 64'h1) | (except_type == 64'h2) | (except_type == 64'h3)) ? 
+    {csr_mstatus[63:13], 2'b11, csr_mstatus[10:8], csr_mstatus[3], csr_mstatus[6:4], 1'b0, csr_mstatus[2:0]} : (except_type == 64'h4) ?
+    {csr_mstatus[63:13], 2'b00, csr_mstatus[10:8], 1'b0, csr_mstatus[6:4], csr_mstatus[7], csr_mstatus[2:0]} :
                                         csr_mstatus;     
 
 assign mepc = ((csr_w_ena == 1'b1) & (csr_w_addr == `mepc)) ? csr_w_data : 
-        //((except_type == 64'h1) | (except_type == 64'h2) | (except_type == 64'h3)) ? except_pc : 
+        ((except_type == 64'h1) | (except_type == 64'h2) | (except_type == 64'h3)) ? except_pc : 
         csr_mepc;
 
 assign mcause = ((csr_w_ena == 1'b1) & (csr_w_addr == `mcause)) ? csr_w_data : 
-                //(except_type == 64'h1) ? {1'b1, 63'h7} : (except_type == 64'h2) ? {1'b0, 59'h0, 4'b1011} : (except_type == 64'h3) ?
-              // {1'b0, 59'h0, 4'b0011} : (except_type == 64'h2) ? {1'b0, 59'h0, 4'b1100} : 
+                (except_type == 64'h1) ? {1'b1, 63'h7} : (except_type == 64'h2) ? {1'b0, 59'h0, 4'b1011} : (except_type == 64'h3) ?
+               {1'b0, 59'h0, 4'b0011} : (except_type == 64'h2) ? {1'b0, 59'h0, 4'b1100} : 
               csr_mcause;
 
  assign mip = ((csr_w_ena == 1'b1) & (csr_w_addr == `mip)) ? csr_w_data : (time_inter == 1'b1) ?
