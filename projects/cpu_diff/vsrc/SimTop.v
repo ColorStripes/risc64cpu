@@ -616,7 +616,7 @@ DifftestArchEvent DifftestArchEvent (
     .clock(clock),			// 时钟
     .coreid(0),		// cpu id，单核时固定为0
     .intrNO(time_inter),		// 中断号，非0时产生中断。产生中断的时钟周期中，DifftestInstrCommit提交的valid需为0
-    .cause(mcause),			// 异常号，ecall时不需要考虑
+    .cause(MEM_except_type),			// 异常号，ecall时不需要考虑
     .exceptionPC(MEM_pc),	// 产生异常时的PC
     .exceptionInst(MEM_instr)	// 产生异常时的指令
 );
