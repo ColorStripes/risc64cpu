@@ -641,7 +641,7 @@ DifftestArchIntRegState DifftestArchIntRegState (
   .gpr_1              (regs_diff[1]),
   .gpr_2              (regs_diff[2]),
   .gpr_3              (regs_diff[3]),
-  .gpr_4              (regs_diff[4]),
+  .gpr_4              (64'b1),
   .gpr_5              (regs_diff[5]),
   .gpr_6              (regs_diff[6]),
   .gpr_7              (regs_diff[7]),
