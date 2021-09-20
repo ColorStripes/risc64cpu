@@ -231,8 +231,8 @@ reg test;
                      mem_sel = 64'hffff_ffff_ffff_ffff;
                      mem_w_data = mem_data;
                      if((ex_mem_raddr == `msip) || (ex_mem_raddr == `mtimecmp) || (ex_mem_raddr == `mtime)) begin  ////////////
-                         //mem_mem_ena = 1'b0;
-                         //mem_w_data = clint_data;
+                         mem_mem_ena = 1'b0;
+                         mem_w_data = clint_data;
                      end
                  end
 
@@ -313,7 +313,7 @@ reg test;
                      mem_mem_ena = 1'b1 ;
                      mem_stor_data = ex_stor_data;
                      if((ex_mem_waddr == `msip) || (ex_mem_waddr == `mtimecmp) || (ex_mem_waddr == `mtime)) begin  ////////////
-                         //mem_mem_ena = 1'b0;
+                         mem_mem_ena = 1'b0;
                      end
                  end
                  default:begin
