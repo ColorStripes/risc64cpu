@@ -4,6 +4,7 @@
 
 module MEM_stage (
     input wire rst,
+    input wire time_inter,
     input wire [`REG_BUS] ex_w_data,
     input wire ex_w_ena,
     input wire [4 : 0] ex_w_addr,
@@ -419,7 +420,7 @@ reg test;
             mem_except_type = `ZERO_WORD;
             new_pc = `ZERO_WORD;
             if(mem_pc != `ZERO_WORD) begin
-                if(mstatus[3] & mie[7] & mip[7]) begin                             //time_interrupt
+                if(mstatus[3] & mie[7] & time_inter) begin                             //time_interrupt
                     mem_except_type = 64'h1;
                     new_pc = mtvec;
                 end

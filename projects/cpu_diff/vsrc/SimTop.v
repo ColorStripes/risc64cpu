@@ -411,6 +411,7 @@ assign rst = reset;
 
     MEM_stage MEM_stage (
     .rst(rst),
+    .time_inter(time_inter),
     .ex_w_data(mem_w_data),
     .ex_w_ena(mem_w_ena),
     .ex_w_addr(mem_w_addr),
