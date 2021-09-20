@@ -275,7 +275,7 @@ reg test;
                      endcase  
                  end
                  `W_DOU:begin
-                     mem_mem_ena = 1'b1 & (~(|ex_except_type));
+                     mem_mem_ena = 1'b1;
                      case(ex_mem_waddr[2 : 1])
                          2'b00:begin
                              mem_sel = 64'h0000_0000_0000_ffff;
@@ -296,7 +296,7 @@ reg test;
                      endcase
                  end
                  `W_FOR:begin
-                     mem_mem_ena = 1'b1 & (~(|ex_except_type));
+                     mem_mem_ena = 1'b1;
                      case(ex_mem_waddr[2])
                          1'b0:begin
                              mem_sel = 64'h0000_0000_ffff_ffff;
