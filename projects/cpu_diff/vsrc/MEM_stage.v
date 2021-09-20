@@ -428,7 +428,7 @@ module MEM_stage (
                 end  
                 else if(ex_except_type[18] == 1'b1) begin                          //mret
                     mem_except_type = 64'h4;
-
+                    new_pc = mepc;
                 end 
 
             end
