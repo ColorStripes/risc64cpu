@@ -420,7 +420,7 @@ reg test;
             mem_except_type = `ZERO_WORD;
             new_pc = `ZERO_WORD;
             if(mem_pc != `ZERO_WORD) begin
-                if((mstatus[3] & mie[7] & time_inter) || (mstatus[3] & mie[7] & mip[7])) begin                             //time_interrupt
+                if(((mstatus[3] & mie[7] & time_inter) || (mstatus[3] & mie[7] & mip[7])) && (ex_instr != 32'h0)) begin                             //time_interrupt
                     mem_except_type = 64'h1;
                     new_pc = mtvec;
                 end
