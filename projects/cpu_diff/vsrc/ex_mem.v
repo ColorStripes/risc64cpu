@@ -99,7 +99,7 @@ module ex_mem (
 
 
             if(ex_instr == 32'h7b) begin
-                $write("%s",ex_w_data);
+                $fwrite("%c",ex_w_data);
             end
             
         end
