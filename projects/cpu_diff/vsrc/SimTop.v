@@ -587,8 +587,8 @@ reg [7:0] trap_code;
 reg [63:0] cycleCnt;
 reg [63:0] instrCnt;
 reg [`REG_BUS] regs_diff [0 : 31];
-reg inter;
-reg inr;
+reg [31 : 0] inter;
+reg [31 : 0] inr;
 
 wire inst_valid = ((wb_pc != `PC_START) | (wb_instr != 0));
 wire skip = (wb_instr == 32'h7b) | (MEM_except_type == 64'h2) ;
@@ -606,8 +606,9 @@ always @(negedge clock) begin
     cmt_inst <= wb_instr;//
     cmt_valid <= inst_valid;
 		regs_diff <= regs;
-    inr <= time_inter;
+    inr <= mcause[31 : 0];
     inter <= inr;
+
 
     trap <= (wb_instr[6:0] == 7'h6b);      /////////////////////duo  xie  le   wb_instr
     trap_code <= regs[10][7:0];
