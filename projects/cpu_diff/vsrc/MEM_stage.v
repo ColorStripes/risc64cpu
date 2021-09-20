@@ -85,7 +85,7 @@ reg test;
             mem_stor_data = `ZERO_WORD;
             mem_sel = 64'h0000_0000_0000_0000;
             mem_wr = ex_mem_wr;
-            mem_mem_ena = ex_mem_ena & (~(|ex_except_type));////////////////////////
+            mem_mem_ena = ex_mem_ena ;////////////////////////
             test = 1'b0;
             if(ex_pc == 64'h800016a4) begin  ////////////
                          test = 1'b1;
@@ -238,7 +238,7 @@ reg test;
 
                  //write
                  `W_ONE:begin
-                     mem_mem_ena = 1'b1 & (~(|ex_except_type));
+                     mem_mem_ena = 1'b1;
                      case(ex_mem_waddr[2 : 0])
                          3'b000:begin
                              mem_sel = 64'h0000_0000_0000_00ff;
@@ -310,7 +310,7 @@ reg test;
                  end
                  `W_EIG:begin
                      mem_sel = 64'hffff_ffff_ffff_ffff;
-                     mem_mem_ena = 1'b1 & (~(|ex_except_type));
+                     mem_mem_ena = 1'b1 ;
                      mem_stor_data = ex_stor_data;
                      if((ex_mem_waddr == `msip) || (ex_mem_waddr == `mtimecmp) || (ex_mem_waddr == `mtime)) begin  ////////////
                          //mem_mem_ena = 1'b0;
