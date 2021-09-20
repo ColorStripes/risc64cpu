@@ -61,7 +61,7 @@ module MEM_stage (
 );
     assign mem_pc = ex_pc;
     assign mem_instr = ex_instr;
-
+reg test;
     always @(*) begin
         if(rst == 1'b1) begin
             mem_w_data = `ZERO_WORD;
@@ -73,6 +73,7 @@ module MEM_stage (
             mem_stor_data = `ZERO_WORD;
             mem_wr = 1'b0;
             mem_mem_ena = 1'b0;
+            test = 1'b0;
         end
         else begin
             mem_w_data = ex_w_data;
@@ -84,6 +85,10 @@ module MEM_stage (
             mem_sel = 64'h0000_0000_0000_0000;
             mem_wr = ex_mem_wr;
             mem_mem_ena = ex_mem_ena & (~(|ex_except_type));////////////////////////
+            test = 1'b0;
+            if((ex_mem_waddr == `msip) || (ex_mem_waddr == `mtimecmp) || (ex_mem_waddr == `mtime)) begin  ////////////
+                         test = 1'b1;
+            end
             case(ex_memop)
                  `R_ONE:begin
                      case(ex_mem_raddr[2 : 0])
