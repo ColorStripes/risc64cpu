@@ -589,14 +589,16 @@ reg [63:0] instrCnt;
 reg [`REG_BUS] regs_diff [0 : 31];
 reg [31 : 0] inter;
 reg flush_f;
+reg next;
+reg nextt;
 
-wire inst_valid = ((wb_pc != `PC_START) | (wb_instr != 0));
+wire inst_valid = ((wb_pc != `PC_START) | (wb_instr != 0)) & ~nextt;
 wire skip = (wb_instr == 32'h7b) | (MEM_except_type == 64'h2) ;
 wire cause = (MEM_except_type == 64'h4);
 
 always @(negedge clock) begin
   if (reset) begin
-    {cmt_wen, cmt_wdest, cmt_wdata, cmt_pc, cmt_inst, cmt_valid, trap, trap_code, cycleCnt, instrCnt} <= 0;
+    {cmt_wen, cmt_wdest, cmt_wdata, cmt_pc, cmt_inst, cmt_valid, trap, trap_code, cycleCnt, instrCnt, nextt} <= 0;
   end
   else if (~trap) begin
     cmt_wen <= WB_w_ena;//
@@ -606,6 +608,7 @@ always @(negedge clock) begin
     cmt_inst <= wb_instr;//
     cmt_valid <= inst_valid;
 		regs_diff <= regs;
+    nextt <= next;
 
 
     trap <= (wb_instr[6:0] == 7'h6b);      /////////////////////duo  xie  le   wb_instr
@@ -620,8 +623,10 @@ end
 
 always @(*) begin
   inter = 32'b0;
+  next = 1'b0;
   if(mcause[2 : 0] == 3'h7 && flush_f) begin
     inter = 32'd7;
+    next = 1'b1;
   end
 end
 
