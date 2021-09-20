@@ -588,8 +588,8 @@ reg [63:0] instrCnt;
 reg [`REG_BUS] regs_diff [0 : 31];
 reg inter;
 
-wire inst_valid = ((wb_pc != `PC_START) | (wb_instr != 0)) & ~time_inter ;
-wire skip = (wb_instr == 32'h7b) | (MEM_except_type ==64'h2);
+wire inst_valid = ((wb_pc != `PC_START) | (wb_instr != 0))  ;
+wire skip = (wb_instr == 32'h7b) | (MEM_except_type ==64'h2) | time_inter;
 wire cause = (MEM_except_type == 64'h4);
 
 always @(negedge clock) begin
