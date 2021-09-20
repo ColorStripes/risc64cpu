@@ -185,8 +185,8 @@ assign mcause = ((csr_w_ena == 1'b1) & (csr_w_addr == `mcause)) ? csr_w_data :
                //{1'b0, 59'h0, 4'b0011} : (except_type == 64'h2) ? {1'b0, 59'h0, 4'b1100} : 
               csr_mcause;
 
- assign mip = ((csr_w_ena == 1'b1) & (csr_w_addr == `mip)) ? csr_w_data : (time_inter == 1'b1) ?
-                                              {csr_mip[63 : 8], time_inter, csr_mip[6 : 0]} :
+ assign mip = ((csr_w_ena == 1'b1) & (csr_w_addr == `mip)) ? csr_w_data :
+                                              //{csr_mip[63 : 8], time_inter, csr_mip[6 : 0]} :
                                                         csr_mip; 
 
 assign mie = ((csr_w_ena == 1'b1) & (csr_w_addr == `mie)) ? csr_w_data : csr_mie;
