@@ -590,7 +590,7 @@ reg [`REG_BUS] regs_diff [0 : 31];
 reg [31 : 0] inter;
 reg flush_f;
 
-wire inst_valid = ((wb_pc != `PC_START) | (wb_instr != 0))  && ~flush_f;
+wire inst_valid = ((wb_pc != `PC_START) | (wb_instr != 0)) && ~inter;
 wire skip = (wb_instr == 32'h7b) | (MEM_except_type == 64'h2) ;
 wire cause = (MEM_except_type == 64'h4);
 
