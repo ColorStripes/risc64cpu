@@ -531,7 +531,7 @@ assign rst = reset;
     .csr_w_data(WB_w_csr_data),
    
     .except_type(MEM_except_type),
-    .except_pc(EX_pc),             //mem_pc
+    .except_pc(MEM_pc),             //mem_pc
     .time_inter(time_inter),
 
     .csr_reg_data(csr_reg_data),
