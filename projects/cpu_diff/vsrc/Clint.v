@@ -25,7 +25,7 @@ module Clint (
     always @(posedge clk) begin
         if(rst == 1'b1) begin
             mtime <= `ZERO_WORD;
-            mtimecmp <= 64'd100;
+            mtimecmp <= 64'd1000;
             msip <= `ZERO_WORD;
             time_inter <= 1'b0;
         end
