@@ -20,17 +20,7 @@ module IF_stage (
 
 wire [63 : 0] sum;
 wire [63 : 0] pc_i;
-wire [63 : 0] pc_f;
 wire I_M_e;
-
-MUX MUX_PC (
-    .data1(pc_id),
-    .data2(new_pc),
-    .ch(flush),
-
-
-    .data()
-);
 
 
 reg [63:0] rdata;

@@ -440,7 +440,7 @@ assign rst = reset;
     .csr_mip(mip),
     .csr_mie(mie),
     .csr_mtvec(mtvec),
-    .csr_mstatus(exc_mstatus),
+    .csr_mstatus(mstatus),
 
     .clint_data(clint_data),      //clint
 
