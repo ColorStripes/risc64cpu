@@ -100,7 +100,7 @@ module ex_mem (
 
             if(ex_instr == 32'h7b) begin
                 $fwrite("%c",ex_w_data);
-                $fflush();
+                //$fflush();
             end
             
         end
