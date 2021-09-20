@@ -306,7 +306,7 @@ module MEM_stage (
                      mem_sel = 64'hffff_ffff_ffff_ffff;
                      mem_mem_ena = 1'b1 & (~(|ex_except_type));
                      mem_stor_data = ex_stor_data;
-                     if((ex_mem_waddr == 64'h0000) || (ex_mem_waddr == 64'h4000) || (ex_mem_waddr == 64'hBFF8)) begin  ////////////
+                     if((ex_mem_waddr == 64'h0000) || (ex_mem_waddr == 64'h2004000) || (ex_mem_waddr == 64'h200BFF8)) begin  ////////////
                          mem_mem_ena = 1'b0;
                      end
                  end
