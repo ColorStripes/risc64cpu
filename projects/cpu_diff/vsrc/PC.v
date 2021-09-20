@@ -33,13 +33,14 @@ always@( posedge clk ) begin
   if( I_M_e == 1'b0 ) begin
     pc <= PC_START_RESET ;
   end
-  else begin
-    if (pc_con == 1'b0) begin
-      pc <= pc_i;
-    end
-    else if(flush == 1'b1) begin
+  else begin    
+    if(flush == 1'b1) begin
       pc <= new_pc;
     end
+    else if (pc_con == 1'b0) begin
+      pc <= pc_i;
+    end
+
   end
 end
 endmodule

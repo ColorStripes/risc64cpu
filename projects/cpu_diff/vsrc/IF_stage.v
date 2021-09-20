@@ -24,12 +24,12 @@ wire [63 : 0] pc_f;
 wire I_M_e;
 
 MUX MUX_PC (
-    .data1(pc_f),
+    .data1(pc_id),
     .data2(new_pc),
     .ch(flush),
 
 
-    .data(IF_pc)
+    .data()
 );
 
 
@@ -58,7 +58,7 @@ PC PC(
   .flush(flush),
 
   .I_M_e(I_M_e),
-  .pc(pc_f)
+  .pc(IF_pc)
   
 );
 
