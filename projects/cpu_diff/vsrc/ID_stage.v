@@ -608,7 +608,7 @@ module ID_stage (
                        end
                        `csrrsi:begin
                            aluop = `NO;
-                           alusel = `CSRRC;
+                           alusel = `CSRRSI;
                            reg1_r_ena = 1'b0;
                            reg2_r_ena = 1'b0;
                        end
