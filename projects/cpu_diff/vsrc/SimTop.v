@@ -607,6 +607,9 @@ always @(negedge clock) begin
     cmt_valid <= inst_valid;
 		regs_diff <= regs;
 
+  if(mcause == 64'h7) begin
+     inter <= 32'd7;
+  end
 
     trap <= (wb_instr[6:0] == 7'h6b);      /////////////////////duo  xie  le   wb_instr
     trap_code <= regs[10][7:0];
@@ -614,12 +617,7 @@ always @(negedge clock) begin
     instrCnt <= instrCnt + inst_valid;
   end
 end
-always @(*) begin
-  inter = 32'd0;
-  if(mcause == 64'h7) begin
-     inter = 32'd7;
-  end
-end
+
 
 DifftestArchEvent DifftestArchEvent (
     .clock(clock),			// 时钟
