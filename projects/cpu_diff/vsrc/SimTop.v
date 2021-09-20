@@ -605,7 +605,7 @@ always @(negedge clock) begin
     cmt_inst <= wb_instr;//
     cmt_valid <= inst_valid;
 		regs_diff <= regs;
-    inr <= (MEM_except_type == 64'h1);
+    inr <= time_inter;
     inter <= inr;
 
     trap <= (wb_instr[6:0] == 7'h6b);      /////////////////////duo  xie  le   wb_instr
