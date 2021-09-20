@@ -423,11 +423,11 @@ module MEM_stage (
                     new_pc = mtvec;
                 end
                 else if(ex_except_type[17] == 1'b1) begin                          //ebreak
-                    mem_except_type = 64'h4;
+                    mem_except_type = 64'h3;
                     new_pc = mtvec;
                 end  
                 else if(ex_except_type[18] == 1'b1) begin                          //mret
-                    mem_except_type = 64'h3;
+                    mem_except_type = 64'h4;
                     new_pc = mepc;
                 end 
 
