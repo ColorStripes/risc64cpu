@@ -606,7 +606,6 @@ always @(negedge clock) begin
     cmt_inst <= wb_instr;//
     cmt_valid <= inst_valid;
 		regs_diff <= regs;
-    flush_f <= flush;
 
 
     trap <= (wb_instr[6:0] == 7'h6b);      /////////////////////duo  xie  le   wb_instr
@@ -614,6 +613,9 @@ always @(negedge clock) begin
     cycleCnt <= cycleCnt + 1;
     instrCnt <= instrCnt + inst_valid;
   end
+end
+always @(posedge clk) begin
+       flush_f <= flush;
 end
 
 always @(*) begin
