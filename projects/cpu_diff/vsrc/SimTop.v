@@ -615,9 +615,9 @@ always @(negedge clock) begin
   end
 end
 
-always @(mcause) begin
+always @(*) begin
   inter = 32'b0;
-  if(mcause == 64'h7) begin
+  if(mcause[2 : 0] == 3'h7) begin
     inter = 32'b1;
   end
 end
