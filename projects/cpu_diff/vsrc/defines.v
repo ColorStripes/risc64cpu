@@ -191,4 +191,4 @@
 `define msip 64'h2000000
 `define mtimecmp 64'h2004000
 `define mtime 64'h200bff8
-`define TIME 64'd6000
+`define TIME 64'd60000
