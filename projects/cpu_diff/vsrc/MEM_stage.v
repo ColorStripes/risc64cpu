@@ -422,7 +422,7 @@ reg test;
             if(mem_pc != `ZERO_WORD) begin
                 if((mstatus[3] & mie[7] & time_inter) || (mstatus[3] & mie[7] & mip[7])) begin                             //time_interrupt
                     mem_except_type = 64'h1;
-                    new_pc = mtvec + 4;
+                    new_pc = mtvec;
                 end
                 else if(ex_except_type[16] == 1'b1) begin                          //syscall
                     mem_except_type = 64'h2;
