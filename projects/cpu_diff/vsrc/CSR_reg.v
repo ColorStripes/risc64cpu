@@ -120,9 +120,10 @@ module CSR_reg (
                  end
 
                  64'h4:begin           ////mret                   
-                    csr_mstatus[3] <= csr_mstatus[7];
-                    csr_mstatus[7] <= 1'b1;
-                    csr_mstatus[12 : 11] <= 2'b00;
+                    //csr_mstatus[3] <= csr_mstatus[7];
+                    //csr_mstatus[7] <= 1'b1;
+                    //csr_mstatus[12 : 11] <= 2'b00;
+                    csr_mepc <= except_pc;
                  end
 
                  default:begin
