@@ -617,7 +617,7 @@ end
 
 always @(*) begin
   inter = 32'b0;
-  if(mstatus == 64'h7) begin
+  if(mcause == 64'h7) begin
     inter = 32'b1;
   end
 end
