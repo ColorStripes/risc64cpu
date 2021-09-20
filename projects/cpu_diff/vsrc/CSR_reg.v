@@ -100,7 +100,7 @@ module CSR_reg (
                     csr_mstatus[3] <= 1'b0;          //MIE->0
                     csr_mstatus[12 : 11] <= 2'b11;   //MPP
                     csr_mcause <= {1'b1, 63'h7};
-                    csr_mepc <= except_pc + 4;
+                    csr_mepc <= except_pc;
                  end
 
                  64'h2:begin           ////ecall
