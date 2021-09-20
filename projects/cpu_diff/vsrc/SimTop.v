@@ -168,7 +168,6 @@ wire [`REG_BUS] mtvec;
 wire [`REG_BUS] mepc;
 wire [`REG_BUS] mie;
 wire [`REG_BUS] mip;
-wire [`REG_BUS] exc_mstatus;
 //CSR_reg -> difftest
 wire [`REG_BUS] mcause;
 wire [`REG_BUS] mcycle;
@@ -544,9 +543,8 @@ assign rst = reset;
     .mcause(mcause),
     .mcycle(mcycle),
 
-    .flush(flush),
+    .flush(flush)
 
-    .exc_mstatus(exc_mstatus) 
 
 );
 
