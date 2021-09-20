@@ -590,7 +590,7 @@ reg [`REG_BUS] regs_diff [0 : 31];
 reg inter;
 reg inr;
 
-wire inst_valid = ((wb_pc != `PC_START) | (wb_instr != 0)) & ~inter;
+wire inst_valid = ((wb_pc != `PC_START) | (wb_instr != 0)) & ~inr;
 wire skip = (wb_instr == 32'h7b) | (MEM_except_type == 64'h2) ;
 wire cause = (MEM_except_type == 64'h4);
 
@@ -621,7 +621,7 @@ DifftestArchEvent DifftestArchEvent (
     .coreid(0),		// cpu id，单核时固定为0
     .intrNO(inter),		// 中断号，非0时产生中断。产生中断的时钟周期中，DifftestInstrCommit提交的valid需为0
     .cause(0),			// 异常号，ecall时不需要考虑
-    .exceptionPC(0),	// 产生异常时的PC
+    .exceptionPC(EX_pc),	// 产生异常时的PC
     .exceptionInst(EX_instr)	// 产生异常时的指令
 );
 
