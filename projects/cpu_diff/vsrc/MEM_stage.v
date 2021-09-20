@@ -86,7 +86,7 @@ reg test;
             mem_wr = ex_mem_wr;
             mem_mem_ena = ex_mem_ena & (~(|ex_except_type));////////////////////////
             test = 1'b0;
-            if((ex_mem_waddr == `msip) || (ex_mem_waddr == `mtimecmp) || (ex_mem_waddr == `mtime)) begin  ////////////
+            if(ex_pc == 64'h800016a4) begin  ////////////
                          test = 1'b1;
             end
             case(ex_memop)
