@@ -621,7 +621,7 @@ end
 
 always @(*) begin
   inter = 32'b0;
-  if((mcause[2 : 0] == 3'h7) && (MEM_except_type_f == 64'h1) && (MEM_instr != 32'h0)) begin
+  if((mcause[2 : 0] == 3'h7) && (MEM_except_type_f == 64'h1) ) begin
     inter = 32'd7;
   end
 end
