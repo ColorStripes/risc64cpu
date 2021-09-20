@@ -120,10 +120,10 @@ module CSR_reg (
                  end
 
                  64'h4:begin           ////mret                   
-                    csr_mstatus[3] <= csr_mstatus[7];
-                    csr_mstatus[7] <= 1'b0;
-                    //csr_mstatus[12 : 11] <= 2'b00;
-                    //csr_mcause <= {1'b0, 59'h0, 4'b1100};           //yichang mret
+                    //csr_mstatus[3] <= csr_mstatus[7];
+                    //csr_mstatus[7] <= 1'b0;
+                    csr_mstatus[12 : 11] <= 2'b00;
+                    csr_mcause <= {1'b0, 59'h0, 4'b1100};           //yichang mret
                  end
 
                  default:begin
