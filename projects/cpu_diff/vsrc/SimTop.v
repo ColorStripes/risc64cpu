@@ -592,7 +592,7 @@ reg flush_f;
 reg next;
 reg nextt;
 
-wire inst_valid = ((wb_pc != `PC_START) | (wb_instr != 0)) && ~inter;
+wire inst_valid = ((wb_pc != `PC_START) | (wb_instr != 0)) && ~(inter != 32'h0);
 wire skip = (wb_instr == 32'h7b) | (MEM_except_type == 64'h2) ;
 wire cause = (MEM_except_type == 64'h4);
 
