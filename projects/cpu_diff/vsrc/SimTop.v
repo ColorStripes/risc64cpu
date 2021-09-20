@@ -588,7 +588,6 @@ reg [63:0] cycleCnt;
 reg [63:0] instrCnt;
 reg [`REG_BUS] regs_diff [0 : 31];
 reg [31 : 0] inter;
-reg [31 : 0] inr;
 
 wire inst_valid = ((wb_pc != `PC_START) | (wb_instr != 0));
 wire skip = (wb_instr == 32'h7b) | (MEM_except_type == 64'h2) ;
@@ -618,7 +617,7 @@ end
 always @(*) begin
   inter = 32'b0;
   if(mcause[2 : 0] == 3'h7) begin
-    inter = 32'b1;
+    inter = 32'd7;
   end
 end
 
