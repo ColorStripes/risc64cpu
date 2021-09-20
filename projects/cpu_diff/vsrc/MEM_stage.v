@@ -224,7 +224,7 @@ module MEM_stage (
                  `R_EIG:begin
                      mem_sel = 64'hffff_ffff_ffff_ffff;
                      mem_w_data = mem_data;
-                     if((ex_mem_raddr == 64'h0000) || (ex_mem_raddr == 64'h4000) || (ex_mem_raddr == 64'hBFF8)) begin  ////////////
+                     if((ex_mem_raddr == `msip) || (ex_mem_raddr == `mtimecmp) || (ex_mem_raddr == `mtime)) begin  ////////////
                          mem_mem_ena = 1'b0;
                          mem_w_data = clint_data;
                      end
@@ -306,7 +306,7 @@ module MEM_stage (
                      mem_sel = 64'hffff_ffff_ffff_ffff;
                      mem_mem_ena = 1'b1 & (~(|ex_except_type));
                      mem_stor_data = ex_stor_data;
-                     if((ex_mem_waddr == 64'h0000) || (ex_mem_waddr == 64'h2004000) || (ex_mem_waddr == 64'h200BFF8)) begin  ////////////
+                     if((ex_mem_waddr == `msip) || (ex_mem_waddr == `mtimecmp) || (ex_mem_waddr == `mtime)) begin  ////////////
                          mem_mem_ena = 1'b0;
                      end
                  end
