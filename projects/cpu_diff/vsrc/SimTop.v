@@ -588,9 +588,8 @@ reg [63:0] cycleCnt;
 reg [63:0] instrCnt;
 reg [`REG_BUS] regs_diff [0 : 31];
 reg [31 : 0] inter;
-reg flush_f;
-reg next;
-reg nextt;
+reg [63 : 0] MEM_except_type_f;
+
 
 wire inst_valid = ((wb_pc != `PC_START) | (wb_instr != 0)) && ~(inter != 32'h0);
 wire skip = (wb_instr == 32'h7b) | (MEM_except_type == 64'h2) | (wb_instr == 32'h00063783) | (wb_instr == 32'h00f63023);
@@ -617,15 +616,13 @@ always @(negedge clock) begin
   end
 end
 always @(posedge clk) begin
-       flush_f <= flush;
+       MEM_except_type_f <= MEM_except_type;
 end
 
 always @(*) begin
   inter = 32'b0;
-  next = 1'b0;
-  if(mcause[2 : 0] == 3'h7 && flush_f) begin
+  if((mcause[2 : 0] == 3'h7) && (MEM_except_type_f == 64'h1)) begin
     inter = 32'd7;
-    next = 1'b1;
   end
 end
 
