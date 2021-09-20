@@ -48,7 +48,9 @@ module mem_wb (
             wb_w_csr_data <= mem_w_csr_data;
             wb_csr_ena <= mem_csr_ena;
 
-
+            if(flush == 1'b1) begin
+                wb_w_ena <= 1'b0;
+            end
 
         end
     end
