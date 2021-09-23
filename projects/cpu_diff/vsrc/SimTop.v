@@ -595,7 +595,7 @@ reg [63 : 0] MEM_except_type_f;
 
 wire inst_valid = ((wb_pc != `PC_START) | (wb_instr != 0)) && ~(inter != 32'h0);
 //wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2) | (wb_instr == 32'h00063783) | (wb_instr == 32'h00f63023);
-wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2) | (wb_instr == 32'h0007b483) | (wb_instr == 32'h00f73023);
+wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2)  | (wb_instr == 32'h00f73023);
 wire cause = (MEM_except_type == 64'h4);
 
 always @(negedge clock) begin
