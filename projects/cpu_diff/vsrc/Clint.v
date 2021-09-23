@@ -13,6 +13,8 @@ module Clint (
     input wire ex_mem_wr,
     input wire ex_mem_ena,
 
+    output reg clint,
+
     output reg time_inter,
     output reg [`REG_BUS] clint_data
 
@@ -76,7 +78,6 @@ module Clint (
         if (rst == 1'b1) begin
 			clint_data = `ZERO_WORD;
 		end
-
         else begin
             clint_data = `ZERO_WORD;
             if(~ex_mem_wr & ex_mem_ena) begin
@@ -103,6 +104,25 @@ module Clint (
 
 
 
+                                                  
+always @(posedge clk) begin                                   //difftest
+    if(rst == 1'b1) begin
+        clint <= 1'b0;
+    end
+    else begin
+        clint <= 1'b0;
+        if(~ex_mem_wr & ex_mem_ena) begin
+            if((ex_mem_raddr == `msip) || (ex_mem_raddr == `mtimecmp) || (ex_mem_raddr == `mtime)) begin
+                clint <= 1'b1;
+            end
+        end
+        if(ex_mem_wr & ex_mem_ena) begin
+            if((ex_mem_waddr == `msip) || (ex_mem_waddr == `mtimecmp) || (ex_mem_waddr == `mtime)) begin
+                clint <= 1'b1;
+            end
+        end
+    end  
+end
 
 
 
