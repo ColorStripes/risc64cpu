@@ -23,6 +23,7 @@ module CSR_reg (
    output wire [`REG_BUS] mie,
    output wire [`REG_BUS] mip,
    output wire [`REG_BUS] mcause,
+   output wire [`REG_BUS] mscratch,
 
    output wire [`REG_BUS] mcycle,            ////////////////////
 
@@ -39,7 +40,7 @@ module CSR_reg (
    reg [`REG_BUS] csr_mie;
    reg [`REG_BUS] csr_mtvec;
    
-           
+   reg [`REG_BUS] csr_mscratch;        
    reg [`REG_BUS] csr_mcause;   
    reg [`REG_BUS] csr_mcycle;
 
@@ -53,6 +54,7 @@ module CSR_reg (
             csr_mie <= `ZERO_WORD;
             csr_mip <= `ZERO_WORD;
             csr_mcycle <= `ZERO_WORD;
+            csr_mscratch <= `ZERO_WORD;
         end
         else begin
 
@@ -81,6 +83,9 @@ module CSR_reg (
                     end
                     `mcause:begin
                         csr_mcause <= csr_w_data;
+                    end
+                    `mscratch:begin
+                        csr_mscratch <= csr_w_data;
                     end
                     `mcycle:begin
                         csr_mcycle <= csr_w_data;
@@ -163,6 +168,9 @@ module CSR_reg (
                 `mip:begin
                     csr_reg_data = csr_mip;
                 end
+                `mscratch:begin
+                    csr_reg_data = csr_mscratch;
+                end
                 default:begin
                     csr_reg_data = `ZERO_WORD;    
                 end
@@ -193,6 +201,7 @@ assign mcause = ((csr_w_ena == 1'b1) & (csr_w_addr == `mcause)) ? csr_w_data :
 assign mie = ((csr_w_ena == 1'b1) & (csr_w_addr == `mie)) ? csr_w_data : csr_mie;
 assign mcycle = ((csr_w_ena == 1'b1) & (csr_w_addr == `mcycle)) ? csr_w_data : csr_mcycle;
 assign mtvec = ((csr_w_ena == 1'b1) & (csr_w_addr == `mtvec)) ? csr_w_data : csr_mtvec;
+assign mscratch = ((csr_w_ena == 1'b1) & (csr_w_addr == `mtvec)) ? csr_w_data : csr_mscratch;
 
 
     always @(*) begin                          //Ctrl

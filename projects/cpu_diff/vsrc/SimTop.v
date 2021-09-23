@@ -172,6 +172,7 @@ wire [`REG_BUS] mip;
 wire [`REG_BUS] mcause;
 wire [`REG_BUS] mcycle;
 wire [`REG_BUS] mstatus;
+wire [`REG_BUS] mscratch;
 //CSR_reg -> ALL_stage
 wire flush;
 //Clint -> CSR_reg
@@ -542,6 +543,7 @@ assign rst = reset;
     .mstatus(mstatus),
 
     .mcause(mcause),
+    .mscratch(mscratch),
     .mcycle(mcycle),
 
     .flush(flush)
@@ -716,7 +718,7 @@ DifftestCSRState DifftestCSRState(
   .satp               (0),
   .mip                (mip),
   .mie                (mie),
-  .mscratch           (0),
+  .mscratch           (mscratch),
   .sscratch           (0),
   .mideleg            (0),
   .medeleg            (0)
