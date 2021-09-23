@@ -77,26 +77,38 @@ module Clint (
 			clint_data = `ZERO_WORD;
 		end
         else if((ex_mem_ena & ex_mem_wr) && (ex_mem_waddr == ex_mem_raddr)) begin
-            clint_data = ex_stor_data;
+            if(~ex_mem_wr & ex_mem_ena) begin
+                clint_data = ex_stor_data;
+            end
+            else begin
+                clint_data = `ZERO_WORD;
+            end
         end
         else begin
             clint_data = `ZERO_WORD;
-            case(ex_mem_raddr)
-                 `msip:begin
-                     clint_data = msip;
-                 end
-                 `mtimecmp:begin
-                     clint_data = mtimecmp;
-                 end
-                 `mtime:begin
-                     clint_data = mtime;
-                 end
-                 default:begin
-                     clint_data = `ZERO_WORD;
-                 end
-            endcase
+            if(~ex_mem_wr & ex_mem_ena) begin
+                case(ex_mem_raddr)
+                     `msip:begin
+                         clint_data = msip;
+                     end
+                     `mtimecmp:begin
+                         clint_data = mtimecmp;
+                     end
+                     `mtime:begin
+                         clint_data = mtime;
+                     end
+                     default:begin
+                         clint_data = `ZERO_WORD;
+                     end
+                endcase
+            end
+            else begin
+                clint_data = `ZERO_WORD;
+            end 
         end
     end
+
+
 
 
 
