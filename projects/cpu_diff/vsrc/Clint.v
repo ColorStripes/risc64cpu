@@ -76,14 +76,7 @@ module Clint (
         if (rst == 1'b1) begin
 			clint_data = `ZERO_WORD;
 		end
-        else if((ex_mem_ena & ex_mem_wr) && (ex_mem_waddr == ex_mem_raddr)) begin
-            if(~ex_mem_wr & ex_mem_ena) begin
-                clint_data = ex_stor_data;
-            end
-            else begin
-                clint_data = `ZERO_WORD;
-            end
-        end
+
         else begin
             clint_data = `ZERO_WORD;
             if(~ex_mem_wr & ex_mem_ena) begin
