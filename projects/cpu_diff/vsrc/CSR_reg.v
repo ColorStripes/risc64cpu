@@ -71,6 +71,7 @@ module CSR_reg (
                 case(csr_w_addr)
                     `mstatus:begin
                         csr_mstatus[62 : 0] <= csr_w_data[62 : 0];
+                        csr_mstatus[63] <= csr_w_data[12] & csr_w_data[13] & csr_w_data[14] & csr_w_data[15];
                     end
                      `mtvec:begin
                         csr_mtvec <= csr_w_data;
@@ -98,6 +99,7 @@ module CSR_reg (
                     end
                 endcase
             end
+            
 
             case(except_type)
                  64'h1:begin            ////time_interrupt
@@ -179,7 +181,7 @@ module CSR_reg (
     end
 
 
-assign mstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ? {csr_mstatus[63], csr_w_data[62 : 0]} :   
+assign mstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ? {csr_w_data[12] & csr_w_data[13] & csr_w_data[14] & csr_w_data[15], csr_w_data[62 : 0]} :   
        // ((except_type == 64'h1) | (except_type == 64'h2) | (except_type == 64'h3)) ? 
     //{csr_mstatus[63:13], 2'b11, csr_mstatus[10:8], csr_mstatus[3], csr_mstatus[6:4], 1'b0, csr_mstatus[2:0]} : (except_type == 64'h4) ?
     //{csr_mstatus[63:13], 2'b00, csr_mstatus[10:8], 1'b0, csr_mstatus[6:4], csr_mstatus[7], csr_mstatus[2:0]} :
