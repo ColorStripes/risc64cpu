@@ -182,7 +182,7 @@ module CSR_reg (
     end
 
 
-assign mstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ? {(csr_w_data[12] & csr_w_data[13]) | (csr_w_data[14] & csr_w_data[15]),  csr_w_data[62 : 0]}:   
+assign mstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ? {(csr_w_data[13] & csr_w_data[14]) | (csr_w_data[15] & csr_w_data[16]),  csr_w_data[62 : 0]}:   
        // ((except_type == 64'h1) | (except_type == 64'h2) | (except_type == 64'h3)) ? 
     //{csr_mstatus[63:13], 2'b11, csr_mstatus[10:8], csr_mstatus[3], csr_mstatus[6:4], 1'b0, csr_mstatus[2:0]} : (except_type == 64'h4) ?
     //{csr_mstatus[63:13], 2'b00, csr_mstatus[10:8], 1'b0, csr_mstatus[6:4], csr_mstatus[7], csr_mstatus[2:0]} :
@@ -205,7 +205,7 @@ assign mie = ((csr_w_ena == 1'b1) & (csr_w_addr == `mie)) ? csr_w_data : csr_mie
 assign mcycle = ((csr_w_ena == 1'b1) & (csr_w_addr == `mcycle)) ? csr_w_data : csr_mcycle;
 assign mtvec = ((csr_w_ena == 1'b1) & (csr_w_addr == `mtvec)) ? csr_w_data : csr_mtvec;
 assign mscratch = ((csr_w_ena == 1'b1) & (csr_w_addr == `mscratch)) ? csr_w_data : csr_mscratch;
-assign sstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ? {(csr_w_data[12] & csr_w_data[13]) | (csr_w_data[14] & csr_w_data[15]), 63'h0, csr_w_data[14 : 13], 12'h0} : `ZERO_WORD;
+assign sstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ? {{(csr_w_data[13] & csr_w_data[14]) | (csr_w_data[15] & csr_w_data[16])}, 63'h0} : `ZERO_WORD;
 
 
     always @(*) begin                          //Ctrl
