@@ -175,6 +175,7 @@ wire [`REG_BUS] mcause;
 wire [`REG_BUS] mcycle;
 wire [`REG_BUS] mstatus;
 wire [`REG_BUS] mscratch;
+wire [`REG_BUS] sstatus;
 //CSR_reg -> ALL_stage
 wire flush;
 //Clint -> CSR_reg
@@ -563,7 +564,6 @@ assign rst = reset;
 
 
 );
-wire sstatus;
 
     Clint Clint (
     .clk(clk),
