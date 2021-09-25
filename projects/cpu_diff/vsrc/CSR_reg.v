@@ -50,7 +50,7 @@ module CSR_reg (
             csr_mtvec <= `ZERO_WORD;
             csr_mepc <= `ZERO_WORD;
             csr_mcause <= `ZERO_WORD;
-            csr_mstatus <= 64'h8000_0000_0000_0000;
+            csr_mstatus <= `ZERO_WORD;
             csr_mie <= `ZERO_WORD;
             csr_mip <= `ZERO_WORD;
             csr_mcycle <= `ZERO_WORD;
