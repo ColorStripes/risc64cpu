@@ -186,6 +186,8 @@
 `define tdata2 12'h7a2
 `define tdata3 12'h7a3
 
+`define sstatus 12'h100
+
 
 //Clint
 `define msip 64'h2000000

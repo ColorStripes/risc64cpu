@@ -553,6 +553,7 @@ assign rst = reset;
     .mie(mie),
     .mip(mip),
     .mstatus(mstatus),
+    .sstatus(sstatus),
 
     .mcause(mcause),
     .mscratch(mscratch),
@@ -562,6 +563,7 @@ assign rst = reset;
 
 
 );
+wire sstatus;
 
     Clint Clint (
     .clk(clk),
@@ -722,7 +724,7 @@ DifftestCSRState DifftestCSRState(
   .coreid             (0),
   .priviledgeMode     (`RISCV_PRIV_MODE_M),
   .mstatus            (mstatus),
-  .sstatus            (0),
+  .sstatus            (sstatus),
   .mepc               (mepc),
   .sepc               (0),
   .mtval              (0),
