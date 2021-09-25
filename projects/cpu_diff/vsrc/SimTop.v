@@ -64,6 +64,7 @@ wire [4 : 0] memop;
 wire [63 : 0] imm;
 wire id_mem_wr;
 wire id_mem_ena;
+wire id_csr_ena;
 
 
 //id_ex -> EX_stage
@@ -77,6 +78,7 @@ wire [`PC_BUS] ex_pc;
 wire [`INST_BUS] ex_instr;
 wire [4 : 0] ex_memop;
 wire [63 : 0] ex_imm;
+wire ex_csr_ena;
 //id_ex -> ID_stage too
 wire ex_mem_wr;
 wire ex_mem_ena;
@@ -96,7 +98,7 @@ wire EX_mem_wr;
 wire EX_mem_ena;
 wire [11 : 0] ex_csr_addr;    //csr read     ///csr o
 wire [`REG_BUS] ex_w_csr_data;
-wire ex_csr_ena;
+wire EX_csr_ena;
 wire [`REG_BUS] except_type;
 
 //ex_men -> MEM_stage
@@ -278,7 +280,9 @@ assign rst = reset;
 
     .memop(memop),
     .id_mem_wr(id_mem_wr),
-    .id_mem_ena(id_mem_ena)
+    .id_mem_ena(id_mem_ena),
+
+    .id_csr_ena(id_csr_ena) 
 
 );
 
@@ -303,6 +307,10 @@ assign rst = reset;
     .id_w_addr(w_addr),
     .flush(flush),
 
+    .id_csr_ena(id_csr_ena),
+
+
+    .ex_csr_ena(ex_csr_ena),
 
     .ex_w_addr(ex_w_addr),
     .ex_w_ena(ex_w_ena),
@@ -342,6 +350,8 @@ assign rst = reset;
     .id_alusel(ex_alusel),
 
     .csr_reg_data(csr_reg_data),               //csr
+    .id_csr_ena(ex_csr_ena),
+
     .mem_csr_addr(mem_csr_addr),
     .mem_w_csr_data(mem_w_csr_data),
     .mem_csr_ena(mem_csr_ena),
@@ -363,7 +373,7 @@ assign rst = reset;
 
     .ex_csr_addr(ex_csr_addr),         ///csr o
     .ex_w_csr_data(ex_w_csr_data),
-    .ex_csr_ena(ex_csr_ena), 
+    .ex_csr_ena(EX_csr_ena), 
 
     .EX_instr(EX_instr),
     .EX_pc(EX_pc),
@@ -386,7 +396,7 @@ assign rst = reset;
     .ex_mem_wr(EX_mem_wr),
     .ex_mem_ena(EX_mem_ena),
 
-    .ex_csr_ena(ex_csr_ena),               ///csr
+    .ex_csr_ena(EX_csr_ena),               ///csr
     .ex_csr_addr(ex_csr_addr),         
     .ex_w_csr_data(ex_w_csr_data),
     .ex_except_type(except_type),

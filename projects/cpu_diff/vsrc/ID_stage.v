@@ -46,7 +46,9 @@ module ID_stage (
 
     output reg [4 : 0] memop,
     output reg id_mem_wr,
-    output reg id_mem_ena
+    output reg id_mem_ena,
+
+    output reg id_csr_ena           //csr_ena
 
 );
     wire [6 : 0] opcode;
@@ -85,6 +87,7 @@ module ID_stage (
             id_mem_wr = 1'b0;
             id_mem_ena = 1'b0;
             pc_con = 1'b0;
+            id_csr_ena = 1'b0;
 
         end
         else begin
@@ -105,6 +108,7 @@ module ID_stage (
             id_mem_wr = 1'b0;
             id_mem_ena = 1'b0;
             pc_con = 1'b0;
+            id_csr_ena = 1'b0;
 
         case (opcode)
             //I
@@ -580,6 +584,7 @@ module ID_stage (
 
               //CSR
               7'b1110011:begin
+                  id_csr_ena = 1'b1;
                   w_ena = 1'b1;
                   case(funct3)
                        `csrrw:begin
@@ -647,6 +652,7 @@ module ID_stage (
                                    reg1_r_ena = 1'b0;
                                    reg2_r_ena = 1'b0;
                                    w_ena = 1'b0;
+                                   id_csr_ena = 1'b0;
                                 end
                            endcase
                        end
@@ -656,6 +662,7 @@ module ID_stage (
                            alusel = `No;
                            reg1_r_ena = 1'b0;
                            reg2_r_ena = 1'b0;
+                           id_csr_ena = 1'b0;
                        end
                   endcase
               end
@@ -665,6 +672,7 @@ module ID_stage (
                     reg2_r_ena = `ZERO_ENA;
                     id_mem_ena = 1'b0;
                     w_ena = 1'b0;
+                    id_csr_ena = 1'b0;
               end
         endcase
 
@@ -675,6 +683,7 @@ module ID_stage (
             w_ena = 1'b0;
             pc_con = 1'b1;
             id_mem_wr = 1'b0;
+            id_csr_ena = 1'b0;
             ID_pc = `PC_START;      //difftest
             ID_instr = `ZERO_INST;  //difftest
          end

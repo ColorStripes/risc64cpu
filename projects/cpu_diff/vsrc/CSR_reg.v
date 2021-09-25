@@ -50,7 +50,7 @@ module CSR_reg (
             csr_mtvec <= `ZERO_WORD;
             csr_mepc <= `ZERO_WORD;
             csr_mcause <= `ZERO_WORD;
-            csr_mstatus <= 64'h1100_0000_0000_0000;
+            csr_mstatus <= `ZERO_WORD;
             csr_mie <= `ZERO_WORD;
             csr_mip <= `ZERO_WORD;
             csr_mcycle <= `ZERO_WORD;
@@ -70,7 +70,7 @@ module CSR_reg (
             if(csr_w_ena == 1'b1) begin
                 case(csr_w_addr)
                     `mstatus:begin
-                        csr_mstatus[61 : 0] <= csr_w_data[61 : 0];
+                        csr_mstatus[62 : 0] <= csr_w_data[62 : 0];
                     end
                      `mtvec:begin
                         csr_mtvec <= csr_w_data;
@@ -179,7 +179,7 @@ module CSR_reg (
     end
 
 
-assign mstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ? csr_mstatus :   
+assign mstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ? {csr_mstatus[63], csr_w_data[62 : 0]} :   
        // ((except_type == 64'h1) | (except_type == 64'h2) | (except_type == 64'h3)) ? 
     //{csr_mstatus[63:13], 2'b11, csr_mstatus[10:8], csr_mstatus[3], csr_mstatus[6:4], 1'b0, csr_mstatus[2:0]} : (except_type == 64'h4) ?
     //{csr_mstatus[63:13], 2'b00, csr_mstatus[10:8], 1'b0, csr_mstatus[6:4], csr_mstatus[7], csr_mstatus[2:0]} :

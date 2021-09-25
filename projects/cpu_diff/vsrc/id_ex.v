@@ -23,6 +23,10 @@ module id_ex (
     input wire [4 : 0] id_w_addr,
     input wire flush,
 
+    input wire id_csr_ena,           //csr
+
+    output reg ex_csr_ena,
+
     output reg [4 : 0] ex_w_addr,
     output reg ex_w_ena,
 
@@ -58,6 +62,8 @@ always @(posedge clk) begin
 
         ex_pc <= `PC_START;
         ex_instr <= `ZERO_INST;
+
+        ex_csr_ena <= 1'b0;
     end
     else begin
         ex_w_addr <= id_w_addr;
@@ -75,6 +81,7 @@ always @(posedge clk) begin
 
         ex_pc <= id_pc;
         ex_instr <= id_instr;
+        ex_csr_ena <= id_csr_ena;
         if(flush == 1'b1) begin
            ex_w_addr <= `ZERO_REG_ADDR;
            ex_w_ena <= 1'b0;
@@ -91,6 +98,7 @@ always @(posedge clk) begin
 
            ex_pc <= `PC_START;
            ex_instr <= `ZERO_INST;
+           ex_csr_ena <= 1'b0;
         end
     end
   end
