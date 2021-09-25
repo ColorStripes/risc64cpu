@@ -73,8 +73,8 @@ module CSR_reg (
                 case(csr_w_addr)
                     `mstatus:begin
                         csr_mstatus[62 : 0] <= csr_w_data[62 : 0];
-                        csr_mstatus[63] <= (csr_w_data[12] & csr_w_data[13]) | (csr_w_data[14] & csr_w_data[15]);
-                        csr_sstatus[63] <= (csr_w_data[12] & csr_w_data[13]) | (csr_w_data[14] & csr_w_data[15]);
+                        csr_mstatus[63] <= (csr_w_data[13] & csr_w_data[14]) | (csr_w_data[15] & csr_w_data[16]);
+                        csr_sstatus[63] <= (csr_w_data[13] & csr_w_data[14]) | (csr_w_data[15] & csr_w_data[16]);
                         csr_sstatus[16 : 13] <= csr_w_data[16 : 13];
                     end
                      `mtvec:begin
