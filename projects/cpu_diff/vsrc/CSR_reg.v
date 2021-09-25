@@ -70,7 +70,7 @@ module CSR_reg (
             if(csr_w_ena == 1'b1) begin
                 case(csr_w_addr)
                     `mstatus:begin
-                        csr_mstatus[62 : 0] <= csr_w_data[62 : 0];
+                        csr_mstatus[61 : 0] <= csr_w_data[61 : 0];
                     end
                      `mtvec:begin
                         csr_mtvec <= csr_w_data;
