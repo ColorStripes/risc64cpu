@@ -51,8 +51,7 @@ module mem_wb (
             if(flush == 1'b1) begin
                 wb_w_ena <= 1'b0;
                 wb_csr_ena <= 1'b0;
-                wb_pc <= `PC_START;
-                wb_instr <= `ZERO_INST;
+
             end
 
         end
