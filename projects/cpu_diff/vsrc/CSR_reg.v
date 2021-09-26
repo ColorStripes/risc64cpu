@@ -110,7 +110,7 @@ module CSR_reg (
 
             case(except_type)
                  64'h1:begin            ////time_interrupt
-                    csr_mstatus[7] <= csr_mstatus[3];    //MPIE
+                    csr_mstatus[7] <= mstatus[3];    //MPIE
                     csr_mstatus[3] <= 1'b0;          //MIE->0
                     csr_mstatus[12 : 11] <= 2'b11;   //MPP
                     csr_mcause <= {1'b1, 63'h7};
