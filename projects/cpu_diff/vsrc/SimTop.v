@@ -607,7 +607,6 @@ reg [63:0] cycleCnt;
 reg [63:0] instrCnt;
 reg [`REG_BUS] regs_diff [0 : 31];
 reg [31 : 0] inter;
-reg [31 : 0] inte;
 reg [63 : 0] MEM_except_type_f;
 
 
@@ -639,7 +638,6 @@ always @(negedge clock) begin
 end
 always @(posedge clk) begin
        MEM_except_type_f <= MEM_except_type;
-       inte <= inter;
 end
 
 always @(*) begin
