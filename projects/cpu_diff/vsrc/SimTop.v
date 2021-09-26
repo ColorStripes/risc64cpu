@@ -505,6 +505,7 @@ assign rst = reset;
     .mem_w_csr_data(MEM_w_csr_data),
     .mem_csr_ena(MEM_csr_ena),
     .flush(flush),
+    .except_type(MEM_except_type),//
 
     .wb_csr_addr(wb_csr_addr),         ///csr o
     .wb_w_csr_data(wb_w_csr_data),
