@@ -83,7 +83,7 @@ module MEM_stage (
             mem_stor_data = `ZERO_WORD;
             mem_sel = 64'h0000_0000_0000_0000;
             mem_wr = ex_mem_wr;
-            mem_mem_ena = ex_mem_ena ;////////////////////////
+            mem_mem_ena = ex_mem_ena && (mem_except_type == 64'h0);////////////////////////
             case(ex_memop)
                  `R_ONE:begin
                      case(ex_mem_raddr[2 : 0])

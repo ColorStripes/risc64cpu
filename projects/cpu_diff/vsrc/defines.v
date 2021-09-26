@@ -154,9 +154,6 @@
 
 
 
-//CSR
-
-
 
 //CSR_ADDR
 `define mvendorid 12'hf11    //MRO
