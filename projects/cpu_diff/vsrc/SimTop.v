@@ -606,10 +606,11 @@ reg [63:0] cycleCnt;
 reg [63:0] instrCnt;
 reg [`REG_BUS] regs_diff [0 : 31];
 reg [31 : 0] inter;
+reg [31 : 0] inte;
 reg [63 : 0] MEM_except_type_f;
 
 
-wire inst_valid = ((wb_pc != `PC_START) | (wb_instr != 0)) && ~(inter != 32'h0);
+wire inst_valid = ((wb_pc != `PC_START) | (wb_instr != 0)) && ~(inte != 32'h0);
 //wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2) | (wb_instr == 32'h00063783) | (wb_instr == 32'h00f63023);
 //wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2) | (wb_instr == 32'h0007b483) | (wb_instr == 32'h00f73023);
 wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2) | (clint) ;
@@ -637,6 +638,7 @@ always @(negedge clock) begin
 end
 always @(posedge clk) begin
        MEM_except_type_f <= MEM_except_type;
+       inte <= inter;
 end
 
 always @(*) begin
@@ -650,7 +652,7 @@ end
 DifftestArchEvent DifftestArchEvent (
     .clock(clock),			// 时钟
     .coreid(0),		// cpu id，单核时固定为0
-    .intrNO(inter),		// 中断号，非0时产生中断。产生中断的时钟周期中，DifftestInstrCommit提交的valid需为0
+    .intrNO(inte),		// 中断号，非0时产生中断。产生中断的时钟周期中，DifftestInstrCommit提交的valid需为0
     .cause(0),			// 异常号，ecall时不需要考虑
     .exceptionPC(wb_pc),	// 产生异常时的PC
     .exceptionInst(wb_instr)	// 产生异常时的指令
