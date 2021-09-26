@@ -232,7 +232,6 @@ module MEM_stage (
 
                  //write
                  `W_ONE:begin
-                     mem_mem_ena = 1'b1;
                      case(ex_mem_waddr[2 : 0])
                          3'b000:begin
                              mem_sel = 64'h0000_0000_0000_00ff;
@@ -269,7 +268,6 @@ module MEM_stage (
                      endcase  
                  end
                  `W_DOU:begin
-                     mem_mem_ena = 1'b1;
                      case(ex_mem_waddr[2 : 1])
                          2'b00:begin
                              mem_sel = 64'h0000_0000_0000_ffff;
@@ -290,7 +288,6 @@ module MEM_stage (
                      endcase
                  end
                  `W_FOR:begin
-                     mem_mem_ena = 1'b1;
                      case(ex_mem_waddr[2])
                          1'b0:begin
                              mem_sel = 64'h0000_0000_ffff_ffff;
@@ -304,7 +301,6 @@ module MEM_stage (
                  end
                  `W_EIG:begin
                      mem_sel = 64'hffff_ffff_ffff_ffff;
-                     mem_mem_ena = 1'b1 ;
                      mem_stor_data = ex_stor_data;
                      if((ex_mem_waddr == `msip) || (ex_mem_waddr == `mtimecmp) || (ex_mem_waddr == `mtime)) begin  ////////////
                          mem_mem_ena = 1'b0;
