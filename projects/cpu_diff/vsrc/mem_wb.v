@@ -53,8 +53,11 @@ module mem_wb (
                 wb_w_ena <= 1'b0;
                 wb_csr_ena <= 1'b0;
                 if(except_type == 64'h1) begin
-
-
+                                wb_w_addr <= `ZERO_REG_ADDR;
+            wb_pc <= `PC_START;
+            wb_instr <= `ZERO_INST;
+            wb_csr_addr <= 12'h000;
+            wb_w_csr_data <= `ZERO_WORD;
                 end
 
 
