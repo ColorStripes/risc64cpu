@@ -282,7 +282,7 @@ module axi_rw # (
     // Read data channel signals
     assign axi_r_ready_o    = r_state_read;
 
-    wire [AXI_DATA_WIDTH-1:0] axi_r_data_l  = (axi_r_data_i & mask_l) >> aligned_offset_l;
+    wire [AXI_DATA_WIDTH-1:0] axi_r_data  = (axi_r_data_i & mask);
     wire [AXI_DATA_WIDTH-1:0] axi_r_data_h  = (axi_r_data_i & mask_h) << aligned_offset_h;
 
     generate
@@ -297,11 +297,11 @@ module axi_rw # (
                             data_read_o[AXI_DATA_WIDTH-1:0] <= data_read_o[AXI_DATA_WIDTH-1:0] | axi_r_data_h;
                         end
                         else begin
-                            data_read_o[AXI_DATA_WIDTH-1:0] <= axi_r_data_l;
+                            data_read_o[AXI_DATA_WIDTH-1:0] <= axi_r_data;
                         end
                     end
                     else if (len == i) begin
-                        data_read_o[i*AXI_DATA_WIDTH+:AXI_DATA_WIDTH] <= axi_r_data_l;
+                        data_read_o[i*AXI_DATA_WIDTH+:AXI_DATA_WIDTH] <= axi_r_data;
                     end
                 end
             end
