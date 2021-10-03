@@ -155,7 +155,7 @@ DifftestInstrCommit DifftestInstrCommit(
   .clock              (clock),
   .coreid             (0),
   .index              (0),
-  .valid              (0),
+  .valid              (cmt_valid),
   .pc                 (cmt_pc),
   .instr              (cmt_inst),
   .skip               (0),
