@@ -87,7 +87,7 @@ module axi_rw # (
     input                               axi_w_ready_i,
     output                              axi_w_valid_o,
     output [AXI_DATA_WIDTH-1:0]         axi_w_data_o,
-    output [AXI_DATA_WIDTH/8-1:0]       axi_w_strb_o,
+    output [AXI_DATA_WIDTH/8-1:0]       axi_w_strb_o,//
     output                              axi_w_last_o,
     output [AXI_USER_WIDTH-1:0]         axi_w_user_o,
     

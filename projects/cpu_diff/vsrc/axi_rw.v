@@ -220,6 +220,7 @@ module axi_rw # (
     wire [2:0] axi_size     = AXI_SIZE[2:0];
     
     wire [AXI_ADDR_WIDTH-1:0] axi_addr          = {rw_addr_i[AXI_ADDR_WIDTH-1:ALIGNED_WIDTH], {ALIGNED_WIDTH{1'b0}}};
+    wire [OFFSET_WIDTH-1:0] aligned_offset    = {{OFFSET_WIDTH-ALIGNED_WIDTH{1'b0}}, {rw_addr_i[ALIGNED_WIDTH-1:0]}};
     wire [OFFSET_WIDTH-1:0] aligned_offset_l    = {{OFFSET_WIDTH-ALIGNED_WIDTH{1'b0}}, {rw_addr_i[ALIGNED_WIDTH-1:0]}} << 3;
     wire [OFFSET_WIDTH-1:0] aligned_offset_h    = AXI_DATA_WIDTH - aligned_offset_l;
     wire [MASK_WIDTH-1:0] mask                  = (({MASK_WIDTH{size_b}} & {{MASK_WIDTH-8{1'b0}}, 8'hff})
@@ -277,9 +278,14 @@ module axi_rw # (
 
     // Write data channel signals
     assign axi_w_valid_o    = w_state_write;
+    assign axi_w_strb_o     = (size_b) ? {{AXI_DATA_WIDTH/8-1{1'b0}}, 1'b1} << aligned_offset : 
+                              (size_h) ? {{AXI_DATA_WIDTH/8-2{1'b0}}, 2'b11} << aligned_offset :
+                              (size_w) ? {{AXI_DATA_WIDTH/8-4{1'b0}}, 4'b1111} << aligned_offset :
+                              (size_d) ? {{AXI_DATA_WIDTH/8-8{1'b0}}, 8'b11111111} << aligned_offset : 8'b00000000;
 
-    wire [AXI_DATA_WIDTH-1:0] axi_w_data_l  = (data_write_i & mask_l) >> aligned_offset_l;
-    wire [AXI_DATA_WIDTH-1:0] axi_w_data_h  = (data_write_i & mask_h) << aligned_offset_h;
+
+    wire [AXI_DATA_WIDTH-1:0] axi_w_data_l  = (data_write_i & mask_l) ;
+    wire [AXI_DATA_WIDTH-1:0] axi_w_data_h  = (data_write_i & mask_h) ;
 
     generate
         for (genvar i = 0; i < TRANS_LEN; i += 1) begin
