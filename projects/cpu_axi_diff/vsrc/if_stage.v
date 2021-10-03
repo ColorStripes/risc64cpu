@@ -43,6 +43,6 @@ always @( posedge clk ) begin
 end
 
 assign if_valid = 1'b1;
-assign if_size = `SIZE_D;
+assign if_size = `SIZE_B;
 
 endmodule
