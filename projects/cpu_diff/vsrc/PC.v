@@ -10,12 +10,14 @@ module PC(
   input wire [`PC_BUS] pc_i,
   input wire pc_con,
   input wire [`PC_BUS] new_pc,
-  input wire flush,
+  input wire flush,	
+  input wire if_ready,                //AXI
 
   output reg I_M_e,
   output reg [`PC_BUS] pc
+                           
 );
-parameter PC_START_RESET = `PC_START;
+wire handshake_done = I_M_e & if_ready;
 
 always@( posedge clk )
 begin
@@ -31,9 +33,10 @@ end
 
 always@( posedge clk ) begin
   if( I_M_e == 1'b0 ) begin
-    pc <= PC_START_RESET ;
+    pc <= `PC_START ;
   end
-  else begin    
+  else if(handshake_done) begin    
+
     if(flush == 1'b1) begin
       pc <= new_pc;
     end

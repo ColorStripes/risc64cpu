@@ -11,11 +11,11 @@ module if_stage(
   output reg [63:0] pc,
   output reg [31:0] inst,
 
-	output if_valid,
-	input  if_ready,
+	output if_valid,//
+	input  if_ready,//
   input  [63:0] if_data_read,
   output reg [63:0] if_addr,
-  output [1:0] if_size,
+  output [1:0] if_size,//
   input  [1:0] if_resp,
 
   output reg fetched

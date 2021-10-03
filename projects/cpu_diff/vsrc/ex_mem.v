@@ -22,6 +22,7 @@ module ex_mem (
     input wire [`REG_BUS] ex_w_csr_data,
     input wire [`REG_BUS] ex_except_type,
     input wire flush,
+    input wire stall,
 
     output reg [`REG_BUS] mem_w_data,
     output reg mem_w_ena,
@@ -61,7 +62,7 @@ module ex_mem (
             mem_w_csr_data <= `ZERO_WORD;
             mem_except_type <= `ZERO_WORD;
         end
-        else begin
+        else if(~stall) begin
             mem_w_data <= ex_w_data;
             mem_w_ena <= ex_w_ena;
             mem_w_addr <= ex_w_addr;

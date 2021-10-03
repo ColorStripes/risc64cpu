@@ -22,6 +22,7 @@ module id_ex (
     input wire id_w_ena,
     input wire [4 : 0] id_w_addr,
     input wire flush,
+    input wire stall,
 
     input wire id_csr_ena,           //csr
 
@@ -65,7 +66,7 @@ always @(posedge clk) begin
 
         ex_csr_ena <= 1'b0;
     end
-    else begin
+    else if(~stall) begin
         ex_w_addr <= id_w_addr;
         ex_w_ena <= id_w_ena;
 
