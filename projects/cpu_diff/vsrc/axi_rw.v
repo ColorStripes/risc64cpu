@@ -60,14 +60,14 @@ module axi_rw # (
     input                               clock,
     input                               reset,
 
-	input                               rw_valid_i,
-	output                              rw_ready_o,
-    input                               rw_req_i,
-    output reg [RW_DATA_WIDTH:0]        data_read_o,
-    input  [RW_DATA_WIDTH:0]            data_write_i,
-    input  [AXI_DATA_WIDTH:0]           rw_addr_i,
-    input  [1:0]                        rw_size_i,
-    output [1:0]                        rw_resp_o,
+	input                               rw_valid_i,//
+	output                              rw_ready_o,//
+    input                               rw_req_i,//
+    output reg [RW_DATA_WIDTH-1:0]        data_read_o,//
+    input  [RW_DATA_WIDTH-1:0]            data_write_i,
+    input  [AXI_DATA_WIDTH-1:0]           rw_addr_i,//
+    input  [1:0]                        rw_size_i,//
+    output [1:0]                        rw_resp_o,//
 
     // Advanced eXtensible Interface
     input                               axi_aw_ready_i,
@@ -261,6 +261,53 @@ module axi_rw # (
 
 
     // ------------------Write Transaction------------------
+
+    // Write address channel signals
+    assign axi_aw_valid_o   = w_state_addr;
+    assign axi_aw_addr_o    = axi_addr;
+    assign axi_aw_prot_o    = `AXI_PROT_UNPRIVILEGED_ACCESS | `AXI_PROT_SECURE_ACCESS | `AXI_PROT_DATA_ACCESS;
+    assign axi_aw_id_o      = axi_id;
+    assign axi_aw_user_o    = axi_user;
+    assign axi_aw_len_o     = axi_len;
+    assign axi_aw_size_o    = axi_size;
+    assign axi_aw_burst_o   = `AXI_BURST_TYPE_INCR;
+    assign axi_aw_lock_o    = 1'b0;
+    assign axi_aw_cache_o   = `AXI_ARCACHE_NORMAL_NON_CACHEABLE_NON_BUFFERABLE;
+    assign axi_aw_qos_o     = 4'h0;
+
+    // Write data channel signals
+    assign axi_w_valid_o    = w_state_write;
+
+    wire [AXI_DATA_WIDTH-1:0] axi_w_data_l  = (data_write_i & mask_l) >> aligned_offset_l;
+    wire [AXI_DATA_WIDTH-1:0] axi_w_data_h  = (data_write_i & mask_h) << aligned_offset_h;
+
+    generate
+        for (genvar i = 0; i < TRANS_LEN; i += 1) begin
+            always @(posedge clock) begin
+                if (reset) begin
+                    axi_w_data_o[i*AXI_DATA_WIDTH+:AXI_DATA_WIDTH] <= 0;
+                end
+                else if (axi_w_valid_o) begin
+                    if (~aligned & overstep) begin
+                        if (len[0]) begin
+                            axi_w_data_o[AXI_DATA_WIDTH-1:0] <= axi_w_data_o[AXI_DATA_WIDTH-1:0] | axi_w_data_h;
+                        end
+                        else begin
+                            axi_w_data_o[AXI_DATA_WIDTH-1:0] <= axi_w_data_l;
+                        end
+                    end
+                    else if (len == i) begin
+                        axi_w_data_o[i*AXI_DATA_WIDTH+:AXI_DATA_WIDTH] <= axi_w_data_l;
+                    end
+                end
+            end
+        end
+    endgenerate
+
+    //Write respond channel signals
+    assign axi_b_ready_o    = w_state_resp;
+
+
 
 
     
