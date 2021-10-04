@@ -139,9 +139,9 @@ module axi_rw # (
     wire r_done     = r_hs & axi_r_last_i;
     wire trans_done = w_trans ? b_hs : r_done;
 
-    
 
-    assign out_id = (axi_r_valid_i) ? axi_r_id_i : (axi_b_valid_i) ? axi_b_id_i : 0;
+
+
     
     // ------------------State Machine------------------
     parameter [1:0] W_STATE_IDLE = 2'b00, W_STATE_ADDR = 2'b01, W_STATE_WRITE = 2'b10, W_STATE_RESP = 2'b11;
@@ -239,6 +239,19 @@ module axi_rw # (
 
     wire [AXI_ID_WIDTH-1:0] axi_id              = {cpu_id[AXI_ID_WIDTH-1 : 0]};
     wire [AXI_USER_WIDTH-1:0] axi_user          = {AXI_USER_WIDTH{1'b0}};
+
+    
+    reg id;
+    wire out_id_nxt = (axi_r_valid_i) ? axi_r_id_i : (axi_b_valid_i) ? axi_b_id_i : 0;
+    always @(posedge clock) begin
+        if (reset) begin
+            id <= 0;
+        end
+        else begin
+            id <= out_id_nxt;
+        end
+    end
+    assign out_id     = id;
 
     reg rw_ready;
     wire rw_ready_nxt = trans_done;
