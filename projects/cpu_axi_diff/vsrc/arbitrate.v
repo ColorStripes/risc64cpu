@@ -81,18 +81,17 @@ always @(posedge clk) begin
     end
     else begin
         stall = AXI_stall;
-        if(AXI_ready) begin
             if(AXI_id == 4'b1) begin
                 mem_data = AXI_r_data;
                 mem_ready = AXI_ready;
-                stall = 1'b0;
+                //stall = 1'b0;
                 if_ready = 1'b0;
                 if_data_read = `ZERO_WORD;
             end
             else if(AXI_id == 4'b11) begin
                 if_data_read = AXI_r_data;
                 if_ready = AXI_ready;
-                stall = 1'b0;
+                //stall = 1'b0;
                 mem_ready = 1'b0;
                 mem_data = `ZERO_WORD;
             end
@@ -101,9 +100,8 @@ always @(posedge clk) begin
                 mem_ready = 1'b0;
                 mem_data = `ZERO_WORD;
                 if_data_read = `ZERO_WORD;
-                stall = 1'b1;
+                //stall = 1'b1;
             end
-        end
         
     
     end
