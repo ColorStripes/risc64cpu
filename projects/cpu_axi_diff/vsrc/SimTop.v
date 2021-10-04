@@ -146,7 +146,7 @@ module SimTop(
         .rw_addr_i                      (AXI_addr),
         .rw_size_i                      (AXI_size),
         .rw_resp_o                      (),
-        .stall                          (),
+        .stall                          (AXI_stall),
         .cpu_id                         (AXI_id),
         .out_id                         (AXI_out_id),
 
@@ -231,8 +231,10 @@ module SimTop(
    wire AXI_ready;
    wire [3:0] AXI_out_id;
    wire [`REG_BUS] AXI_r_data;
+   wire AXI_stall;
 
    wire [1: 0] rw_resp;
+   wire stall;
 
     cpu u_cpu(
         .clock                          (clock),
@@ -277,8 +279,12 @@ arbitrate arbitrate (
 
     .AXI_ready(AXI_ready),
     .AXI_out_id(AXI_out_id),
-    .AXI_r_data(AXI_r_data)
-    
+    .AXI_r_data(AXI_r_data),
+
+    .AXI_stall(AXI_stall),
+
+    .stall(stall)
+
 );
 
 endmodule

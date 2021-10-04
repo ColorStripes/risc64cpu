@@ -33,7 +33,10 @@ module arbitrate (
 
     input wire AXI_ready,
     input wire [3:0] AXI_out_id,
-    input wire [`REG_BUS] AXI_r_data
+    input wire [`REG_BUS] AXI_r_data,
+    input wire AXI_stall,
+
+    output reg stall
     
 );
 
@@ -72,6 +75,8 @@ always @(posedge clk) begin
     mem_ready = 1'b0;
     mem_data = `ZERO_WORD;
     if_data_read = `ZERO_WORD;
+    stall = AXI_stall;
+
     
     
         if(AXI_id == 4'b1) begin
