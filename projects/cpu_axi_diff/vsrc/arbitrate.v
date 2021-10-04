@@ -3,6 +3,8 @@
 `include "defines.v"
 
 module arbitrate (
+    input clk,
+    input rst,
 
     output reg if_ready,
     output reg [63 : 0] if_data_read,
@@ -36,7 +38,7 @@ module arbitrate (
 );
 
 
-always @(*) begin
+always @(posedge clk) begin
     AXI_addr = `ZERO_WORD;
     AXI_w_data = `ZERO_WORD;
     AXI_vaild = 1'b0;
@@ -65,7 +67,7 @@ end
 
 
 
-always @(*) begin
+always @(posedge clk) begin
     if_ready = 1'b0;
     mem_ready = 1'b0;
     mem_data = `ZERO_WORD;

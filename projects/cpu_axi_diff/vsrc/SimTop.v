@@ -247,6 +247,8 @@ module SimTop(
     );
 
 arbitrate arbitrate (
+    .clk(clock),
+    .rst(reset),
 
     .if_ready(if_ready),
     .if_data_read(if_data_read),
