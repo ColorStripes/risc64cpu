@@ -139,6 +139,8 @@ module axi_rw # (
     wire r_done     = r_hs & axi_r_last_i;
     wire trans_done = w_trans ? b_hs : r_done;
 
+    
+
     assign out_id = (axi_r_valid_i) ? axi_r_id_i : (axi_b_valid_i) ? axi_b_id_i : 0;
     
     // ------------------State Machine------------------

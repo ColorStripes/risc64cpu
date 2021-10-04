@@ -225,11 +225,11 @@ module SimTop(
    wire AXI_vaild;
    wire [1 : 0] AXI_req;
    wire [1 : 0] AXI_size;
-   wire [64-1:0] AXI_id;
+   wire [3:0] AXI_id;
 
 //AXI -> arbitrate
    wire AXI_ready;
-   wire [64-1:0] AXI_out_id;
+   wire [3:0] AXI_out_id;
    wire [`REG_BUS] AXI_r_data;
 
    wire [1: 0] rw_resp;

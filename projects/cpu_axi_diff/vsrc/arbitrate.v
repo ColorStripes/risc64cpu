@@ -29,10 +29,10 @@ module arbitrate (
     output reg AXI_vaild,
     output reg [1 : 0] AXI_req,
     output reg [1 : 0] AXI_size,
-    output reg [63:0] AXI_id,
+    output reg [3:0] AXI_id,
 
     input wire AXI_ready,
-    input wire [63:0] AXI_out_id,
+    input wire [3:0] AXI_out_id,
     input wire [`REG_BUS] AXI_r_data
     
 );
@@ -51,7 +51,7 @@ always @(*) begin
         AXI_vaild = mem_valid;
         AXI_req = mem_req;
         AXI_size = mem_sel;
-        AXI_id = {{63{1'b0}}, 1'b1};
+        AXI_id = 4'b0001;
     end
     else if(if_valid) begin
         AXI_addr = IF_pc;
@@ -59,11 +59,11 @@ always @(*) begin
         AXI_vaild = if_valid;
         AXI_req = if_req;
         AXI_size = if_size;
-        AXI_id = {{62{1'b0}}, 2'b11};
+        AXI_id = 4'b0011;
     end
 end
 
-reg [63:0] id;
+reg [3:0] id;
 reg ready;
 reg [63:0] data;
 
