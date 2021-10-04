@@ -37,9 +37,8 @@ always@( posedge clk ) begin
     pc <= `PC_START ;
   end
   else begin
-    if(if_ready) begin
-      test <=1'b1;
-    end    
+    test <= handshake_done;
+    
     
 
     if(flush == 1'b1) begin
