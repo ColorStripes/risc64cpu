@@ -138,17 +138,14 @@ module SimTop(
         .clock                          (clock),
         .reset                          (reset),
 
-        .rw_valid_i                     (AXI_vaild),
-        .rw_ready_o                     (AXI_ready),
-        .rw_req_i                       (AXI_req),
-        .data_read_o                    (AXI_r_data),
-        .data_write_i                   (AXI_w_data),
-        .rw_addr_i                      (AXI_addr),
-        .rw_size_i                      (AXI_size),
-        .rw_resp_o                      (rw_resp),
-        .stall                          (stall),
-        .cpu_id                         (AXI_id),
-        .out_id                         (AXI_out_id),
+        .rw_valid_i                     (if_valid),
+        .rw_ready_o                     (if_ready),
+        .rw_req_i                       (req),
+        .data_read_o                    (if_data_read),
+        .data_write_i                   (data_write),
+        .rw_addr_i                      (if_addr),
+        .rw_size_i                      (if_size),
+        .rw_resp_o                      (if_resp),
 
         .axi_aw_ready_i                 (aw_ready),
         .axi_aw_valid_o                 (aw_valid),
@@ -200,118 +197,26 @@ module SimTop(
         .axi_r_user_i                   (r_user)
     );
 
-//CPU -> arbitrate
     wire if_valid;
-    wire [`PC_BUS] IF_pc;
-    wire [1 : 0] if_size;
-    wire [1 : 0] if_req;
-////////////////
-    wire mem_valid;
-    wire [63 : 0] mem_addr;
-    wire [63 : 0] MEM_stor_data;
-    wire [1 : 0] mem_sel;
-    wire [1 : 0] mem_req;
+    wire if_ready;
+    wire req = `REQ_READ;
+    wire [63:0] if_data_read;
+    wire [63:0] data_write;
+    wire [63:0] if_addr;
+    wire [1:0] if_size;
+    wire [1:0] if_resp;
 
-//arbitrate -> CPU
-   wire if_ready;
-   wire [63:0] if_data_read;
-///////////////
-   wire mem_ready;
-   wire [63:0] mem_data;
+    cpu u_cpu(
+        .clock                          (clock),
+        .reset                          (reset),
 
-//arbitrate -> AXI
-   wire [63 : 0] AXI_addr;
-   wire [`REG_BUS] AXI_w_data;
-   wire AXI_vaild;
-   wire [1 : 0] AXI_req;
-   wire [1 : 0] AXI_size;
-   wire [64-1:0] AXI_id;
-
-//AXI -> arbitrate
-   wire AXI_ready;
-   wire [64-1:0] AXI_out_id;
-   wire [`REG_BUS] AXI_r_data;
-
-   wire [1: 0] rw_resp;
-
-wire stall;
-
-    
-
-
-arbitrate arbitrate (
-
-    .if_ready(if_ready),
-    .if_data_read(if_data_read),
-
-    .if_valid(if_valid),
-    .IF_pc(IF_pc),
-    .if_size(if_size),
-    .if_req(if_req),
-
-    .mem_ready(mem_ready),
-    .mem_data(mem_data),
-    
-    .mem_stor_data(MEM_stor_data),
-    .mem_valid(mem_valid),
-    .mem_addr(mem_addr),
-    .mem_sel(mem_sel),
-    .mem_req(mem_req),
-
-
-    .AXI_addr(AXI_addr),
-    .AXI_w_data(AXI_w_data),
-    .AXI_vaild(AXI_vaild),
-    .AXI_req(AXI_req),
-    .AXI_size(AXI_size),
-    .AXI_id(AXI_id),
-
-    .AXI_ready(AXI_ready),
-    .AXI_out_id(AXI_out_id),
-    .AXI_r_data(AXI_r_data)
-    
-);
-
-rvcpu rvcpu(
-    .clock(clock),
-    .reset(reset),
-    .stall(stall),
-
-    .if_ready(if_ready),
-    .if_data_read(if_data_read),
-    .if_valid(if_valid),
-    .pc(IF_pc),
-    .if_size(if_size),
-    .if_req(if_req),
-
-    .mem_ready(mem_ready),
-    .mem_data(mem_data),
-    .MEM_stor_data(MEM_stor_data),
-    .mem_valid(mem_valid),
-    .mem_addr(mem_addr),
-    .mem_sel(mem_sel),
-    .mem_req(mem_req)
-
-);
-
-
-
+        .if_valid                       (if_valid),
+        .if_ready                       (if_ready),
+        .if_data_read                   (if_data_read),
+        .if_addr                        (if_addr),
+        .if_size                        (if_size),
+        .if_resp                        (if_resp)
+    );
 
 
 endmodule
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
