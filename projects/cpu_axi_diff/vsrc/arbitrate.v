@@ -67,26 +67,26 @@ end
 
 
 
-always @(posedge clk) begin
-    if_ready <= 1'b0;
-    mem_ready <= 1'b0;
-    mem_data <= `ZERO_WORD;
-    if_data_read <= `ZERO_WORD;
+always @(*) begin
+    if_ready = 1'b0;
+    mem_ready = 1'b0;
+    mem_data = `ZERO_WORD;
+    if_data_read = `ZERO_WORD;
     
     if(AXI_ready) begin
         if(AXI_out_id == {{63{1'b0}}, 1'b1}) begin
-            mem_data <= AXI_r_data;
-            mem_ready <= AXI_ready;
+            mem_data = AXI_r_data;
+            mem_ready = AXI_ready;
         end
         else if(AXI_out_id == {{62{1'b0}}, 2'b11}) begin
-            if_data_read <= AXI_r_data;
-            if_ready <= AXI_ready;
+            if_data_read = AXI_r_data;
+            if_ready = AXI_ready;
         end
         else begin
-            if_ready <= 1'b0;
-            mem_ready <= 1'b0;
-            mem_data <= `ZERO_WORD;
-            if_data_read <= `ZERO_WORD;
+            if_ready = 1'b0;
+            mem_ready = 1'b0;
+            mem_data = `ZERO_WORD;
+            if_data_read = `ZERO_WORD;
         end
     end
     
