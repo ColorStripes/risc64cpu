@@ -17,7 +17,7 @@ module PC(
   output reg [`PC_BUS] pc
                            
 );
-reg handshake_done = I_M_e & if_ready;
+wire handshake_done = I_M_e & if_ready;
 
 always@( posedge clk )
 begin
@@ -36,7 +36,7 @@ always@( posedge clk ) begin
   if( I_M_e == 1'b0 ) begin
     pc <= `PC_START ;
   end
-  else if(handshake_done) begin    
+  else if(handshake_done == 1'b1) begin    
     test <=1'b1;
 
     if(flush == 1'b1) begin
