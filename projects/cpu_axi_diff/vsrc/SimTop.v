@@ -139,7 +139,7 @@ module SimTop(
         .reset                          (reset),
 
         .rw_valid_i                     (AXI_vaild),
-        .rw_ready_o                     (AXI_ready),
+        .rw_ready_o                     (if_ready),
         .rw_req_i                       (AXI_req),
         .data_read_o                    (AXI_r_data),
         .data_write_i                   (AXI_w_data),
@@ -250,7 +250,7 @@ arbitrate arbitrate (
     .clk(clock),
     .rst(reset),
 
-    .if_ready(if_ready),
+    .if_ready(),
     .if_data_read(if_data_read),
 
     .if_valid(if_valid),
