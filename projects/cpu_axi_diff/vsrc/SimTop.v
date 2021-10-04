@@ -280,7 +280,7 @@ rvcpu rvcpu(
     .if_ready(if_ready),
     .if_data_read(if_data_read),
     .if_valid(if_valid),
-    .IF_pc(IF_pc),
+    .pc(IF_pc),
     .if_size(if_size),
     .if_req(if_req),
 

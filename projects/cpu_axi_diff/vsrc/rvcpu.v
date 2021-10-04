@@ -11,7 +11,7 @@ module rvcpu(
     input  wire if_ready,
     input  wire [63 : 0] if_data_read,
     output wire if_valid,
-    output wire [63 : 0] IF_pc,
+    output wire [63 : 0] pc,
     output wire [1 : 0] if_size,
     output wire [1 : 0] if_req,
 
@@ -31,7 +31,7 @@ wire rst;
 
 //IF_stage -> if_id
 wire wash;
-wire [`PC_BUS] pc;
+//wire [`PC_BUS] pc;
 wire [31 : 0] instr;
 
 
