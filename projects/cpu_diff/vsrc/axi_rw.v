@@ -63,11 +63,14 @@ module axi_rw # (
 	input                               rw_valid_i,//
 	output                              rw_ready_o,//
     input                               rw_req_i,//
-    output reg [RW_DATA_WIDTH-1:0]        data_read_o,//
-    input  [RW_DATA_WIDTH-1:0]            data_write_i,
-    input  [AXI_DATA_WIDTH-1:0]           rw_addr_i,//
+    output reg [RW_DATA_WIDTH-1:0]      data_read_o,//
+    input  [RW_DATA_WIDTH-1:0]          data_write_i,
+    input  [AXI_DATA_WIDTH-1:0]         rw_addr_i,//
     input  [1:0]                        rw_size_i,//
     output [1:0]                        rw_resp_o,//
+    output reg                          stall,
+    input [AXI_ID_WIDTH-1:0]            cpu_id,
+    output [AXI_ID_WIDTH-1:0]           out_id,
 
     // Advanced eXtensible Interface
     input                               axi_aw_ready_i,
@@ -153,10 +156,10 @@ module axi_rw # (
         else begin
             if (w_valid) begin
                 case (w_state)
-                    W_STATE_IDLE:               w_state <= W_STATE_ADDR;
+                    W_STATE_IDLE: begin w_state <= W_STATE_ADDR;  stall <= 1'b1; end              
                     W_STATE_ADDR:  if (aw_hs)   w_state <= W_STATE_WRITE;
                     W_STATE_WRITE: if (w_done)  w_state <= W_STATE_RESP;
-                    W_STATE_RESP:  if (b_hs)    w_state <= W_STATE_IDLE;
+                    W_STATE_RESP:  if (b_hs) begin w_state <= W_STATE_IDLE; stall <= 1'b0; end   
                 endcase
             end
         end
@@ -170,9 +173,9 @@ module axi_rw # (
         else begin
             if (r_valid) begin
                 case (r_state)
-                    R_STATE_IDLE:               r_state <= R_STATE_ADDR;
+                    R_STATE_IDLE:begin r_state <= R_STATE_ADDR; stall <= 1'b1;end               
                     R_STATE_ADDR: if (ar_hs)    r_state <= R_STATE_READ;
-                    R_STATE_READ: if (r_done)   r_state <= R_STATE_IDLE;
+                    R_STATE_READ: if (r_done) begin r_state <= R_STATE_IDLE; stall <= 1'b0; end   
                     default:;
                 endcase
             end
@@ -231,7 +234,7 @@ module axi_rw # (
     wire [AXI_DATA_WIDTH-1:0] mask_l            = mask[AXI_DATA_WIDTH-1:0];
     wire [AXI_DATA_WIDTH-1:0] mask_h            = mask[MASK_WIDTH-1:AXI_DATA_WIDTH];
 
-    wire [AXI_ID_WIDTH-1:0] axi_id              = {AXI_ID_WIDTH{1'b0}};
+    wire [AXI_ID_WIDTH-1:0] axi_id              = {cpu_id[AXI_ID_WIDTH-1 : 0]};
     wire [AXI_USER_WIDTH-1:0] axi_user          = {AXI_USER_WIDTH{1'b0}};
 
     reg rw_ready;
@@ -281,7 +284,7 @@ module axi_rw # (
     assign axi_w_strb_o     = (size_b) ? {{AXI_DATA_WIDTH/8-1{1'b0}}, 1'b1} << aligned_offset : 
                               (size_h) ? {{AXI_DATA_WIDTH/8-2{1'b0}}, 2'b11} << aligned_offset :
                               (size_w) ? {{AXI_DATA_WIDTH/8-4{1'b0}}, 4'b1111} << aligned_offset :
-                              (size_d) ? {{AXI_DATA_WIDTH/8-8{1'b0}}, 8'b11111111} << aligned_offset : 8'b00000000;
+                              (size_d) ? {{AXI_DATA_WIDTH/8-8{1'b0}}, 8'b11111111} << aligned_offset : {AXI_DATA_WIDTH/8-0{1'b0}};
 
 
     wire [AXI_DATA_WIDTH-1:0] axi_w_data_l  = (data_write_i & mask_l) ;
@@ -310,6 +313,8 @@ module axi_rw # (
         end
     endgenerate
 
+    assign axi_w_last_o = 1'b1;
+
     //Write respond channel signals
     assign axi_b_ready_o    = w_state_resp;
 
@@ -334,6 +339,7 @@ module axi_rw # (
 
     // Read data channel signals
     assign axi_r_ready_o    = r_state_read;
+    assign out_id = axi_r_id_i;
 
     wire [AXI_DATA_WIDTH-1:0] axi_r_data_l  = (axi_r_data_i & mask_l) >> aligned_offset_l;
     wire [AXI_DATA_WIDTH-1:0] axi_r_data_h  = (axi_r_data_i & mask_h) << aligned_offset_h;

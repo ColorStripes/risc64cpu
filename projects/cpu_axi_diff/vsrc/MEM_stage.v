@@ -55,7 +55,6 @@ module MEM_stage (
     output reg [`REG_BUS] mem_mem_waddr,
     output reg [`REG_BUS] mem_mem_raddr,
     //output reg [`REG_BUS] mem_sel,
-    ,
     output reg mem_wr,
     output reg mem_mem_ena,
 

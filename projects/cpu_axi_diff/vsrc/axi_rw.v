@@ -60,14 +60,17 @@ module axi_rw # (
     input                               clock,
     input                               reset,
 
-	input                               rw_valid_i,
-	output                              rw_ready_o,
-    input                               rw_req_i,
-    output reg [RW_DATA_WIDTH:0]        data_read_o,
-    input  [RW_DATA_WIDTH:0]            data_write_i,
-    input  [AXI_DATA_WIDTH:0]           rw_addr_i,
-    input  [1:0]                        rw_size_i,
-    output [1:0]                        rw_resp_o,
+	input                               rw_valid_i,//
+	output                              rw_ready_o,//
+    input                               rw_req_i,//
+    output reg [RW_DATA_WIDTH-1:0]      data_read_o,//
+    input  [RW_DATA_WIDTH-1:0]          data_write_i,
+    input  [AXI_DATA_WIDTH-1:0]         rw_addr_i,//
+    input  [1:0]                        rw_size_i,//
+    output [1:0]                        rw_resp_o,//
+    output reg                          stall,
+    input [AXI_ID_WIDTH-1:0]            cpu_id,
+    output [AXI_ID_WIDTH-1:0]           out_id,
 
     // Advanced eXtensible Interface
     input                               axi_aw_ready_i,
@@ -87,7 +90,7 @@ module axi_rw # (
     input                               axi_w_ready_i,
     output                              axi_w_valid_o,
     output [AXI_DATA_WIDTH-1:0]         axi_w_data_o,
-    output [AXI_DATA_WIDTH/8-1:0]       axi_w_strb_o,//
+    output [AXI_DATA_WIDTH/8-1:0]       axi_w_strb_o,
     output                              axi_w_last_o,
     output [AXI_USER_WIDTH-1:0]         axi_w_user_o,
     
@@ -136,6 +139,7 @@ module axi_rw # (
     wire r_done     = r_hs & axi_r_last_i;
     wire trans_done = w_trans ? b_hs : r_done;
 
+    assign out_id = (axi_r_valid_i) ? axi_r_id_i : (axi_b_valid_i) ? axi_b_id_i : 0;
     
     // ------------------State Machine------------------
     parameter [1:0] W_STATE_IDLE = 2'b00, W_STATE_ADDR = 2'b01, W_STATE_WRITE = 2'b10, W_STATE_RESP = 2'b11;
@@ -153,10 +157,10 @@ module axi_rw # (
         else begin
             if (w_valid) begin
                 case (w_state)
-                    W_STATE_IDLE:               w_state <= W_STATE_ADDR;
+                    W_STATE_IDLE: begin w_state <= W_STATE_ADDR;  stall <= 1'b1; end              
                     W_STATE_ADDR:  if (aw_hs)   w_state <= W_STATE_WRITE;
                     W_STATE_WRITE: if (w_done)  w_state <= W_STATE_RESP;
-                    W_STATE_RESP:  if (b_hs)    w_state <= W_STATE_IDLE;
+                    W_STATE_RESP:  if (b_hs) begin w_state <= W_STATE_IDLE; stall <= 1'b0; end   
                 endcase
             end
         end
@@ -170,9 +174,9 @@ module axi_rw # (
         else begin
             if (r_valid) begin
                 case (r_state)
-                    R_STATE_IDLE:               r_state <= R_STATE_ADDR;
+                    R_STATE_IDLE:begin r_state <= R_STATE_ADDR; stall <= 1'b1;end               
                     R_STATE_ADDR: if (ar_hs)    r_state <= R_STATE_READ;
-                    R_STATE_READ: if (r_done)   r_state <= R_STATE_IDLE;
+                    R_STATE_READ: if (r_done) begin r_state <= R_STATE_IDLE; stall <= 1'b0; end   
                     default:;
                 endcase
             end
@@ -220,6 +224,7 @@ module axi_rw # (
     wire [2:0] axi_size     = AXI_SIZE[2:0];
     
     wire [AXI_ADDR_WIDTH-1:0] axi_addr          = {rw_addr_i[AXI_ADDR_WIDTH-1:ALIGNED_WIDTH], {ALIGNED_WIDTH{1'b0}}};
+    wire [OFFSET_WIDTH-1:0] aligned_offset    = {{OFFSET_WIDTH-ALIGNED_WIDTH{1'b0}}, {rw_addr_i[ALIGNED_WIDTH-1:0]}};
     wire [OFFSET_WIDTH-1:0] aligned_offset_l    = {{OFFSET_WIDTH-ALIGNED_WIDTH{1'b0}}, {rw_addr_i[ALIGNED_WIDTH-1:0]}} << 3;
     wire [OFFSET_WIDTH-1:0] aligned_offset_h    = AXI_DATA_WIDTH - aligned_offset_l;
     wire [MASK_WIDTH-1:0] mask                  = (({MASK_WIDTH{size_b}} & {{MASK_WIDTH-8{1'b0}}, 8'hff})
@@ -230,7 +235,7 @@ module axi_rw # (
     wire [AXI_DATA_WIDTH-1:0] mask_l            = mask[AXI_DATA_WIDTH-1:0];
     wire [AXI_DATA_WIDTH-1:0] mask_h            = mask[MASK_WIDTH-1:AXI_DATA_WIDTH];
 
-    wire [AXI_ID_WIDTH-1:0] axi_id              = {AXI_ID_WIDTH{1'b0}};
+    wire [AXI_ID_WIDTH-1:0] axi_id              = {cpu_id[AXI_ID_WIDTH-1 : 0]};
     wire [AXI_USER_WIDTH-1:0] axi_user          = {AXI_USER_WIDTH{1'b0}};
 
     reg rw_ready;
@@ -261,6 +266,60 @@ module axi_rw # (
 
 
     // ------------------Write Transaction------------------
+
+    // Write address channel signals
+    assign axi_aw_valid_o   = w_state_addr;
+    assign axi_aw_addr_o    = axi_addr;
+    assign axi_aw_prot_o    = `AXI_PROT_UNPRIVILEGED_ACCESS | `AXI_PROT_SECURE_ACCESS | `AXI_PROT_DATA_ACCESS;
+    assign axi_aw_id_o      = axi_id;
+    assign axi_aw_user_o    = axi_user;
+    assign axi_aw_len_o     = axi_len;
+    assign axi_aw_size_o    = axi_size;
+    assign axi_aw_burst_o   = `AXI_BURST_TYPE_INCR;
+    assign axi_aw_lock_o    = 1'b0;
+    assign axi_aw_cache_o   = `AXI_ARCACHE_NORMAL_NON_CACHEABLE_NON_BUFFERABLE;
+    assign axi_aw_qos_o     = 4'h0;
+
+    // Write data channel signals
+    assign axi_w_valid_o    = w_state_write;
+    assign axi_w_strb_o     = (size_b) ? {{AXI_DATA_WIDTH/8-1{1'b0}}, 1'b1} << aligned_offset : 
+                              (size_h) ? {{AXI_DATA_WIDTH/8-2{1'b0}}, 2'b11} << aligned_offset :
+                              (size_w) ? {{AXI_DATA_WIDTH/8-4{1'b0}}, 4'b1111} << aligned_offset :
+                              (size_d) ? {{AXI_DATA_WIDTH/8-8{1'b0}}, 8'b11111111} << aligned_offset : {AXI_DATA_WIDTH/8-0{1'b0}};
+
+
+    wire [AXI_DATA_WIDTH-1:0] axi_w_data_l  = (data_write_i & mask_l) ;
+    wire [AXI_DATA_WIDTH-1:0] axi_w_data_h  = (data_write_i & mask_h) ;
+
+    generate
+        for (genvar i = 0; i < TRANS_LEN; i += 1) begin
+            always @(posedge clock) begin
+                if (reset) begin
+                    axi_w_data_o[i*AXI_DATA_WIDTH+:AXI_DATA_WIDTH] <= 0;
+                end
+                else if (axi_w_valid_o) begin
+                    if (~aligned & overstep) begin
+                        if (len[0]) begin
+                            axi_w_data_o[AXI_DATA_WIDTH-1:0] <= axi_w_data_o[AXI_DATA_WIDTH-1:0] | axi_w_data_h;
+                        end
+                        else begin
+                            axi_w_data_o[AXI_DATA_WIDTH-1:0] <= axi_w_data_l;
+                        end
+                    end
+                    else if (len == i) begin
+                        axi_w_data_o[i*AXI_DATA_WIDTH+:AXI_DATA_WIDTH] <= axi_w_data_l;
+                    end
+                end
+            end
+        end
+    endgenerate
+
+    assign axi_w_last_o = 1'b1;
+
+    //Write respond channel signals
+    assign axi_b_ready_o    = w_state_resp;
+
+
 
 
     
