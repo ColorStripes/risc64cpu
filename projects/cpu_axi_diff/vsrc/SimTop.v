@@ -275,7 +275,7 @@ arbitrate arbitrate (
     .AXI_size(AXI_size),
     .AXI_id(AXI_id),
 
-    .AXI_ready(AXI_ready),
+    .AXI_ready(if_ready),
     .AXI_out_id(AXI_out_id),
     .AXI_r_data(AXI_r_data)
     
