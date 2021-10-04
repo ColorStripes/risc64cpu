@@ -17,13 +17,8 @@ module PC(
   output reg [`PC_BUS] pc
                            
 );
-wire handshake_done = I_M_e & if_ready;
+wire test = I_M_e & if_ready;
 
-always @(posedge clk) begin
-  if(handshake_done) begin
-    test <= 1'b1;
-  end
-end
 
 always@( posedge clk )
 begin
