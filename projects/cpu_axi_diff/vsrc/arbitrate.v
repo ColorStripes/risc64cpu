@@ -44,7 +44,7 @@ always @(*) begin
     AXI_vaild = 1'b0;
     AXI_req = 2'b0;
     AXI_size = 2'b0;
-    AXI_id = {{63{1'b0}}, 1'b0};
+    AXI_id = 4'b0000;
     if(mem_valid) begin
         AXI_addr = mem_addr;
         AXI_w_data = mem_stor_data;
@@ -63,18 +63,34 @@ always @(*) begin
     end
 end
 
-reg [3:0] id;
-reg ready;
-reg [63:0] data;
+
+
+
 
 always @(posedge clk) begin
-    id = AXI_out_id;
-    if_ready = AXI_ready;
-    if_data_read = AXI_r_data;
+    if_ready = 1'b0;
+    mem_ready = 1'b0;
+    mem_data = `ZERO_WORD;
+    if_data_read = `ZERO_WORD;
+    
+    
+        if(AXI_id == 4'b1) begin
+            mem_data = AXI_r_data;
+            mem_ready = AXI_ready;
+        end
+        else if(AXI_id == 4'b11) begin
+            if_data_read = AXI_r_data;
+            if_ready = AXI_ready;
+        end
+        else begin
+            if_ready = 1'b0;
+            mem_ready = 1'b0;
+            mem_data = `ZERO_WORD;
+            if_data_read = `ZERO_WORD;
+        end
+    
+    
 end
-
-
-
 
     
 endmodule
