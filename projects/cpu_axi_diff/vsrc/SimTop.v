@@ -146,6 +146,9 @@ module SimTop(
         .rw_addr_i                      (if_addr),
         .rw_size_i                      (if_size),
         .rw_resp_o                      (if_resp),
+        .stall(),
+        .cpu_id(),
+        .out_id(),
 
         .axi_aw_ready_i                 (aw_ready),
         .axi_aw_valid_o                 (aw_valid),
