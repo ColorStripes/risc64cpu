@@ -69,7 +69,7 @@ end
 
 always @(posedge clk) begin
 
-    
+    if_ready = AXI_ready;
     
         if(AXI_out_id == {{63{1'b0}}, 1'b1}) begin
             mem_data = AXI_r_data;
