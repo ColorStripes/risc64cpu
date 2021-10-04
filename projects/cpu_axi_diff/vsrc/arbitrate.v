@@ -76,7 +76,7 @@ always @(posedge clk) begin
         mem_ready = 1'b0;
         mem_data = `ZERO_WORD;
         if_data_read = `ZERO_WORD;
-        stall = AXI_stall;
+        stall = 1'b0;
     end
     else begin
         stall = AXI_stall;
