@@ -79,7 +79,7 @@ always @(posedge clk) begin
         stall = AXI_stall;
     end
     else begin
-        
+        stall = AXI_stall;
         if(AXI_id == 4'b1) begin
             mem_data = AXI_r_data;
             mem_ready = AXI_ready;
