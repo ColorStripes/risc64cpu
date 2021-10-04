@@ -20,20 +20,22 @@ module PC(
 
 
 
-wire handshake_done = I_M_e & if_ready;
+wire handshake_done = if_valid & if_ready;
 reg [63:0] addr;
 reg fetched;
+wire if_valid;
+reg [`PC_BUS] if_addr;
 
 // fetch an instruction
 always @( posedge clk ) begin
   if (rst) begin
-    //pc <= `PC_START;
     pc <= `PC_START;
+    if_addr <= `PC_START;
     fetched <= 0;
   end
   else if ( handshake_done ) begin
-    //pc <= pc;
-    pc <= pc + 4;
+    pc <= if_addr;
+    if_addr <= if_addr + 4;
     fetched <= 1;
     //inst <= if_data_read[31:0];
   end
@@ -42,6 +44,6 @@ always @( posedge clk ) begin
   end
 end
 
-assign I_M_e = 1'b1;
+assign if_valid = 1'b1;
 
 endmodule
