@@ -18,6 +18,12 @@ module PC(
                            
 );
 reg test = I_M_e & if_ready;
+reg test2;
+always @(posedge clk) begin
+  if(test == 1'b1) begin
+    test2 <= 1'b1;
+  end
+end
 
 
 always@( posedge clk )
