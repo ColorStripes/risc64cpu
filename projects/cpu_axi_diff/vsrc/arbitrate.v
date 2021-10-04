@@ -74,11 +74,11 @@ always @(*) begin
     if_data_read = `ZERO_WORD;
     
     
-        if(AXI_out_id == 1) begin
+        if(AXI_out_id == 64'b1) begin
             mem_data = AXI_r_data;
             mem_ready = AXI_ready;
         end
-        else if(AXI_out_id == 3) begin
+        else if(AXI_out_id == 64'b11) begin
             if_data_read = AXI_r_data;
             if_ready = AXI_ready;
         end
