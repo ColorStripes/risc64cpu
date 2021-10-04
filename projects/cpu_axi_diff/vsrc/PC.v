@@ -17,7 +17,7 @@ module PC(
   output reg [`PC_BUS] pc
                            
 );
-wire handshake_done = I_M_e & if_ready;
+reg handshake_done = I_M_e & if_ready;
 
 always@( posedge clk )
 begin
