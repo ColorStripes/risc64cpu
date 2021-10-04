@@ -73,7 +73,7 @@ always @(*) begin
     mem_data = `ZERO_WORD;
     if_data_read = `ZERO_WORD;
     
-    if(AXI_ready) begin
+    
         if(AXI_out_id == {{63{1'b0}}, 1'b1}) begin
             mem_data = AXI_r_data;
             mem_ready = AXI_ready;
@@ -88,7 +88,7 @@ always @(*) begin
             mem_data = `ZERO_WORD;
             if_data_read = `ZERO_WORD;
         end
-    end
+    
     
 end
 
