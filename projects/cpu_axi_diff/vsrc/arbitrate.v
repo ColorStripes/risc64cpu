@@ -69,7 +69,7 @@ end
 
 
 
-assign if_ready = (AXI_out_id == 64'b11) ? AXI_ready : 1'b0;
+assign if_ready =  AXI_ready ;
 
 
     
