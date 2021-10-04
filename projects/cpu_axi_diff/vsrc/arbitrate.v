@@ -67,7 +67,7 @@ reg [63:0] id;
 reg ready;
 reg [63:0] data;
 
-always @(*) begin
+always @(posedge clk) begin
     id = AXI_out_id;
     ready = AXI_ready;
     data = AXI_r_data;
@@ -75,16 +75,19 @@ end
 
 
 always @(posedge clk) begin
+    if_ready = 1'b0;
+    mem_ready = 1'b0;
+    mem_data = `ZERO_WORD;
+    if_data_read = `ZERO_WORD;
     
-    if_data_read =data;
-    if_ready = ready;
     
         if(id == 64'b1) begin
             mem_data = data;
             mem_ready = ready;
         end
         else if(id == 64'b11) begin
-            
+            if_data_read =data;
+            if_ready = ready;
         end
         else begin
             if_ready = 1'b0;
