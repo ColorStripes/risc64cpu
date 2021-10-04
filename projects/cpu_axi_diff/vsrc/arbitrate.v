@@ -38,28 +38,28 @@ module arbitrate (
 );
 
 
-always @(posedge clk) begin
-    AXI_addr <= `ZERO_WORD;
-    AXI_w_data <= `ZERO_WORD;
-    AXI_vaild <= 1'b0;
-    AXI_req <= 2'b0;
-    AXI_size <= 2'b0;
-    AXI_id <= {{63{1'b0}}, 1'b0};
+always @(*) begin
+    AXI_addr = `ZERO_WORD;
+    AXI_w_data = `ZERO_WORD;
+    AXI_vaild = 1'b0;
+    AXI_req = 2'b0;
+    AXI_size = 2'b0;
+    AXI_id = {{63{1'b0}}, 1'b0};
     if(mem_valid) begin
-        AXI_addr <= mem_addr;
-        AXI_w_data <= mem_stor_data;
-        AXI_vaild <= mem_valid;
-        AXI_req <= mem_req;
-        AXI_size <= mem_sel;
-        AXI_id <= {{63{1'b0}}, 1'b1};
+        AXI_addr = mem_addr;
+        AXI_w_data = mem_stor_data;
+        AXI_vaild = mem_valid;
+        AXI_req = mem_req;
+        AXI_size = mem_sel;
+        AXI_id = {{63{1'b0}}, 1'b1};
     end
     else if(if_valid) begin
-        AXI_addr <= IF_pc;
-        AXI_w_data <= `ZERO_WORD;
-        AXI_vaild <= if_valid;
-        AXI_req <= if_req;
-        AXI_size <= if_size;
-        AXI_id <= {{62{1'b0}}, 2'b11};
+        AXI_addr = IF_pc;
+        AXI_w_data = `ZERO_WORD;
+        AXI_vaild = if_valid;
+        AXI_req = if_req;
+        AXI_size = if_size;
+        AXI_id = {{62{1'b0}}, 2'b11};
     end
 end
 
