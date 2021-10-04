@@ -145,7 +145,7 @@ module SimTop(
         .data_write_i                   (AXI_w_data),
         .rw_addr_i                      (AXI_addr),
         .rw_size_i                      (AXI_size),
-        .rw_resp_o                      (rw_resp),
+        .rw_resp_o                      (),
         .stall                          (AXI_stall),
         .cpu_id                         (AXI_id),
         .out_id                         (AXI_out_id),
@@ -198,13 +198,11 @@ module SimTop(
         .axi_r_last_i                   (r_last),
         .axi_r_id_i                     (r_id),
         .axi_r_user_i                   (r_user)
-
-
     );
 
 //CPU -> arbitrate
     wire if_valid;
-    wire [`PC_BUS] IF_pc;
+    wire [63: 0] IF_pc;
     wire [1 : 0] if_size;
     wire [1 : 0] if_req;
 ////////////////
@@ -227,21 +225,28 @@ module SimTop(
    wire AXI_vaild;
    wire [1 : 0] AXI_req;
    wire [1 : 0] AXI_size;
-   wire [64-1:0] AXI_id;
-   wire stall;
+   wire [3:0] AXI_id;
 
 //AXI -> arbitrate
    wire AXI_ready;
-   wire [64-1:0] AXI_out_id;
+   wire [3:0] AXI_out_id;
    wire [`REG_BUS] AXI_r_data;
    wire AXI_stall;
 
    wire [1: 0] rw_resp;
+   wire stall;
 
+    cpu u_cpu(
+        .clock                          (clock),
+        .reset                          (reset),
 
-
-    
-
+        .if_valid                       (if_valid),
+        .if_ready                       (if_ready),
+        .if_data_read                   (if_data_read),
+        .if_addr                        (IF_pc),
+        .if_size                        (if_size),
+        .if_resp                        ()
+    );
 
 arbitrate arbitrate (
     .clk(clock),
@@ -279,49 +284,7 @@ arbitrate arbitrate (
     .AXI_stall(AXI_stall),
 
     .stall(stall)
-    
-);
-
-rvcpu rvcpu(
-    .clock(clock),
-    .reset(reset),
-    .stall(stall),
-
-    .if_ready(if_ready),
-    .if_data_read(if_data_read),
-    .if_valid(if_valid),
-    .pc(IF_pc),
-    .if_size(if_size),
-    .if_req(if_req),
-
-    .mem_ready(mem_ready),
-    .mem_data(mem_data),
-    .MEM_stor_data(MEM_stor_data),
-    .mem_valid(mem_valid),
-    .mem_addr(mem_addr),
-    .mem_sel(mem_sel),
-    .mem_req(mem_req)
 
 );
-
-
-
-
 
 endmodule
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
