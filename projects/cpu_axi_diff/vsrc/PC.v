@@ -20,10 +20,9 @@ module PC(
 
 
 
-wire handshake_done = if_valid & if_ready;
+wire handshake_done = I_M_e & if_ready;
 reg [63:0] addr;
 reg fetched;
-wire if_valid;
 reg [`PC_BUS] if_addr;
 
 // fetch an instruction
@@ -44,6 +43,6 @@ always @( posedge clk ) begin
   end
 end
 
-assign if_valid = 1'b1;
+assign I_M_e = 1'b1;
 
 endmodule
