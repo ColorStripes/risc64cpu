@@ -19,8 +19,8 @@ module PC(
 );
 reg test = I_M_e & if_ready;
 reg test2;
-always @(posedge clk) begin
-    test2 <= test;
+always @(*) begin
+    test2 = test;
 end
 
 
