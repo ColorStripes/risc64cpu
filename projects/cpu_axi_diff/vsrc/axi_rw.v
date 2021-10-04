@@ -241,8 +241,8 @@ module axi_rw # (
     wire [AXI_USER_WIDTH-1:0] axi_user          = {AXI_USER_WIDTH{1'b0}};
 
     
-    reg id;
-    wire out_id_nxt = (axi_r_valid_i) ? axi_r_id_i : (axi_b_valid_i) ? axi_b_id_i : 0;
+    reg [3: 0] id;
+    wire [3 : 0] out_id_nxt = (axi_r_valid_i) ? axi_r_id_i : (axi_b_valid_i) ? axi_b_id_i : 0;
     always @(posedge clock) begin
         if (reset) begin
             id <= 0;
