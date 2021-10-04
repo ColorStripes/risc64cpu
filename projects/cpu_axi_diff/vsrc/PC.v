@@ -13,7 +13,7 @@ module PC(
   input wire flush,	
   input wire if_ready,                //AXI
 
-  output reg I_M_e,
+  output wire I_M_e,
   output reg [`PC_BUS] pc
                            
 );
@@ -41,4 +41,7 @@ always @( posedge clk ) begin
     fetched <= 0;
   end
 end
+
+assign I_M_e = 1'b1;
+
 endmodule
