@@ -145,8 +145,8 @@ module SimTop(
         .data_write_i                   (AXI_w_data),
         .rw_addr_i                      (AXI_addr),
         .rw_size_i                      (AXI_size),
-        .rw_resp_o                      (rw_resp),
-        .stall                          (stall),
+        .rw_resp_o                      (),
+        .stall                          (),
         .cpu_id                         (AXI_id),
         .out_id                         (AXI_out_id),
 
@@ -202,7 +202,7 @@ module SimTop(
 
 //CPU -> arbitrate
     wire if_valid;
-    wire [`PC_BUS] IF_pc;
+    wire [63: 0] IF_pc;
     wire [1 : 0] if_size;
     wire [1 : 0] if_req;
 ////////////////
@@ -234,10 +234,17 @@ module SimTop(
 
    wire [1: 0] rw_resp;
 
-wire stall;
+    cpu u_cpu(
+        .clock                          (clock),
+        .reset                          (reset),
 
-    
-
+        .if_valid                       (if_valid),
+        .if_ready                       (if_ready),
+        .if_data_read                   (if_data_read),
+        .if_addr                        (IF_pc),
+        .if_size                        (if_size),
+        .if_resp                        ()
+    );
 
 arbitrate arbitrate (
 
@@ -272,46 +279,4 @@ arbitrate arbitrate (
     
 );
 
-rvcpu rvcpu(
-    .clock(clock),
-    .reset(reset),
-    .stall(stall),
-
-    .if_ready(if_ready),
-    .if_data_read(if_data_read),
-    .if_valid(if_valid),
-    .pc(IF_pc),
-    .if_size(if_size),
-    .if_req(if_req),
-
-    .mem_ready(mem_ready),
-    .mem_data(mem_data),
-    .MEM_stor_data(MEM_stor_data),
-    .mem_valid(mem_valid),
-    .mem_addr(mem_addr),
-    .mem_sel(mem_sel),
-    .mem_req(mem_req)
-
-);
-
-
-
-
-
 endmodule
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
