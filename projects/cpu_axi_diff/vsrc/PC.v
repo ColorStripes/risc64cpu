@@ -17,40 +17,25 @@ module PC(
   output reg [`PC_BUS] pc
                            
 );
-reg test = I_M_e & if_ready;
-reg test2;
-always @(*) begin
-    test2 = test;
-end
+wire handshake_done = I_M_e & if_ready;
+reg [63:0] addr;
 
 
-always@( posedge clk )
-begin
-  if( rst == 1'b1 )
-  begin
-    I_M_e <= 1'b0;
+always @( posedge clk ) begin
+  if (rst) begin
+    pc <= `PC_START;
+    //if_addr <= `PC_START;
+    //fetched <= 0;
   end
-  else
-  begin
-    I_M_e <= 1'b1;
-  end
-end
-
-always@( posedge clk ) begin
-  if( I_M_e == 1'b0 ) begin
-    pc <= `PC_START ;
+  else if ( handshake_done ) begin
+    pc <= pc + 4;
+    //fetched <= 1;
+    //inst <= if_data_read[31:0];
   end
   else begin
-    
-    
-
-    if(flush == 1'b1) begin
-      pc <= new_pc;
-    end
-    else if (pc_con == 1'b0) begin
-      pc <= pc_i;
-    end
-
+    //fetched <= 0;
   end
 end
+
+assign I_M_e = 1'b1;
 endmodule
