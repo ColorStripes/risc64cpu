@@ -19,7 +19,7 @@ module PC(
 );
 wire handshake_done = I_M_e & if_ready;
 
-always@( posedge clk or negedge clk)
+always@( posedge clk )
 begin
   if( rst == 1'b1 )
   begin
@@ -31,7 +31,7 @@ begin
   end
 end
 
-always@( posedge clk ) begin
+always@( posedge clk or negedge clk) begin
   if( I_M_e == 1'b0 ) begin
     pc <= `PC_START ;
   end
