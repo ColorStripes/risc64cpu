@@ -36,8 +36,11 @@ always@( posedge clk ) begin
   if( I_M_e == 1'b0 ) begin
     pc <= `PC_START ;
   end
-  else if(I_M_e & if_ready) begin    
-    test <=1'b1;
+  else begin
+    if(if_ready) begin
+      test <=1'b1;
+    end    
+    
 
     if(flush == 1'b1) begin
       pc <= new_pc;
