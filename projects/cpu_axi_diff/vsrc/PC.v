@@ -17,7 +17,7 @@ module PC(
   output reg [`PC_BUS] pc
                            
 );
-wire test = I_M_e & if_ready;
+reg test = I_M_e & if_ready;
 
 
 always@( posedge clk )
@@ -31,7 +31,6 @@ begin
     I_M_e <= 1'b1;
   end
 end
-reg test;
 
 always@( posedge clk ) begin
   if( I_M_e == 1'b0 ) begin
