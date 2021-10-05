@@ -70,7 +70,7 @@ end
 
 
 
-always @(posedge clk) begin
+always @(*) begin
     
     if(rst == 1'b1) begin
         if_ready = 1'b0;
