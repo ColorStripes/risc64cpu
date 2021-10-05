@@ -122,11 +122,12 @@ module axi_rw # (
     input  [AXI_ID_WIDTH-1:0]           axi_r_id_i,
     input  [AXI_USER_WIDTH-1:0]         axi_r_user_i
 );
+reg axi_r_valid_i_nxt;
 
     wire w_trans    = rw_req_i == `REQ_WRITE;
     wire r_trans    = rw_req_i == `REQ_READ;
-    wire w_valid    = rw_valid_i & w_trans & ~axi_b_valid_i;                               
-    wire r_valid    = rw_valid_i & r_trans & ~axi_r_valid_i;
+    wire w_valid    = rw_valid_i & w_trans ;//& ~axi_b_valid_i_nxt;                               
+    wire r_valid    = rw_valid_i & r_trans & ~axi_r_valid_i_nxt;
 
     // handshake
     wire aw_hs      = axi_aw_ready_i & axi_aw_valid_o;
@@ -138,6 +139,12 @@ module axi_rw # (
     wire w_done     = w_hs & axi_w_last_o;
     wire r_done     = r_hs & axi_r_last_i;
     wire trans_done = w_trans ? b_hs : r_done;
+
+
+
+    always @(posedge clock) begin
+        axi_r_valid_i_nxt <= axi_r_valid_i;
+    end
 
 
 
