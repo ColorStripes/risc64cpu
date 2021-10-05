@@ -174,9 +174,7 @@ reg axi_b_valid_i_nxt;
                     W_STATE_RESP:  if (b_hs) begin w_state <= W_STATE_IDLE; stall <= 1'b0; end   
                 endcase
             end
-            else begin
-                stall <= ~axi_b_valid_i;
-            end
+
         end
     end
 
@@ -318,33 +316,11 @@ reg axi_b_valid_i_nxt;
                               (size_d) ? {{AXI_DATA_WIDTH/8-8{1'b0}}, 8'b11111111} << aligned_offset : {AXI_DATA_WIDTH/8-0{1'b0}};
 
 
-    wire [AXI_DATA_WIDTH-1:0] axi_w_data_l  = (data_write_i & mask_l) ;
-    wire [AXI_DATA_WIDTH-1:0] axi_w_data_h  = (data_write_i & mask_h) ;
+    assign  axi_w_data_o  = (data_write_i & mask_l) ;
+    //wire [AXI_DATA_WIDTH-1:0] axi_w_data_h  = (data_write_i & mask_h) ;
 
-    generate
-        for (genvar i = 0; i < TRANS_LEN; i += 1) begin
-            always @(posedge clock) begin
-                if (reset) begin
-                    axi_w_data_o[i*AXI_DATA_WIDTH+:AXI_DATA_WIDTH] <= 0;
-                end
-                else if (axi_w_valid_o) begin
-                    if (~aligned & overstep) begin
-                        if (len[0]) begin
-                            axi_w_data_o[AXI_DATA_WIDTH-1:0] <= axi_w_data_o[AXI_DATA_WIDTH-1:0] | axi_w_data_h;
-                        end
-                        else begin
-                            axi_w_data_o[AXI_DATA_WIDTH-1:0] <= axi_w_data_l;
-                        end
-                    end
-                    else if (len == i) begin
-                        axi_w_data_o[i*AXI_DATA_WIDTH+:AXI_DATA_WIDTH] <= axi_w_data_l;
-                    end
-                end
-            end
-        end
-    endgenerate
 
-    assign axi_w_last_o = 1'b1;
+    assign axi_w_last_o = axi_w_valid_o;
 
     //Write respond channel signals
     assign axi_b_ready_o    = w_state_resp;
