@@ -174,7 +174,9 @@ reg axi_b_valid_i_nxt;
                     W_STATE_RESP:  if (b_hs) begin w_state <= W_STATE_IDLE; stall <= 1'b0; end   
                 endcase
             end
-
+            else if (rw_req_i) begin
+                stall <= ~axi_b_valid_i;
+            end
         end
     end
 
@@ -192,7 +194,7 @@ reg axi_b_valid_i_nxt;
                     default:;
                 endcase
             end
-            else begin
+            else if (~rw_req_i) begin
                 stall <= ~axi_r_valid_i;
             end
         end
