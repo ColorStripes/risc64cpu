@@ -41,7 +41,7 @@ always@( posedge clk ) begin
       pc <= new_pc;
     end
     else if (pc_con == 1'b0) begin
-      pc <= pc_i-4;
+      pc <= pc_i;
     end
 
   end
