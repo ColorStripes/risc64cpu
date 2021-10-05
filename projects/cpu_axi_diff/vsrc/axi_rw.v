@@ -183,11 +183,14 @@ reg axi_r_valid_i_nxt;
         else begin
             if (r_valid) begin
                 case (r_state)
-                    R_STATE_IDLE:begin r_state <= R_STATE_ADDR; stall <= 1'b1;end               
+                    R_STATE_IDLE:begin r_state <= R_STATE_ADDR; stall <= 1'b1; end               
                     R_STATE_ADDR: if (ar_hs)    r_state <= R_STATE_READ;
                     R_STATE_READ: if (r_done) begin r_state <= R_STATE_IDLE; stall <= 1'b0; end   
                     default:;
                 endcase
+            end
+            else begin
+                stall <= ~axi_r_valid_i;
             end
         end
     end
