@@ -127,8 +127,8 @@ reg axi_b_valid_i_nxt;
 
     wire w_trans    = rw_req_i == `REQ_WRITE;
     wire r_trans    = rw_req_i == `REQ_READ;
-    wire w_valid    = rw_valid_i & w_trans ;//& ~axi_b_valid_i_nxt;                               
-    wire r_valid    = rw_valid_i & r_trans ;//& ~axi_r_valid_i_nxt;
+    wire w_valid    = rw_valid_i & w_trans;// & ~axi_b_valid_i_nxt;                               
+    wire r_valid    = rw_valid_i & r_trans;// & ~axi_r_valid_i_nxt;
 
     // handshake
     wire aw_hs      = axi_aw_ready_i & axi_aw_valid_o;
@@ -298,7 +298,7 @@ reg axi_b_valid_i_nxt;
     // ------------------Write Transaction------------------
 
     // Write address channel signals
-    assign axi_aw_valid_o   = w_state_addr;
+    assign axi_aw_valid_o   = w_state_addr & w_valid;
     assign axi_aw_addr_o    = axi_addr;
     assign axi_aw_prot_o    = `AXI_PROT_UNPRIVILEGED_ACCESS | `AXI_PROT_SECURE_ACCESS | `AXI_PROT_DATA_ACCESS;
     assign axi_aw_id_o      = axi_id;
@@ -334,7 +334,7 @@ reg axi_b_valid_i_nxt;
     // ------------------Read Transaction------------------
 
     // Read address channel signals
-    assign axi_ar_valid_o   = r_state_addr;
+    assign axi_ar_valid_o   = r_state_addr & r_valid;
     assign axi_ar_addr_o    = axi_addr;
     assign axi_ar_prot_o    = `AXI_PROT_UNPRIVILEGED_ACCESS | `AXI_PROT_SECURE_ACCESS | `AXI_PROT_DATA_ACCESS;
     assign axi_ar_id_o      = axi_id;
