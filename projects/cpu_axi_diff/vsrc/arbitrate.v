@@ -69,7 +69,6 @@ end
 
 
 
-
 always @(*) begin
     
     if(rst == 1'b1) begin
@@ -79,6 +78,9 @@ always @(*) begin
         if_data_read = `ZERO_WORD;
     end
     else begin
+
+
+
             if(AXI_out_id == 4'b1) begin
                 mem_data = AXI_r_data;
                 mem_ready = AXI_ready;
@@ -107,7 +109,10 @@ always @(*) begin
     else begin
         stall = 5'b0000;
         if(mem_valid & if_valid) begin
-            stall = {2'b11, AXI_stall, AXI_stall, 1'b0};
+            stall = {4'b1111, 1'b0};
+            if(AXI_out_id == 4'b1) begin
+                stall = {2'b11, AXI_stall, AXI_stall, 1'b0};
+            end
         end
         else if(mem_valid & ~if_valid) begin
             stall = {{4{AXI_stall}}, 1'b0};
