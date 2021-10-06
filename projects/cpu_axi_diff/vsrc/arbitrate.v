@@ -102,10 +102,16 @@ end
 
 reg test;
 always @(*) begin
-    test = 1'b0;
- if(if_valid) begin
-            test = 1'b1;
-end
+    if(rst == 1'b1) begin
+        test = 1'b0;
+    end
+    else begin
+           test = 1'b0;
+           if(if_valid) begin
+               test = 1'b1;
+           end
+    end
+ 
 end
 
     
