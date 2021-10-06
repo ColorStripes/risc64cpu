@@ -106,7 +106,7 @@ always @(*) begin
         stall = 4'b0000;
     end
     else begin
-        stall = 4'b0000;
+        stall = 4'b0111;
         if(mem_valid & if_valid) begin
             stall = {2'b11, AXI_stall, 1'b0};
         end
