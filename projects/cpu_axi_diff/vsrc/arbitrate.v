@@ -114,7 +114,7 @@ always @(*) begin
             stall = {{3{AXI_stall}}, 1'b0};
         end
         else if(if_valid) begin
-            stall = {AXI_stall, AXI_stall, 2'b0};
+            stall = AXI_stall;
         end
     end
 end
