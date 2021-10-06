@@ -3,20 +3,21 @@
 
 `include "defines.v"
 
-module CPU(
-    input         clock,
-    input         reset,
-    input         stall,
+module rvcpu(
+    input                 clock,
+    input                 reset,
+    input [3 : 0]         stall,
 
     input  wire if_ready,
     input  wire [63 : 0] if_data_read,
     output wire if_valid,
-    output wire [63 : 0] IF_pc,
+    output wire [63 : 0] pc,
     output wire [1 : 0] if_size,
     output wire [1 : 0] if_req,
 
     input  wire mem_ready,
     input  wire [63 : 0] mem_data,
+    output wire [63 : 0] MEM_stor_data,
     output wire mem_valid,
     output wire [63 : 0] mem_addr,
     output wire [1 : 0] mem_sel,
@@ -30,7 +31,7 @@ wire rst;
 
 //IF_stage -> if_id
 wire wash;
-wire [`PC_BUS] pc;
+//wire [`PC_BUS] pc;
 wire [31 : 0] instr;
 
 
@@ -141,8 +142,8 @@ wire [`PC_BUS] new_pc;
 //MEM_stage -> DATA_MEM
 wire [`REG_BUS] MEM_mem_waddr;
 wire [`REG_BUS] MEM_mem_raddr;
-wire [`REG_BUS] mem_sel;
-wire [`REG_BUS] MEM_stor_data;
+//wire [1 : 0] mem_sel;
+//wire [`REG_BUS] MEM_stor_data;
 wire mem_wr;
 wire MEM_mem_ena;
 
@@ -205,6 +206,7 @@ assign rst = reset;
     .pc_id(id_pc),
     .new_pc(new_pc),
     .flush(flush),
+    .stall(stall[3]),
 
     .wash(wash),
     .instr(instr),
@@ -225,7 +227,7 @@ assign rst = reset;
     .pc_con(pc_con),
     .wash(wash),
     .flush(flush),
-    .stall(stall),
+    .stall(stall[3]),
 
     .id_pc(id_pc),
     .id_instr(id_instr)
@@ -321,7 +323,7 @@ assign rst = reset;
     .id_w_ena(w_ena),
     .id_w_addr(w_addr),
     .flush(flush),
-    .stall(stall),
+    .stall(stall[2]),
 
     .id_csr_ena(id_csr_ena),
 
@@ -417,7 +419,7 @@ assign rst = reset;
     .ex_w_csr_data(ex_w_csr_data),
     .ex_except_type(except_type),
     .flush(flush),
-    .stall(stall),
+    .stall(stall[1]),
 
     .mem_w_data(mem_w_data),
     .mem_w_ena(mem_w_ena),
@@ -490,7 +492,7 @@ assign rst = reset;
     .mem_mem_waddr(MEM_mem_waddr),
     .mem_mem_raddr(MEM_mem_raddr),
     .mem_wr(mem_wr),
-    .mem_mem_ena(MEM_mem_ena)
+    .mem_mem_ena(MEM_mem_ena),
 
     .mem_valid(mem_valid),
     .mem_ready(mem_ready),
@@ -501,17 +503,6 @@ assign rst = reset;
     .mem_req(mem_req)
 );
 
-
-    RAMHelper RAMHelper(
-    .clk(clk),
-    .en(MEM_mem_ena),
-    .rIdx({3'b000,(MEM_mem_raddr-64'h0000_0000_8000_0000)>>3}),
-    .rdata(data),
-    .wIdx({3'b000,(MEM_mem_waddr-64'h0000_0000_8000_0000)>>3}),
-    .wdata(MEM_stor_data),
-    .wmask(mem_sel),          //!!!!!!!!!!!
-    .wen(mem_wr)
-);
 
     mem_wb mem_wb (
     .clk(clk),
@@ -527,7 +518,7 @@ assign rst = reset;
     .mem_csr_ena(MEM_csr_ena),
     .except_type(MEM_except_type),//
     .flush(flush),
-    .stall(stall),
+    .stall(stall[0]),
     
 
     .wb_csr_addr(wb_csr_addr),         ///csr o
@@ -633,7 +624,7 @@ reg [31 : 0] inter;
 reg [63 : 0] MEM_except_type_f;
 
 
-wire inst_valid = ((wb_pc != `PC_START) | (wb_instr != 0)) && ~(inter != 32'h0);
+wire inst_valid = ((wb_pc != `PC_START) | (wb_instr != 0)) && ~(inter != 32'h0) ;
 //wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2) | (wb_instr == 32'h00063783) | (wb_instr == 32'h00f63023);
 //wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2) | (wb_instr == 32'h0007b483) | (wb_instr == 32'h00f73023);
 wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2) | (clint) ;

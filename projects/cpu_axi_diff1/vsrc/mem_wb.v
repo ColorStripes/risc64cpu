@@ -15,8 +15,9 @@ module mem_wb (
     input wire [11 : 0] mem_csr_addr,         //csr
     input wire [`REG_BUS] mem_w_csr_data,
     input wire mem_csr_ena,
-    input wire flush,
     input wire [63 : 0] except_type,
+    input wire flush,
+    input wire stall,
 
     output reg [11 : 0] wb_csr_addr,         ///csr o
     output reg [`REG_BUS] wb_w_csr_data,
@@ -39,7 +40,7 @@ module mem_wb (
             wb_w_csr_data <= `ZERO_WORD;
             wb_csr_ena <= 1'b0;
         end
-        else begin
+        else if(~stall) begin
             wb_w_data <= mem_w_data;
             wb_w_ena <= mem_w_ena;
             wb_w_addr <= mem_w_addr;
@@ -62,6 +63,16 @@ module mem_wb (
 
             end
 
+        end
+        else begin
+            wb_w_data <= `ZERO_WORD;
+            wb_w_ena <= 1'b0;
+            wb_w_addr <= `ZERO_REG_ADDR;
+            wb_pc <= `PC_START;                             //for difftest
+            wb_instr <= `ZERO_INST;
+            wb_csr_addr <= 12'h000;
+            wb_w_csr_data <= `ZERO_WORD;
+            wb_csr_ena <= 1'b0;
         end
     end
 endmodule

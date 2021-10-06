@@ -12,31 +12,27 @@ module IF_stage (
     input wire [63 : 0] pc_id,
     input wire [`PC_BUS] new_pc,
     input wire flush,
+    input wire stall,
 
     output wire wash,
-    output wire [63 : 0] IF_pc,
-    output wire [31 : 0] instr
+    output wire [`INST_BUS] instr,
+
+    output wire if_valid,                  //AXI
+    input  wire if_ready,//
+    input  wire [63 : 0] if_data_read,//
+    output wire [63 : 0] IF_pc,//
+    output wire [1 : 0] if_size,//
+    output wire [1 : 0] if_req//
+
 );
 
 wire [63 : 0] sum;
 wire [63 : 0] pc_i;
 wire I_M_e;
 
-
-reg [63:0] rdata;
-RAMHelper ROM(
-  .clk              (clk),
-  .en               (I_M_e),
-  .rIdx             ((IF_pc - `PC_START) >> 3),
-  .rdata            (rdata),
-  .wIdx             (0),
-  .wdata            (0),
-  .wmask            (0),
-  .wen              (0)
-);
-
-assign instr = IF_pc[2] ? rdata[63 : 32] : rdata[31 : 0];
-
+assign if_size = `SIZE_W;
+assign instr = if_data_read[`INST_BUS];
+assign if_req = `REQ_READ;
 
 
 PC PC(
@@ -46,8 +42,9 @@ PC PC(
   .pc_con(pc_con),
   .new_pc(new_pc),
   .flush(flush),
+  .if_ready(if_ready),
 
-  .I_M_e(I_M_e),
+  .I_M_e(if_valid),
   .pc(IF_pc)
   
 );
@@ -67,6 +64,7 @@ forecase forecase (
     .add_pc(sum),
     .branch(branch),
     .pc_con(pc_con),
+    .stall(stall),
 
 
     .wash(wash),

@@ -122,11 +122,13 @@ module axi_rw # (
     input  [AXI_ID_WIDTH-1:0]           axi_r_id_i,
     input  [AXI_USER_WIDTH-1:0]         axi_r_user_i
 );
+reg axi_r_valid_i_nxt;
+reg axi_b_valid_i_nxt;
 
     wire w_trans    = rw_req_i == `REQ_WRITE;
     wire r_trans    = rw_req_i == `REQ_READ;
-    wire w_valid    = rw_valid_i & w_trans;
-    wire r_valid    = rw_valid_i & r_trans;
+    wire w_valid    = rw_valid_i & w_trans & ~axi_b_valid_i_nxt;                               
+    wire r_valid    = rw_valid_i & r_trans & ~axi_r_valid_i_nxt;
 
     // handshake
     wire aw_hs      = axi_aw_ready_i & axi_aw_valid_o;
@@ -138,6 +140,13 @@ module axi_rw # (
     wire w_done     = w_hs & axi_w_last_o;
     wire r_done     = r_hs & axi_r_last_i;
     wire trans_done = w_trans ? b_hs : r_done;
+
+
+
+    always @(posedge clock) begin
+        axi_r_valid_i_nxt <= axi_r_valid_i;
+        axi_b_valid_i_nxt <= axi_b_valid_i;
+    end
 
 
 
@@ -165,6 +174,9 @@ module axi_rw # (
                     W_STATE_RESP:  if (b_hs) begin w_state <= W_STATE_IDLE; stall <= 1'b0; end   
                 endcase
             end
+            else if (rw_req_i) begin
+                stall <= ~axi_b_valid_i;
+            end
         end
     end
 
@@ -176,11 +188,14 @@ module axi_rw # (
         else begin
             if (r_valid) begin
                 case (r_state)
-                    R_STATE_IDLE:begin r_state <= R_STATE_ADDR; stall <= 1'b1;end               
+                    R_STATE_IDLE:begin r_state <= R_STATE_ADDR; stall <= 1'b1; end               
                     R_STATE_ADDR: if (ar_hs)    r_state <= R_STATE_READ;
                     R_STATE_READ: if (r_done) begin r_state <= R_STATE_IDLE; stall <= 1'b0; end   
                     default:;
                 endcase
+            end
+            else if (~rw_req_i) begin
+                stall <= ~axi_r_valid_i;
             end
         end
     end
@@ -241,8 +256,8 @@ module axi_rw # (
     wire [AXI_USER_WIDTH-1:0] axi_user          = {AXI_USER_WIDTH{1'b0}};
 
     
-    reg id;
-    wire out_id_nxt = (axi_r_valid_i) ? axi_r_id_i : (axi_b_valid_i) ? axi_b_id_i : 0;
+    reg [3: 0] id;
+    wire [3 : 0] out_id_nxt = (axi_r_valid_i) ? axi_r_id_i : (axi_b_valid_i) ? axi_b_id_i : 0;
     always @(posedge clock) begin
         if (reset) begin
             id <= 0;
@@ -303,33 +318,11 @@ module axi_rw # (
                               (size_d) ? {{AXI_DATA_WIDTH/8-8{1'b0}}, 8'b11111111} << aligned_offset : {AXI_DATA_WIDTH/8-0{1'b0}};
 
 
-    wire [AXI_DATA_WIDTH-1:0] axi_w_data_l  = (data_write_i & mask_l) ;
-    wire [AXI_DATA_WIDTH-1:0] axi_w_data_h  = (data_write_i & mask_h) ;
+    assign  axi_w_data_o  = (data_write_i & mask_l) ;
+    //wire [AXI_DATA_WIDTH-1:0] axi_w_data_h  = (data_write_i & mask_h) ;
 
-    generate
-        for (genvar i = 0; i < TRANS_LEN; i += 1) begin
-            always @(posedge clock) begin
-                if (reset) begin
-                    axi_w_data_o[i*AXI_DATA_WIDTH+:AXI_DATA_WIDTH] <= 0;
-                end
-                else if (axi_w_valid_o) begin
-                    if (~aligned & overstep) begin
-                        if (len[0]) begin
-                            axi_w_data_o[AXI_DATA_WIDTH-1:0] <= axi_w_data_o[AXI_DATA_WIDTH-1:0] | axi_w_data_h;
-                        end
-                        else begin
-                            axi_w_data_o[AXI_DATA_WIDTH-1:0] <= axi_w_data_l;
-                        end
-                    end
-                    else if (len == i) begin
-                        axi_w_data_o[i*AXI_DATA_WIDTH+:AXI_DATA_WIDTH] <= axi_w_data_l;
-                    end
-                end
-            end
-        end
-    endgenerate
 
-    assign axi_w_last_o = 1'b1;
+    assign axi_w_last_o = axi_w_valid_o;
 
     //Write respond channel signals
     assign axi_b_ready_o    = w_state_resp;

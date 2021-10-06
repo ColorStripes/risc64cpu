@@ -36,7 +36,7 @@ module arbitrate (
     input wire [`REG_BUS] AXI_r_data,
     input wire AXI_stall,
 
-    output reg stall
+    output reg [3 : 0] stall
     
 );
 
@@ -70,31 +70,52 @@ end
 
 
 
-always @(posedge clk) begin
-    if_ready = 1'b0;
-    mem_ready = 1'b0;
-    mem_data = `ZERO_WORD;
-    if_data_read = `ZERO_WORD;
-    stall = AXI_stall;
+always @(*) begin
+    
+    if(rst == 1'b1) begin
+        if_ready = 1'b0;
+        mem_ready = 1'b0;
+        mem_data = `ZERO_WORD;
+        if_data_read = `ZERO_WORD;
+    end
+    else begin
+            if(AXI_out_id == 4'b1) begin
+                mem_data = AXI_r_data;
+                mem_ready = AXI_ready;
+                if_ready = 1'b0;
+                if_data_read = `ZERO_WORD;
+            end
+            else if(AXI_out_id == 4'b11) begin
+                if_data_read = AXI_r_data;
+                if_ready = AXI_ready;
+                mem_ready = 1'b0;
+                mem_data = `ZERO_WORD;
+            end
+            else begin
+                if_ready = 1'b0;
+                mem_ready = 1'b0;
+                mem_data = `ZERO_WORD;
+                if_data_read = `ZERO_WORD;
+            end
+    end
+end
 
-    
-    
-        if(AXI_id == 4'b1) begin
-            mem_data = AXI_r_data;
-            mem_ready = AXI_ready;
+always @(*) begin
+    if(rst == 1'b1) begin
+        stall = 4'b0000;
+    end
+    else begin
+        stall = 4'b0000;
+        if(mem_valid & if_valid) begin
+            stall = {1'b1, AXI_stall, AXI_stall, 1'b0};
         end
-        else if(AXI_id == 4'b11) begin
-            if_data_read = AXI_r_data;
-            if_ready = AXI_ready;
+        else if(mem_valid & ~if_valid) begin
+            stall = {{3{AXI_stall}}, 1'b0};
         end
-        else begin
-            if_ready = 1'b0;
-            mem_ready = 1'b0;
-            mem_data = `ZERO_WORD;
-            if_data_read = `ZERO_WORD;
+        else if(if_valid) begin
+            stall = {AXI_stall, 3'b0};
         end
-    
-    
+    end
 end
 
     

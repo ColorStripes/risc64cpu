@@ -152,6 +152,9 @@
 `define RISCV_PRIV_MODE_M   3
 
 
+
+
+
 //CSR_ADDR
 `define mvendorid 12'hf11    //MRO
 `define marchid 12'hf12
@@ -188,18 +191,3 @@
 `define mtimecmp 64'h2004000
 `define mtime 64'h200bff8
 `define TIME 64'd06000
-
-
-//AXI
-`define AXI_ADDR_WIDTH      64
-`define AXI_DATA_WIDTH      64
-`define AXI_ID_WIDTH        4
-`define AXI_USER_WIDTH      1
-
-`define SIZE_B              2'b00
-`define SIZE_H              2'b01
-`define SIZE_W              2'b10
-`define SIZE_D              2'b11
-
-`define REQ_READ            1'b0
-`define REQ_WRITE           1'b1

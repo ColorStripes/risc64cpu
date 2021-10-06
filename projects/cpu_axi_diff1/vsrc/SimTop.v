@@ -113,6 +113,31 @@ module SimTop(
     wire [`AXI_ID_WIDTH-1:0] r_id;
     wire [`AXI_USER_WIDTH-1:0] r_user;
 
+    assign aw_ready                                 = `AXI_TOP_INTERFACE(aw_ready);
+    assign `AXI_TOP_INTERFACE(aw_valid)             = aw_valid;
+    assign `AXI_TOP_INTERFACE(aw_bits_addr)         = aw_addr;
+    assign `AXI_TOP_INTERFACE(aw_bits_prot)         = aw_prot;
+    assign `AXI_TOP_INTERFACE(aw_bits_id)           = aw_id;
+    assign `AXI_TOP_INTERFACE(aw_bits_user)         = aw_user;
+    assign `AXI_TOP_INTERFACE(aw_bits_len)          = aw_len;
+    assign `AXI_TOP_INTERFACE(aw_bits_size)         = aw_size;
+    assign `AXI_TOP_INTERFACE(aw_bits_burst)        = aw_burst;
+    assign `AXI_TOP_INTERFACE(aw_bits_lock)         = aw_lock;
+    assign `AXI_TOP_INTERFACE(aw_bits_cache)        = aw_cache;
+    assign `AXI_TOP_INTERFACE(aw_bits_qos)          = aw_qos;
+
+    assign w_ready                                  = `AXI_TOP_INTERFACE(w_ready);
+    assign `AXI_TOP_INTERFACE(w_valid)              = w_valid;
+    assign `AXI_TOP_INTERFACE(w_bits_data)[0]       = w_data;
+    assign `AXI_TOP_INTERFACE(w_bits_strb)          = w_strb;
+    assign `AXI_TOP_INTERFACE(w_bits_last)          = w_last;
+
+    assign `AXI_TOP_INTERFACE(b_ready)              = b_ready;
+    assign b_valid                                  = `AXI_TOP_INTERFACE(b_valid);
+    assign b_resp                                   = `AXI_TOP_INTERFACE(b_bits_resp);
+    assign b_id                                     = `AXI_TOP_INTERFACE(b_bits_id);
+    assign b_user                                   = `AXI_TOP_INTERFACE(b_bits_user);
+
     assign ar_ready                                 = `AXI_TOP_INTERFACE(ar_ready);
     assign `AXI_TOP_INTERFACE(ar_valid)             = ar_valid;
     assign `AXI_TOP_INTERFACE(ar_bits_addr)         = ar_addr;
@@ -145,7 +170,7 @@ module SimTop(
         .data_write_i                   (AXI_w_data),
         .rw_addr_i                      (AXI_addr),
         .rw_size_i                      (AXI_size),
-        .rw_resp_o                      (),
+        .rw_resp_o                      (rw_resp),
         .stall                          (AXI_stall),
         .cpu_id                         (AXI_id),
         .out_id                         (AXI_out_id),
@@ -198,11 +223,13 @@ module SimTop(
         .axi_r_last_i                   (r_last),
         .axi_r_id_i                     (r_id),
         .axi_r_user_i                   (r_user)
+
+
     );
 
 //CPU -> arbitrate
     wire if_valid;
-    wire [63: 0] IF_pc;
+    wire [`PC_BUS] IF_pc;
     wire [1 : 0] if_size;
     wire [1 : 0] if_req;
 ////////////////
@@ -225,28 +252,21 @@ module SimTop(
    wire AXI_vaild;
    wire [1 : 0] AXI_req;
    wire [1 : 0] AXI_size;
-   wire [3:0] AXI_id;
+   wire [64-1:0] AXI_id;
+   wire [3 : 0] stall;
 
 //AXI -> arbitrate
    wire AXI_ready;
-   wire [3:0] AXI_out_id;
+   wire [64-1:0] AXI_out_id;
    wire [`REG_BUS] AXI_r_data;
    wire AXI_stall;
 
    wire [1: 0] rw_resp;
-   wire stall;
 
-    cpu u_cpu(
-        .clock                          (clock),
-        .reset                          (reset),
 
-        .if_valid                       (if_valid),
-        .if_ready                       (if_ready),
-        .if_data_read                   (if_data_read),
-        .if_addr                        (IF_pc),
-        .if_size                        (if_size),
-        .if_resp                        ()
-    );
+
+    
+
 
 arbitrate arbitrate (
     .clk(clock),
@@ -284,7 +304,49 @@ arbitrate arbitrate (
     .AXI_stall(AXI_stall),
 
     .stall(stall)
+    
+);
+
+rvcpu rvcpu(
+    .clock(clock),
+    .reset(reset),
+    .stall(stall),
+
+    .if_ready(if_ready),
+    .if_data_read(if_data_read),
+    .if_valid(if_valid),
+    .pc(IF_pc),
+    .if_size(if_size),
+    .if_req(if_req),
+
+    .mem_ready(mem_ready),
+    .mem_data(mem_data),
+    .MEM_stor_data(MEM_stor_data),
+    .mem_valid(mem_valid),
+    .mem_addr(mem_addr),
+    .mem_sel(mem_sel),
+    .mem_req(mem_req)
 
 );
 
+
+
+
+
 endmodule
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
