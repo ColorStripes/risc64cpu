@@ -79,8 +79,6 @@ always @(*) begin
     end
     else begin
 
-
-
             if(AXI_out_id == 4'b1) begin
                 mem_data = AXI_r_data;
                 mem_ready = AXI_ready;
@@ -92,6 +90,9 @@ always @(*) begin
                 if_ready = AXI_ready;
                 mem_ready = 1'b0;
                 mem_data = `ZERO_WORD;
+                if (mem_valid & if_valid) begin
+                    if_ready = 1'b0;
+                end
             end
             else begin
                 if_ready = 1'b0;
