@@ -62,7 +62,7 @@ always @(*) begin
         pc_s = `ZERO_WORD;
         error_branch = 1'b0;
 
-        if(~stall_nxt) begin
+        if(~stall) begin
             if((timeo < 2) || (pc_id != `PC_START)) begin
                 if(mux_pc == 1'b1) begin
                     pc_s = pc_id + 4;
@@ -108,7 +108,7 @@ end
             wash = wash_reg;
             pc = pc_reg;
             if_forecase = if_forecase_reg;
-            if(~stall_nxt) begin
+            if(~stall) begin
                 wash = 1'b0;
                 pc = add_pc;
                 if_forecase = 1'b0;
