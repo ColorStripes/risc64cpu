@@ -127,8 +127,8 @@ reg axi_b_valid_i_nxt;
 
     wire w_trans    = rw_req_i == `REQ_WRITE;
     wire r_trans    = rw_req_i == `REQ_READ;
-    wire w_valid    = rw_valid_i & w_trans & ~axi_b_valid_i_nxt;                               
-    wire r_valid    = rw_valid_i & r_trans & ~axi_r_valid_i_nxt;
+    wire w_valid    = rw_valid_i & w_trans ;//& ~axi_b_valid_i_nxt;                               
+    wire r_valid    = rw_valid_i & r_trans ;//& ~axi_r_valid_i_nxt;
 
     // handshake
     wire aw_hs      = axi_aw_ready_i & axi_aw_valid_o;
