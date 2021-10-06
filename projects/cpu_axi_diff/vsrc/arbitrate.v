@@ -102,19 +102,10 @@ end
 
 reg test;
 always @(*) begin
-    if(rst == 1'b0) begin
-        stall = 4'b0000;
-        test = 1'b0;
-    end
-    else begin
-        stall = 4'b0000;
-        test = 1'b0;
-
-         if(if_valid) begin
-            stall = {AXI_stall, AXI_stall, 2'b0};
+    test = 1'b0;
+ if(if_valid) begin
             test = 1'b1;
-        end
-    end
+end
 end
 
     
