@@ -206,6 +206,7 @@ assign rst = reset;
     .pc_id(id_pc),
     .new_pc(new_pc),
     .flush(flush),
+    .stall(stall[3]),
 
     .wash(wash),
     .instr(instr),

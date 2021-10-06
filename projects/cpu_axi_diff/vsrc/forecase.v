@@ -11,10 +11,15 @@ module forecase (
     input wire [`PC_BUS] add_pc,
     input wire [`PC_BUS] branch,
     input wire pc_con,
+    input wire stall,
 
     output reg wash,
     output reg [`PC_BUS] pc
 );
+
+    reg wash_a;
+    reg [`PC_BUS] pc_a;
+
     integer i;
     reg [1 : 0] fore;
     reg [`PC_BUS] fore_branch[`FORECASE-1 : 0];
@@ -87,41 +92,41 @@ end
 
     always @(*) begin
         if(rst == 1'b1) begin
-            wash = 1'b0;
-            pc = `ZERO_WORD;
+            wash_a = 1'b0;
+            pc_a = `ZERO_WORD;
             if_forecase = 1'b0;
         end
         else begin
-            wash = 1'b0;
-            pc = add_pc;
+            wash_a = 1'b0;
+            pc_a = add_pc;
             if_forecase = 1'b0;
             if((timeo < 2) || (pc_id != `PC_START)) begin
                 if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]]) begin
                     if(fore >= 2'b10) begin
-                        pc = fore_branch[add_pc[`FORECASE_LOG + 1 : 2]];
+                        pc_a = fore_branch[add_pc[`FORECASE_LOG + 1 : 2]];
                         if_forecase = 1'b1;
                     end
                     else begin
-                        pc = add_pc;
+                        pc_a = add_pc;
                         if_forecase = 1'b0;
                     end
                 end
                 else begin
                     if_forecase = 1'b0;
-                    pc = add_pc;
+                    pc_a = add_pc;
                 end
 
                 if(mux_pc == 1'b1) begin
                     if((mux_pc != ifa) || (error_branch)) begin  
-                       wash = 1'b1;
-                       pc = branch;
+                       wash_a = 1'b1;
+                       pc_a = branch;
                     end
                 end
                 
                 if(mux_pc == 1'b0) begin
                     if(mux_pc != ifa) begin
-                        wash = 1'b1;
-                        pc = pc_id + 4;
+                        wash_a = 1'b1;
+                        pc_a = pc_id + 4;
                     end
                 end
             end
@@ -144,5 +149,18 @@ always @(posedge clk) begin   //count
     end
 end
 
+
+always @(posedge clk) begin
+    if(stall) begin
+        if(wash_a) begin
+            wash <= wash_a;
+            pc <= pc_a;
+        end
+    end
+    else begin
+        wash <= wash_a;
+        pc <= pc_a;
+    end
+end
 
 endmodule
