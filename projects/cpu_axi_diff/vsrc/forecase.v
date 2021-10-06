@@ -34,10 +34,8 @@ module forecase (
     reg ifa;  //former if_forecase
     reg error_branch;  //if branch != forecase_branch when mux_pc==1
 
-    reg stall_nxt;
 
 always @(posedge clk) begin
-    stall_nxt <= stall;
     if(pc_con != 1'b1)
         ifa <= if_forecase;
 end
