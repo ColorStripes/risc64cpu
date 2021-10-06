@@ -12,7 +12,7 @@ module IF_stage (
     input wire [63 : 0] pc_id,
     input wire [`PC_BUS] new_pc,
     input wire flush,
-    input wire stall,
+    //input wire stall,
 
     output wire wash,
     output wire [`INST_BUS] instr,
@@ -64,7 +64,7 @@ forecase forecase (
     .add_pc(sum),
     .branch(branch),
     .pc_con(pc_con),
-    .stall(stall),
+    //.stall(stall),
 
 
     .wash(wash),

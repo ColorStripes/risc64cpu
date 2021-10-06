@@ -17,7 +17,7 @@ module mem_wb (
     input wire mem_csr_ena,
     input wire [63 : 0] except_type,
     input wire flush,
-    input wire stall,
+    input wire [1 : 0] stall,
 
     output reg [11 : 0] wb_csr_addr,         ///csr o
     output reg [`REG_BUS] wb_w_csr_data,
@@ -40,39 +40,39 @@ module mem_wb (
             wb_w_csr_data <= `ZERO_WORD;
             wb_csr_ena <= 1'b0;
         end
-        else if(~stall) begin
-            wb_w_data <= mem_w_data;
-            wb_w_ena <= mem_w_ena;
-            wb_w_addr <= mem_w_addr;
-            wb_pc <= mem_pc;
-            wb_instr <= mem_instr;
-            wb_csr_addr <= mem_csr_addr;
-            wb_w_csr_data <= mem_w_csr_data;
-            wb_csr_ena <= mem_csr_ena;
-
-            if(flush == 1'b1) begin
+        else begin
+            if(stall[1] & ~stall[0]) begin
                 wb_w_data <= `ZERO_WORD;
                 wb_w_ena <= 1'b0;
                 wb_w_addr <= `ZERO_REG_ADDR;
-                //wb_pc <= `PC_START;                             //for difftest
-                //wb_instr <= `ZERO_INST;
+                wb_pc <= `PC_START;                             //for difftest
+                wb_instr <= `ZERO_INST;
                 wb_csr_addr <= 12'h000;
                 wb_w_csr_data <= `ZERO_WORD;
                 wb_csr_ena <= 1'b0;
-
-
             end
+            else if(~stall[1]) begin
+                wb_w_data <= mem_w_data;
+                wb_w_ena <= mem_w_ena;
+                wb_w_addr <= mem_w_addr;
+                wb_pc <= mem_pc;
+                wb_instr <= mem_instr;
+                wb_csr_addr <= mem_csr_addr;
+                wb_w_csr_data <= mem_w_csr_data;
+                wb_csr_ena <= mem_csr_ena;
 
+                if(flush == 1'b1) begin
+                    wb_w_data <= `ZERO_WORD;
+                    wb_w_ena <= 1'b0;
+                    wb_w_addr <= `ZERO_REG_ADDR;
+                    //wb_pc <= `PC_START;                             //for difftest
+                    //wb_instr <= `ZERO_INST;
+                    wb_csr_addr <= 12'h000;
+                    wb_w_csr_data <= `ZERO_WORD;
+                    wb_csr_ena <= 1'b0;
+                end
+            end
         end
-        else begin
-            wb_w_data <= `ZERO_WORD;
-            wb_w_ena <= 1'b0;
-            wb_w_addr <= `ZERO_REG_ADDR;
-            wb_pc <= `PC_START;                             //for difftest
-            wb_instr <= `ZERO_INST;
-            wb_csr_addr <= 12'h000;
-            wb_w_csr_data <= `ZERO_WORD;
-            wb_csr_ena <= 1'b0;
-        end
+
     end
 endmodule

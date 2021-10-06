@@ -253,7 +253,7 @@ module SimTop(
    wire [1 : 0] AXI_req;
    wire [1 : 0] AXI_size;
    wire [64-1:0] AXI_id;
-   wire [3 : 0] stall;
+   wire [4 : 0] stall;
 
 //AXI -> arbitrate
    wire AXI_ready;

@@ -36,7 +36,7 @@ module arbitrate (
     input wire [`REG_BUS] AXI_r_data,
     input wire AXI_stall,
 
-    output reg [3 : 0] stall
+    output reg [4 : 0] stall
     
 );
 
@@ -102,18 +102,18 @@ end
 
 always @(*) begin
     if(rst == 1'b1) begin
-        stall = 4'b0000;
+        stall = 5'b0000;
     end
     else begin
-        stall = 4'b0000;
+        stall = 5'b0000;
         if(mem_valid & if_valid) begin
-            stall = {1'b1, AXI_stall, AXI_stall, 1'b0};
+            stall = {2'b11, AXI_stall, AXI_stall, 1'b0};
         end
         else if(mem_valid & ~if_valid) begin
-            stall = {{3{AXI_stall}}, 1'b0};
+            stall = {{4{AXI_stall}}, 1'b0};
         end
         else if(if_valid) begin
-            stall = {AXI_stall, 3'b0};
+            stall = {AXI_stall, AXI_stall, 3'b0};
         end
     end
 end

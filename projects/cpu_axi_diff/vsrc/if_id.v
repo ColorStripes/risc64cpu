@@ -11,7 +11,7 @@ module if_id (
     input wire pc_con,
     input wire wash,
     input wire flush,
-    input wire stall,
+    input wire [1: 0] stall,
 
     output reg [`PC_BUS] id_pc,
     output reg [`INST_BUS] id_instr
@@ -21,29 +21,30 @@ module if_id (
             id_pc <= `PC_START;
             id_instr <= `ZERO_INST;
         end
-        else if(~stall) begin
-            if(wash == 1'b1) begin
-                if(pc_con == 1'b0) begin
+        else begin
+            if(stall[1] & ~stall[0]) begin
+                id_pc <= `PC_START;
+                id_instr <= `ZERO_INST;
+            end
+            else if(~stall[1]) begin
+                if(wash == 1'b1) begin
+                    if(pc_con == 1'b0) begin
+                        id_pc <= `PC_START;
+                        id_instr <= `ZERO_INST;
+                    end
+                end
+                else begin
+                    if (pc_con == 1'b0) begin
+                        id_pc <= if_pc;
+                        id_instr <= if_instr;
+                    end 
+                end
+
+                if(flush == 1'b1) begin
                     id_pc <= `PC_START;
                     id_instr <= `ZERO_INST;
                 end
             end
-            else begin
-                if (pc_con == 1'b0) begin
-                      id_pc <= if_pc;
-                      id_instr <= if_instr;
-                end 
-            end
-
-            if(flush == 1'b1) begin
-                id_pc <= `PC_START;
-                id_instr <= `ZERO_INST;
-            end
-            
-        end
-        else begin
-            id_pc <= `PC_START;
-            id_instr <= `ZERO_INST;
         end
     end
 endmodule

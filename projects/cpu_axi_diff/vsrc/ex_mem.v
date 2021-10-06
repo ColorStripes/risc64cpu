@@ -22,7 +22,7 @@ module ex_mem (
     input wire [`REG_BUS] ex_w_csr_data,
     input wire [`REG_BUS] ex_except_type,
     input wire flush,
-    input wire stall,
+    input wire [1 : 0] stall,
 
     output reg [`REG_BUS] mem_w_data,
     output reg mem_w_ena,
@@ -62,23 +62,8 @@ module ex_mem (
             mem_w_csr_data <= `ZERO_WORD;
             mem_except_type <= `ZERO_WORD;
         end
-        else if(~stall) begin
-            mem_w_data <= ex_w_data;
-            mem_w_ena <= ex_w_ena;
-            mem_w_addr <= ex_w_addr;
-            men_pc <= ex_pc;
-            mem_mem_waddr <= ex_mem_waddr;
-            mem_mem_raddr <= ex_mem_raddr;
-            mem_memop <= ex_memop;
-            mem_stor_data <= ex_stor_data;
-            mem_mem_wr <= ex_mem_wr;
-            mem_mem_ena <= ex_mem_ena;
-            men_instr <= ex_instr;
-            mem_csr_addr <= ex_csr_addr;
-            mem_w_csr_data <= ex_w_csr_data;
-            mem_csr_ena <= ex_csr_ena;
-            mem_except_type <= ex_except_type;
-            if(flush == 1'b1) begin
+        else begin
+            if(stall[1] & ~stall[0]) begin
                 mem_w_data <= `ZERO_WORD;
                 mem_w_ena <= 1'b0;
                 mem_w_addr <= `ZERO_REG_ADDR;
@@ -96,30 +81,47 @@ module ex_mem (
                 mem_csr_ena <= 1'b0;
                 mem_except_type <= `ZERO_WORD;
             end
-            
-            if(ex_instr == 32'h7b) begin
-                $write("%c",ex_w_data);
-                $fflush();
-            end
-            
+            else if(~stall[1]) begin
+                mem_w_data <= ex_w_data;
+                mem_w_ena <= ex_w_ena;
+                mem_w_addr <= ex_w_addr;
+                men_pc <= ex_pc;
+                mem_mem_waddr <= ex_mem_waddr;
+                mem_mem_raddr <= ex_mem_raddr;
+                mem_memop <= ex_memop;
+                mem_stor_data <= ex_stor_data;
+                mem_mem_wr <= ex_mem_wr;
+                mem_mem_ena <= ex_mem_ena;
+                men_instr <= ex_instr;
+                mem_csr_addr <= ex_csr_addr;
+                mem_w_csr_data <= ex_w_csr_data;
+                mem_csr_ena <= ex_csr_ena;
+                mem_except_type <= ex_except_type;
+                if(flush == 1'b1) begin
+                    mem_w_data <= `ZERO_WORD;
+                    mem_w_ena <= 1'b0;
+                    mem_w_addr <= `ZERO_REG_ADDR;
+                    men_pc <= `ZERO_WORD;
+                    mem_mem_waddr <= `ZERO_WORD;
+                    mem_mem_raddr <= `ZERO_WORD;
+                    mem_memop <= 5'b00000;
+                    mem_stor_data <= `ZERO_WORD;
+                    mem_mem_wr <= 1'b0;
+                    mem_mem_ena <= 1'b0;
+                    men_pc <= `PC_START;
+                    men_instr <= `ZERO_INST;
+                    mem_csr_addr <= 12'h000;
+                    mem_w_csr_data <= `ZERO_WORD;
+                    mem_csr_ena <= 1'b0;
+                    mem_except_type <= `ZERO_WORD;
+                end
+    
+                if(ex_instr == 32'h7b) begin
+                    $write("%c",ex_w_data);
+                    $fflush();
+                end
+            end  
         end
-        else begin
-            mem_w_data <= `ZERO_WORD;
-            mem_w_ena <= 1'b0;
-            mem_w_addr <= `ZERO_REG_ADDR;
-            men_pc <= `ZERO_WORD;
-            mem_mem_waddr <= `ZERO_WORD;
-            mem_mem_raddr <= `ZERO_WORD;
-            mem_memop <= 5'b00000;
-            mem_stor_data <= `ZERO_WORD;
-            mem_mem_wr <= 1'b0;
-            mem_mem_ena <= 1'b0;
-            men_pc <= `PC_START;
-            men_instr <= `ZERO_INST;
-            mem_csr_addr <= 12'h000;
-            mem_w_csr_data <= `ZERO_WORD;
-            mem_csr_ena <= 1'b0;
-            mem_except_type <= `ZERO_WORD;
-        end
+
     end
 endmodule
