@@ -36,7 +36,7 @@ module arbitrate (
     input wire [`REG_BUS] AXI_r_data,
     input wire AXI_stall,
 
-    output reg stall
+    output reg [3 : 0] stall
     
 );
 
@@ -77,21 +77,17 @@ always @(*) begin
         mem_ready = 1'b0;
         mem_data = `ZERO_WORD;
         if_data_read = `ZERO_WORD;
-        stall = 1'b0;
     end
     else begin
-        stall = AXI_stall;
             if(AXI_out_id == 4'b1) begin
                 mem_data = AXI_r_data;
                 mem_ready = AXI_ready;
-                //stall = 1'b0;
                 if_ready = 1'b0;
                 if_data_read = `ZERO_WORD;
             end
             else if(AXI_out_id == 4'b11) begin
                 if_data_read = AXI_r_data;
                 if_ready = AXI_ready;
-                //stall = 1'b0;
                 mem_ready = 1'b0;
                 mem_data = `ZERO_WORD;
             end
@@ -100,10 +96,26 @@ always @(*) begin
                 mem_ready = 1'b0;
                 mem_data = `ZERO_WORD;
                 if_data_read = `ZERO_WORD;
-                //stall = 1'b1;
             end
-        
-    
+    end
+end
+
+
+always @(*) begin
+    if(rst == 1'b0) begin
+        stall = 4'b0000;
+    end
+    else begin
+        stall = 4'b0000;
+        if(mem_valid & if_valid) begin
+            stall = {2'b11, AXI_stall, 1'b0};
+        end
+        else if(mem_valid & ~if_valid) begin
+            stall = {{3{AXI_stall}}, 1'b0};
+        end
+        else if(if_valid) begin
+            stall = {{2{AXI_stall}}, 2'b0};
+        end
     end
 end
 

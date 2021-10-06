@@ -102,5 +102,23 @@ always @(posedge clk) begin
            ex_csr_ena <= 1'b0;
         end
     end
+    else begin
+        ex_w_addr <= `ZERO_REG_ADDR;
+        ex_w_ena <= 1'b0;
+
+        ex_reg1_data <= `ZERO_WORD;
+        ex_reg2_data <= `ZERO_WORD;
+
+        ex_memop <= 5'b00000;
+        ex_aluop <= 7'b0000000;
+        ex_alusel <= 3'b000;
+        ex_imm <= `ZERO_WORD;
+        ex_mem_wr <= 1'b0;
+        ex_mem_ena <= 1'b0;
+
+        ex_pc <= `PC_START;
+        ex_instr <= `ZERO_INST;
+        ex_csr_ena <= 1'b0;
+    end
   end
 endmodule

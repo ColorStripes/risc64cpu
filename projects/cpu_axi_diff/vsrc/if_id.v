@@ -41,5 +41,9 @@ module if_id (
             end
             
         end
+        else begin
+            id_pc <= `PC_START;
+            id_instr <= `ZERO_INST;
+        end
     end
 endmodule

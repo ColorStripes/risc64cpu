@@ -4,9 +4,9 @@
 `include "defines.v"
 
 module rvcpu(
-    input         clock,
-    input         reset,
-    input         stall,
+    input                 clock,
+    input                 reset,
+    input [3 : 0]         stall,
 
     input  wire if_ready,
     input  wire [63 : 0] if_data_read,
@@ -226,7 +226,7 @@ assign rst = reset;
     .pc_con(pc_con),
     .wash(wash),
     .flush(flush),
-    .stall(stall),
+    .stall(stall[3]),
 
     .id_pc(id_pc),
     .id_instr(id_instr)
@@ -322,7 +322,7 @@ assign rst = reset;
     .id_w_ena(w_ena),
     .id_w_addr(w_addr),
     .flush(flush),
-    .stall(stall),
+    .stall(stall[2]),
 
     .id_csr_ena(id_csr_ena),
 
@@ -418,7 +418,7 @@ assign rst = reset;
     .ex_w_csr_data(ex_w_csr_data),
     .ex_except_type(except_type),
     .flush(flush),
-    .stall(stall),
+    .stall(stall[1]),
 
     .mem_w_data(mem_w_data),
     .mem_w_ena(mem_w_ena),
@@ -517,7 +517,7 @@ assign rst = reset;
     .mem_csr_ena(MEM_csr_ena),
     .except_type(MEM_except_type),//
     .flush(flush),
-    .stall(stall),
+    .stall(stall[0]),
     
 
     .wb_csr_addr(wb_csr_addr),         ///csr o
