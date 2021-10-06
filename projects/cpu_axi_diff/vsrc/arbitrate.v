@@ -107,13 +107,13 @@ always @(*) begin
     else begin
         stall = 4'b0000;
         if(mem_valid & if_valid) begin
-            stall = {2'b11, AXI_stall, 1'b0};
+            stall = {1'b1, AXI_stall, AXI_stall, 1'b0};
         end
         else if(mem_valid & ~if_valid) begin
             stall = {{3{AXI_stall}}, 1'b0};
         end
         else if(if_valid) begin
-            stall = {AXI_stall, AXI_stall, 2'b0};
+            stall = {AXI_stall, 3'b0};
         end
     end
 end
