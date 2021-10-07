@@ -62,7 +62,7 @@ module ex_mem (
             mem_csr_ena <= 1'b0;
             mem_except_type <= `ZERO_WORD;
         end
-
+        else begin
 
 
         if(rst == 1'b1) begin
@@ -83,8 +83,12 @@ module ex_mem (
             mem_w_csr_data <= `ZERO_WORD;
             mem_except_type <= `ZERO_WORD;
         end
-        else begin
-            if(stall[1] & ~stall[0]) begin
+        
+
+
+
+
+        else if(stall[1] & ~stall[0]) begin
                 mem_w_data <= `ZERO_WORD;
                 mem_w_ena <= 1'b0;
                 mem_w_addr <= `ZERO_REG_ADDR;
@@ -125,6 +129,7 @@ module ex_mem (
                     $fflush();
                 end
             end  
+            
         end
 
     end

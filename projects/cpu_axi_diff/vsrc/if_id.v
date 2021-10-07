@@ -26,7 +26,7 @@ module if_id (
                 id_pc <= `PC_START;
                 id_instr <= `ZERO_INST;
             end
-            if(stall[1] & ~stall[0]) begin
+            else if(stall[1] & ~stall[0]) begin
                 id_pc <= `PC_START;
                 id_instr <= `ZERO_INST;
             end

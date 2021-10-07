@@ -52,7 +52,7 @@ module mem_wb (
                 wb_csr_ena <= 1'b0;
             end
 
-            if(stall[1] & ~stall[0]) begin
+            else if(stall[1] & ~stall[0]) begin
                 wb_w_data <= `ZERO_WORD;
                 wb_w_ena <= 1'b0;
                 wb_w_addr <= `ZERO_REG_ADDR;

@@ -85,8 +85,7 @@ always @(posedge clk) begin
             ex_instr <= `ZERO_INST;
             ex_csr_ena <= 1'b0;
         end
-
-        if(stall[1] & ~stall[0]) begin
+        else if(stall[1] & ~stall[0]) begin
             ex_w_addr <= `ZERO_REG_ADDR;
             ex_w_ena <= 1'b0;
 
