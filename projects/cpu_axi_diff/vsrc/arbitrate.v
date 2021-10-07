@@ -125,7 +125,7 @@ always @(*) begin
             stall = 6'b000000;
         end
         else if(flush_reg) begin
-            stall = 6'b111111;
+            stall = 6'b111110;
         end
     end
 end
