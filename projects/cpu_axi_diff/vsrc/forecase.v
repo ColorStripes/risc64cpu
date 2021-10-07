@@ -36,8 +36,14 @@ module forecase (
 
 
 always @(posedge clk) begin
-    if(pc_con != 1'b1)
-        ifa <= if_forecase;
+    if(rst == 1'b1) begin
+        ifa <= 1'b0;
+    end
+    else begin
+        if(pc_con != 1'b1) begin
+            ifa <= if_forecase;
+        end
+    end
 end
 
 
@@ -87,12 +93,26 @@ always @(*) begin
 end
 
 always @(posedge clk) begin
+    if(rst == 1'b1) begin
+        fore_reg = 2'b00;
+        wash_reg = 1'b0;
+        pc_reg = `ZERO_WORD;
+        if_forecase_reg = 1'b0;
+        for(i=0; i<`PC; i=i+1) begin
+            pc_now_reg[i] = `ZERO_WORD; 
+        end
+        for(i=0; i<`FORECASE; i=i+1) begin
+            fore_branch_reg[i] = `ZERO_WORD; 
+        end
+    end
+    else begin
         fore_reg = fore;
         pc_now_reg = pc_now;
         fore_branch_reg = fore_branch;
         wash_reg = wash;
         pc_reg = pc;
         if_forecase_reg = if_forecase;
+    end
 end
 
 
@@ -157,7 +177,6 @@ always @(posedge clk) begin   //count
                timeo <= timeo + 1 ;
            end
         end
-    
     end
 end
 

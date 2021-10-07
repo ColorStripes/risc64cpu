@@ -43,27 +43,37 @@ module arbitrate (
 
 
 always @(*) begin
-    AXI_addr = `ZERO_WORD;
-    AXI_w_data = `ZERO_WORD;
-    AXI_vaild = 1'b0;
-    AXI_req = 2'b0;
-    AXI_size = 2'b0;
-    AXI_id = 4'b0000;
-    if(mem_valid) begin
-        AXI_addr = mem_addr;
-        AXI_w_data = mem_stor_data;
-        AXI_vaild = mem_valid;
-        AXI_req = mem_req;
-        AXI_size = mem_sel;
-        AXI_id = 4'b0001;
-    end
-    else if(if_valid) begin
-        AXI_addr = IF_pc;
+    if(rst == 1'b1) begin
+        AXI_addr = `ZERO_WORD;
         AXI_w_data = `ZERO_WORD;
-        AXI_vaild = if_valid;
-        AXI_req = if_req;
-        AXI_size = if_size;
-        AXI_id = 4'b0011;
+        AXI_vaild = 1'b0;
+        AXI_req = 2'b0;
+        AXI_size = 2'b0;
+        AXI_id = 4'b0000;
+    end
+    else begin
+        AXI_addr = `ZERO_WORD;
+        AXI_w_data = `ZERO_WORD;
+        AXI_vaild = 1'b0;
+        AXI_req = 2'b0;
+        AXI_size = 2'b0;
+        AXI_id = 4'b0000;
+        if(mem_valid) begin
+            AXI_addr = mem_addr;
+            AXI_w_data = mem_stor_data;
+            AXI_vaild = mem_valid;
+            AXI_req = mem_req;
+            AXI_size = mem_sel;
+            AXI_id = 4'b0001;
+        end
+        else if(if_valid) begin
+            AXI_addr = IF_pc;
+            AXI_w_data = `ZERO_WORD;
+            AXI_vaild = if_valid;
+            AXI_req = if_req;
+            AXI_size = if_size;
+            AXI_id = 4'b0011;
+        end
     end
 end
 
@@ -132,11 +142,16 @@ end
 
 reg flush_reg;
 always @(posedge clk) begin
-    if(flush) begin
-        flush_reg <= 1'b1;
-    end
-    if(~AXI_stall) begin
+    if(rst == 1'b1) begin
         flush_reg <= 1'b0;
+    end
+    else begin
+        if(flush) begin
+            flush_reg <= 1'b1;
+        end
+        if(~AXI_stall) begin
+            flush_reg <= 1'b0;
+        end
     end
 end
     
