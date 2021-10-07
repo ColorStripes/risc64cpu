@@ -6,7 +6,7 @@
 module rvcpu(
     input                 clock,
     input                 reset,
-    input [4 : 0]         stall,
+    input [5 : 0]         stall,
 
     input  wire if_ready,
     input  wire [63 : 0] if_data_read,
@@ -21,7 +21,9 @@ module rvcpu(
     output wire mem_valid,
     output wire [63 : 0] mem_addr,
     output wire [1 : 0] mem_sel,
-    output wire [1 : 0] mem_req
+    output wire [1 : 0] mem_req,
+
+    output wire flush
 
 );
 
@@ -185,7 +187,7 @@ wire [`REG_BUS] mstatus;
 wire [`REG_BUS] mscratch;
 wire [`REG_BUS] sstatus;
 //CSR_reg -> ALL_stage
-wire flush;
+//wire flush;
 //Clint -> CSR_reg
 wire time_inter;
 //Clint -> MEM_reg
@@ -206,7 +208,7 @@ assign rst = reset;
     .pc_id(id_pc),
     .new_pc(new_pc),
     .flush(flush),
-    .stall(stall[4]),
+    .stall(stall[5]),
 
     .wash(wash),
     .instr(instr),

@@ -253,7 +253,7 @@ module SimTop(
    wire [1 : 0] AXI_req;
    wire [1 : 0] AXI_size;
    wire [64-1:0] AXI_id;
-   wire [4 : 0] stall;
+   wire [5 : 0] stall;
 
 //AXI -> arbitrate
    wire AXI_ready;
@@ -263,7 +263,7 @@ module SimTop(
 
    wire [1: 0] rw_resp;
 
-
+wire flush;
 
     
 
@@ -271,6 +271,7 @@ module SimTop(
 arbitrate arbitrate (
     .clk(clock),
     .rst(reset),
+    .flush(flush),
 
     .if_ready(if_ready),
     .if_data_read(if_data_read),
@@ -325,7 +326,9 @@ rvcpu rvcpu(
     .mem_valid(mem_valid),
     .mem_addr(mem_addr),
     .mem_sel(mem_sel),
-    .mem_req(mem_req)
+    .mem_req(mem_req),
+
+    .flush(flush)
 
 );
 

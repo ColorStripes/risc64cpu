@@ -22,6 +22,10 @@ module if_id (
             id_instr <= `ZERO_INST;
         end
         else begin
+            if(flush == 1'b1) begin
+                id_pc <= `PC_START;
+                id_instr <= `ZERO_INST;
+            end
             if(stall[1] & ~stall[0]) begin
                 id_pc <= `PC_START;
                 id_instr <= `ZERO_INST;
@@ -40,10 +44,7 @@ module if_id (
                     end 
                 end
 
-                if(flush == 1'b1) begin
-                    id_pc <= `PC_START;
-                    id_instr <= `ZERO_INST;
-                end
+                
             end
         end
     end

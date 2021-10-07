@@ -5,6 +5,7 @@
 module arbitrate (
     input clk,
     input rst,
+    input flush,
 
     output reg if_ready,
     output reg [63 : 0] if_data_read,
@@ -36,7 +37,7 @@ module arbitrate (
     input wire [`REG_BUS] AXI_r_data,
     input wire AXI_stall,
 
-    output reg [4 : 0] stall
+    output reg [5 : 0] stall
     
 );
 
@@ -70,7 +71,6 @@ end
 
 
 always @(*) begin
-    
     if(rst == 1'b1) begin
         if_ready = 1'b0;
         mem_ready = 1'b0;
@@ -105,24 +105,36 @@ end
 
 always @(*) begin
     if(rst == 1'b1) begin
-        stall = 5'b0000;
+        stall = 6'b000000;
     end
     else begin
-        stall = 5'b0000;
-        if(mem_valid & if_valid) begin
-            stall = {4'b1111, 1'b0};
+        stall = 6'b000000;
+        if(mem_valid & if_valid & ~flush_reg) begin
+            stall = {5'b11111, 1'b0};
             if(AXI_out_id == 4'b1) begin
-                stall = {2'b11, AXI_stall, AXI_stall, 1'b0};
+                stall = {3'b111, AXI_stall, AXI_stall, 1'b0};
             end
         end
-        else if(mem_valid & ~if_valid) begin
-            stall = {{4{AXI_stall}}, 1'b0};
+        else if(mem_valid & ~if_valid & ~flush_reg) begin
+            stall = {{5{AXI_stall}}, 1'b0};
         end
-        else if(if_valid) begin
-            stall = {AXI_stall, AXI_stall, 3'b0};
+        else if(if_valid & ~flush_reg) begin
+            stall = {AXI_stall, AXI_stall, AXI_stall, 3'b0};
+        end
+        if(flush) begin
+            stall = 6'b000000;
         end
     end
 end
 
+reg flush_reg;
+always @(posedge clk) begin
+    if(flush) begin
+        flush_reg <= 1'b1;
+    end
+    if(~AXI_stall) begin
+        flush_reg <= 1'b0;
+    end
+end
     
 endmodule

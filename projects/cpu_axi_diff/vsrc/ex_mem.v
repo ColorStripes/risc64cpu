@@ -44,6 +44,27 @@ module ex_mem (
     output reg [`PC_BUS] men_pc 
 );
     always @(posedge clk) begin
+        if(flush == 1'b1) begin
+            mem_w_data <= `ZERO_WORD;
+            mem_w_ena <= 1'b0;
+            mem_w_addr <= `ZERO_REG_ADDR;
+            men_pc <= `ZERO_WORD;
+            mem_mem_waddr <= `ZERO_WORD;
+            mem_mem_raddr <= `ZERO_WORD;
+            mem_memop <= 5'b00000;
+            mem_stor_data <= `ZERO_WORD;
+            mem_mem_wr <= 1'b0;
+            mem_mem_ena <= 1'b0;
+            men_pc <= `PC_START;
+            men_instr <= `ZERO_INST;
+            mem_csr_addr <= 12'h000;
+            mem_w_csr_data <= `ZERO_WORD;
+            mem_csr_ena <= 1'b0;
+            mem_except_type <= `ZERO_WORD;
+        end
+
+
+
         if(rst == 1'b1) begin
             mem_w_data <= `ZERO_WORD;
             mem_w_ena <= 1'b0;
@@ -97,24 +118,7 @@ module ex_mem (
                 mem_w_csr_data <= ex_w_csr_data;
                 mem_csr_ena <= ex_csr_ena;
                 mem_except_type <= ex_except_type;
-                if(flush == 1'b1) begin
-                    mem_w_data <= `ZERO_WORD;
-                    mem_w_ena <= 1'b0;
-                    mem_w_addr <= `ZERO_REG_ADDR;
-                    men_pc <= `ZERO_WORD;
-                    mem_mem_waddr <= `ZERO_WORD;
-                    mem_mem_raddr <= `ZERO_WORD;
-                    mem_memop <= 5'b00000;
-                    mem_stor_data <= `ZERO_WORD;
-                    mem_mem_wr <= 1'b0;
-                    mem_mem_ena <= 1'b0;
-                    men_pc <= `PC_START;
-                    men_instr <= `ZERO_INST;
-                    mem_csr_addr <= 12'h000;
-                    mem_w_csr_data <= `ZERO_WORD;
-                    mem_csr_ena <= 1'b0;
-                    mem_except_type <= `ZERO_WORD;
-                end
+                
     
                 if(ex_instr == 32'h7b) begin
                     $write("%c",ex_w_data);

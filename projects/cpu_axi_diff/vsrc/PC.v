@@ -11,7 +11,8 @@ module PC(
   input wire pc_con,
   input wire [`PC_BUS] new_pc,
   input wire flush,	
-  input wire if_ready,                //AXI
+  input wire if_ready,              //AXI
+  input wire stall,                
 
   output reg I_M_e,
   output reg [`PC_BUS] pc
@@ -35,15 +36,17 @@ always@( posedge clk ) begin
   if( I_M_e == 1'b0 ) begin
     pc <= `PC_START ;
   end
-  else if(handshake_done) begin    
-
+  else begin  
     if(flush == 1'b1) begin
       pc <= new_pc;
+    end  
+    if(~stall) begin
+      if (pc_con == 1'b0) begin
+          pc <= pc_i;
+      end
     end
-    else if (pc_con == 1'b0) begin
-      pc <= pc_i;
-    end
-
+    
+    
   end
 end
 endmodule

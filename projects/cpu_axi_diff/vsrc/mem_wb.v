@@ -41,6 +41,17 @@ module mem_wb (
             wb_csr_ena <= 1'b0;
         end
         else begin
+            if(flush == 1'b1) begin
+                wb_w_data <= `ZERO_WORD;
+                wb_w_ena <= 1'b0;
+                wb_w_addr <= `ZERO_REG_ADDR;
+                //wb_pc <= `PC_START;                             //for difftest
+                //wb_instr <= `ZERO_INST;
+                wb_csr_addr <= 12'h000;
+                wb_w_csr_data <= `ZERO_WORD;
+                wb_csr_ena <= 1'b0;
+            end
+
             if(stall[1] & ~stall[0]) begin
                 wb_w_data <= `ZERO_WORD;
                 wb_w_ena <= 1'b0;
@@ -61,16 +72,7 @@ module mem_wb (
                 wb_w_csr_data <= mem_w_csr_data;
                 wb_csr_ena <= mem_csr_ena;
 
-                if(flush == 1'b1) begin
-                    wb_w_data <= `ZERO_WORD;
-                    wb_w_ena <= 1'b0;
-                    wb_w_addr <= `ZERO_REG_ADDR;
-                    //wb_pc <= `PC_START;                             //for difftest
-                    //wb_instr <= `ZERO_INST;
-                    wb_csr_addr <= 12'h000;
-                    wb_w_csr_data <= `ZERO_WORD;
-                    wb_csr_ena <= 1'b0;
-                end
+
             end
         end
 

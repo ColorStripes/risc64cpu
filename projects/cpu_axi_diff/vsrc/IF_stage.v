@@ -43,6 +43,7 @@ PC PC(
   .new_pc(new_pc),
   .flush(flush),
   .if_ready(if_ready),
+  .stall(stall),
 
   .I_M_e(if_valid),
   .pc(IF_pc)
