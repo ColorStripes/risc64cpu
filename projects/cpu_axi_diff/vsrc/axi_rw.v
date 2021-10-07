@@ -71,7 +71,6 @@ module axi_rw # (
     output reg                          stall,
     input [AXI_ID_WIDTH-1:0]            cpu_id,
     output [AXI_ID_WIDTH-1:0]           out_id,
-    input wire flush,
 
     // Advanced eXtensible Interface
     input                               axi_aw_ready_i,
