@@ -40,7 +40,7 @@ always@( posedge clk ) begin
     if(flush == 1'b1) begin
       pc <= new_pc;
     end  
-    if(~stall) begin
+    else if(~stall) begin
       if (pc_con == 1'b0) begin
           pc <= pc_i;
       end
