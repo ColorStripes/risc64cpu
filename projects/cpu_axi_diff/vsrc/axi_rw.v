@@ -71,6 +71,7 @@ module axi_rw # (
     output reg                          stall,
     input [AXI_ID_WIDTH-1:0]            cpu_id,
     output [AXI_ID_WIDTH-1:0]           out_id,
+    input wire flush,
 
     // Advanced eXtensible Interface
     input                               axi_aw_ready_i,
@@ -166,7 +167,10 @@ reg axi_b_valid_i_nxt;
             w_state <= W_STATE_IDLE;
         end
         else begin
-            if (w_valid) begin
+            if(flush) begin
+                w_state <= W_STATE_ADDR;
+            end
+            else if (w_valid) begin
                 case (w_state)
                     W_STATE_IDLE: begin w_state <= W_STATE_ADDR;  stall <= 1'b1; end              
                     W_STATE_ADDR:  if (aw_hs)   w_state <= W_STATE_WRITE;

@@ -174,6 +174,7 @@ module SimTop(
         .stall                          (AXI_stall),
         .cpu_id                         (AXI_id),
         .out_id                         (AXI_out_id),
+        .flush(flush),
 
         .axi_aw_ready_i                 (aw_ready),
         .axi_aw_valid_o                 (aw_valid),
