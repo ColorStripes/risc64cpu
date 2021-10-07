@@ -168,7 +168,7 @@ reg axi_b_valid_i_nxt;
         end
         else begin
             if(flush) begin
-                w_state <= W_STATE_ADDR;
+                w_state <= W_STATE_IDLE;
             end
             else if (w_valid) begin
                 case (w_state)
