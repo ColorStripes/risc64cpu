@@ -434,7 +434,7 @@ module ID_stage (
                     reg1_r_ena = 1'b1;
                     reg2_r_ena = 1'b1;
                     branch = IF_pc + imm ;
-                    if(if_branch != branch) begin
+                    if((if_branch != branch) && (mux_pc)) begin
                         error_branch = 1'b1;
                     end
 
@@ -514,7 +514,7 @@ module ID_stage (
                   alusel = `Jump;
                   branch = IF_pc + imm;
                   mux_pc = 1'b1;
-                  if(if_branch != branch) begin
+                  if((if_branch != branch) && (mux_pc)) begin
                         error_branch = 1'b1;
                   end
               end
@@ -528,7 +528,7 @@ module ID_stage (
                   aluop = `NO;
                   alusel = `Jump;
                   branch = ((reg1_data + imm) & 64'hffff_ffff_ffff_fffe);
-                  if(if_branch != branch) begin
+                  if((if_branch != branch) && (mux_pc)) begin
                         error_branch = 1'b1;
                   end
               end
