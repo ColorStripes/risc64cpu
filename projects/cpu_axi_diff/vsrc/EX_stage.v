@@ -5,7 +5,7 @@
 module EX_stage (
     input wire rst,
 
-    input wire [`PC_BUS] ID_pc,//未写
+    input wire [`PC_BUS] ID_pc,
     input wire [`INST_BUS] ID_instr,
 
     input wire [4 : 0] id_w_addr,

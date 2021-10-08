@@ -183,6 +183,7 @@ wire [`REG_BUS] mip;
 //CSR_reg -> difftest
 wire [`REG_BUS] mcause;
 wire [`REG_BUS] mcycle;
+wire [`REG_BUS] minstret;
 wire [`REG_BUS] mstatus;
 wire [`REG_BUS] mscratch;
 wire [`REG_BUS] sstatus;
@@ -576,6 +577,7 @@ assign rst = reset;
     .mcause(mcause),
     .mscratch(mscratch),
     .mcycle(mcycle),
+    .minstret(minstret),
 
     .flush(flush)
 

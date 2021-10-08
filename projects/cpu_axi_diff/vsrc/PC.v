@@ -20,33 +20,34 @@ module PC(
 );
 wire handshake_done = I_M_e & if_ready;
 
-always@( posedge clk )
-begin
-  if( rst == 1'b1 )
-  begin
-    I_M_e <= 1'b0;
-  end
-  else
-  begin
-    I_M_e <= 1'b1;
-  end
+always@( posedge clk ) begin
+    if( rst == 1'b1 ) begin
+      I_M_e <= 1'b0;
+    end
+    else begin
+      I_M_e <= 1'b1;
+    end
 end
 
+
 always@( posedge clk ) begin
-  if( I_M_e == 1'b0 ) begin
+  if(rst == 1'b1) begin
     pc <= `PC_START ;
   end
-  else begin  
-    if(flush == 1'b1) begin
-      pc <= new_pc;
-    end  
-    else if(~stall) begin
-      if (pc_con == 1'b0) begin
-          pc <= pc_i;
+  else begin
+      if( I_M_e == 1'b0 ) begin
+        pc <= `PC_START ;
       end
-    end
-    
-    
+      else begin  
+        if(flush == 1'b1) begin
+          pc <= new_pc;
+        end  
+        else if(~stall) begin
+          if (pc_con == 1'b0) begin
+              pc <= pc_i;
+          end
+        end 
+      end
   end
 end
 endmodule

@@ -85,20 +85,20 @@ module axi_rw # (
     output                              axi_aw_lock_o,
     output [3:0]                        axi_aw_cache_o,
     output [3:0]                        axi_aw_qos_o,
-    output [3:0]                        axi_aw_region_o,
+    output [3:0]                        axi_aw_region_o,//
 
     input                               axi_w_ready_i,
     output                              axi_w_valid_o,
     output [AXI_DATA_WIDTH-1:0]         axi_w_data_o,
     output [AXI_DATA_WIDTH/8-1:0]       axi_w_strb_o,
     output                              axi_w_last_o,
-    output [AXI_USER_WIDTH-1:0]         axi_w_user_o,
+    output [AXI_USER_WIDTH-1:0]         axi_w_user_o,  //
     
     output                              axi_b_ready_o,
     input                               axi_b_valid_i,
     input  [1:0]                        axi_b_resp_i,
     input  [AXI_ID_WIDTH-1:0]           axi_b_id_i,
-    input  [AXI_USER_WIDTH-1:0]         axi_b_user_i,
+    input  [AXI_USER_WIDTH-1:0]         axi_b_user_i,  //
 
     input                               axi_ar_ready_i,
     output                              axi_ar_valid_o,
@@ -112,7 +112,7 @@ module axi_rw # (
     output                              axi_ar_lock_o,
     output [3:0]                        axi_ar_cache_o,
     output [3:0]                        axi_ar_qos_o,
-    output [3:0]                        axi_ar_region_o,
+    output [3:0]                        axi_ar_region_o, //
     
     output                              axi_r_ready_o,
     input                               axi_r_valid_i,
@@ -120,7 +120,7 @@ module axi_rw # (
     input  [AXI_DATA_WIDTH-1:0]         axi_r_data_i,
     input                               axi_r_last_i,
     input  [AXI_ID_WIDTH-1:0]           axi_r_id_i,
-    input  [AXI_USER_WIDTH-1:0]         axi_r_user_i
+    input  [AXI_USER_WIDTH-1:0]         axi_r_user_i //
 );
 reg axi_r_valid_i_nxt;
 reg axi_b_valid_i_nxt;
@@ -144,8 +144,14 @@ reg axi_b_valid_i_nxt;
 
 
     always @(posedge clock) begin
-        axi_r_valid_i_nxt <= axi_r_valid_i;
-        axi_b_valid_i_nxt <= axi_b_valid_i;
+        if(reset == 1'b1) begin
+            axi_r_valid_i_nxt <= 1'b0;
+            axi_b_valid_i_nxt <= 1'b0;
+        end
+        else begin
+            axi_r_valid_i_nxt <= axi_r_valid_i;
+            axi_b_valid_i_nxt <= axi_b_valid_i;
+        end
     end
 
 
@@ -164,6 +170,7 @@ reg axi_b_valid_i_nxt;
     always @(posedge clock) begin
         if (reset) begin
             w_state <= W_STATE_IDLE;
+            stall <= 1'b0;
         end
         else begin
             if (w_valid) begin
@@ -184,6 +191,7 @@ reg axi_b_valid_i_nxt;
     always @(posedge clock) begin
         if (reset) begin
             r_state <= R_STATE_IDLE;
+            stall <= 1'b0;
         end
         else begin
             if (r_valid) begin

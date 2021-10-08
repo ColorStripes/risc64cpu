@@ -42,9 +42,7 @@ module if_id (
                         id_pc <= if_pc;
                         id_instr <= if_instr;
                     end 
-                end
-
-                
+                end        
             end
         end
     end
