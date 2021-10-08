@@ -736,7 +736,7 @@ DifftestTrapEvent DifftestTrapEvent(
   .code               (trap_code),
   .pc                 (cmt_pc),
   .cycleCnt           (mcycle),   //
-  .instrCnt           (instrCnt)
+  .instrCnt           (minstret)
 );
 
 DifftestCSRState DifftestCSRState(
