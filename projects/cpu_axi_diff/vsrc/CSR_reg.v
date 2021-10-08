@@ -247,17 +247,3 @@ assign sstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ? {{(csr_w_dat
 
 
 endmodule
-
-
-
-
-
-always @(*) begin
-    pc_reg
-end
-
-
-
-always @(posedge clk) begin
-    pc <= pc_reg;
-end
