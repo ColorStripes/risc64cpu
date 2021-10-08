@@ -67,7 +67,7 @@ module CSR_reg (
                 csr_mcycle <= 64'h0;
             end
 
-            //csr_mip[7] <= time_inter;                    //interrpt
+            csr_mip[7] <= time_inter;                    //interrpt
 
             if(csr_w_ena == 1'b1) begin
                 case(csr_w_addr)
@@ -115,7 +115,7 @@ module CSR_reg (
                     csr_mstatus[12 : 11] <= 2'b11;   //MPP
                     csr_mcause <= {1'b1, 63'h7};
                     csr_mepc <= except_pc;
-                    csr_mip[7] <= 1'b1;
+                    csr_mip[7] <= 1'b0;
                  end
 
                  64'h2:begin           ////ecall
