@@ -58,7 +58,7 @@ module CSR_reg (
             csr_mie <= `ZERO_WORD;
             csr_mip <= `ZERO_WORD;
             csr_mcycle <= `ZERO_WORD;
-            csr_minstret <= `ZERO_WORD;
+            csr_minstret <= 64'h1;
             csr_mscratch <= `ZERO_WORD;
             csr_sstatus <= `ZERO_WORD;
         end
