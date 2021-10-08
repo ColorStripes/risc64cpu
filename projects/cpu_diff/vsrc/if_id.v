@@ -11,7 +11,11 @@ module if_id (
     input wire pc_con,
     input wire wash,
     input wire flush,
+    input wire if_forecase,
+    input wire [`PC_BUS] if_branch,
 
+    output reg [`PC_BUS] id_branch,
+    output reg id_forecase,
     output reg [`PC_BUS] id_pc,
     output reg [`INST_BUS] id_instr
 );
@@ -29,8 +33,10 @@ module if_id (
             end
             else begin
                 if (pc_con == 1'b0) begin
+                      id_forecase <= if_forecase;
                       id_pc <= if_pc;
                       id_instr <= if_instr;
+                      id_branch <= if_branch;
                 end 
             end
 

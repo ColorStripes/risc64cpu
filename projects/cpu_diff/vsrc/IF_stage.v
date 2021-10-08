@@ -12,11 +12,17 @@ module IF_stage (
     input wire [63 : 0] pc_id,
     input wire [`PC_BUS] new_pc,
     input wire flush,
+    input wire id_forecase,
+    input wire error_branch,
 
+    output wire [`PC_BUS] if_branch,
+    output wire if_forecase,
     output wire wash,
     output wire [63 : 0] IF_pc,
     output wire [31 : 0] instr
 );
+
+assign if_branch = pc_i;
 
 wire [63 : 0] sum;
 wire [63 : 0] pc_i;
@@ -67,9 +73,12 @@ forecase forecase (
     .add_pc(sum),
     .branch(branch),
     .pc_con(pc_con),
+    .id_forecase(id_forecase),
+    .error_branch(error_branch),
 
 
     .wash(wash),
+    .if_forecase(if_forecase),
     .pc(pc_i)
 );
 

@@ -16,7 +16,7 @@ module MEM_stage (
 
     input wire ex_mem_wr,
     input wire ex_mem_ena,
-    //input wire [`REG_BUS] mem_data,
+    //input wire [`REG_BUS] mem_data,                   //delete for AXI
 
     input wire [`PC_BUS] ex_pc,
     input wire [`INST_BUS] ex_instr,
@@ -52,11 +52,11 @@ module MEM_stage (
     output reg mem_w_ena,
     output reg [4 : 0] mem_w_addr,
 
-    output reg [`REG_BUS] mem_mem_waddr,
-    output reg [`REG_BUS] mem_mem_raddr,
+    //output reg [`REG_BUS] mem_mem_waddr,     //delete for AXI
+    //output reg [`REG_BUS] mem_mem_raddr,
     //output reg [`REG_BUS] mem_sel,
-    output reg mem_wr,
-    output reg mem_mem_ena,
+    //output reg mem_wr,
+    //output reg mem_mem_ena,
 
     output wire mem_valid,  //                //AXI
     input  wire mem_ready,
@@ -72,7 +72,10 @@ assign mem_valid = mem_mem_ena;
 assign mem_req = mem_wr;
 assign mem_addr = mem_wr ? mem_mem_waddr : mem_mem_raddr;
 
-
+    reg [`REG_BUS] mem_mem_waddr;
+    reg [`REG_BUS] mem_mem_raddr;
+    reg mem_wr;
+    reg mem_mem_ena;
 
 
     assign mem_pc = ex_pc;

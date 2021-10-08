@@ -23,6 +23,10 @@ module ID_stage (
     input wire idex_mem_ena,          //id_ex memory enable
     input wire idex_mem_wr,
 
+    input wire [`PC_BUS] if_branch,
+
+    output reg error_branch,
+
     output reg reg1_r_ena,
     output reg reg2_r_ena,
     output reg [4 : 0] reg1_addr,
@@ -88,6 +92,7 @@ module ID_stage (
             id_mem_ena = 1'b0;
             pc_con = 1'b0;
             id_csr_ena = 1'b0;
+            error_branch = 1'b0;
 
         end
         else begin
@@ -429,6 +434,9 @@ module ID_stage (
                     reg1_r_ena = 1'b1;
                     reg2_r_ena = 1'b1;
                     branch = IF_pc + imm ;
+                    if(if_branch != branch) begin
+                        error_branch = 1'b1;
+                    end
 
                     case(funct3)
                          `beq:begin
@@ -488,10 +496,11 @@ module ID_stage (
                              end
                          end
                          default:begin
-                                 reg1_r_ena = `ZERO_ENA;
-                                 reg2_r_ena = `ZERO_ENA;
-                                 id_mem_ena = 1'b0;
-                                 w_ena = 1'b0;
+                                reg1_r_ena = `ZERO_ENA;
+                                reg2_r_ena = `ZERO_ENA;
+                                id_mem_ena = 1'b0;
+                                w_ena = 1'b0;
+                                error_branch = 1'b0;
                          end
                     endcase
               end
@@ -505,6 +514,9 @@ module ID_stage (
                   alusel = `Jump;
                   branch = IF_pc + imm;
                   mux_pc = 1'b1;
+                  if(if_branch != branch) begin
+                        error_branch = 1'b1;
+                  end
               end
 
               //jalr
@@ -516,6 +528,9 @@ module ID_stage (
                   aluop = `NO;
                   alusel = `Jump;
                   branch = ((reg1_data + imm) & 64'hffff_ffff_ffff_fffe);
+                  if(if_branch != branch) begin
+                        error_branch = 1'b1;
+                  end
               end
 
               //S
@@ -663,6 +678,7 @@ module ID_stage (
                            reg1_r_ena = 1'b0;
                            reg2_r_ena = 1'b0;
                            id_csr_ena = 1'b0;
+                           error_branch = 1'b0;
                        end
                   endcase
               end
@@ -673,6 +689,7 @@ module ID_stage (
                     id_mem_ena = 1'b0;
                     w_ena = 1'b0;
                     id_csr_ena = 1'b0;
+                    error_branch = 1'b0;
               end
         endcase
 

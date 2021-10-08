@@ -142,12 +142,12 @@ wire [`REG_BUS] MEM_except_type;
 wire [`PC_BUS] new_pc;
 
 //MEM_stage -> DATA_MEM
-wire [`REG_BUS] MEM_mem_waddr;
-wire [`REG_BUS] MEM_mem_raddr;
-//wire [1 : 0] mem_sel;
-//wire [`REG_BUS] MEM_stor_data;
-wire mem_wr;
-wire MEM_mem_ena;
+////wire [`REG_BUS] MEM_mem_waddr;
+////wire [`REG_BUS] MEM_mem_raddr;
+////wire [1 : 0] mem_sel;
+////wire [`REG_BUS] MEM_stor_data;
+////wire mem_wr;
+////wire MEM_mem_ena;
 
 //DATA_MEM -> MEM_stage
 wire [63 : 0] data;
@@ -457,7 +457,7 @@ assign rst = reset;
     
     .ex_mem_wr(mem_mem_wr),
     .ex_mem_ena(mem_mem_ena),
-    //.mem_data(data),
+    //.mem_data(data),              //delete for AXI
 
     .ex_pc(men_pc),
     .ex_instr(men_instr),
@@ -492,10 +492,10 @@ assign rst = reset;
     .mem_w_ena(MEM_w_ena),
     .mem_w_addr(MEM_w_addr),
 
-    .mem_mem_waddr(MEM_mem_waddr),
-    .mem_mem_raddr(MEM_mem_raddr),
-    .mem_wr(mem_wr),
-    .mem_mem_ena(MEM_mem_ena),
+    //.mem_mem_waddr(MEM_mem_waddr),     //delete for AXI
+    //.mem_mem_raddr(MEM_mem_raddr),
+    //.mem_wr(mem_wr),
+    //.mem_mem_ena(MEM_mem_ena),
 
     .mem_valid(mem_valid),
     .mem_ready(mem_ready),

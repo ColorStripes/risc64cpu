@@ -11,8 +11,11 @@ module forecase (
     input wire [`PC_BUS] add_pc,
     input wire [`PC_BUS] branch,
     input wire pc_con,
+    input wire id_forecase,
+    input wire error_branch,
 
     output reg wash,
+    output reg if_forecase,
     output reg [`PC_BUS] pc
 );
     integer i;
@@ -23,23 +26,19 @@ module forecase (
     reg [1 : 0] fore_reg;
     reg [`PC_BUS] fore_branch_reg[`FORECASE-1 : 0];
     reg [`PC_BUS] pc_now_reg[3 : 0];
-    reg if_forecase;
+    
 
     reg [`PC_BUS] pc_s; // pc_id + 4
     reg ifa;  //former if_forecase
-    reg error_branch;  //if branch != forecase_branch when mux_pc==1
+    //reg error_branch;  //if branch != forecase_branch when mux_pc==1
+
+
 
 always @(posedge clk) begin
-    if(pc_con != 1'b1)
-        ifa <= if_forecase;
-end
-
-
-always @(*) begin
     if(rst == 1'b1) begin
         fore = 2'b00;
         pc_s = `ZERO_WORD;        
-        error_branch = 1'b0;
+        //error_branch = 1'b0;
         for(i=0; i<`PC; i=i+1) begin
             pc_now[i] = `ZERO_WORD; 
         end
@@ -48,17 +47,17 @@ always @(*) begin
         end
     end
     else begin
-        fore = fore_reg;
-        pc_now = pc_now_reg;
-        fore_branch = fore_branch_reg;
-        pc_s = `ZERO_WORD;
-        error_branch = 1'b0;
+        //fore = fore_reg;
+        //pc_now = pc_now_reg;
+        //fore_branch = fore_branch_reg;
+        //pc_s = `ZERO_WORD;
+        //error_branch = 1'b0;
 
         if((timeo < 2) || (pc_id != `PC_START)) begin
             if(mux_pc == 1'b1) begin
                 pc_s = pc_id + 4;
                 if(fore_branch[pc_s[`FORECASE_LOG+1 : 2]] != branch) begin
-                    error_branch = 1'b1;
+                    //error_branch = 1'b1;
                     fore_branch[pc_s[`FORECASE_LOG+1 : 2]] = branch; 
                     pc_now[pc_s[`PC_LOG+1 : 2]] = pc_id + 4;
                 end
@@ -75,6 +74,7 @@ always @(*) begin
                 end
             end
         end
+
     end
 end
 
@@ -112,18 +112,20 @@ end
                 end
 
                 if(mux_pc == 1'b1) begin
-                    if((mux_pc != ifa) || (error_branch)) begin  
+                    if((mux_pc != id_forecase) || (error_branch)) begin
                        wash = 1'b1;
                        pc = branch;
                     end
                 end
                 
                 if(mux_pc == 1'b0) begin
-                    if(mux_pc != ifa) begin
+                    if(mux_pc != id_forecase) begin
                         wash = 1'b1;
                         pc = pc_id + 4;
                     end
                 end
+
+
             end
         end
     end
@@ -135,6 +137,7 @@ always @(posedge clk) begin   //count
         timeo <= 1'b0;
     end
     else begin
+
         if(pc_id == `PC_START) begin
            if(timeo < 2) begin
                timeo <= timeo + 1 ;
