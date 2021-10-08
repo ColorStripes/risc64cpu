@@ -81920,7 +81920,6 @@ module AXI4Xbar(
   output        auto_out_1_wvalid,
   output [63:0] auto_out_1_wdata,
   output [7:0]  auto_out_1_wstrb,
-  output        auto_out_1_wlast,
   output        auto_out_1_bready,
   input         auto_out_1_bvalid,
   input  [3:0]  auto_out_1_bid,
@@ -81936,7 +81935,6 @@ module AXI4Xbar(
   input  [3:0]  auto_out_1_rid,
   input  [63:0] auto_out_1_rdata,
   input  [1:0]  auto_out_1_rresp,
-  input         auto_out_1_rlast,
   input         auto_out_0_awready,
   output        auto_out_0_awvalid,
   output [3:0]  auto_out_0_awid,
@@ -82235,7 +82233,7 @@ module AXI4Xbar(
   wire  _in_0_rvalid_T_2 = state_2_0 & auto_out_0_rvalid | state_2_1 & auto_out_1_rvalid; // @[Mux.scala 27:72]
   wire  in_0_rvalid = idle_2 ? anyValid : _in_0_rvalid_T_2; // @[Xbar.scala 285:22]
   wire  _arFIFOMap_0_T_4 = auto_in_rready & in_0_rvalid; // @[Decoupled.scala 40:37]
-  wire  in_0_rlast = muxState_2_0 & auto_out_0_rlast | muxState_2_1 & auto_out_1_rlast; // @[Mux.scala 27:72]
+  wire  in_0_rlast = muxState_2_0 & auto_out_0_rlast | muxState_2_1; // @[Mux.scala 27:72]
   wire  _arFIFOMap_0_T_6 = rSel[0] & _arFIFOMap_0_T_4 & in_0_rlast; // @[Xbar.scala 127:45]
   wire [2:0] _GEN_84 = {{2'd0}, _arFIFOMap_0_T_2}; // @[Xbar.scala 113:30]
   wire [2:0] _arFIFOMap_0_count_T_1 = arFIFOMap_0_count + _GEN_84; // @[Xbar.scala 113:30]
@@ -82588,7 +82586,7 @@ module AXI4Xbar(
   assign auto_in_rid = _T_54 | _T_55; // @[Mux.scala 27:72]
   assign auto_in_rdata = _T_51 | _T_52; // @[Mux.scala 27:72]
   assign auto_in_rresp = _T_48 | _T_49; // @[Mux.scala 27:72]
-  assign auto_in_rlast = muxState_2_0 & auto_out_0_rlast | muxState_2_1 & auto_out_1_rlast; // @[Mux.scala 27:72]
+  assign auto_in_rlast = muxState_2_0 & auto_out_0_rlast | muxState_2_1; // @[Mux.scala 27:72]
   assign auto_out_1_awvalid = in_0_awvalid & requestAWIO_0_1; // @[Xbar.scala 229:40]
   assign auto_out_1_awid = auto_in_awid; // @[Xbar.scala 86:47]
   assign auto_out_1_awaddr = auto_in_awaddr[29:0]; // @[Nodes.scala 1207:84 BundleMap.scala 247:19]
@@ -82597,7 +82595,6 @@ module AXI4Xbar(
   assign auto_out_1_wvalid = in_0_wvalid & requestWIO_0_1; // @[Xbar.scala 229:40]
   assign auto_out_1_wdata = auto_in_wdata; // @[Nodes.scala 1210:84 LazyModule.scala 309:16]
   assign auto_out_1_wstrb = auto_in_wstrb; // @[Nodes.scala 1210:84 LazyModule.scala 309:16]
-  assign auto_out_1_wlast = auto_in_wlast; // @[Nodes.scala 1210:84 LazyModule.scala 309:16]
   assign auto_out_1_bready = auto_in_bready & allowed_1_1; // @[Xbar.scala 279:31]
   assign auto_out_1_arvalid = in_0_arvalid & requestARIO_0_1; // @[Xbar.scala 229:40]
   assign auto_out_1_arid = auto_in_arid; // @[Xbar.scala 87:47]
@@ -85136,490 +85133,6 @@ module APBSPI(
   assign mspi_in_pstrb = auto_in_pstrb; // @[Nodes.scala 1210:84 LazyModule.scala 309:16]
   assign mspi_spi_miso = spi_bundle_miso; // @[SPI.scala 51:16]
 endmodule
-module Queue_20(
-  input         clock,
-  input         reset,
-  output        io_enq_ready,
-  input         io_enq_valid,
-  input  [3:0]  io_enq_bits_id,
-  input  [63:0] io_enq_bits_data,
-  input  [1:0]  io_enq_bits_resp,
-  input         io_deq_ready,
-  output        io_deq_valid,
-  output [3:0]  io_deq_bits_id,
-  output [63:0] io_deq_bits_data,
-  output [1:0]  io_deq_bits_resp,
-  output        io_deq_bits_last
-);
-`ifdef RANDOMIZE_MEM_INIT
-  reg [31:0] _RAND_0;
-  reg [63:0] _RAND_1;
-  reg [31:0] _RAND_2;
-  reg [31:0] _RAND_3;
-`endif // RANDOMIZE_MEM_INIT
-`ifdef RANDOMIZE_REG_INIT
-  reg [31:0] _RAND_4;
-`endif // RANDOMIZE_REG_INIT
-  reg [3:0] ram_id [0:0]; // @[Decoupled.scala 218:16]
-  wire [3:0] ram_id_io_deq_bits_MPORT_data; // @[Decoupled.scala 218:16]
-  wire  ram_id_io_deq_bits_MPORT_addr; // @[Decoupled.scala 218:16]
-  wire [3:0] ram_id_MPORT_data; // @[Decoupled.scala 218:16]
-  wire  ram_id_MPORT_addr; // @[Decoupled.scala 218:16]
-  wire  ram_id_MPORT_mask; // @[Decoupled.scala 218:16]
-  wire  ram_id_MPORT_en; // @[Decoupled.scala 218:16]
-  reg [63:0] ram_data [0:0]; // @[Decoupled.scala 218:16]
-  wire [63:0] ram_data_io_deq_bits_MPORT_data; // @[Decoupled.scala 218:16]
-  wire  ram_data_io_deq_bits_MPORT_addr; // @[Decoupled.scala 218:16]
-  wire [63:0] ram_data_MPORT_data; // @[Decoupled.scala 218:16]
-  wire  ram_data_MPORT_addr; // @[Decoupled.scala 218:16]
-  wire  ram_data_MPORT_mask; // @[Decoupled.scala 218:16]
-  wire  ram_data_MPORT_en; // @[Decoupled.scala 218:16]
-  reg [1:0] ram_resp [0:0]; // @[Decoupled.scala 218:16]
-  wire [1:0] ram_resp_io_deq_bits_MPORT_data; // @[Decoupled.scala 218:16]
-  wire  ram_resp_io_deq_bits_MPORT_addr; // @[Decoupled.scala 218:16]
-  wire [1:0] ram_resp_MPORT_data; // @[Decoupled.scala 218:16]
-  wire  ram_resp_MPORT_addr; // @[Decoupled.scala 218:16]
-  wire  ram_resp_MPORT_mask; // @[Decoupled.scala 218:16]
-  wire  ram_resp_MPORT_en; // @[Decoupled.scala 218:16]
-  reg  ram_last [0:0]; // @[Decoupled.scala 218:16]
-  wire  ram_last_io_deq_bits_MPORT_data; // @[Decoupled.scala 218:16]
-  wire  ram_last_io_deq_bits_MPORT_addr; // @[Decoupled.scala 218:16]
-  wire  ram_last_MPORT_data; // @[Decoupled.scala 218:16]
-  wire  ram_last_MPORT_addr; // @[Decoupled.scala 218:16]
-  wire  ram_last_MPORT_mask; // @[Decoupled.scala 218:16]
-  wire  ram_last_MPORT_en; // @[Decoupled.scala 218:16]
-  reg  maybe_full; // @[Decoupled.scala 221:27]
-  wire  empty = ~maybe_full; // @[Decoupled.scala 224:28]
-  wire  _do_enq_T = io_enq_ready & io_enq_valid; // @[Decoupled.scala 40:37]
-  wire  _do_deq_T = io_deq_ready & io_deq_valid; // @[Decoupled.scala 40:37]
-  wire  _GEN_10 = io_deq_ready ? 1'h0 : _do_enq_T; // @[Decoupled.scala 249:27 Decoupled.scala 249:36]
-  wire  do_enq = empty ? _GEN_10 : _do_enq_T; // @[Decoupled.scala 246:18]
-  wire  do_deq = empty ? 1'h0 : _do_deq_T; // @[Decoupled.scala 246:18 Decoupled.scala 248:14]
-  assign ram_id_io_deq_bits_MPORT_addr = 1'h0;
-  assign ram_id_io_deq_bits_MPORT_data = ram_id[ram_id_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 218:16]
-  assign ram_id_MPORT_data = io_enq_bits_id;
-  assign ram_id_MPORT_addr = 1'h0;
-  assign ram_id_MPORT_mask = 1'h1;
-  assign ram_id_MPORT_en = empty ? _GEN_10 : _do_enq_T;
-  assign ram_data_io_deq_bits_MPORT_addr = 1'h0;
-  assign ram_data_io_deq_bits_MPORT_data = ram_data[ram_data_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 218:16]
-  assign ram_data_MPORT_data = io_enq_bits_data;
-  assign ram_data_MPORT_addr = 1'h0;
-  assign ram_data_MPORT_mask = 1'h1;
-  assign ram_data_MPORT_en = empty ? _GEN_10 : _do_enq_T;
-  assign ram_resp_io_deq_bits_MPORT_addr = 1'h0;
-  assign ram_resp_io_deq_bits_MPORT_data = ram_resp[ram_resp_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 218:16]
-  assign ram_resp_MPORT_data = io_enq_bits_resp;
-  assign ram_resp_MPORT_addr = 1'h0;
-  assign ram_resp_MPORT_mask = 1'h1;
-  assign ram_resp_MPORT_en = empty ? _GEN_10 : _do_enq_T;
-  assign ram_last_io_deq_bits_MPORT_addr = 1'h0;
-  assign ram_last_io_deq_bits_MPORT_data = ram_last[ram_last_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 218:16]
-  assign ram_last_MPORT_data = 1'h1;
-  assign ram_last_MPORT_addr = 1'h0;
-  assign ram_last_MPORT_mask = 1'h1;
-  assign ram_last_MPORT_en = empty ? _GEN_10 : _do_enq_T;
-  assign io_enq_ready = ~maybe_full; // @[Decoupled.scala 241:19]
-  assign io_deq_valid = io_enq_valid | ~empty; // @[Decoupled.scala 245:25 Decoupled.scala 245:40 Decoupled.scala 240:16]
-  assign io_deq_bits_id = empty ? io_enq_bits_id : ram_id_io_deq_bits_MPORT_data; // @[Decoupled.scala 246:18 Decoupled.scala 247:19 Decoupled.scala 242:15]
-  assign io_deq_bits_data = empty ? io_enq_bits_data : ram_data_io_deq_bits_MPORT_data; // @[Decoupled.scala 246:18 Decoupled.scala 247:19 Decoupled.scala 242:15]
-  assign io_deq_bits_resp = empty ? io_enq_bits_resp : ram_resp_io_deq_bits_MPORT_data; // @[Decoupled.scala 246:18 Decoupled.scala 247:19 Decoupled.scala 242:15]
-  assign io_deq_bits_last = empty | ram_last_io_deq_bits_MPORT_data; // @[Decoupled.scala 246:18 Decoupled.scala 247:19 Decoupled.scala 242:15]
-  always @(posedge clock) begin
-    if(ram_id_MPORT_en & ram_id_MPORT_mask) begin
-      ram_id[ram_id_MPORT_addr] <= ram_id_MPORT_data; // @[Decoupled.scala 218:16]
-    end
-    if(ram_data_MPORT_en & ram_data_MPORT_mask) begin
-      ram_data[ram_data_MPORT_addr] <= ram_data_MPORT_data; // @[Decoupled.scala 218:16]
-    end
-    if(ram_resp_MPORT_en & ram_resp_MPORT_mask) begin
-      ram_resp[ram_resp_MPORT_addr] <= ram_resp_MPORT_data; // @[Decoupled.scala 218:16]
-    end
-    if(ram_last_MPORT_en & ram_last_MPORT_mask) begin
-      ram_last[ram_last_MPORT_addr] <= ram_last_MPORT_data; // @[Decoupled.scala 218:16]
-    end
-    if (reset) begin // @[Decoupled.scala 221:27]
-      maybe_full <= 1'h0; // @[Decoupled.scala 221:27]
-    end else if (do_enq != do_deq) begin // @[Decoupled.scala 236:28]
-      if (empty) begin // @[Decoupled.scala 246:18]
-        if (io_deq_ready) begin // @[Decoupled.scala 249:27]
-          maybe_full <= 1'h0; // @[Decoupled.scala 249:36]
-        end else begin
-          maybe_full <= _do_enq_T;
-        end
-      end else begin
-        maybe_full <= _do_enq_T;
-      end
-    end
-  end
-// Register and memory initialization
-`ifdef RANDOMIZE_GARBAGE_ASSIGN
-`define RANDOMIZE
-`endif
-`ifdef RANDOMIZE_INVALID_ASSIGN
-`define RANDOMIZE
-`endif
-`ifdef RANDOMIZE_REG_INIT
-`define RANDOMIZE
-`endif
-`ifdef RANDOMIZE_MEM_INIT
-`define RANDOMIZE
-`endif
-`ifndef RANDOM
-`define RANDOM $random
-`endif
-`ifdef RANDOMIZE_MEM_INIT
-  integer initvar;
-`endif
-`ifndef SYNTHESIS
-`ifdef FIRRTL_BEFORE_INITIAL
-`FIRRTL_BEFORE_INITIAL
-`endif
-initial begin
-  `ifdef RANDOMIZE
-    `ifdef INIT_RANDOM
-      `INIT_RANDOM
-    `endif
-    `ifndef VERILATOR
-      `ifdef RANDOMIZE_DELAY
-        #`RANDOMIZE_DELAY begin end
-      `else
-        #0.002 begin end
-      `endif
-    `endif
-`ifdef RANDOMIZE_MEM_INIT
-  _RAND_0 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 1; initvar = initvar+1)
-    ram_id[initvar] = _RAND_0[3:0];
-  _RAND_1 = {2{`RANDOM}};
-  for (initvar = 0; initvar < 1; initvar = initvar+1)
-    ram_data[initvar] = _RAND_1[63:0];
-  _RAND_2 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 1; initvar = initvar+1)
-    ram_resp[initvar] = _RAND_2[1:0];
-  _RAND_3 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 1; initvar = initvar+1)
-    ram_last[initvar] = _RAND_3[0:0];
-`endif // RANDOMIZE_MEM_INIT
-`ifdef RANDOMIZE_REG_INIT
-  _RAND_4 = {1{`RANDOM}};
-  maybe_full = _RAND_4[0:0];
-`endif // RANDOMIZE_REG_INIT
-  `endif // RANDOMIZE
-end // initial
-`ifdef FIRRTL_AFTER_INITIAL
-`FIRRTL_AFTER_INITIAL
-`endif
-`endif // SYNTHESIS
-endmodule
-module Queue_21(
-  input        clock,
-  input        reset,
-  output       io_enq_ready,
-  input        io_enq_valid,
-  input  [3:0] io_enq_bits_id,
-  input  [1:0] io_enq_bits_resp,
-  input        io_deq_ready,
-  output       io_deq_valid,
-  output [3:0] io_deq_bits_id,
-  output [1:0] io_deq_bits_resp
-);
-`ifdef RANDOMIZE_MEM_INIT
-  reg [31:0] _RAND_0;
-  reg [31:0] _RAND_1;
-`endif // RANDOMIZE_MEM_INIT
-`ifdef RANDOMIZE_REG_INIT
-  reg [31:0] _RAND_2;
-`endif // RANDOMIZE_REG_INIT
-  reg [3:0] ram_id [0:0]; // @[Decoupled.scala 218:16]
-  wire [3:0] ram_id_io_deq_bits_MPORT_data; // @[Decoupled.scala 218:16]
-  wire  ram_id_io_deq_bits_MPORT_addr; // @[Decoupled.scala 218:16]
-  wire [3:0] ram_id_MPORT_data; // @[Decoupled.scala 218:16]
-  wire  ram_id_MPORT_addr; // @[Decoupled.scala 218:16]
-  wire  ram_id_MPORT_mask; // @[Decoupled.scala 218:16]
-  wire  ram_id_MPORT_en; // @[Decoupled.scala 218:16]
-  reg [1:0] ram_resp [0:0]; // @[Decoupled.scala 218:16]
-  wire [1:0] ram_resp_io_deq_bits_MPORT_data; // @[Decoupled.scala 218:16]
-  wire  ram_resp_io_deq_bits_MPORT_addr; // @[Decoupled.scala 218:16]
-  wire [1:0] ram_resp_MPORT_data; // @[Decoupled.scala 218:16]
-  wire  ram_resp_MPORT_addr; // @[Decoupled.scala 218:16]
-  wire  ram_resp_MPORT_mask; // @[Decoupled.scala 218:16]
-  wire  ram_resp_MPORT_en; // @[Decoupled.scala 218:16]
-  reg  maybe_full; // @[Decoupled.scala 221:27]
-  wire  empty = ~maybe_full; // @[Decoupled.scala 224:28]
-  wire  _do_enq_T = io_enq_ready & io_enq_valid; // @[Decoupled.scala 40:37]
-  wire  _do_deq_T = io_deq_ready & io_deq_valid; // @[Decoupled.scala 40:37]
-  wire  _GEN_8 = io_deq_ready ? 1'h0 : _do_enq_T; // @[Decoupled.scala 249:27 Decoupled.scala 249:36]
-  wire  do_enq = empty ? _GEN_8 : _do_enq_T; // @[Decoupled.scala 246:18]
-  wire  do_deq = empty ? 1'h0 : _do_deq_T; // @[Decoupled.scala 246:18 Decoupled.scala 248:14]
-  assign ram_id_io_deq_bits_MPORT_addr = 1'h0;
-  assign ram_id_io_deq_bits_MPORT_data = ram_id[ram_id_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 218:16]
-  assign ram_id_MPORT_data = io_enq_bits_id;
-  assign ram_id_MPORT_addr = 1'h0;
-  assign ram_id_MPORT_mask = 1'h1;
-  assign ram_id_MPORT_en = empty ? _GEN_8 : _do_enq_T;
-  assign ram_resp_io_deq_bits_MPORT_addr = 1'h0;
-  assign ram_resp_io_deq_bits_MPORT_data = ram_resp[ram_resp_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 218:16]
-  assign ram_resp_MPORT_data = io_enq_bits_resp;
-  assign ram_resp_MPORT_addr = 1'h0;
-  assign ram_resp_MPORT_mask = 1'h1;
-  assign ram_resp_MPORT_en = empty ? _GEN_8 : _do_enq_T;
-  assign io_enq_ready = ~maybe_full; // @[Decoupled.scala 241:19]
-  assign io_deq_valid = io_enq_valid | ~empty; // @[Decoupled.scala 245:25 Decoupled.scala 245:40 Decoupled.scala 240:16]
-  assign io_deq_bits_id = empty ? io_enq_bits_id : ram_id_io_deq_bits_MPORT_data; // @[Decoupled.scala 246:18 Decoupled.scala 247:19 Decoupled.scala 242:15]
-  assign io_deq_bits_resp = empty ? io_enq_bits_resp : ram_resp_io_deq_bits_MPORT_data; // @[Decoupled.scala 246:18 Decoupled.scala 247:19 Decoupled.scala 242:15]
-  always @(posedge clock) begin
-    if(ram_id_MPORT_en & ram_id_MPORT_mask) begin
-      ram_id[ram_id_MPORT_addr] <= ram_id_MPORT_data; // @[Decoupled.scala 218:16]
-    end
-    if(ram_resp_MPORT_en & ram_resp_MPORT_mask) begin
-      ram_resp[ram_resp_MPORT_addr] <= ram_resp_MPORT_data; // @[Decoupled.scala 218:16]
-    end
-    if (reset) begin // @[Decoupled.scala 221:27]
-      maybe_full <= 1'h0; // @[Decoupled.scala 221:27]
-    end else if (do_enq != do_deq) begin // @[Decoupled.scala 236:28]
-      if (empty) begin // @[Decoupled.scala 246:18]
-        if (io_deq_ready) begin // @[Decoupled.scala 249:27]
-          maybe_full <= 1'h0; // @[Decoupled.scala 249:36]
-        end else begin
-          maybe_full <= _do_enq_T;
-        end
-      end else begin
-        maybe_full <= _do_enq_T;
-      end
-    end
-  end
-// Register and memory initialization
-`ifdef RANDOMIZE_GARBAGE_ASSIGN
-`define RANDOMIZE
-`endif
-`ifdef RANDOMIZE_INVALID_ASSIGN
-`define RANDOMIZE
-`endif
-`ifdef RANDOMIZE_REG_INIT
-`define RANDOMIZE
-`endif
-`ifdef RANDOMIZE_MEM_INIT
-`define RANDOMIZE
-`endif
-`ifndef RANDOM
-`define RANDOM $random
-`endif
-`ifdef RANDOMIZE_MEM_INIT
-  integer initvar;
-`endif
-`ifndef SYNTHESIS
-`ifdef FIRRTL_BEFORE_INITIAL
-`FIRRTL_BEFORE_INITIAL
-`endif
-initial begin
-  `ifdef RANDOMIZE
-    `ifdef INIT_RANDOM
-      `INIT_RANDOM
-    `endif
-    `ifndef VERILATOR
-      `ifdef RANDOMIZE_DELAY
-        #`RANDOMIZE_DELAY begin end
-      `else
-        #0.002 begin end
-      `endif
-    `endif
-`ifdef RANDOMIZE_MEM_INIT
-  _RAND_0 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 1; initvar = initvar+1)
-    ram_id[initvar] = _RAND_0[3:0];
-  _RAND_1 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 1; initvar = initvar+1)
-    ram_resp[initvar] = _RAND_1[1:0];
-`endif // RANDOMIZE_MEM_INIT
-`ifdef RANDOMIZE_REG_INIT
-  _RAND_2 = {1{`RANDOM}};
-  maybe_full = _RAND_2[0:0];
-`endif // RANDOMIZE_REG_INIT
-  `endif // RANDOMIZE
-end // initial
-`ifdef FIRRTL_AFTER_INITIAL
-`FIRRTL_AFTER_INITIAL
-`endif
-`endif // SYNTHESIS
-endmodule
-module Queue_22(
-  input         clock,
-  input         reset,
-  output        io_enq_ready,
-  input         io_enq_valid,
-  input  [3:0]  io_enq_bits_id,
-  input  [29:0] io_enq_bits_addr,
-  input  [7:0]  io_enq_bits_len,
-  input  [2:0]  io_enq_bits_size,
-  input         io_deq_ready,
-  output        io_deq_valid,
-  output [3:0]  io_deq_bits_id,
-  output [29:0] io_deq_bits_addr,
-  output [7:0]  io_deq_bits_len,
-  output [2:0]  io_deq_bits_size
-);
-`ifdef RANDOMIZE_MEM_INIT
-  reg [31:0] _RAND_0;
-  reg [31:0] _RAND_1;
-  reg [31:0] _RAND_2;
-  reg [31:0] _RAND_3;
-`endif // RANDOMIZE_MEM_INIT
-`ifdef RANDOMIZE_REG_INIT
-  reg [31:0] _RAND_4;
-`endif // RANDOMIZE_REG_INIT
-  reg [3:0] ram_id [0:0]; // @[Decoupled.scala 218:16]
-  wire [3:0] ram_id_io_deq_bits_MPORT_data; // @[Decoupled.scala 218:16]
-  wire  ram_id_io_deq_bits_MPORT_addr; // @[Decoupled.scala 218:16]
-  wire [3:0] ram_id_MPORT_data; // @[Decoupled.scala 218:16]
-  wire  ram_id_MPORT_addr; // @[Decoupled.scala 218:16]
-  wire  ram_id_MPORT_mask; // @[Decoupled.scala 218:16]
-  wire  ram_id_MPORT_en; // @[Decoupled.scala 218:16]
-  reg [29:0] ram_addr [0:0]; // @[Decoupled.scala 218:16]
-  wire [29:0] ram_addr_io_deq_bits_MPORT_data; // @[Decoupled.scala 218:16]
-  wire  ram_addr_io_deq_bits_MPORT_addr; // @[Decoupled.scala 218:16]
-  wire [29:0] ram_addr_MPORT_data; // @[Decoupled.scala 218:16]
-  wire  ram_addr_MPORT_addr; // @[Decoupled.scala 218:16]
-  wire  ram_addr_MPORT_mask; // @[Decoupled.scala 218:16]
-  wire  ram_addr_MPORT_en; // @[Decoupled.scala 218:16]
-  reg [7:0] ram_len [0:0]; // @[Decoupled.scala 218:16]
-  wire [7:0] ram_len_io_deq_bits_MPORT_data; // @[Decoupled.scala 218:16]
-  wire  ram_len_io_deq_bits_MPORT_addr; // @[Decoupled.scala 218:16]
-  wire [7:0] ram_len_MPORT_data; // @[Decoupled.scala 218:16]
-  wire  ram_len_MPORT_addr; // @[Decoupled.scala 218:16]
-  wire  ram_len_MPORT_mask; // @[Decoupled.scala 218:16]
-  wire  ram_len_MPORT_en; // @[Decoupled.scala 218:16]
-  reg [2:0] ram_size [0:0]; // @[Decoupled.scala 218:16]
-  wire [2:0] ram_size_io_deq_bits_MPORT_data; // @[Decoupled.scala 218:16]
-  wire  ram_size_io_deq_bits_MPORT_addr; // @[Decoupled.scala 218:16]
-  wire [2:0] ram_size_MPORT_data; // @[Decoupled.scala 218:16]
-  wire  ram_size_MPORT_addr; // @[Decoupled.scala 218:16]
-  wire  ram_size_MPORT_mask; // @[Decoupled.scala 218:16]
-  wire  ram_size_MPORT_en; // @[Decoupled.scala 218:16]
-  reg  maybe_full; // @[Decoupled.scala 221:27]
-  wire  empty = ~maybe_full; // @[Decoupled.scala 224:28]
-  wire  _do_enq_T = io_enq_ready & io_enq_valid; // @[Decoupled.scala 40:37]
-  wire  _do_deq_T = io_deq_ready & io_deq_valid; // @[Decoupled.scala 40:37]
-  wire  _GEN_15 = io_deq_ready ? 1'h0 : _do_enq_T; // @[Decoupled.scala 249:27 Decoupled.scala 249:36]
-  wire  do_enq = empty ? _GEN_15 : _do_enq_T; // @[Decoupled.scala 246:18]
-  wire  do_deq = empty ? 1'h0 : _do_deq_T; // @[Decoupled.scala 246:18 Decoupled.scala 248:14]
-  assign ram_id_io_deq_bits_MPORT_addr = 1'h0;
-  assign ram_id_io_deq_bits_MPORT_data = ram_id[ram_id_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 218:16]
-  assign ram_id_MPORT_data = io_enq_bits_id;
-  assign ram_id_MPORT_addr = 1'h0;
-  assign ram_id_MPORT_mask = 1'h1;
-  assign ram_id_MPORT_en = empty ? _GEN_15 : _do_enq_T;
-  assign ram_addr_io_deq_bits_MPORT_addr = 1'h0;
-  assign ram_addr_io_deq_bits_MPORT_data = ram_addr[ram_addr_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 218:16]
-  assign ram_addr_MPORT_data = io_enq_bits_addr;
-  assign ram_addr_MPORT_addr = 1'h0;
-  assign ram_addr_MPORT_mask = 1'h1;
-  assign ram_addr_MPORT_en = empty ? _GEN_15 : _do_enq_T;
-  assign ram_len_io_deq_bits_MPORT_addr = 1'h0;
-  assign ram_len_io_deq_bits_MPORT_data = ram_len[ram_len_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 218:16]
-  assign ram_len_MPORT_data = io_enq_bits_len;
-  assign ram_len_MPORT_addr = 1'h0;
-  assign ram_len_MPORT_mask = 1'h1;
-  assign ram_len_MPORT_en = empty ? _GEN_15 : _do_enq_T;
-  assign ram_size_io_deq_bits_MPORT_addr = 1'h0;
-  assign ram_size_io_deq_bits_MPORT_data = ram_size[ram_size_io_deq_bits_MPORT_addr]; // @[Decoupled.scala 218:16]
-  assign ram_size_MPORT_data = io_enq_bits_size;
-  assign ram_size_MPORT_addr = 1'h0;
-  assign ram_size_MPORT_mask = 1'h1;
-  assign ram_size_MPORT_en = empty ? _GEN_15 : _do_enq_T;
-  assign io_enq_ready = ~maybe_full; // @[Decoupled.scala 241:19]
-  assign io_deq_valid = io_enq_valid | ~empty; // @[Decoupled.scala 245:25 Decoupled.scala 245:40 Decoupled.scala 240:16]
-  assign io_deq_bits_id = empty ? io_enq_bits_id : ram_id_io_deq_bits_MPORT_data; // @[Decoupled.scala 246:18 Decoupled.scala 247:19 Decoupled.scala 242:15]
-  assign io_deq_bits_addr = empty ? io_enq_bits_addr : ram_addr_io_deq_bits_MPORT_data; // @[Decoupled.scala 246:18 Decoupled.scala 247:19 Decoupled.scala 242:15]
-  assign io_deq_bits_len = empty ? io_enq_bits_len : ram_len_io_deq_bits_MPORT_data; // @[Decoupled.scala 246:18 Decoupled.scala 247:19 Decoupled.scala 242:15]
-  assign io_deq_bits_size = empty ? io_enq_bits_size : ram_size_io_deq_bits_MPORT_data; // @[Decoupled.scala 246:18 Decoupled.scala 247:19 Decoupled.scala 242:15]
-  always @(posedge clock) begin
-    if(ram_id_MPORT_en & ram_id_MPORT_mask) begin
-      ram_id[ram_id_MPORT_addr] <= ram_id_MPORT_data; // @[Decoupled.scala 218:16]
-    end
-    if(ram_addr_MPORT_en & ram_addr_MPORT_mask) begin
-      ram_addr[ram_addr_MPORT_addr] <= ram_addr_MPORT_data; // @[Decoupled.scala 218:16]
-    end
-    if(ram_len_MPORT_en & ram_len_MPORT_mask) begin
-      ram_len[ram_len_MPORT_addr] <= ram_len_MPORT_data; // @[Decoupled.scala 218:16]
-    end
-    if(ram_size_MPORT_en & ram_size_MPORT_mask) begin
-      ram_size[ram_size_MPORT_addr] <= ram_size_MPORT_data; // @[Decoupled.scala 218:16]
-    end
-    if (reset) begin // @[Decoupled.scala 221:27]
-      maybe_full <= 1'h0; // @[Decoupled.scala 221:27]
-    end else if (do_enq != do_deq) begin // @[Decoupled.scala 236:28]
-      if (empty) begin // @[Decoupled.scala 246:18]
-        if (io_deq_ready) begin // @[Decoupled.scala 249:27]
-          maybe_full <= 1'h0; // @[Decoupled.scala 249:36]
-        end else begin
-          maybe_full <= _do_enq_T;
-        end
-      end else begin
-        maybe_full <= _do_enq_T;
-      end
-    end
-  end
-// Register and memory initialization
-`ifdef RANDOMIZE_GARBAGE_ASSIGN
-`define RANDOMIZE
-`endif
-`ifdef RANDOMIZE_INVALID_ASSIGN
-`define RANDOMIZE
-`endif
-`ifdef RANDOMIZE_REG_INIT
-`define RANDOMIZE
-`endif
-`ifdef RANDOMIZE_MEM_INIT
-`define RANDOMIZE
-`endif
-`ifndef RANDOM
-`define RANDOM $random
-`endif
-`ifdef RANDOMIZE_MEM_INIT
-  integer initvar;
-`endif
-`ifndef SYNTHESIS
-`ifdef FIRRTL_BEFORE_INITIAL
-`FIRRTL_BEFORE_INITIAL
-`endif
-initial begin
-  `ifdef RANDOMIZE
-    `ifdef INIT_RANDOM
-      `INIT_RANDOM
-    `endif
-    `ifndef VERILATOR
-      `ifdef RANDOMIZE_DELAY
-        #`RANDOMIZE_DELAY begin end
-      `else
-        #0.002 begin end
-      `endif
-    `endif
-`ifdef RANDOMIZE_MEM_INIT
-  _RAND_0 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 1; initvar = initvar+1)
-    ram_id[initvar] = _RAND_0[3:0];
-  _RAND_1 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 1; initvar = initvar+1)
-    ram_addr[initvar] = _RAND_1[29:0];
-  _RAND_2 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 1; initvar = initvar+1)
-    ram_len[initvar] = _RAND_2[7:0];
-  _RAND_3 = {1{`RANDOM}};
-  for (initvar = 0; initvar < 1; initvar = initvar+1)
-    ram_size[initvar] = _RAND_3[2:0];
-`endif // RANDOMIZE_MEM_INIT
-`ifdef RANDOMIZE_REG_INIT
-  _RAND_4 = {1{`RANDOM}};
-  maybe_full = _RAND_4[0:0];
-`endif // RANDOMIZE_REG_INIT
-  `endif // RANDOMIZE
-end // initial
-`ifdef FIRRTL_AFTER_INITIAL
-`FIRRTL_AFTER_INITIAL
-`endif
-`endif // SYNTHESIS
-endmodule
 module AXI4ToAPB(
   input         clock,
   input         reset,
@@ -85633,7 +85146,6 @@ module AXI4ToAPB(
   input         auto_in_wvalid,
   input  [63:0] auto_in_wdata,
   input  [7:0]  auto_in_wstrb,
-  input         auto_in_wlast,
   input         auto_in_bready,
   output        auto_in_bvalid,
   output [3:0]  auto_in_bid,
@@ -85649,7 +85161,6 @@ module AXI4ToAPB(
   output [3:0]  auto_in_rid,
   output [63:0] auto_in_rdata,
   output [1:0]  auto_in_rresp,
-  output        auto_in_rlast,
   output        auto_out_psel,
   output        auto_out_penable,
   output        auto_out_pwrite,
@@ -85667,247 +85178,109 @@ module AXI4ToAPB(
   reg [31:0] _RAND_3;
   reg [31:0] _RAND_4;
   reg [31:0] _RAND_5;
+  reg [31:0] _RAND_6;
+  reg [63:0] _RAND_7;
+  reg [31:0] _RAND_8;
+  reg [31:0] _RAND_9;
 `endif // RANDOMIZE_REG_INIT
-  wire  bundleIn_0_rq_clock; // @[Decoupled.scala 296:21]
-  wire  bundleIn_0_rq_reset; // @[Decoupled.scala 296:21]
-  wire  bundleIn_0_rq_io_enq_ready; // @[Decoupled.scala 296:21]
-  wire  bundleIn_0_rq_io_enq_valid; // @[Decoupled.scala 296:21]
-  wire [3:0] bundleIn_0_rq_io_enq_bits_id; // @[Decoupled.scala 296:21]
-  wire [63:0] bundleIn_0_rq_io_enq_bits_data; // @[Decoupled.scala 296:21]
-  wire [1:0] bundleIn_0_rq_io_enq_bits_resp; // @[Decoupled.scala 296:21]
-  wire  bundleIn_0_rq_io_deq_ready; // @[Decoupled.scala 296:21]
-  wire  bundleIn_0_rq_io_deq_valid; // @[Decoupled.scala 296:21]
-  wire [3:0] bundleIn_0_rq_io_deq_bits_id; // @[Decoupled.scala 296:21]
-  wire [63:0] bundleIn_0_rq_io_deq_bits_data; // @[Decoupled.scala 296:21]
-  wire [1:0] bundleIn_0_rq_io_deq_bits_resp; // @[Decoupled.scala 296:21]
-  wire  bundleIn_0_rq_io_deq_bits_last; // @[Decoupled.scala 296:21]
-  wire  bundleIn_0_bq_clock; // @[Decoupled.scala 296:21]
-  wire  bundleIn_0_bq_reset; // @[Decoupled.scala 296:21]
-  wire  bundleIn_0_bq_io_enq_ready; // @[Decoupled.scala 296:21]
-  wire  bundleIn_0_bq_io_enq_valid; // @[Decoupled.scala 296:21]
-  wire [3:0] bundleIn_0_bq_io_enq_bits_id; // @[Decoupled.scala 296:21]
-  wire [1:0] bundleIn_0_bq_io_enq_bits_resp; // @[Decoupled.scala 296:21]
-  wire  bundleIn_0_bq_io_deq_ready; // @[Decoupled.scala 296:21]
-  wire  bundleIn_0_bq_io_deq_valid; // @[Decoupled.scala 296:21]
-  wire [3:0] bundleIn_0_bq_io_deq_bits_id; // @[Decoupled.scala 296:21]
-  wire [1:0] bundleIn_0_bq_io_deq_bits_resp; // @[Decoupled.scala 296:21]
-  wire  ar_clock; // @[Decoupled.scala 296:21]
-  wire  ar_reset; // @[Decoupled.scala 296:21]
-  wire  ar_io_enq_ready; // @[Decoupled.scala 296:21]
-  wire  ar_io_enq_valid; // @[Decoupled.scala 296:21]
-  wire [3:0] ar_io_enq_bits_id; // @[Decoupled.scala 296:21]
-  wire [29:0] ar_io_enq_bits_addr; // @[Decoupled.scala 296:21]
-  wire [7:0] ar_io_enq_bits_len; // @[Decoupled.scala 296:21]
-  wire [2:0] ar_io_enq_bits_size; // @[Decoupled.scala 296:21]
-  wire  ar_io_deq_ready; // @[Decoupled.scala 296:21]
-  wire  ar_io_deq_valid; // @[Decoupled.scala 296:21]
-  wire [3:0] ar_io_deq_bits_id; // @[Decoupled.scala 296:21]
-  wire [29:0] ar_io_deq_bits_addr; // @[Decoupled.scala 296:21]
-  wire [7:0] ar_io_deq_bits_len; // @[Decoupled.scala 296:21]
-  wire [2:0] ar_io_deq_bits_size; // @[Decoupled.scala 296:21]
-  wire  aw_clock; // @[Decoupled.scala 296:21]
-  wire  aw_reset; // @[Decoupled.scala 296:21]
-  wire  aw_io_enq_ready; // @[Decoupled.scala 296:21]
-  wire  aw_io_enq_valid; // @[Decoupled.scala 296:21]
-  wire [3:0] aw_io_enq_bits_id; // @[Decoupled.scala 296:21]
-  wire [29:0] aw_io_enq_bits_addr; // @[Decoupled.scala 296:21]
-  wire [7:0] aw_io_enq_bits_len; // @[Decoupled.scala 296:21]
-  wire [2:0] aw_io_enq_bits_size; // @[Decoupled.scala 296:21]
-  wire  aw_io_deq_ready; // @[Decoupled.scala 296:21]
-  wire  aw_io_deq_valid; // @[Decoupled.scala 296:21]
-  wire [3:0] aw_io_deq_bits_id; // @[Decoupled.scala 296:21]
-  wire [29:0] aw_io_deq_bits_addr; // @[Decoupled.scala 296:21]
-  wire [7:0] aw_io_deq_bits_len; // @[Decoupled.scala 296:21]
-  wire [2:0] aw_io_deq_bits_size; // @[Decoupled.scala 296:21]
-  wire  w_clock; // @[Decoupled.scala 296:21]
-  wire  w_reset; // @[Decoupled.scala 296:21]
-  wire  w_io_enq_ready; // @[Decoupled.scala 296:21]
-  wire  w_io_enq_valid; // @[Decoupled.scala 296:21]
-  wire [63:0] w_io_enq_bits_data; // @[Decoupled.scala 296:21]
-  wire [7:0] w_io_enq_bits_strb; // @[Decoupled.scala 296:21]
-  wire  w_io_enq_bits_last; // @[Decoupled.scala 296:21]
-  wire  w_io_deq_ready; // @[Decoupled.scala 296:21]
-  wire  w_io_deq_valid; // @[Decoupled.scala 296:21]
-  wire [63:0] w_io_deq_bits_data; // @[Decoupled.scala 296:21]
-  wire [7:0] w_io_deq_bits_strb; // @[Decoupled.scala 296:21]
-  wire  w_io_deq_bits_last; // @[Decoupled.scala 296:21]
-  reg  ar_enable; // @[AXI4ToAPB.scala 70:30]
-  reg  aw_enable; // @[AXI4ToAPB.scala 71:30]
-  wire  bundleIn_0_rvalid = bundleIn_0_rq_io_deq_valid; // @[Nodes.scala 1210:84 AXI4ToAPB.scala 54:12]
-  reg  ar_sel_REG; // @[AXI4ToAPB.scala 72:42]
-  wire  ar_sel = ar_io_deq_valid & ar_sel_REG; // @[AXI4ToAPB.scala 72:32]
-  wire  bundleIn_0_bvalid = bundleIn_0_bq_io_deq_valid; // @[Nodes.scala 1210:84 AXI4ToAPB.scala 56:12]
-  reg  aw_sel_REG; // @[AXI4ToAPB.scala 73:64]
-  wire  aw_sel = aw_io_deq_valid & w_io_deq_valid & ~ar_sel & aw_sel_REG; // @[AXI4ToAPB.scala 73:54]
-  wire  enable_r = ar_sel & ~ar_enable; // @[AXI4ToAPB.scala 75:29]
-  reg [3:0] r_id; // @[Reg.scala 15:16]
-  wire  enable_b = aw_sel & ~aw_enable; // @[AXI4ToAPB.scala 77:29]
-  reg [3:0] b_id; // @[Reg.scala 15:16]
-  wire  _GEN_2 = ar_sel | ar_enable; // @[AXI4ToAPB.scala 80:23 AXI4ToAPB.scala 80:35 AXI4ToAPB.scala 70:30]
-  wire  r_ready = bundleIn_0_rq_io_enq_ready;
-  wire  r_valid = ar_enable & auto_out_pready; // @[AXI4ToAPB.scala 99:29]
-  wire  _T_24 = r_ready & r_valid; // @[Decoupled.scala 40:37]
-  wire  _GEN_4 = aw_sel | aw_enable; // @[AXI4ToAPB.scala 82:23 AXI4ToAPB.scala 82:35 AXI4ToAPB.scala 71:30]
-  wire  b_ready = bundleIn_0_bq_io_enq_ready;
-  wire  b_valid = aw_enable & auto_out_pready; // @[AXI4ToAPB.scala 104:29]
-  wire  _T_25 = b_ready & b_valid; // @[Decoupled.scala 40:37]
-  wire [3:0] _bundleOut_0_pstrb_T_3 = aw_io_deq_bits_addr[2] ? w_io_deq_bits_strb[7:4] : w_io_deq_bits_strb[3:0]; // @[AXI4ToAPB.scala 96:42]
-  Queue_20 bundleIn_0_rq ( // @[Decoupled.scala 296:21]
-    .clock(bundleIn_0_rq_clock),
-    .reset(bundleIn_0_rq_reset),
-    .io_enq_ready(bundleIn_0_rq_io_enq_ready),
-    .io_enq_valid(bundleIn_0_rq_io_enq_valid),
-    .io_enq_bits_id(bundleIn_0_rq_io_enq_bits_id),
-    .io_enq_bits_data(bundleIn_0_rq_io_enq_bits_data),
-    .io_enq_bits_resp(bundleIn_0_rq_io_enq_bits_resp),
-    .io_deq_ready(bundleIn_0_rq_io_deq_ready),
-    .io_deq_valid(bundleIn_0_rq_io_deq_valid),
-    .io_deq_bits_id(bundleIn_0_rq_io_deq_bits_id),
-    .io_deq_bits_data(bundleIn_0_rq_io_deq_bits_data),
-    .io_deq_bits_resp(bundleIn_0_rq_io_deq_bits_resp),
-    .io_deq_bits_last(bundleIn_0_rq_io_deq_bits_last)
-  );
-  Queue_21 bundleIn_0_bq ( // @[Decoupled.scala 296:21]
-    .clock(bundleIn_0_bq_clock),
-    .reset(bundleIn_0_bq_reset),
-    .io_enq_ready(bundleIn_0_bq_io_enq_ready),
-    .io_enq_valid(bundleIn_0_bq_io_enq_valid),
-    .io_enq_bits_id(bundleIn_0_bq_io_enq_bits_id),
-    .io_enq_bits_resp(bundleIn_0_bq_io_enq_bits_resp),
-    .io_deq_ready(bundleIn_0_bq_io_deq_ready),
-    .io_deq_valid(bundleIn_0_bq_io_deq_valid),
-    .io_deq_bits_id(bundleIn_0_bq_io_deq_bits_id),
-    .io_deq_bits_resp(bundleIn_0_bq_io_deq_bits_resp)
-  );
-  Queue_22 ar ( // @[Decoupled.scala 296:21]
-    .clock(ar_clock),
-    .reset(ar_reset),
-    .io_enq_ready(ar_io_enq_ready),
-    .io_enq_valid(ar_io_enq_valid),
-    .io_enq_bits_id(ar_io_enq_bits_id),
-    .io_enq_bits_addr(ar_io_enq_bits_addr),
-    .io_enq_bits_len(ar_io_enq_bits_len),
-    .io_enq_bits_size(ar_io_enq_bits_size),
-    .io_deq_ready(ar_io_deq_ready),
-    .io_deq_valid(ar_io_deq_valid),
-    .io_deq_bits_id(ar_io_deq_bits_id),
-    .io_deq_bits_addr(ar_io_deq_bits_addr),
-    .io_deq_bits_len(ar_io_deq_bits_len),
-    .io_deq_bits_size(ar_io_deq_bits_size)
-  );
-  Queue_22 aw ( // @[Decoupled.scala 296:21]
-    .clock(aw_clock),
-    .reset(aw_reset),
-    .io_enq_ready(aw_io_enq_ready),
-    .io_enq_valid(aw_io_enq_valid),
-    .io_enq_bits_id(aw_io_enq_bits_id),
-    .io_enq_bits_addr(aw_io_enq_bits_addr),
-    .io_enq_bits_len(aw_io_enq_bits_len),
-    .io_enq_bits_size(aw_io_enq_bits_size),
-    .io_deq_ready(aw_io_deq_ready),
-    .io_deq_valid(aw_io_deq_valid),
-    .io_deq_bits_id(aw_io_deq_bits_id),
-    .io_deq_bits_addr(aw_io_deq_bits_addr),
-    .io_deq_bits_len(aw_io_deq_bits_len),
-    .io_deq_bits_size(aw_io_deq_bits_size)
-  );
-  Queue_15 w ( // @[Decoupled.scala 296:21]
-    .clock(w_clock),
-    .reset(w_reset),
-    .io_enq_ready(w_io_enq_ready),
-    .io_enq_valid(w_io_enq_valid),
-    .io_enq_bits_data(w_io_enq_bits_data),
-    .io_enq_bits_strb(w_io_enq_bits_strb),
-    .io_enq_bits_last(w_io_enq_bits_last),
-    .io_deq_ready(w_io_deq_ready),
-    .io_deq_valid(w_io_deq_valid),
-    .io_deq_bits_data(w_io_deq_bits_data),
-    .io_deq_bits_strb(w_io_deq_bits_strb),
-    .io_deq_bits_last(w_io_deq_bits_last)
-  );
-  assign auto_in_awready = aw_io_enq_ready; // @[Nodes.scala 1210:84 Decoupled.scala 299:17]
-  assign auto_in_wready = w_io_enq_ready; // @[Nodes.scala 1210:84 Decoupled.scala 299:17]
-  assign auto_in_bvalid = bundleIn_0_bq_io_deq_valid; // @[Nodes.scala 1210:84 AXI4ToAPB.scala 56:12]
-  assign auto_in_bid = bundleIn_0_bq_io_deq_bits_id; // @[Nodes.scala 1210:84 AXI4ToAPB.scala 56:12]
-  assign auto_in_bresp = bundleIn_0_bq_io_deq_bits_resp; // @[Nodes.scala 1210:84 AXI4ToAPB.scala 56:12]
-  assign auto_in_arready = ar_io_enq_ready; // @[Nodes.scala 1210:84 Decoupled.scala 299:17]
-  assign auto_in_rvalid = bundleIn_0_rq_io_deq_valid; // @[Nodes.scala 1210:84 AXI4ToAPB.scala 54:12]
-  assign auto_in_rid = bundleIn_0_rq_io_deq_bits_id; // @[Nodes.scala 1210:84 AXI4ToAPB.scala 54:12]
-  assign auto_in_rdata = bundleIn_0_rq_io_deq_bits_data; // @[Nodes.scala 1210:84 AXI4ToAPB.scala 54:12]
-  assign auto_in_rresp = bundleIn_0_rq_io_deq_bits_resp; // @[Nodes.scala 1210:84 AXI4ToAPB.scala 54:12]
-  assign auto_in_rlast = bundleIn_0_rq_io_deq_bits_last; // @[Nodes.scala 1210:84 AXI4ToAPB.scala 54:12]
-  assign auto_out_psel = ar_sel | aw_sel; // @[AXI4ToAPB.scala 90:29]
-  assign auto_out_penable = ar_enable | aw_enable; // @[AXI4ToAPB.scala 91:32]
-  assign auto_out_pwrite = aw_io_deq_valid & w_io_deq_valid & ~ar_sel & aw_sel_REG; // @[AXI4ToAPB.scala 73:54]
-  assign auto_out_paddr = ar_sel ? ar_io_deq_bits_addr : aw_io_deq_bits_addr; // @[AXI4ToAPB.scala 93:25]
-  assign auto_out_pwdata = aw_io_deq_bits_addr[2] ? w_io_deq_bits_data[63:32] : w_io_deq_bits_data[31:0]; // @[AXI4ToAPB.scala 95:25]
-  assign auto_out_pstrb = ar_sel ? 4'h0 : _bundleOut_0_pstrb_T_3; // @[AXI4ToAPB.scala 96:25]
-  assign bundleIn_0_rq_clock = clock;
-  assign bundleIn_0_rq_reset = reset;
-  assign bundleIn_0_rq_io_enq_valid = ar_enable & auto_out_pready; // @[AXI4ToAPB.scala 99:29]
-  assign bundleIn_0_rq_io_enq_bits_id = r_id; // @[Decoupled.scala 298:21]
-  assign bundleIn_0_rq_io_enq_bits_data = {auto_out_prdata,auto_out_prdata}; // @[Cat.scala 30:58]
-  assign bundleIn_0_rq_io_enq_bits_resp = auto_out_pslverr ? 2'h2 : 2'h0; // @[AXI4ToAPB.scala 110:25]
-  assign bundleIn_0_rq_io_deq_ready = auto_in_rready; // @[Nodes.scala 1210:84 LazyModule.scala 309:16]
-  assign bundleIn_0_bq_clock = clock;
-  assign bundleIn_0_bq_reset = reset;
-  assign bundleIn_0_bq_io_enq_valid = aw_enable & auto_out_pready; // @[AXI4ToAPB.scala 104:29]
-  assign bundleIn_0_bq_io_enq_bits_id = b_id; // @[Decoupled.scala 298:21]
-  assign bundleIn_0_bq_io_enq_bits_resp = auto_out_pslverr ? 2'h2 : 2'h0; // @[AXI4ToAPB.scala 113:25]
-  assign bundleIn_0_bq_io_deq_ready = auto_in_bready; // @[Nodes.scala 1210:84 LazyModule.scala 309:16]
-  assign ar_clock = clock;
-  assign ar_reset = reset;
-  assign ar_io_enq_valid = auto_in_arvalid; // @[Nodes.scala 1210:84 LazyModule.scala 309:16]
-  assign ar_io_enq_bits_id = auto_in_arid; // @[Nodes.scala 1210:84 LazyModule.scala 309:16]
-  assign ar_io_enq_bits_addr = auto_in_araddr; // @[Nodes.scala 1210:84 LazyModule.scala 309:16]
-  assign ar_io_enq_bits_len = auto_in_arlen; // @[Nodes.scala 1210:84 LazyModule.scala 309:16]
-  assign ar_io_enq_bits_size = auto_in_arsize; // @[Nodes.scala 1210:84 LazyModule.scala 309:16]
-  assign ar_io_deq_ready = ar_enable & auto_out_pready; // @[AXI4ToAPB.scala 98:29]
-  assign aw_clock = clock;
-  assign aw_reset = reset;
-  assign aw_io_enq_valid = auto_in_awvalid; // @[Nodes.scala 1210:84 LazyModule.scala 309:16]
-  assign aw_io_enq_bits_id = auto_in_awid; // @[Nodes.scala 1210:84 LazyModule.scala 309:16]
-  assign aw_io_enq_bits_addr = auto_in_awaddr; // @[Nodes.scala 1210:84 LazyModule.scala 309:16]
-  assign aw_io_enq_bits_len = auto_in_awlen; // @[Nodes.scala 1210:84 LazyModule.scala 309:16]
-  assign aw_io_enq_bits_size = auto_in_awsize; // @[Nodes.scala 1210:84 LazyModule.scala 309:16]
-  assign aw_io_deq_ready = aw_enable & auto_out_pready; // @[AXI4ToAPB.scala 102:29]
-  assign w_clock = clock;
-  assign w_reset = reset;
-  assign w_io_enq_valid = auto_in_wvalid; // @[Nodes.scala 1210:84 LazyModule.scala 309:16]
-  assign w_io_enq_bits_data = auto_in_wdata; // @[Nodes.scala 1210:84 LazyModule.scala 309:16]
-  assign w_io_enq_bits_strb = auto_in_wstrb; // @[Nodes.scala 1210:84 LazyModule.scala 309:16]
-  assign w_io_enq_bits_last = auto_in_wlast; // @[Nodes.scala 1210:84 LazyModule.scala 309:16]
-  assign w_io_deq_ready = aw_enable & auto_out_pready; // @[AXI4ToAPB.scala 103:29]
+  reg [2:0] state; // @[AXI4ToAPB.scala 50:26]
+  wire  _T = 3'h0 == state; // @[Conditional.scala 37:30]
+  wire  _T_1 = 3'h1 == state; // @[Conditional.scala 37:30]
+  wire  _T_2 = 3'h2 == state; // @[Conditional.scala 37:30]
+  wire [2:0] _GEN_0 = auto_in_rready & auto_out_pready ? 3'h0 : state; // @[AXI4ToAPB.scala 54:52 AXI4ToAPB.scala 54:60 AXI4ToAPB.scala 50:26]
+  wire  _T_4 = 3'h3 == state; // @[Conditional.scala 37:30]
+  wire [2:0] _GEN_1 = auto_in_wvalid ? 3'h4 : state; // @[AXI4ToAPB.scala 55:38 AXI4ToAPB.scala 55:46 AXI4ToAPB.scala 50:26]
+  wire  _T_5 = 3'h4 == state; // @[Conditional.scala 37:30]
+  wire [2:0] _GEN_2 = auto_out_pready ? 3'h5 : state; // @[AXI4ToAPB.scala 56:41 AXI4ToAPB.scala 56:49 AXI4ToAPB.scala 50:26]
+  wire  _T_6 = 3'h5 == state; // @[Conditional.scala 37:30]
+  wire [2:0] _GEN_3 = auto_in_bready ? 3'h0 : state; // @[AXI4ToAPB.scala 57:38 AXI4ToAPB.scala 57:46 AXI4ToAPB.scala 50:26]
+  wire [2:0] _GEN_4 = _T_6 ? _GEN_3 : state; // @[Conditional.scala 39:67 AXI4ToAPB.scala 50:26]
+  wire [2:0] _GEN_5 = _T_5 ? _GEN_2 : _GEN_4; // @[Conditional.scala 39:67]
+  wire [2:0] _GEN_6 = _T_4 ? _GEN_1 : _GEN_5; // @[Conditional.scala 39:67]
+  wire  is_ar = state == 3'h1; // @[AXI4ToAPB.scala 59:26]
+  wire  is_r = state == 3'h2; // @[AXI4ToAPB.scala 60:26]
+  wire  is_aw = state == 3'h3; // @[AXI4ToAPB.scala 61:26]
+  wire  is_w = state == 3'h4; // @[AXI4ToAPB.scala 62:26]
+  wire  is_b = state == 3'h5; // @[AXI4ToAPB.scala 63:26]
+  wire  is_write = is_aw | is_w | is_b; // @[AXI4ToAPB.scala 64:36]
+  wire  _rid_reg_T = is_ar & auto_in_arvalid; // @[Decoupled.scala 40:37]
+  reg [3:0] rid_reg; // @[Reg.scala 15:16]
+  reg  bundleIn_0_awready_REG; // @[AXI4ToAPB.scala 89:36]
+  wire  bundleIn_0_awready = is_aw & ~bundleIn_0_awready_REG; // @[AXI4ToAPB.scala 89:25]
+  wire  _bid_reg_T = bundleIn_0_awready & auto_in_awvalid; // @[Decoupled.scala 40:37]
+  reg [3:0] bid_reg; // @[Reg.scala 15:16]
+  reg [29:0] araddr_reg; // @[Reg.scala 15:16]
+  reg [29:0] awaddr_reg; // @[Reg.scala 15:16]
+  reg  bundleIn_0_wready_REG; // @[AXI4ToAPB.scala 90:36]
+  wire  bundleIn_0_wready = is_w & ~bundleIn_0_wready_REG; // @[AXI4ToAPB.scala 90:25]
+  wire  _wdata_reg_T = bundleIn_0_wready & auto_in_wvalid; // @[Decoupled.scala 40:37]
+  reg [63:0] wdata_reg; // @[Reg.scala 15:16]
+  reg [7:0] wstrb_reg; // @[Reg.scala 15:16]
+  wire  bundleOut_0_psel = is_r | is_w; // @[AXI4ToAPB.scala 80:27]
+  reg  bundleOut_0_penable_REG; // @[AXI4ToAPB.scala 81:41]
+  wire [3:0] _bundleOut_0_pstrb_T_3 = awaddr_reg[2] ? wstrb_reg[7:4] : wstrb_reg[3:0]; // @[AXI4ToAPB.scala 86:39]
+  assign auto_in_awready = is_aw & ~bundleIn_0_awready_REG; // @[AXI4ToAPB.scala 89:25]
+  assign auto_in_wready = is_w & ~bundleIn_0_wready_REG; // @[AXI4ToAPB.scala 90:25]
+  assign auto_in_bvalid = state == 3'h5; // @[AXI4ToAPB.scala 63:26]
+  assign auto_in_bid = bid_reg; // @[Nodes.scala 1210:84 AXI4ToAPB.scala 100:19]
+  assign auto_in_bresp = auto_out_pslverr ? 2'h2 : 2'h0; // @[AXI4ToAPB.scala 99:25]
+  assign auto_in_arready = state == 3'h1; // @[AXI4ToAPB.scala 59:26]
+  assign auto_in_rvalid = is_r & auto_out_pready; // @[AXI4ToAPB.scala 92:24]
+  assign auto_in_rid = rid_reg; // @[Nodes.scala 1210:84 AXI4ToAPB.scala 94:19]
+  assign auto_in_rdata = {auto_out_prdata,auto_out_prdata}; // @[Cat.scala 30:58]
+  assign auto_in_rresp = auto_out_pslverr ? 2'h2 : 2'h0; // @[AXI4ToAPB.scala 95:25]
+  assign auto_out_psel = is_r | is_w; // @[AXI4ToAPB.scala 80:27]
+  assign auto_out_penable = bundleOut_0_psel & bundleOut_0_penable_REG; // @[AXI4ToAPB.scala 81:31]
+  assign auto_out_pwrite = is_aw | is_w | is_b; // @[AXI4ToAPB.scala 64:36]
+  assign auto_out_paddr = is_write ? awaddr_reg : araddr_reg; // @[AXI4ToAPB.scala 83:25]
+  assign auto_out_pwdata = awaddr_reg[2] ? wdata_reg[63:32] : wdata_reg[31:0]; // @[AXI4ToAPB.scala 85:25]
+  assign auto_out_pstrb = is_write ? _bundleOut_0_pstrb_T_3 : 4'h0; // @[AXI4ToAPB.scala 86:25]
   always @(posedge clock) begin
-    if (reset) begin // @[AXI4ToAPB.scala 70:30]
-      ar_enable <= 1'h0; // @[AXI4ToAPB.scala 70:30]
-    end else if (_T_24) begin // @[AXI4ToAPB.scala 81:23]
-      ar_enable <= 1'h0; // @[AXI4ToAPB.scala 81:35]
+    if (reset) begin // @[AXI4ToAPB.scala 50:26]
+      state <= 3'h0; // @[AXI4ToAPB.scala 50:26]
+    end else if (_T) begin // @[Conditional.scala 40:58]
+      if (auto_in_arvalid) begin // @[AXI4ToAPB.scala 52:35]
+        state <= 3'h1;
+      end else if (auto_in_awvalid) begin // @[AXI4ToAPB.scala 52:55]
+        state <= 3'h3;
+      end else begin
+        state <= 3'h0;
+      end
+    end else if (_T_1) begin // @[Conditional.scala 39:67]
+      state <= 3'h2; // @[AXI4ToAPB.scala 53:29]
+    end else if (_T_2) begin // @[Conditional.scala 39:67]
+      state <= _GEN_0;
     end else begin
-      ar_enable <= _GEN_2;
+      state <= _GEN_6;
     end
-    if (reset) begin // @[AXI4ToAPB.scala 71:30]
-      aw_enable <= 1'h0; // @[AXI4ToAPB.scala 71:30]
-    end else if (_T_25) begin // @[AXI4ToAPB.scala 83:23]
-      aw_enable <= 1'h0; // @[AXI4ToAPB.scala 83:35]
-    end else begin
-      aw_enable <= _GEN_4;
+    if (_rid_reg_T) begin // @[Reg.scala 16:19]
+      rid_reg <= auto_in_arid; // @[Reg.scala 16:23]
     end
-    ar_sel_REG <= ~bundleIn_0_rvalid | auto_in_rready; // @[AXI4ToAPB.scala 72:55]
-    aw_sel_REG <= ~bundleIn_0_bvalid | auto_in_bready; // @[AXI4ToAPB.scala 73:77]
-    if (enable_r) begin // @[Reg.scala 16:19]
-      r_id <= ar_io_deq_bits_id; // @[Reg.scala 16:23]
+    bundleIn_0_awready_REG <= state == 3'h3; // @[AXI4ToAPB.scala 61:26]
+    if (_bid_reg_T) begin // @[Reg.scala 16:19]
+      bid_reg <= auto_in_awid; // @[Reg.scala 16:23]
     end
-    if (enable_b) begin // @[Reg.scala 16:19]
-      b_id <= aw_io_deq_bits_id; // @[Reg.scala 16:23]
+    if (_rid_reg_T) begin // @[Reg.scala 16:19]
+      araddr_reg <= auto_in_araddr; // @[Reg.scala 16:23]
     end
+    if (_bid_reg_T) begin // @[Reg.scala 16:19]
+      awaddr_reg <= auto_in_awaddr; // @[Reg.scala 16:23]
+    end
+    bundleIn_0_wready_REG <= state == 3'h4; // @[AXI4ToAPB.scala 62:26]
+    if (_wdata_reg_T) begin // @[Reg.scala 16:19]
+      wdata_reg <= auto_in_wdata; // @[Reg.scala 16:23]
+    end
+    if (_wdata_reg_T) begin // @[Reg.scala 16:19]
+      wstrb_reg <= auto_in_wstrb; // @[Reg.scala 16:23]
+    end
+    bundleOut_0_penable_REG <= is_r | is_w; // @[AXI4ToAPB.scala 80:27]
     `ifndef SYNTHESIS
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (~(~(ar_io_deq_valid & ar_io_deq_bits_len != 8'h0) | reset)) begin
+        if (~(~(auto_in_arvalid & auto_in_arlen != 8'h0) | reset)) begin
           $fwrite(32'h80000002,
-            "Assertion failed\n    at AXI4ToAPB.scala:64 assert(!(ar.valid && ar.bits.len =/= 0.U))\n"); // @[AXI4ToAPB.scala 64:13]
+            "Assertion failed\n    at AXI4ToAPB.scala:67 assert(!(ar.valid && ar.bits.len =/= 0.U))\n"); // @[AXI4ToAPB.scala 67:13]
         end
     `ifdef PRINTF_COND
       end
@@ -85917,53 +85290,7 @@ module AXI4ToAPB(
     `ifdef STOP_COND
       if (`STOP_COND) begin
     `endif
-        if (~(~(ar_io_deq_valid & ar_io_deq_bits_len != 8'h0) | reset)) begin
-          $fatal; // @[AXI4ToAPB.scala 64:13]
-        end
-    `ifdef STOP_COND
-      end
-    `endif
-    `endif // SYNTHESIS
-    `ifndef SYNTHESIS
-    `ifdef PRINTF_COND
-      if (`PRINTF_COND) begin
-    `endif
-        if (~(~(aw_io_deq_valid & aw_io_deq_bits_len != 8'h0) | reset)) begin
-          $fwrite(32'h80000002,
-            "Assertion failed\n    at AXI4ToAPB.scala:65 assert(!(aw.valid && aw.bits.len =/= 0.U))\n"); // @[AXI4ToAPB.scala 65:13]
-        end
-    `ifdef PRINTF_COND
-      end
-    `endif
-    `endif // SYNTHESIS
-    `ifndef SYNTHESIS
-    `ifdef STOP_COND
-      if (`STOP_COND) begin
-    `endif
-        if (~(~(aw_io_deq_valid & aw_io_deq_bits_len != 8'h0) | reset)) begin
-          $fatal; // @[AXI4ToAPB.scala 65:13]
-        end
-    `ifdef STOP_COND
-      end
-    `endif
-    `endif // SYNTHESIS
-    `ifndef SYNTHESIS
-    `ifdef PRINTF_COND
-      if (`PRINTF_COND) begin
-    `endif
-        if (~(~(ar_io_deq_valid & ar_io_deq_bits_size > 3'h2) | reset)) begin
-          $fwrite(32'h80000002,
-            "Assertion failed\n    at AXI4ToAPB.scala:67 assert(!(ar.valid && ar.bits.size > \"b10\".U))\n"); // @[AXI4ToAPB.scala 67:13]
-        end
-    `ifdef PRINTF_COND
-      end
-    `endif
-    `endif // SYNTHESIS
-    `ifndef SYNTHESIS
-    `ifdef STOP_COND
-      if (`STOP_COND) begin
-    `endif
-        if (~(~(ar_io_deq_valid & ar_io_deq_bits_size > 3'h2) | reset)) begin
+        if (~(~(auto_in_arvalid & auto_in_arlen != 8'h0) | reset)) begin
           $fatal; // @[AXI4ToAPB.scala 67:13]
         end
     `ifdef STOP_COND
@@ -85974,9 +85301,9 @@ module AXI4ToAPB(
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (~(~(aw_io_deq_valid & aw_io_deq_bits_size > 3'h2) | reset)) begin
+        if (~(~(auto_in_awvalid & auto_in_awlen != 8'h0) | reset)) begin
           $fwrite(32'h80000002,
-            "Assertion failed\n    at AXI4ToAPB.scala:68 assert(!(aw.valid && aw.bits.size > \"b10\".U))\n"); // @[AXI4ToAPB.scala 68:13]
+            "Assertion failed\n    at AXI4ToAPB.scala:68 assert(!(aw.valid && aw.bits.len =/= 0.U))\n"); // @[AXI4ToAPB.scala 68:13]
         end
     `ifdef PRINTF_COND
       end
@@ -85986,7 +85313,7 @@ module AXI4ToAPB(
     `ifdef STOP_COND
       if (`STOP_COND) begin
     `endif
-        if (~(~(aw_io_deq_valid & aw_io_deq_bits_size > 3'h2) | reset)) begin
+        if (~(~(auto_in_awvalid & auto_in_awlen != 8'h0) | reset)) begin
           $fatal; // @[AXI4ToAPB.scala 68:13]
         end
     `ifdef STOP_COND
@@ -85997,8 +85324,9 @@ module AXI4ToAPB(
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (~(~r_valid | r_ready | reset)) begin
-          $fwrite(32'h80000002,"Assertion failed\n    at AXI4ToAPB.scala:100 assert (!r.valid || r.ready)\n"); // @[AXI4ToAPB.scala 100:14]
+        if (~(~(auto_in_arvalid & auto_in_arsize > 3'h2) | reset)) begin
+          $fwrite(32'h80000002,
+            "Assertion failed\n    at AXI4ToAPB.scala:70 assert(!(ar.valid && ar.bits.size > \"b10\".U))\n"); // @[AXI4ToAPB.scala 70:13]
         end
     `ifdef PRINTF_COND
       end
@@ -86008,8 +85336,8 @@ module AXI4ToAPB(
     `ifdef STOP_COND
       if (`STOP_COND) begin
     `endif
-        if (~(~r_valid | r_ready | reset)) begin
-          $fatal; // @[AXI4ToAPB.scala 100:14]
+        if (~(~(auto_in_arvalid & auto_in_arsize > 3'h2) | reset)) begin
+          $fatal; // @[AXI4ToAPB.scala 70:13]
         end
     `ifdef STOP_COND
       end
@@ -86019,8 +85347,9 @@ module AXI4ToAPB(
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (~(~b_valid | b_ready | reset)) begin
-          $fwrite(32'h80000002,"Assertion failed\n    at AXI4ToAPB.scala:105 assert (!b.valid || b.ready)\n"); // @[AXI4ToAPB.scala 105:14]
+        if (~(~(auto_in_awvalid & auto_in_awsize > 3'h2) | reset)) begin
+          $fwrite(32'h80000002,
+            "Assertion failed\n    at AXI4ToAPB.scala:71 assert(!(aw.valid && aw.bits.size > \"b10\".U))\n"); // @[AXI4ToAPB.scala 71:13]
         end
     `ifdef PRINTF_COND
       end
@@ -86030,8 +85359,8 @@ module AXI4ToAPB(
     `ifdef STOP_COND
       if (`STOP_COND) begin
     `endif
-        if (~(~b_valid | b_ready | reset)) begin
-          $fatal; // @[AXI4ToAPB.scala 105:14]
+        if (~(~(auto_in_awvalid & auto_in_awsize > 3'h2) | reset)) begin
+          $fatal; // @[AXI4ToAPB.scala 71:13]
         end
     `ifdef STOP_COND
       end
@@ -86075,17 +85404,25 @@ initial begin
     `endif
 `ifdef RANDOMIZE_REG_INIT
   _RAND_0 = {1{`RANDOM}};
-  ar_enable = _RAND_0[0:0];
+  state = _RAND_0[2:0];
   _RAND_1 = {1{`RANDOM}};
-  aw_enable = _RAND_1[0:0];
+  rid_reg = _RAND_1[3:0];
   _RAND_2 = {1{`RANDOM}};
-  ar_sel_REG = _RAND_2[0:0];
+  bundleIn_0_awready_REG = _RAND_2[0:0];
   _RAND_3 = {1{`RANDOM}};
-  aw_sel_REG = _RAND_3[0:0];
+  bid_reg = _RAND_3[3:0];
   _RAND_4 = {1{`RANDOM}};
-  r_id = _RAND_4[3:0];
+  araddr_reg = _RAND_4[29:0];
   _RAND_5 = {1{`RANDOM}};
-  b_id = _RAND_5[3:0];
+  awaddr_reg = _RAND_5[29:0];
+  _RAND_6 = {1{`RANDOM}};
+  bundleIn_0_wready_REG = _RAND_6[0:0];
+  _RAND_7 = {2{`RANDOM}};
+  wdata_reg = _RAND_7[63:0];
+  _RAND_8 = {1{`RANDOM}};
+  wstrb_reg = _RAND_8[7:0];
+  _RAND_9 = {1{`RANDOM}};
+  bundleOut_0_penable_REG = _RAND_9[0:0];
 `endif // RANDOMIZE_REG_INIT
   `endif // RANDOMIZE
 end // initial
@@ -86314,7 +85651,6 @@ module ysyxSoCASIC(
   wire  axi4xbar_auto_out_1_wvalid; // @[Xbar.scala 218:30]
   wire [63:0] axi4xbar_auto_out_1_wdata; // @[Xbar.scala 218:30]
   wire [7:0] axi4xbar_auto_out_1_wstrb; // @[Xbar.scala 218:30]
-  wire  axi4xbar_auto_out_1_wlast; // @[Xbar.scala 218:30]
   wire  axi4xbar_auto_out_1_bready; // @[Xbar.scala 218:30]
   wire  axi4xbar_auto_out_1_bvalid; // @[Xbar.scala 218:30]
   wire [3:0] axi4xbar_auto_out_1_bid; // @[Xbar.scala 218:30]
@@ -86330,7 +85666,6 @@ module ysyxSoCASIC(
   wire [3:0] axi4xbar_auto_out_1_rid; // @[Xbar.scala 218:30]
   wire [63:0] axi4xbar_auto_out_1_rdata; // @[Xbar.scala 218:30]
   wire [1:0] axi4xbar_auto_out_1_rresp; // @[Xbar.scala 218:30]
-  wire  axi4xbar_auto_out_1_rlast; // @[Xbar.scala 218:30]
   wire  axi4xbar_auto_out_0_awready; // @[Xbar.scala 218:30]
   wire  axi4xbar_auto_out_0_awvalid; // @[Xbar.scala 218:30]
   wire [3:0] axi4xbar_auto_out_0_awid; // @[Xbar.scala 218:30]
@@ -86447,44 +85782,42 @@ module ysyxSoCASIC(
   wire [1:0] lspi_spi_bundle_cs; // @[SoC.scala 34:25]
   wire  lspi_spi_bundle_mosi; // @[SoC.scala 34:25]
   wire  lspi_spi_bundle_miso; // @[SoC.scala 34:25]
-  wire  axi42apb_clock; // @[AXI4ToAPB.scala 121:30]
-  wire  axi42apb_reset; // @[AXI4ToAPB.scala 121:30]
-  wire  axi42apb_auto_in_awready; // @[AXI4ToAPB.scala 121:30]
-  wire  axi42apb_auto_in_awvalid; // @[AXI4ToAPB.scala 121:30]
-  wire [3:0] axi42apb_auto_in_awid; // @[AXI4ToAPB.scala 121:30]
-  wire [29:0] axi42apb_auto_in_awaddr; // @[AXI4ToAPB.scala 121:30]
-  wire [7:0] axi42apb_auto_in_awlen; // @[AXI4ToAPB.scala 121:30]
-  wire [2:0] axi42apb_auto_in_awsize; // @[AXI4ToAPB.scala 121:30]
-  wire  axi42apb_auto_in_wready; // @[AXI4ToAPB.scala 121:30]
-  wire  axi42apb_auto_in_wvalid; // @[AXI4ToAPB.scala 121:30]
-  wire [63:0] axi42apb_auto_in_wdata; // @[AXI4ToAPB.scala 121:30]
-  wire [7:0] axi42apb_auto_in_wstrb; // @[AXI4ToAPB.scala 121:30]
-  wire  axi42apb_auto_in_wlast; // @[AXI4ToAPB.scala 121:30]
-  wire  axi42apb_auto_in_bready; // @[AXI4ToAPB.scala 121:30]
-  wire  axi42apb_auto_in_bvalid; // @[AXI4ToAPB.scala 121:30]
-  wire [3:0] axi42apb_auto_in_bid; // @[AXI4ToAPB.scala 121:30]
-  wire [1:0] axi42apb_auto_in_bresp; // @[AXI4ToAPB.scala 121:30]
-  wire  axi42apb_auto_in_arready; // @[AXI4ToAPB.scala 121:30]
-  wire  axi42apb_auto_in_arvalid; // @[AXI4ToAPB.scala 121:30]
-  wire [3:0] axi42apb_auto_in_arid; // @[AXI4ToAPB.scala 121:30]
-  wire [29:0] axi42apb_auto_in_araddr; // @[AXI4ToAPB.scala 121:30]
-  wire [7:0] axi42apb_auto_in_arlen; // @[AXI4ToAPB.scala 121:30]
-  wire [2:0] axi42apb_auto_in_arsize; // @[AXI4ToAPB.scala 121:30]
-  wire  axi42apb_auto_in_rready; // @[AXI4ToAPB.scala 121:30]
-  wire  axi42apb_auto_in_rvalid; // @[AXI4ToAPB.scala 121:30]
-  wire [3:0] axi42apb_auto_in_rid; // @[AXI4ToAPB.scala 121:30]
-  wire [63:0] axi42apb_auto_in_rdata; // @[AXI4ToAPB.scala 121:30]
-  wire [1:0] axi42apb_auto_in_rresp; // @[AXI4ToAPB.scala 121:30]
-  wire  axi42apb_auto_in_rlast; // @[AXI4ToAPB.scala 121:30]
-  wire  axi42apb_auto_out_psel; // @[AXI4ToAPB.scala 121:30]
-  wire  axi42apb_auto_out_penable; // @[AXI4ToAPB.scala 121:30]
-  wire  axi42apb_auto_out_pwrite; // @[AXI4ToAPB.scala 121:30]
-  wire [29:0] axi42apb_auto_out_paddr; // @[AXI4ToAPB.scala 121:30]
-  wire [31:0] axi42apb_auto_out_pwdata; // @[AXI4ToAPB.scala 121:30]
-  wire [3:0] axi42apb_auto_out_pstrb; // @[AXI4ToAPB.scala 121:30]
-  wire  axi42apb_auto_out_pready; // @[AXI4ToAPB.scala 121:30]
-  wire  axi42apb_auto_out_pslverr; // @[AXI4ToAPB.scala 121:30]
-  wire [31:0] axi42apb_auto_out_prdata; // @[AXI4ToAPB.scala 121:30]
+  wire  axi42apb_clock; // @[AXI4ToAPB.scala 107:30]
+  wire  axi42apb_reset; // @[AXI4ToAPB.scala 107:30]
+  wire  axi42apb_auto_in_awready; // @[AXI4ToAPB.scala 107:30]
+  wire  axi42apb_auto_in_awvalid; // @[AXI4ToAPB.scala 107:30]
+  wire [3:0] axi42apb_auto_in_awid; // @[AXI4ToAPB.scala 107:30]
+  wire [29:0] axi42apb_auto_in_awaddr; // @[AXI4ToAPB.scala 107:30]
+  wire [7:0] axi42apb_auto_in_awlen; // @[AXI4ToAPB.scala 107:30]
+  wire [2:0] axi42apb_auto_in_awsize; // @[AXI4ToAPB.scala 107:30]
+  wire  axi42apb_auto_in_wready; // @[AXI4ToAPB.scala 107:30]
+  wire  axi42apb_auto_in_wvalid; // @[AXI4ToAPB.scala 107:30]
+  wire [63:0] axi42apb_auto_in_wdata; // @[AXI4ToAPB.scala 107:30]
+  wire [7:0] axi42apb_auto_in_wstrb; // @[AXI4ToAPB.scala 107:30]
+  wire  axi42apb_auto_in_bready; // @[AXI4ToAPB.scala 107:30]
+  wire  axi42apb_auto_in_bvalid; // @[AXI4ToAPB.scala 107:30]
+  wire [3:0] axi42apb_auto_in_bid; // @[AXI4ToAPB.scala 107:30]
+  wire [1:0] axi42apb_auto_in_bresp; // @[AXI4ToAPB.scala 107:30]
+  wire  axi42apb_auto_in_arready; // @[AXI4ToAPB.scala 107:30]
+  wire  axi42apb_auto_in_arvalid; // @[AXI4ToAPB.scala 107:30]
+  wire [3:0] axi42apb_auto_in_arid; // @[AXI4ToAPB.scala 107:30]
+  wire [29:0] axi42apb_auto_in_araddr; // @[AXI4ToAPB.scala 107:30]
+  wire [7:0] axi42apb_auto_in_arlen; // @[AXI4ToAPB.scala 107:30]
+  wire [2:0] axi42apb_auto_in_arsize; // @[AXI4ToAPB.scala 107:30]
+  wire  axi42apb_auto_in_rready; // @[AXI4ToAPB.scala 107:30]
+  wire  axi42apb_auto_in_rvalid; // @[AXI4ToAPB.scala 107:30]
+  wire [3:0] axi42apb_auto_in_rid; // @[AXI4ToAPB.scala 107:30]
+  wire [63:0] axi42apb_auto_in_rdata; // @[AXI4ToAPB.scala 107:30]
+  wire [1:0] axi42apb_auto_in_rresp; // @[AXI4ToAPB.scala 107:30]
+  wire  axi42apb_auto_out_psel; // @[AXI4ToAPB.scala 107:30]
+  wire  axi42apb_auto_out_penable; // @[AXI4ToAPB.scala 107:30]
+  wire  axi42apb_auto_out_pwrite; // @[AXI4ToAPB.scala 107:30]
+  wire [29:0] axi42apb_auto_out_paddr; // @[AXI4ToAPB.scala 107:30]
+  wire [31:0] axi42apb_auto_out_pwdata; // @[AXI4ToAPB.scala 107:30]
+  wire [3:0] axi42apb_auto_out_pstrb; // @[AXI4ToAPB.scala 107:30]
+  wire  axi42apb_auto_out_pready; // @[AXI4ToAPB.scala 107:30]
+  wire  axi42apb_auto_out_pslverr; // @[AXI4ToAPB.scala 107:30]
+  wire [31:0] axi42apb_auto_out_prdata; // @[AXI4ToAPB.scala 107:30]
   wire  cpu_reset_chain_clock; // @[ShiftReg.scala 45:23]
   wire  cpu_reset_chain_io_d; // @[ShiftReg.scala 45:23]
   wire  cpu_reset_chain_io_q; // @[ShiftReg.scala 45:23]
@@ -86572,7 +85905,6 @@ module ysyxSoCASIC(
     .auto_out_1_wvalid(axi4xbar_auto_out_1_wvalid),
     .auto_out_1_wdata(axi4xbar_auto_out_1_wdata),
     .auto_out_1_wstrb(axi4xbar_auto_out_1_wstrb),
-    .auto_out_1_wlast(axi4xbar_auto_out_1_wlast),
     .auto_out_1_bready(axi4xbar_auto_out_1_bready),
     .auto_out_1_bvalid(axi4xbar_auto_out_1_bvalid),
     .auto_out_1_bid(axi4xbar_auto_out_1_bid),
@@ -86588,7 +85920,6 @@ module ysyxSoCASIC(
     .auto_out_1_rid(axi4xbar_auto_out_1_rid),
     .auto_out_1_rdata(axi4xbar_auto_out_1_rdata),
     .auto_out_1_rresp(axi4xbar_auto_out_1_rresp),
-    .auto_out_1_rlast(axi4xbar_auto_out_1_rlast),
     .auto_out_0_awready(axi4xbar_auto_out_0_awready),
     .auto_out_0_awvalid(axi4xbar_auto_out_0_awvalid),
     .auto_out_0_awid(axi4xbar_auto_out_0_awid),
@@ -86714,7 +86045,7 @@ module ysyxSoCASIC(
     .spi_bundle_mosi(lspi_spi_bundle_mosi),
     .spi_bundle_miso(lspi_spi_bundle_miso)
   );
-  AXI4ToAPB axi42apb ( // @[AXI4ToAPB.scala 121:30]
+  AXI4ToAPB axi42apb ( // @[AXI4ToAPB.scala 107:30]
     .clock(axi42apb_clock),
     .reset(axi42apb_reset),
     .auto_in_awready(axi42apb_auto_in_awready),
@@ -86727,7 +86058,6 @@ module ysyxSoCASIC(
     .auto_in_wvalid(axi42apb_auto_in_wvalid),
     .auto_in_wdata(axi42apb_auto_in_wdata),
     .auto_in_wstrb(axi42apb_auto_in_wstrb),
-    .auto_in_wlast(axi42apb_auto_in_wlast),
     .auto_in_bready(axi42apb_auto_in_bready),
     .auto_in_bvalid(axi42apb_auto_in_bvalid),
     .auto_in_bid(axi42apb_auto_in_bid),
@@ -86743,7 +86073,6 @@ module ysyxSoCASIC(
     .auto_in_rid(axi42apb_auto_in_rid),
     .auto_in_rdata(axi42apb_auto_in_rdata),
     .auto_in_rresp(axi42apb_auto_in_rresp),
-    .auto_in_rlast(axi42apb_auto_in_rlast),
     .auto_out_psel(axi42apb_auto_out_psel),
     .auto_out_penable(axi42apb_auto_out_penable),
     .auto_out_pwrite(axi42apb_auto_out_pwrite),
@@ -86821,7 +86150,6 @@ module ysyxSoCASIC(
   assign axi4xbar_auto_out_1_rid = axi42apb_auto_in_rid; // @[LazyModule.scala 298:16]
   assign axi4xbar_auto_out_1_rdata = axi42apb_auto_in_rdata; // @[LazyModule.scala 298:16]
   assign axi4xbar_auto_out_1_rresp = axi42apb_auto_in_rresp; // @[LazyModule.scala 298:16]
-  assign axi4xbar_auto_out_1_rlast = axi42apb_auto_in_rlast; // @[LazyModule.scala 298:16]
   assign axi4xbar_auto_out_0_awready = chipMaster_slave_0_awready; // @[Nodes.scala 1210:84 SoC.scala 50:83]
   assign axi4xbar_auto_out_0_wready = chipMaster_slave_0_wready; // @[Nodes.scala 1210:84 SoC.scala 50:83]
   assign axi4xbar_auto_out_0_bvalid = chipMaster_slave_0_bvalid; // @[Nodes.scala 1210:84 SoC.scala 50:83]
@@ -86887,7 +86215,6 @@ module ysyxSoCASIC(
   assign axi42apb_auto_in_wvalid = axi4xbar_auto_out_1_wvalid; // @[LazyModule.scala 298:16]
   assign axi42apb_auto_in_wdata = axi4xbar_auto_out_1_wdata; // @[LazyModule.scala 298:16]
   assign axi42apb_auto_in_wstrb = axi4xbar_auto_out_1_wstrb; // @[LazyModule.scala 298:16]
-  assign axi42apb_auto_in_wlast = axi4xbar_auto_out_1_wlast; // @[LazyModule.scala 298:16]
   assign axi42apb_auto_in_bready = axi4xbar_auto_out_1_bready; // @[LazyModule.scala 298:16]
   assign axi42apb_auto_in_arvalid = axi4xbar_auto_out_1_arvalid; // @[LazyModule.scala 298:16]
   assign axi42apb_auto_in_arid = axi4xbar_auto_out_1_arid; // @[LazyModule.scala 298:16]
@@ -97341,7 +96668,7 @@ end // initial
 `endif
 `endif // SYNTHESIS
 endmodule
-module Queue_30(
+module Queue_25(
   input         clock,
   input         reset,
   output        io_enq_ready,
@@ -97674,7 +97001,7 @@ module SinkD_1(
   wire [4:0] _io_q_bits_beats_T_6 = _io_q_bits_beats_T_4 + 5'h1; // @[SinkD.scala 60:76]
   wire [4:0] _GEN_8 = {{4'd0}, d_grant}; // @[SinkD.scala 60:86]
   wire [4:0] _io_q_bits_beats_T_8 = _io_q_bits_beats_T_6 + _GEN_8; // @[SinkD.scala 60:86]
-  Queue_30 d ( // @[Decoupled.scala 296:21]
+  Queue_25 d ( // @[Decoupled.scala 296:21]
     .clock(d_clock),
     .reset(d_reset),
     .io_enq_ready(d_io_enq_ready),
@@ -100066,7 +99393,7 @@ module ChipLink_1(
   assign do_bypass_catcher_1_clock = clock;
   assign do_bypass_catcher_1_reset = tx_reset; // @[compatibility.scala 260:56]
 endmodule
-module Queue_38(
+module Queue_33(
   input   clock,
   input   reset,
   output  io_enq_ready,
@@ -100142,7 +99469,7 @@ end // initial
 `endif
 `endif // SYNTHESIS
 endmodule
-module Queue_39(
+module Queue_34(
   input         clock,
   input         reset,
   output        io_enq_ready,
@@ -100282,7 +99609,7 @@ end // initial
 `endif
 `endif // SYNTHESIS
 endmodule
-module Queue_40(
+module Queue_35(
   input        clock,
   input        reset,
   input        io_deq_ready,
@@ -100396,7 +99723,7 @@ end // initial
 `endif
 `endif // SYNTHESIS
 endmodule
-module Queue_42(
+module Queue_37(
   input         clock,
   input         reset,
   input         io_deq_ready,
@@ -100608,13 +99935,13 @@ module AXI4Buffer(
   wire [63:0] bundleIn_0_rdeq_io_deq_bits_data; // @[Decoupled.scala 296:21]
   wire [1:0] bundleIn_0_rdeq_io_deq_bits_resp; // @[Decoupled.scala 296:21]
   wire  bundleIn_0_rdeq_io_deq_bits_last; // @[Decoupled.scala 296:21]
-  Queue_38 bundleOut_0_awdeq ( // @[Decoupled.scala 296:21]
+  Queue_33 bundleOut_0_awdeq ( // @[Decoupled.scala 296:21]
     .clock(bundleOut_0_awdeq_clock),
     .reset(bundleOut_0_awdeq_reset),
     .io_enq_ready(bundleOut_0_awdeq_io_enq_ready),
     .io_enq_valid(bundleOut_0_awdeq_io_enq_valid)
   );
-  Queue_39 bundleOut_0_wdeq ( // @[Decoupled.scala 296:21]
+  Queue_34 bundleOut_0_wdeq ( // @[Decoupled.scala 296:21]
     .clock(bundleOut_0_wdeq_clock),
     .reset(bundleOut_0_wdeq_reset),
     .io_enq_ready(bundleOut_0_wdeq_io_enq_ready),
@@ -100626,7 +99953,7 @@ module AXI4Buffer(
     .io_deq_bits_data(bundleOut_0_wdeq_io_deq_bits_data),
     .io_deq_bits_strb(bundleOut_0_wdeq_io_deq_bits_strb)
   );
-  Queue_40 bundleIn_0_bdeq ( // @[Decoupled.scala 296:21]
+  Queue_35 bundleIn_0_bdeq ( // @[Decoupled.scala 296:21]
     .clock(bundleIn_0_bdeq_clock),
     .reset(bundleIn_0_bdeq_reset),
     .io_deq_ready(bundleIn_0_bdeq_io_deq_ready),
@@ -100634,13 +99961,13 @@ module AXI4Buffer(
     .io_deq_bits_id(bundleIn_0_bdeq_io_deq_bits_id),
     .io_deq_bits_resp(bundleIn_0_bdeq_io_deq_bits_resp)
   );
-  Queue_38 bundleOut_0_ardeq ( // @[Decoupled.scala 296:21]
+  Queue_33 bundleOut_0_ardeq ( // @[Decoupled.scala 296:21]
     .clock(bundleOut_0_ardeq_clock),
     .reset(bundleOut_0_ardeq_reset),
     .io_enq_ready(bundleOut_0_ardeq_io_enq_ready),
     .io_enq_valid(bundleOut_0_ardeq_io_enq_valid)
   );
-  Queue_42 bundleIn_0_rdeq ( // @[Decoupled.scala 296:21]
+  Queue_37 bundleIn_0_rdeq ( // @[Decoupled.scala 296:21]
     .clock(bundleIn_0_rdeq_clock),
     .reset(bundleIn_0_rdeq_reset),
     .io_deq_ready(bundleIn_0_rdeq_io_deq_ready),
@@ -102237,7 +101564,7 @@ module AXI4UserYanker_3(
     `endif // SYNTHESIS
   end
 endmodule
-module Queue_43(
+module Queue_38(
   input         clock,
   input         reset,
   output        io_enq_ready,
@@ -103316,7 +102643,7 @@ module AXI4Deinterleaver(
   wire [3:0] deq_bits_14_id = qs_queue_14_io_deq_bits_id; // @[Deinterleaver.scala 114:31 Deinterleaver.scala 114:31]
   wire [3:0] _GEN_112 = 4'he == deq_id ? deq_bits_14_id : _GEN_111; // @[Deinterleaver.scala 115:20 Deinterleaver.scala 115:20]
   wire [3:0] deq_bits_15_id = qs_queue_15_io_deq_bits_id; // @[Deinterleaver.scala 114:31 Deinterleaver.scala 114:31]
-  Queue_43 qs_queue_0 ( // @[Deinterleaver.scala 66:27]
+  Queue_38 qs_queue_0 ( // @[Deinterleaver.scala 66:27]
     .clock(qs_queue_0_clock),
     .reset(qs_queue_0_reset),
     .io_enq_ready(qs_queue_0_io_enq_ready),
@@ -103338,7 +102665,7 @@ module AXI4Deinterleaver(
     .io_deq_bits_echo_extra_id(qs_queue_0_io_deq_bits_echo_extra_id),
     .io_deq_bits_last(qs_queue_0_io_deq_bits_last)
   );
-  Queue_43 qs_queue_1 ( // @[Deinterleaver.scala 66:27]
+  Queue_38 qs_queue_1 ( // @[Deinterleaver.scala 66:27]
     .clock(qs_queue_1_clock),
     .reset(qs_queue_1_reset),
     .io_enq_ready(qs_queue_1_io_enq_ready),
@@ -103360,7 +102687,7 @@ module AXI4Deinterleaver(
     .io_deq_bits_echo_extra_id(qs_queue_1_io_deq_bits_echo_extra_id),
     .io_deq_bits_last(qs_queue_1_io_deq_bits_last)
   );
-  Queue_43 qs_queue_2 ( // @[Deinterleaver.scala 66:27]
+  Queue_38 qs_queue_2 ( // @[Deinterleaver.scala 66:27]
     .clock(qs_queue_2_clock),
     .reset(qs_queue_2_reset),
     .io_enq_ready(qs_queue_2_io_enq_ready),
@@ -103382,7 +102709,7 @@ module AXI4Deinterleaver(
     .io_deq_bits_echo_extra_id(qs_queue_2_io_deq_bits_echo_extra_id),
     .io_deq_bits_last(qs_queue_2_io_deq_bits_last)
   );
-  Queue_43 qs_queue_3 ( // @[Deinterleaver.scala 66:27]
+  Queue_38 qs_queue_3 ( // @[Deinterleaver.scala 66:27]
     .clock(qs_queue_3_clock),
     .reset(qs_queue_3_reset),
     .io_enq_ready(qs_queue_3_io_enq_ready),
@@ -103404,7 +102731,7 @@ module AXI4Deinterleaver(
     .io_deq_bits_echo_extra_id(qs_queue_3_io_deq_bits_echo_extra_id),
     .io_deq_bits_last(qs_queue_3_io_deq_bits_last)
   );
-  Queue_43 qs_queue_4 ( // @[Deinterleaver.scala 66:27]
+  Queue_38 qs_queue_4 ( // @[Deinterleaver.scala 66:27]
     .clock(qs_queue_4_clock),
     .reset(qs_queue_4_reset),
     .io_enq_ready(qs_queue_4_io_enq_ready),
@@ -103426,7 +102753,7 @@ module AXI4Deinterleaver(
     .io_deq_bits_echo_extra_id(qs_queue_4_io_deq_bits_echo_extra_id),
     .io_deq_bits_last(qs_queue_4_io_deq_bits_last)
   );
-  Queue_43 qs_queue_5 ( // @[Deinterleaver.scala 66:27]
+  Queue_38 qs_queue_5 ( // @[Deinterleaver.scala 66:27]
     .clock(qs_queue_5_clock),
     .reset(qs_queue_5_reset),
     .io_enq_ready(qs_queue_5_io_enq_ready),
@@ -103448,7 +102775,7 @@ module AXI4Deinterleaver(
     .io_deq_bits_echo_extra_id(qs_queue_5_io_deq_bits_echo_extra_id),
     .io_deq_bits_last(qs_queue_5_io_deq_bits_last)
   );
-  Queue_43 qs_queue_6 ( // @[Deinterleaver.scala 66:27]
+  Queue_38 qs_queue_6 ( // @[Deinterleaver.scala 66:27]
     .clock(qs_queue_6_clock),
     .reset(qs_queue_6_reset),
     .io_enq_ready(qs_queue_6_io_enq_ready),
@@ -103470,7 +102797,7 @@ module AXI4Deinterleaver(
     .io_deq_bits_echo_extra_id(qs_queue_6_io_deq_bits_echo_extra_id),
     .io_deq_bits_last(qs_queue_6_io_deq_bits_last)
   );
-  Queue_43 qs_queue_7 ( // @[Deinterleaver.scala 66:27]
+  Queue_38 qs_queue_7 ( // @[Deinterleaver.scala 66:27]
     .clock(qs_queue_7_clock),
     .reset(qs_queue_7_reset),
     .io_enq_ready(qs_queue_7_io_enq_ready),
@@ -103492,7 +102819,7 @@ module AXI4Deinterleaver(
     .io_deq_bits_echo_extra_id(qs_queue_7_io_deq_bits_echo_extra_id),
     .io_deq_bits_last(qs_queue_7_io_deq_bits_last)
   );
-  Queue_43 qs_queue_8 ( // @[Deinterleaver.scala 66:27]
+  Queue_38 qs_queue_8 ( // @[Deinterleaver.scala 66:27]
     .clock(qs_queue_8_clock),
     .reset(qs_queue_8_reset),
     .io_enq_ready(qs_queue_8_io_enq_ready),
@@ -103514,7 +102841,7 @@ module AXI4Deinterleaver(
     .io_deq_bits_echo_extra_id(qs_queue_8_io_deq_bits_echo_extra_id),
     .io_deq_bits_last(qs_queue_8_io_deq_bits_last)
   );
-  Queue_43 qs_queue_9 ( // @[Deinterleaver.scala 66:27]
+  Queue_38 qs_queue_9 ( // @[Deinterleaver.scala 66:27]
     .clock(qs_queue_9_clock),
     .reset(qs_queue_9_reset),
     .io_enq_ready(qs_queue_9_io_enq_ready),
@@ -103536,7 +102863,7 @@ module AXI4Deinterleaver(
     .io_deq_bits_echo_extra_id(qs_queue_9_io_deq_bits_echo_extra_id),
     .io_deq_bits_last(qs_queue_9_io_deq_bits_last)
   );
-  Queue_43 qs_queue_10 ( // @[Deinterleaver.scala 66:27]
+  Queue_38 qs_queue_10 ( // @[Deinterleaver.scala 66:27]
     .clock(qs_queue_10_clock),
     .reset(qs_queue_10_reset),
     .io_enq_ready(qs_queue_10_io_enq_ready),
@@ -103558,7 +102885,7 @@ module AXI4Deinterleaver(
     .io_deq_bits_echo_extra_id(qs_queue_10_io_deq_bits_echo_extra_id),
     .io_deq_bits_last(qs_queue_10_io_deq_bits_last)
   );
-  Queue_43 qs_queue_11 ( // @[Deinterleaver.scala 66:27]
+  Queue_38 qs_queue_11 ( // @[Deinterleaver.scala 66:27]
     .clock(qs_queue_11_clock),
     .reset(qs_queue_11_reset),
     .io_enq_ready(qs_queue_11_io_enq_ready),
@@ -103580,7 +102907,7 @@ module AXI4Deinterleaver(
     .io_deq_bits_echo_extra_id(qs_queue_11_io_deq_bits_echo_extra_id),
     .io_deq_bits_last(qs_queue_11_io_deq_bits_last)
   );
-  Queue_43 qs_queue_12 ( // @[Deinterleaver.scala 66:27]
+  Queue_38 qs_queue_12 ( // @[Deinterleaver.scala 66:27]
     .clock(qs_queue_12_clock),
     .reset(qs_queue_12_reset),
     .io_enq_ready(qs_queue_12_io_enq_ready),
@@ -103602,7 +102929,7 @@ module AXI4Deinterleaver(
     .io_deq_bits_echo_extra_id(qs_queue_12_io_deq_bits_echo_extra_id),
     .io_deq_bits_last(qs_queue_12_io_deq_bits_last)
   );
-  Queue_43 qs_queue_13 ( // @[Deinterleaver.scala 66:27]
+  Queue_38 qs_queue_13 ( // @[Deinterleaver.scala 66:27]
     .clock(qs_queue_13_clock),
     .reset(qs_queue_13_reset),
     .io_enq_ready(qs_queue_13_io_enq_ready),
@@ -103624,7 +102951,7 @@ module AXI4Deinterleaver(
     .io_deq_bits_echo_extra_id(qs_queue_13_io_deq_bits_echo_extra_id),
     .io_deq_bits_last(qs_queue_13_io_deq_bits_last)
   );
-  Queue_43 qs_queue_14 ( // @[Deinterleaver.scala 66:27]
+  Queue_38 qs_queue_14 ( // @[Deinterleaver.scala 66:27]
     .clock(qs_queue_14_clock),
     .reset(qs_queue_14_reset),
     .io_enq_ready(qs_queue_14_io_enq_ready),
@@ -103646,7 +102973,7 @@ module AXI4Deinterleaver(
     .io_deq_bits_echo_extra_id(qs_queue_14_io_deq_bits_echo_extra_id),
     .io_deq_bits_last(qs_queue_14_io_deq_bits_last)
   );
-  Queue_43 qs_queue_15 ( // @[Deinterleaver.scala 66:27]
+  Queue_38 qs_queue_15 ( // @[Deinterleaver.scala 66:27]
     .clock(qs_queue_15_clock),
     .reset(qs_queue_15_reset),
     .io_enq_ready(qs_queue_15_io_enq_ready),
@@ -107542,7 +106869,7 @@ end // initial
 `endif
 `endif // SYNTHESIS
 endmodule
-module Queue_60(
+module Queue_55(
   input        clock,
   input        reset,
   output       io_enq_ready,
@@ -108391,7 +107718,7 @@ module TLToAXI4_2(
     .io_deq_bits_strb(deq_io_deq_bits_strb),
     .io_deq_bits_last(deq_io_deq_bits_last)
   );
-  Queue_60 queue_arw_deq ( // @[Decoupled.scala 296:21]
+  Queue_55 queue_arw_deq ( // @[Decoupled.scala 296:21]
     .clock(queue_arw_deq_clock),
     .reset(queue_arw_deq_reset),
     .io_enq_ready(queue_arw_deq_io_enq_ready),
@@ -144186,7 +143513,7 @@ module AXI4Xbar_1(
     `endif // SYNTHESIS
   end
 endmodule
-module Queue_68(
+module Queue_63(
   input         clock,
   input         reset,
   output        io_enq_ready,
@@ -144349,7 +143676,7 @@ end // initial
 `endif
 `endif // SYNTHESIS
 endmodule
-module Queue_70(
+module Queue_65(
   input        clock,
   input        reset,
   output       io_enq_ready,
@@ -144512,7 +143839,7 @@ end // initial
 `endif
 `endif // SYNTHESIS
 endmodule
-module Queue_72(
+module Queue_67(
   input         clock,
   input         reset,
   output        io_enq_ready,
@@ -144836,7 +144163,7 @@ module AXI4Buffer_1(
   wire [1:0] bundleIn_0_rdeq_io_deq_bits_resp; // @[Decoupled.scala 296:21]
   wire  bundleIn_0_rdeq_io_deq_bits_echo_real_last; // @[Decoupled.scala 296:21]
   wire  bundleIn_0_rdeq_io_deq_bits_last; // @[Decoupled.scala 296:21]
-  Queue_68 bundleOut_0_awdeq ( // @[Decoupled.scala 296:21]
+  Queue_63 bundleOut_0_awdeq ( // @[Decoupled.scala 296:21]
     .clock(bundleOut_0_awdeq_clock),
     .reset(bundleOut_0_awdeq_reset),
     .io_enq_ready(bundleOut_0_awdeq_io_enq_ready),
@@ -144850,7 +144177,7 @@ module AXI4Buffer_1(
     .io_deq_bits_addr(bundleOut_0_awdeq_io_deq_bits_addr),
     .io_deq_bits_echo_real_last(bundleOut_0_awdeq_io_deq_bits_echo_real_last)
   );
-  Queue_39 bundleOut_0_wdeq ( // @[Decoupled.scala 296:21]
+  Queue_34 bundleOut_0_wdeq ( // @[Decoupled.scala 296:21]
     .clock(bundleOut_0_wdeq_clock),
     .reset(bundleOut_0_wdeq_reset),
     .io_enq_ready(bundleOut_0_wdeq_io_enq_ready),
@@ -144862,7 +144189,7 @@ module AXI4Buffer_1(
     .io_deq_bits_data(bundleOut_0_wdeq_io_deq_bits_data),
     .io_deq_bits_strb(bundleOut_0_wdeq_io_deq_bits_strb)
   );
-  Queue_70 bundleIn_0_bdeq ( // @[Decoupled.scala 296:21]
+  Queue_65 bundleIn_0_bdeq ( // @[Decoupled.scala 296:21]
     .clock(bundleIn_0_bdeq_clock),
     .reset(bundleIn_0_bdeq_reset),
     .io_enq_ready(bundleIn_0_bdeq_io_enq_ready),
@@ -144876,7 +144203,7 @@ module AXI4Buffer_1(
     .io_deq_bits_resp(bundleIn_0_bdeq_io_deq_bits_resp),
     .io_deq_bits_echo_real_last(bundleIn_0_bdeq_io_deq_bits_echo_real_last)
   );
-  Queue_68 bundleOut_0_ardeq ( // @[Decoupled.scala 296:21]
+  Queue_63 bundleOut_0_ardeq ( // @[Decoupled.scala 296:21]
     .clock(bundleOut_0_ardeq_clock),
     .reset(bundleOut_0_ardeq_reset),
     .io_enq_ready(bundleOut_0_ardeq_io_enq_ready),
@@ -144890,7 +144217,7 @@ module AXI4Buffer_1(
     .io_deq_bits_addr(bundleOut_0_ardeq_io_deq_bits_addr),
     .io_deq_bits_echo_real_last(bundleOut_0_ardeq_io_deq_bits_echo_real_last)
   );
-  Queue_72 bundleIn_0_rdeq ( // @[Decoupled.scala 296:21]
+  Queue_67 bundleIn_0_rdeq ( // @[Decoupled.scala 296:21]
     .clock(bundleIn_0_rdeq_clock),
     .reset(bundleIn_0_rdeq_reset),
     .io_enq_ready(bundleIn_0_rdeq_io_enq_ready),
@@ -144969,7 +144296,7 @@ module AXI4Buffer_1(
   assign bundleIn_0_rdeq_io_enq_bits_echo_real_last = auto_out_recho_real_last; // @[Nodes.scala 1207:84 LazyModule.scala 311:12]
   assign bundleIn_0_rdeq_io_deq_ready = auto_in_rready; // @[Nodes.scala 1210:84 LazyModule.scala 309:16]
 endmodule
-module Queue_73(
+module Queue_68(
   input         clock,
   input         reset,
   output        io_enq_ready,
@@ -145435,7 +144762,7 @@ module AXI4Fragmenter_2(
   wire [1:0] _error_13_T = error_13 | auto_out_bresp; // @[Fragmenter.scala 195:70]
   wire [1:0] _error_14_T = error_14 | auto_out_bresp; // @[Fragmenter.scala 195:70]
   wire [1:0] _error_15_T = error_15 | auto_out_bresp; // @[Fragmenter.scala 195:70]
-  Queue_73 deq ( // @[Decoupled.scala 296:21]
+  Queue_68 deq ( // @[Decoupled.scala 296:21]
     .clock(deq_clock),
     .reset(deq_reset),
     .io_enq_ready(deq_io_enq_ready),
@@ -145453,7 +144780,7 @@ module AXI4Fragmenter_2(
     .io_deq_bits_size(deq_io_deq_bits_size),
     .io_deq_bits_burst(deq_io_deq_bits_burst)
   );
-  Queue_73 deq_1 ( // @[Decoupled.scala 296:21]
+  Queue_68 deq_1 ( // @[Decoupled.scala 296:21]
     .clock(deq_1_clock),
     .reset(deq_1_reset),
     .io_enq_ready(deq_1_io_enq_ready),

@@ -13,7 +13,7 @@
 
 ## SoC集成任务CheckList
 
-### 命名规范
+### 命名规范(2021/10/07 23:59:59前完成)
 
 * [ ] 将CPU代码合并到一个`.v`文件, 文件名为`ysyx_学号后六位.v`, 如`ysyx_210888.v`
  * 在Linux上可通过`cat`命令实现:
@@ -30,7 +30,7 @@
 * [ ] 运行[命名规范自查脚本](./ysyx/soc/cpu-check.py),
   运行方法参考[这里](./ysyx/soc/cpu-interface.md#命名规范自查脚本使用说明)
 
-### CPU内部修改
+### CPU内部修改(2021/10/07 23:59:59前完成)
 
 * [ ] 所有触发器都需要带复位端, 使其复位后带初值
 * 若实现了cache, 则需要
@@ -45,13 +45,25 @@
     * Chisel福利: Chisel不会生成锁存器
  * [ ] 确认代码中的异步复位触发器已经去除, 或已经实现同步撤离
     * Chisel福利: Chisel默认生成同步复位触发器
+* 对于不使用的顶层输入端口, 需要将其赋值为常数`0`;
+  对于不使用的顶层输出端口, 悬空即可
 
-### Verilator仿真
+### 代码规范检查(2021/10/07 23:59:59前完成)
 
 * [ ] 对代码进行规范检查, 清除报告的Warning. 具体步骤请参考[这里](./ysyx/lint/README.md)
+
+### Verilator仿真(2021/11/01 23:59:59前完成)
+
 * [ ] 确认清除Warning后的代码可以成功启动RT-Thread
 * [ ] 将CPU集成到本项目, 具体操作请参考[集成步骤说明](./ysyx/soc/soc.md)
-* 运行本项目提供的测试程序, 详细信息可参考[这里](./ysyx/program/README.md)
+* 通过快速模式(跳过SPI传输, 不可综合, 适合快速调试和迭代)对flash进行模拟,
+  运行本项目提供的测试程序, 详细信息可参考[这里](./ysyx/program/README.md).
+  为了打开flash的快速模式, 你需要在`ysyx/peripheral/spi/rtl/spi.v`的开头定义宏`FAST_FLASH`:
+  ```verilog
+  // define this macro to enable fast behavior simulation
+  // for flash by skipping SPI transfers
+  `define FAST_FLASH
+  ```
   * 直接在flash上运行的程序(位于`ysyx/program/bin/flash`目录下):
     * [ ] hello-flash.bin
     * [ ] memtest-flash.bin
@@ -61,6 +73,19 @@
     * [ ] hello-loader.bin
     * [ ] memtest-loader.bin
     * [ ] rtthread-loader.bin
+* 通过正常模式(不跳过SPI传输, 仿真速度慢, 用于最终的系统测试)对flash进行模拟,
+  重新运行上述测试程序. 你需要在`ysyx/peripheral/spi/rtl/spi.v`的开头取消对宏`FAST_FLASH`的定义:
+  ```verilog
+  // define this macro to enable fast behavior simulation
+  // for flash by skipping SPI transfers
+  // `define FAST_FLASH
+  ```
+  * [ ] hello-flash.bin
+  * [ ] memtest-flash.bin
+  * [ ] rtthread-flash.bin
+  * [ ] hello-loader.bin
+  * [ ] memtest-loader.bin
+  * [ ] rtthread-loader.bin
 * [ ] 若为了正确运行测试程序而修改了设计, 需要重新进行代码规范检查,
       并更新记录Warning的表格文件中报告Warning的代码位置
 
@@ -72,6 +97,19 @@
   * [ ] 一份带数据流向的处理器架构图, 用于供后端团队进行FloorPlan时参考
 
 提交方式后续发布.
+
+### 协助SoC团队在流片仿真环境中启动RT-Thread(2021/11/07 23:59:59前完成)
+
+提交代码后, 具体请关注SoC团队的反馈.
+
+需要注意的是, **本项目中的SoC只用于在verilator中验证, 不参与流片环节!
+此外本项目与流片SoC仿真环境仍然有少数不同,
+在本项目中通过测试, 不代表也能通过流片SoC仿真环境的测试,
+在流片SoC仿真环境中的运行结果, 以SoC团队的反馈为准, 因此请大家务必重视SoC团队的反馈.**
+具体地, 两者的不同之处包括:
+* 没有不定态(x态)信号传播的问题
+* 没有跨时钟域和异步桥
+* 没有PLL
 
 ## 模块说明
 
@@ -168,16 +206,7 @@ ysyxSoC/src/main/scala/ysyx
 * 处理器的复位PC需设置为`0x3000_0000`, 第一条指令从flash中取出
 * CLINT模块位于处理器内部, SoC不提供, 需要大家自行实现
 * 若需要接入其它设备(如PLIC), 请在处理器内部接入,
-  并将地址分配预留空间中, 避免与SoC的设备地址产生冲突
-
-## 注意事项
-
-**本项目中的SoC只用于在verilator中验证, 不参与流片环节!
-此外本项目与流片SoC环境仍然有少数不同,
-在本项目中通过测试, 不代表也能通过流片SoC环境的测试.**
-具体地, 两者的不同之处包括:
-* 没有跨时钟域和异步桥
-* 没有PLL
+  并将地址分配到预留空间中, 避免与SoC的设备地址产生冲突
 
 ## 以下为Rocket Chip项目的README内容
 
