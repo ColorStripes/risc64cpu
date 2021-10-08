@@ -565,6 +565,7 @@ assign rst = reset;
     .except_type(MEM_except_type),
     .except_pc(MEM_pc),             //mem_pc
     .time_inter(time_inter),
+    .stall(stall[1]),
 
     .csr_reg_data(csr_reg_data),
     .mtvec(mtvec),

@@ -14,6 +14,7 @@ module CSR_reg (
    input wire [`REG_BUS] except_type,
    input wire [`PC_BUS] except_pc,             //mem_pc
    input wire time_inter,
+   input wire stall,
 
 
    output reg [`REG_BUS] csr_reg_data,
@@ -65,7 +66,7 @@ module CSR_reg (
 
             csr_mcycle <= csr_mcycle + 1;        //cycle
 
-            if((except_pc != `PC_START) && (except_type != 64'h1)) begin
+            if((except_pc != `PC_START) && (except_type != 64'h1) && (stall != 1'b1)) begin
                 csr_minstret <= csr_minstret + 1;
             end
 
