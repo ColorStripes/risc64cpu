@@ -35,13 +35,19 @@ wire rst;
 wire wash;
 //wire [`PC_BUS] pc;
 wire [31 : 0] instr;
+wire if_forecase;
+wire [`PC_BUS] if_branch;
 
 
 
 //if_id -> ID_stage
 wire [`INST_BUS] id_instr;
+wire [`PC_BUS] id_branch;
 //if_id -> IF_stage too
 wire [`PC_BUS] id_pc;
+
+//if_id -> IF_stage
+wire id_forecase;
 
 //regfile -> ID_stage
 wire [`REG_BUS] r_data1;
@@ -60,6 +66,7 @@ wire [4 : 0] reg2_addr;
 wire [`PC_BUS] branch;
 wire pc_con;
 wire mux_pc;
+wire error_branch;
 
 //ID_stage -> id_ex
 wire [`PC_BUS] ID_pc; 
@@ -209,8 +216,12 @@ assign rst = reset;
     .pc_id(id_pc),
     .new_pc(new_pc),
     .flush(flush),
+    .id_forecase(id_forecase),
+    .error_branch(error_branch),
     .stall(stall[5]),
 
+    .if_branch(if_branch),
+    .if_forecase(if_forecase),
     .wash(wash),
     .instr(instr),
 
@@ -230,8 +241,12 @@ assign rst = reset;
     .pc_con(pc_con),
     .wash(wash),
     .flush(flush),
+    .if_forecase(if_forecase),
+    .if_branch(if_branch),
     .stall(stall[4:3]),
 
+    .id_branch(id_branch),
+    .id_forecase(id_forecase),
     .id_pc(id_pc),
     .id_instr(id_instr)
 );
@@ -275,6 +290,9 @@ assign rst = reset;
     .idex_mem_ena(ex_mem_ena),          //id_ex memory enable
     .idex_mem_wr(ex_mem_wr),
 
+    .if_branch(id_branch),
+
+    .error_branch(error_branch),
 
     .reg1_r_ena(reg1_r_ena),
     .reg2_r_ena(reg2_r_ena),

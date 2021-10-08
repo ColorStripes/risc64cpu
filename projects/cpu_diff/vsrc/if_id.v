@@ -34,9 +34,10 @@ module if_id (
             else begin
                 if (pc_con == 1'b0) begin
                       id_forecase <= if_forecase;
+                      id_branch <= if_branch;
                       id_pc <= if_pc;
                       id_instr <= if_instr;
-                      id_branch <= if_branch;
+                      
                 end 
             end
 
