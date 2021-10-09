@@ -5,7 +5,7 @@
 `include "defines.v"
 
 module ID_stage (
-    input wire rst,
+    input wire reset,
     input wire [`PC_BUS] IF_pc, 
     input wire [`INST_BUS] IF_instr,
 
@@ -75,7 +75,7 @@ module ID_stage (
 );
 
     always @(*) begin                 //ID
-        if(rst == 1) begin
+        if(reset == 1) begin
             reg1_r_ena = `ZERO_ENA;
             reg2_r_ena = `ZERO_ENA;
             reg1_addr = `ZERO_REG_ADDR;
@@ -703,13 +703,12 @@ module ID_stage (
             id_csr_ena = 1'b0;
             ID_pc = `PC_START;      //difftest
             ID_instr = `ZERO_INST;  //difftest
-
          end
     end
 end
 
     always @(*) begin
-        if(rst == 1'b1) begin
+        if(reset == 1'b1) begin
             reg1_data = `ZERO_WORD;
         end
         else if(reg1_r_ena == 1'b1) begin
@@ -732,7 +731,7 @@ end
     end
 
     always @(*) begin
-        if(rst == 1'b1) begin
+        if(reset == 1'b1) begin
             reg2_data = `ZERO_WORD;
         end
         else if(reg2_r_ena == 1'b1) begin

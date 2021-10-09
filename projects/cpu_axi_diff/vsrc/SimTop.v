@@ -269,8 +269,8 @@ wire flush;
 
 
 arbitrate arbitrate (
-    .clk(clock),
-    .rst(reset),
+    .clock(clock),
+    .reset(reset),
     .flush(flush),
 
     .if_ready(if_ready),

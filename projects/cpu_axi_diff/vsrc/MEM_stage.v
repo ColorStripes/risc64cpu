@@ -3,7 +3,7 @@
 `include "defines.v"
 
 module MEM_stage (
-    input wire rst,
+    input wire reset,
     input wire time_inter,
     input wire [`REG_BUS] ex_w_data,
     input wire ex_w_ena,
@@ -81,7 +81,7 @@ assign mem_addr = mem_wr ? mem_mem_waddr : mem_mem_raddr;
     assign mem_pc = ex_pc;
     assign mem_instr = ex_instr;
     always @(*) begin
-        if(rst == 1'b1) begin
+        if(reset == 1'b1) begin
             mem_w_data = `ZERO_WORD;
             mem_w_ena = 1'b0;
             mem_w_addr = `ZERO_REG_ADDR;
@@ -223,7 +223,7 @@ assign mem_addr = mem_wr ? mem_mem_waddr : mem_mem_raddr;
     end
 
     always @(*) begin                    //csr
-        if(rst == 1'b1) begin
+        if(reset == 1'b1) begin
             mem_csr_addr = 12'h000;
             mem_w_csr_data = `ZERO_WORD;
             mem_csr_ena = 1'b0;
@@ -242,7 +242,7 @@ assign mem_addr = mem_wr ? mem_mem_waddr : mem_mem_raddr;
     reg [`REG_BUS] mtvec;
     reg [`REG_BUS] mstatus;
     always @(*) begin
-        if(rst == 1'b1) begin
+        if(reset == 1'b1) begin
             mip = `ZERO_WORD;
         end
         else begin
@@ -255,7 +255,7 @@ assign mem_addr = mem_wr ? mem_mem_waddr : mem_mem_raddr;
         end
     end
     always @(*) begin
-        if(rst == 1'b1) begin
+        if(reset == 1'b1) begin
             mepc = `ZERO_WORD;
         end
         else begin
@@ -268,7 +268,7 @@ assign mem_addr = mem_wr ? mem_mem_waddr : mem_mem_raddr;
         end
     end
     always @(*) begin
-        if(rst == 1'b1) begin
+        if(reset == 1'b1) begin
             mie = `ZERO_WORD;
         end
         else begin
@@ -281,7 +281,7 @@ assign mem_addr = mem_wr ? mem_mem_waddr : mem_mem_raddr;
         end
     end
     always @(*) begin
-        if(rst == 1'b1) begin
+        if(reset == 1'b1) begin
             mtvec = `ZERO_WORD;
         end
         else begin
@@ -294,7 +294,7 @@ assign mem_addr = mem_wr ? mem_mem_waddr : mem_mem_raddr;
         end
     end
     always @(*) begin
-        if(rst == 1'b1) begin
+        if(reset == 1'b1) begin
             mstatus = `ZERO_WORD;
         end
         else begin
@@ -308,7 +308,7 @@ assign mem_addr = mem_wr ? mem_mem_waddr : mem_mem_raddr;
     end
 
     always @(*) begin
-        if(rst == 1'b1) begin
+        if(reset == 1'b1) begin
             mem_except_type = `ZERO_WORD;
             new_pc = `ZERO_WORD;
         end

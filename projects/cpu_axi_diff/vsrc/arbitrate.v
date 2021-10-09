@@ -3,8 +3,8 @@
 `include "defines.v"
 
 module arbitrate (
-    input clk,
-    input rst,
+    input clock,
+    input reset,
     input flush,
 
     output reg if_ready,
@@ -43,7 +43,7 @@ module arbitrate (
 
 
 always @(*) begin
-    if(rst == 1'b1) begin
+    if(reset == 1'b1) begin
         AXI_addr = `ZERO_WORD;
         AXI_w_data = `ZERO_WORD;
         AXI_vaild = 1'b0;
@@ -81,7 +81,7 @@ end
 
 
 always @(*) begin
-    if(rst == 1'b1) begin
+    if(reset == 1'b1) begin
         if_ready = 1'b0;
         mem_ready = 1'b0;
         mem_data = `ZERO_WORD;
@@ -114,7 +114,7 @@ always @(*) begin
 end
 
 always @(*) begin
-    if(rst == 1'b1) begin
+    if(reset == 1'b1) begin
         stall = 6'b000000;
     end
     else begin
@@ -141,8 +141,8 @@ always @(*) begin
 end
 
 reg flush_reg;
-always @(posedge clk) begin
-    if(rst == 1'b1) begin
+always @(posedge clock) begin
+    if(reset == 1'b1) begin
         flush_reg <= 1'b0;
     end
     else begin

@@ -28,8 +28,8 @@ module rvcpu(
 );
 
 //SIMTOP -> rvcpu
-wire clk;
-wire rst;
+//wire clock;
+//wire reset;
 
 //IF_stage -> if_id
 wire wash;
@@ -204,12 +204,12 @@ wire [`REG_BUS] clint_data;
 wire clint;
 
 
-assign clk = clock;
-assign rst = reset;
+//assign clock = clock;
+//assign reset = reset;
 
     IF_stage IF_stage (
-    .rst(rst),
-    .clk(clk),
+    .reset(reset),
+    .clock(clock),
     .branch(branch),
     .mux_pc(mux_pc),
     .pc_con(pc_con),
@@ -234,8 +234,8 @@ assign rst = reset;
 );
 
     if_id if_id (
-    .rst(rst),
-    .clk(clk),
+    .reset(reset),
+    .clock(clock),
     .if_pc(pc),
     .if_instr(instr),
     .pc_con(pc_con),
@@ -252,8 +252,8 @@ assign rst = reset;
 );
 
     regfile regfile(
-    .clk(clk),
-	  .rst(rst),
+    .clock(clock),
+	  .reset(reset),
 	
 	  .w_addr(WB_w_addr),
 	  .w_data(WB_w_data),
@@ -272,7 +272,7 @@ assign rst = reset;
 );
 
     ID_stage ID_stage (
-    .rst(rst),
+    .reset(reset),
     .IF_pc(id_pc), 
     .IF_instr(id_instr),
 
@@ -325,8 +325,8 @@ assign rst = reset;
 );
 
     id_ex id_ex (
-    .rst(rst),
-    .clk(clk),
+    .reset(reset),
+    .clock(clock),
     .id_imm(imm),
 
     .id_pc(ID_pc),
@@ -370,7 +370,7 @@ assign rst = reset;
 ); 
 
     EX_stage EX_stage (
-    .rst(rst),
+    .reset(reset),
 
     .ID_pc(ex_pc),
     .ID_instr(ex_instr),
@@ -421,8 +421,8 @@ assign rst = reset;
 );
 
     ex_mem ex_mem (
-    .rst(rst),
-    .clk(clk),
+    .reset(reset),
+    .clock(clock),
     .ex_pc(EX_pc),
     .ex_instr(EX_instr),
     .ex_w_data(ex_w_data),
@@ -463,7 +463,7 @@ assign rst = reset;
 );
 
     MEM_stage MEM_stage (
-    .rst(rst),
+    .reset(reset),
     .time_inter(time_inter),
     .ex_w_data(mem_w_data),
     .ex_w_ena(mem_w_ena),
@@ -526,8 +526,8 @@ assign rst = reset;
 
 
     mem_wb mem_wb (
-    .clk(clk),
-    .rst(rst),
+    .clock(clock),
+    .reset(reset),
     .mem_w_data(MEM_w_data),
     .mem_w_ena(MEM_w_ena),
     .mem_w_addr(MEM_w_addr),
@@ -554,7 +554,7 @@ assign rst = reset;
 );
 
    WB_stage WB_stage (
-    .rst(rst),
+    .reset(reset),
     .mem_w_ena(wb_w_ena),
     .mem_w_data(wb_w_data),
     .mem_w_addr(wb_w_addr),
@@ -572,8 +572,8 @@ assign rst = reset;
 );
 
    CSR_reg CSR_reg (
-    .rst(rst),
-    .clk(clk),
+    .reset(reset),
+    .clock(clock),
     .csr_r_addr(ex_csr_addr),
 
     .csr_w_ena(WB_csr_ena),
@@ -604,8 +604,8 @@ assign rst = reset;
 );
 
     Clint Clint (
-    .clk(clk),
-    .rst(rst),
+    .clock(clock),
+    .reset(reset),
     .ex_mem_waddr(mem_mem_waddr),
     .ex_mem_raddr(mem_mem_raddr),
     .ex_stor_data(mem_stor_data),
@@ -673,7 +673,7 @@ always @(negedge clock) begin
     instrCnt <= instrCnt + inst_valid;
   end
 end
-always @(posedge clk) begin
+always @(posedge clock) begin
        MEM_except_type_f <= MEM_except_type;
 end
 

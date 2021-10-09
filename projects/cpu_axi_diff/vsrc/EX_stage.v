@@ -3,7 +3,7 @@
 `include "defines.v"
 
 module EX_stage (
-    input wire rst,
+    input wire reset,
 
     input wire [`PC_BUS] ID_pc,
     input wire [`INST_BUS] ID_instr,
@@ -69,7 +69,7 @@ ALU ALU(
 );
     reg [`REG_BUS] csr_data;
     always @(*) begin
-        if(rst == 1'b1) begin
+        if(reset == 1'b1) begin
             csr_data =`ZERO_WORD;
         end
         else begin
@@ -90,7 +90,7 @@ ALU ALU(
 
  
     always @(*) begin
-        if(rst == 1'b1) begin
+        if(reset == 1'b1) begin
             ex_w_data = `ZERO_WORD;
             ex_w_ena = 1'b0;
             ex_w_addr = `ZERO_REG_ADDR;

@@ -3,8 +3,8 @@
 `include "defines.v"
 
 module id_ex (
-    input wire rst,
-    input wire clk,
+    input wire reset,
+    input wire clock,
     input wire [63 : 0] id_imm,
 
     input wire [`PC_BUS] id_pc,
@@ -46,8 +46,8 @@ module id_ex (
 
 ); 
 
-always @(posedge clk) begin
-    if (rst == 1'b1) begin
+always @(posedge clock) begin
+    if (reset == 1'b1) begin
         ex_w_addr <= `ZERO_REG_ADDR;
         ex_w_ena <= 1'b0;
 

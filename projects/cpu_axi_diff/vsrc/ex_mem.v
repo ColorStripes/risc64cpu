@@ -3,8 +3,8 @@
 `include "defines.v"
 
 module ex_mem (
-    input wire rst,
-    input wire clk,
+    input wire reset,
+    input wire clock,
     input wire [`PC_BUS] ex_pc,
     input wire [`INST_BUS] ex_instr,
     input wire  [`REG_BUS] ex_w_data,
@@ -43,7 +43,7 @@ module ex_mem (
     output reg [`INST_BUS] men_instr,
     output reg [`PC_BUS] men_pc 
 );
-    always @(posedge clk) begin
+    always @(posedge clock) begin
         if(flush == 1'b1) begin
             mem_w_data <= `ZERO_WORD;
             mem_w_ena <= 1'b0;
@@ -65,7 +65,7 @@ module ex_mem (
         else begin
 
 
-        if(rst == 1'b1) begin
+        if(reset == 1'b1) begin
             mem_w_data <= `ZERO_WORD;
             mem_w_ena <= 1'b0;
             mem_w_addr <= `ZERO_REG_ADDR;

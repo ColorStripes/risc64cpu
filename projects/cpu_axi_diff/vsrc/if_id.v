@@ -4,8 +4,8 @@
 `include "defines.v"
 
 module if_id (
-    input wire rst,
-    input wire clk,
+    input wire reset,
+    input wire clock,
     input wire [`PC_BUS] if_pc,
     input wire [`INST_BUS] if_instr,
     input wire pc_con,
@@ -20,8 +20,8 @@ module if_id (
     output reg [`PC_BUS] id_pc,
     output reg [`INST_BUS] id_instr
 );
-    always @(posedge clk) begin
-        if(rst == 1'b1) begin
+    always @(posedge clock) begin
+        if(reset == 1'b1) begin
             id_pc <= `PC_START;
             id_instr <= `ZERO_INST;
         end

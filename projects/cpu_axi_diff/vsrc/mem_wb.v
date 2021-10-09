@@ -4,8 +4,8 @@
 
 
 module mem_wb (
-    input wire clk,
-    input wire rst,
+    input wire clock,
+    input wire reset,
     input wire [`REG_BUS] mem_w_data,
     input wire mem_w_ena,
     input wire [4 : 0] mem_w_addr,
@@ -29,8 +29,8 @@ module mem_wb (
     output reg wb_w_ena,
     output reg [4 : 0] wb_w_addr
 );
-    always @(posedge clk) begin
-        if(rst == 1'b1) begin
+    always @(posedge clock) begin
+        if(reset == 1'b1) begin
             wb_w_data <= `ZERO_WORD;
             wb_w_ena <= 1'b0;
             wb_w_addr <= `ZERO_REG_ADDR;

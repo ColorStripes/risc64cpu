@@ -4,8 +4,8 @@
 
 
 module IF_stage (
-    input wire rst,
-    input wire clk,
+    input wire reset,
+    input wire clock,
     input wire [63 : 0] branch,
     input wire mux_pc,
     input wire pc_con,
@@ -41,8 +41,8 @@ assign if_req = `REQ_READ;
 
 
 PC PC(
-  .clk(clk),
-  .rst(rst),
+  .clock(clock),
+  .reset(reset),
   .pc_i(pc_i),
   .pc_con(pc_con),
   .new_pc(new_pc),
@@ -63,8 +63,8 @@ ADD ADD (
 );
 
 forecase forecase (
-    .rst(rst),
-    .clk(clk),
+    .reset(reset),
+    .clock(clock),
     .mux_pc(mux_pc),
     .pc_id(pc_id),
     .add_pc(sum),

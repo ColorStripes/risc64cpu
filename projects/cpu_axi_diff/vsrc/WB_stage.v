@@ -3,7 +3,7 @@
 `include "defines.v"
 
 module WB_stage (
-    input wire rst,
+    input wire reset,
     input wire mem_w_ena,
     input wire [`REG_BUS] mem_w_data,
     input wire [4 : 0] mem_w_addr,
@@ -21,7 +21,7 @@ module WB_stage (
 );
 
     always @( * ) begin
-        if(rst == 1'b1) begin
+        if(reset == 1'b1) begin
             wb_w_ena = 1'b0;
             wb_w_data = `ZERO_WORD;
             wb_w_addr = `ZERO_REG_ADDR;
@@ -34,7 +34,7 @@ module WB_stage (
     end
 
     always @(*) begin                    //csr
-        if(rst == 1'b1) begin
+        if(reset == 1'b1) begin
             wb_csr_addr = 12'h000;
             wb_w_csr_data = `ZERO_WORD;
             wb_csr_ena = 1'b0;

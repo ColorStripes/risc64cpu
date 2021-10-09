@@ -4,8 +4,8 @@
 
 
 module forecase (
-    input wire rst,
-    input wire clk,
+    input wire reset,
+    input wire clock,
     input wire mux_pc,
     input wire [`PC_BUS] pc_id,
     input wire [`PC_BUS] add_pc,
@@ -40,8 +40,8 @@ module forecase (
 
 
 
-always @(posedge clk) begin
-    if(rst == 1'b1) begin
+always @(posedge clock) begin
+    if(reset == 1'b1) begin
         fore = 2'b00;
         pc_s = `ZERO_WORD;        
         for(i=0; i<`PC; i=i+1) begin
@@ -81,7 +81,7 @@ end
 
 
     always @(*) begin
-        if(rst == 1'b1) begin
+        if(reset == 1'b1) begin
             wash = 1'b0;
             pc = `ZERO_WORD;
             if_forecase = 1'b0;
@@ -133,8 +133,8 @@ end
 
     reg [1 : 0] timeo;
 
-always @(posedge clk) begin   //count
-    if(rst == 1'b1) begin
+always @(posedge clock) begin   //count
+    if(reset == 1'b1) begin
         timeo <= 1'b0;
     end
     else begin

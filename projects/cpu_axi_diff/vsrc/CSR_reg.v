@@ -3,8 +3,8 @@
 `include "defines.v"
 
 module CSR_reg (
-   input wire rst,
-   input wire clk,
+   input wire reset,
+   input wire clock,
    input wire [11 : 0] csr_r_addr,
 
    input wire csr_w_ena,
@@ -49,8 +49,8 @@ module CSR_reg (
    reg [`REG_BUS] csr_minstret;
    reg [`REG_BUS] csr_sstatus;
 
-    always @(posedge clk) begin                //write csr
-        if(rst == 1'b1) begin
+    always @(posedge clock) begin                //write csr
+        if(reset == 1'b1) begin
             csr_mtvec <= `ZERO_WORD;
             csr_mepc <= `ZERO_WORD;
             csr_mcause <= `ZERO_WORD;
@@ -158,7 +158,7 @@ module CSR_reg (
     end
 
     always @(*) begin                          //read csr
-        if(rst == 1'b1) begin
+        if(reset == 1'b1) begin
             csr_reg_data = `ZERO_WORD;
         end
         else if((csr_w_ena == 1'b1) && (csr_r_addr == csr_w_addr)) begin
@@ -232,7 +232,7 @@ assign sstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ? {{(csr_w_dat
 
 
     always @(*) begin                          //Ctrl
-        if(rst == 1'b1) begin
+        if(reset == 1'b1) begin
             flush = 1'b0;         
         end
         else begin

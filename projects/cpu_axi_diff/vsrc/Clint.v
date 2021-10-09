@@ -5,8 +5,8 @@
 
 
 module Clint (
-    input wire clk,
-    input wire rst,
+    input wire clock,
+    input wire reset,
     input wire [`REG_BUS] ex_mem_waddr,
     input wire [`REG_BUS] ex_mem_raddr,
     input wire [`REG_BUS] ex_stor_data,
@@ -24,8 +24,8 @@ module Clint (
     reg [`REG_BUS] mtimecmp;
 
 
-    always @(posedge clk) begin
-        if(rst == 1'b1) begin
+    always @(posedge clock) begin
+        if(reset == 1'b1) begin
             mtime <= `ZERO_WORD;
             mtimecmp <= `TIME;
             msip <= `ZERO_WORD;
@@ -75,7 +75,7 @@ module Clint (
 
 
     always @( * ) begin                      //read
-        if (rst == 1'b1) begin
+        if (reset == 1'b1) begin
 			clint_data = `ZERO_WORD;
 		end
         else begin
@@ -105,8 +105,8 @@ module Clint (
 
 
                                                   
-always @(posedge clk) begin                                   //difftest
-    if(rst == 1'b1) begin
+always @(posedge clock) begin                                   //difftest
+    if(reset == 1'b1) begin
         clint <= 1'b0;
     end
     else begin

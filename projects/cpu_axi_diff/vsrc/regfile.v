@@ -1,8 +1,8 @@
 `include "defines.v"
 
 module regfile(
-    input  wire clk,
-	input  wire rst,
+    input  wire clock,
+	input  wire reset,
 	
 	input  wire  [4  : 0] w_addr,
 	input  wire  [`REG_BUS] w_data,
@@ -23,9 +23,9 @@ module regfile(
     // 32 registers
 	reg [`REG_BUS] 	regs[0 : 31];
 	
-	always @(posedge clk) 
+	always @(posedge clock) 
 	begin
-		if ( rst == 1'b1 ) 
+		if ( reset == 1'b1 ) 
 		begin
 			regs[ 0] <= `ZERO_WORD;  //0
 			regs[ 1] <= `ZERO_WORD;
@@ -68,7 +68,7 @@ module regfile(
 	end
 	
 	always @(*) begin
-		if (rst == 1'b1) begin
+		if (reset == 1'b1) begin
 			r_data1 = `ZERO_WORD;
 		end
 		else if (r_ena1 == 1'b1) begin
@@ -85,7 +85,7 @@ module regfile(
 	end
 	
 	always @(*) begin
-		if (rst == 1'b1) begin
+		if (reset == 1'b1) begin
 			r_data2 = `ZERO_WORD;
 		end
 		else if (r_ena2 == 1'b1) begin

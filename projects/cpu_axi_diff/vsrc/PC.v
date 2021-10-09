@@ -5,8 +5,8 @@
 `include "defines.v"
 
 module PC(
-  input wire clk,
-  input wire rst,
+  input wire clock,
+  input wire reset,
   input wire [`PC_BUS] pc_i,
   input wire pc_con,
   input wire [`PC_BUS] new_pc,
@@ -20,8 +20,8 @@ module PC(
 );
 wire handshake_done = I_M_e & if_ready;
 
-always@( posedge clk ) begin
-    if( rst == 1'b1 ) begin
+always@( posedge clock ) begin
+    if( reset == 1'b1 ) begin
       I_M_e <= 1'b0;
     end
     else begin
@@ -30,8 +30,8 @@ always@( posedge clk ) begin
 end
 
 
-always@( posedge clk ) begin
-  if(rst == 1'b1) begin
+always@( posedge clock ) begin
+  if(reset == 1'b1) begin
     pc <= `PC_START ;
   end
   else begin
