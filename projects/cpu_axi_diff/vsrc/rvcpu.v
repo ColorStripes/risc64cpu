@@ -27,9 +27,6 @@ module rvcpu(
 
 );
 
-//SIMTOP -> rvcpu
-//wire clock;
-//wire reset;
 
 //IF_stage -> if_id
 wire wash;
@@ -204,8 +201,6 @@ wire [`REG_BUS] clint_data;
 wire clint;
 
 
-//assign clock = clock;
-//assign reset = reset;
 
     IF_stage IF_stage (
     .reset(reset),
