@@ -410,21 +410,21 @@ module MEM_stage (
             mem_except_type = `ZERO_WORD;
             new_pc = `ZERO_WORD;
             if(mem_pc != `ZERO_WORD) begin
-                if(((mstatus[3] & mie[7] & time_inter) || (mstatus[3] & mie[7] & mip[7])) && (ex_instr != 32'h0)) begin                             //time_interrupt
+                if(((csr_mstatus[3] & csr_mie[7] & time_inter) || (csr_mstatus[3] & csr_mie[7] & csr_mip[7])) && (ex_instr != 32'h0)) begin                             //time_interrupt
                     mem_except_type = 64'h1;
-                    new_pc = mtvec;
+                    new_pc = csr_mtvec;
                 end
                 else if(ex_except_type[16] == 1'b1) begin                          //syscall
                     mem_except_type = 64'h2;
-                    new_pc = mtvec;
+                    new_pc = csr_mtvec;
                 end
                 else if(ex_except_type[17] == 1'b1) begin                          //ebreak
                     mem_except_type = 64'h3;
-                    new_pc = mtvec;
+                    new_pc = csr_mtvec;
                 end  
                 else if(ex_except_type[18] == 1'b1) begin                          //mret
                     mem_except_type = 64'h4;
-                    new_pc = mepc;
+                    new_pc = csr_mepc;
                 end 
 
             end

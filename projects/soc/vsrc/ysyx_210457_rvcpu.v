@@ -52,8 +52,6 @@ wire id_forecase;
 wire [`REG_BUS] r_data1;
 wire [`REG_BUS] r_data2;
 
-// regfile -> difftest
-wire [`REG_BUS] regs[0 : 31];
 
 //ID_stage -> regfile
 wire reg1_r_ena;
@@ -147,23 +145,10 @@ wire [`REG_BUS] MEM_except_type;
 //MEM_stage -> IF_stage
 wire [`PC_BUS] new_pc;
 
-//MEM_stage -> DATA_MEM
-////wire [`REG_BUS] MEM_mem_waddr;
-////wire [`REG_BUS] MEM_mem_raddr;
-////wire [1 : 0] mem_sel;
-////wire [`REG_BUS] MEM_stor_data;
-////wire mem_wr;
-////wire MEM_mem_ena;
-
-//DATA_MEM -> MEM_stage
-wire [63 : 0] data;
-
 //mem_wb -> WB_stage
 wire [`REG_BUS] wb_w_data;
 wire wb_w_ena;
 wire [4 : 0] wb_w_addr;
-wire [`PC_BUS] wb_pc;
-wire [`INST_BUS] wb_instr;
 wire [11 : 0] wb_csr_addr;        ///csr_o
 wire [`REG_BUS] wb_w_csr_data;
 wire wb_csr_ena;
@@ -177,7 +162,6 @@ wire [4 : 0] WB_w_addr;
 wire [11 : 0] WB_csr_addr;
 wire [`REG_BUS] WB_w_csr_data;
 wire WB_csr_ena;
-wire [`REG_BUS] WB_except_type;
 
 //CSR_reg -> EX_stage
 wire [`REG_BUS] csr_reg_data;
@@ -186,21 +170,14 @@ wire [`REG_BUS] mtvec;
 wire [`REG_BUS] mepc;
 wire [`REG_BUS] mie;
 wire [`REG_BUS] mip;
-//CSR_reg -> difftest
-wire [`REG_BUS] mcause;
-wire [`REG_BUS] mcycle;
-wire [`REG_BUS] minstret;
 wire [`REG_BUS] mstatus;
-wire [`REG_BUS] mscratch;
-wire [`REG_BUS] sstatus;
-//CSR_reg -> ALL_stage
-//wire flush;
+
+
 //Clint -> CSR_reg
 wire time_inter;
 //Clint -> MEM_reg
 wire [`REG_BUS] clint_data;
-//Clint -> difftest
-wire clint;
+
 
 
 
@@ -250,20 +227,19 @@ wire clint;
 
     ysyx_210457_regfile regfile(
     .clock(clock),
-	  .reset(reset),
+	.reset(reset),
 	
-	  .w_addr(WB_w_addr),
-	  .w_data(WB_w_data),
-	  .w_ena(WB_w_ena),
+	.w_addr(WB_w_addr),
+	.w_data(WB_w_data),
+	.w_ena(WB_w_ena),
 	
   	.r_addr1(reg1_addr),
-	  .r_ena1(reg1_r_ena),
+	.r_ena1(reg1_r_ena),
   	.r_data1(r_data1),  //OUT1
 
-	  .r_addr2(reg2_addr),
-	  .r_ena2(reg2_r_ena),
-	  .r_data2(r_data2),  //OUT2
-    .regs_o(regs)
+	.r_addr2(reg2_addr),
+	.r_ena2(reg2_r_ena),
+	.r_data2(r_data2)  //OUT2
   
 
 );
@@ -543,8 +519,6 @@ wire clint;
     .wb_w_csr_data(wb_w_csr_data),
     .wb_csr_ena(wb_csr_ena),
     
-    .wb_instr(wb_instr),
-    .wb_pc(wb_pc),
     .wb_w_data(wb_w_data),
     .wb_w_ena(wb_w_ena),
     .wb_w_addr(wb_w_addr)
@@ -588,12 +562,7 @@ wire clint;
     .mie(mie),
     .mip(mip),
     .mstatus(mstatus),
-    .sstatus(sstatus),
 
-    .mcause(mcause),
-    .mscratch(mscratch),
-    .mcycle(mcycle),
-    .minstret(minstret),
 
     .flush(flush)
 
@@ -609,11 +578,9 @@ wire clint;
     .ex_mem_wr(mem_mem_wr),
     .ex_mem_ena(mem_mem_ena),
 
-    .clint(clint),
 
     .time_inter(time_inter),
     .clint_data(clint_data)
-
 );
 
 endmodule

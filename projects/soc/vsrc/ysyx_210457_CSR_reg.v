@@ -23,12 +23,6 @@ module ysyx_210457_CSR_reg (
    output wire [`REG_BUS] mepc,
    output wire [`REG_BUS] mie,
    output wire [`REG_BUS] mip,
-   output wire [`REG_BUS] mcause,
-   output wire [`REG_BUS] mscratch,
-   output wire [`REG_BUS] sstatus,
-
-   output wire [`REG_BUS] mcycle,            ////////////////////
-   output wire [`REG_BUS] minstret,
 
    output reg flush
    
@@ -214,21 +208,14 @@ assign mepc = ((csr_w_ena == 1'b1) & (csr_w_addr == `mepc)) ? csr_w_data :
         //((except_type == 64'h1) | (except_type == 64'h2) | (except_type == 64'h3)) ? except_pc : 
         csr_mepc;
 
-assign mcause = ((csr_w_ena == 1'b1) & (csr_w_addr == `mcause)) ? csr_w_data : 
-                //(except_type == 64'h1) ? {1'b1, 63'h7} : (except_type == 64'h2) ? {1'b0, 59'h0, 4'b1011} : (except_type == 64'h3) ?
-               //{1'b0, 59'h0, 4'b0011} : (except_type == 64'h2) ? {1'b0, 59'h0, 4'b1100} : 
-              csr_mcause;
+
 
  assign mip = ((csr_w_ena == 1'b1) & (csr_w_addr == `mip)) ? csr_w_data :
                                               //{csr_mip[63 : 8], time_inter, csr_mip[6 : 0]} :
                                                         csr_mip; 
 
 assign mie = ((csr_w_ena == 1'b1) & (csr_w_addr == `mie)) ? csr_w_data : csr_mie;
-assign mcycle = ((csr_w_ena == 1'b1) & (csr_w_addr == `mcycle)) ? csr_w_data : csr_mcycle;
-assign minstret = ((csr_w_ena == 1'b1) & (csr_w_addr == `mcycle)) ? csr_w_data : csr_minstret;
 assign mtvec = ((csr_w_ena == 1'b1) & (csr_w_addr == `mtvec)) ? csr_w_data : csr_mtvec;
-assign mscratch = ((csr_w_ena == 1'b1) & (csr_w_addr == `mscratch)) ? csr_w_data : csr_mscratch;
-assign sstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ? {{(csr_w_data[13] & csr_w_data[14]) | (csr_w_data[15] & csr_w_data[16])}, 46'h0, csr_w_data[16 : 13], 13'h0} : csr_sstatus;
 
 
     always @(*) begin                          //Ctrl

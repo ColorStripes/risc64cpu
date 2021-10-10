@@ -16,7 +16,7 @@ module ysyx_210457(
   output        io_master_wlast,
   output        io_master_bready,
   input         io_master_bvalid,
-  input  [1:0]  io_master_bresp,
+  //input  [1:0]  io_master_bresp,
   input  [3:0]  io_master_bid,
   input         io_master_arready,
   output        io_master_arvalid,
@@ -27,7 +27,7 @@ module ysyx_210457(
   output [1:0]  io_master_arburst,
   output        io_master_rready,
   input         io_master_rvalid,
-  input  [1:0]  io_master_rresp,
+  //input  [1:0]  io_master_rresp,
   input  [63:0] io_master_rdata,
   input         io_master_rlast,
   input  [3:0]  io_master_rid
@@ -53,7 +53,7 @@ module ysyx_210457(
 
     assign io_master_bready                         = b_ready;
     assign b_valid                                  = io_master_bvalid;
-    assign b_resp                                   = io_master_bresp;
+    //assign b_resp                                   = io_master_bresp;
     assign b_id                                     = io_master_bid;
 
     assign ar_ready                                 = io_master_arready;
@@ -66,7 +66,7 @@ module ysyx_210457(
 
     assign io_master_rready                         = r_ready;
     assign r_valid                                  = io_master_rvalid;
-    assign r_resp                                   = io_master_rresp;
+    //assign r_resp                                   = io_master_rresp;
     assign r_data                                   = io_master_rdata;
     assign r_last                                   = io_master_rlast;
     assign r_id                                     = io_master_rid;
@@ -87,7 +87,6 @@ module ysyx_210457(
     
     wire b_ready;
     wire b_valid;
-    wire [1:0] b_resp;
     wire [`AXI_ID_WIDTH-1:0] b_id;
 
     wire ar_ready;
@@ -100,7 +99,6 @@ module ysyx_210457(
     
     wire r_ready;
     wire r_valid;
-    wire [1:0] r_resp;
     wire [`AXI_DATA_WIDTH-1:0] r_data;
     wire r_last;
     wire [`AXI_ID_WIDTH-1:0] r_id;
@@ -139,7 +137,7 @@ module ysyx_210457(
         
         .axi_b_ready_o                  (b_ready),
         .axi_b_valid_i                  (b_valid),
-        .axi_b_resp_i                   (b_resp),
+        //.axi_b_resp_i                   (b_resp),
         .axi_b_id_i                     (b_id),
 
 
@@ -153,7 +151,7 @@ module ysyx_210457(
   
         .axi_r_ready_o                  (r_ready),
         .axi_r_valid_i                  (r_valid),
-        .axi_r_resp_i                   (r_resp),
+        //.axi_r_resp_i                   (r_resp),
         .axi_r_data_i                   (r_data),
         .axi_r_last_i                   (r_last),
         .axi_r_id_i                     (r_id)

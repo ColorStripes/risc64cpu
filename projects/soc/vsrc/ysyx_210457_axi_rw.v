@@ -40,7 +40,6 @@ module ysyx_210457_axi_rw # (
     
     output                              axi_b_ready_o,
     input                               axi_b_valid_i,
-    input  [1:0]                        axi_b_resp_i,
     input  [AXI_ID_WIDTH-1:0]           axi_b_id_i,
 
     input                               axi_ar_ready_i,
@@ -53,7 +52,6 @@ module ysyx_210457_axi_rw # (
 
     output                              axi_r_ready_o,
     input                               axi_r_valid_i,
-    input  [1:0]                        axi_r_resp_i,
     input  [AXI_DATA_WIDTH-1:0]         axi_r_data_i,
     input                               axi_r_last_i,
     input  [AXI_ID_WIDTH-1:0]           axi_r_id_i
@@ -211,17 +209,7 @@ module ysyx_210457_axi_rw # (
     end
     assign rw_ready_o     = rw_ready;
 
-    reg [1:0] rw_resp;
-    wire [1:0] rw_resp_nxt = w_trans ? axi_b_resp_i : axi_r_resp_i;
-    wire resp_en = trans_done;
-    always @(posedge clock) begin
-        if (reset) begin
-            rw_resp <= 0;
-        end
-        else if (resp_en) begin
-            rw_resp <= rw_resp_nxt;
-        end
-    end
+
 
 
     // ------------------Write Transaction------------------
