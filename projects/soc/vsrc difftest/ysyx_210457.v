@@ -2,6 +2,7 @@
 module ysyx_210457(
   input         clock,
   input         reset,
+  input         io_interrupt,
   input         io_master_awready,
   output        io_master_awvalid,
   output [31:0] io_master_awaddr,
@@ -36,6 +37,7 @@ module ysyx_210457(
 
 
 
+    assign interrupt                                = io_interrupt;
 
     assign aw_ready                                 = io_master_awready;
     assign io_master_awvalid                        = aw_valid;
@@ -71,6 +73,7 @@ module ysyx_210457(
     assign r_last                                   = io_master_rlast;
     assign r_id                                     = io_master_rid;
 
+    wire interrupt;
     wire aw_ready;
     wire aw_valid;
     wire [`AXI_ADDR_WIDTH-1:0] aw_addr;
@@ -119,6 +122,7 @@ module ysyx_210457(
         .data_write_i                   (AXI_w_data),
         .rw_addr_i                      (AXI_addr),
         .rw_size_i                      (AXI_size),
+        .rw_resp_o                      (rw_resp),
         .stall                          (AXI_stall),
         .cpu_id                         (AXI_id),
         .out_id                         (AXI_out_id),
@@ -193,6 +197,7 @@ module ysyx_210457(
    wire [3 : 0] AXI_out_id;
    wire [`REG_BUS] AXI_r_data;
    wire AXI_stall;
+   wire [1: 0] rw_resp;
 
    wire flush;
 

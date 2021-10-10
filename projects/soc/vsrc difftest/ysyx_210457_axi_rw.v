@@ -3,10 +3,11 @@
 
 module ysyx_210457_axi_rw # (
     parameter RW_DATA_WIDTH     = 64,
+    parameter RW_ADDR_WIDTH     = 64,
     parameter AXI_DATA_WIDTH    = 64,
     parameter AXI_ADDR_WIDTH    = 64,
-    parameter AXI_ID_WIDTH      = 4
-
+    parameter AXI_ID_WIDTH      = 4,
+    parameter AXI_USER_WIDTH    = 1
 )(
     input                               clock,
     input                               reset,
@@ -18,6 +19,7 @@ module ysyx_210457_axi_rw # (
     input  [RW_DATA_WIDTH-1:0]          data_write_i,
     input  [AXI_DATA_WIDTH-1:0]         rw_addr_i,//
     input  [1:0]                        rw_size_i,//
+    output [1:0]                        rw_resp_o,//
     output reg                          stall,
     input [AXI_ID_WIDTH-1:0]            cpu_id,
     output [AXI_ID_WIDTH-1:0]           out_id,
@@ -58,11 +60,13 @@ module ysyx_210457_axi_rw # (
     input                               axi_r_last_i,
     input  [AXI_ID_WIDTH-1:0]           axi_r_id_i
 );
+reg axi_r_valid_i_nxt;
+reg axi_b_valid_i_nxt;
 
     wire w_trans    = rw_req_i == `REQ_WRITE;
     wire r_trans    = rw_req_i == `REQ_READ;
-    wire w_valid    = rw_valid_i & w_trans;                               
-    wire r_valid    = rw_valid_i & r_trans;
+    wire w_valid    = rw_valid_i & w_trans;// & ~axi_b_valid_i_nxt;                               
+    wire r_valid    = rw_valid_i & r_trans;// & ~axi_r_valid_i_nxt;
 
     // handshake
     wire aw_hs      = axi_aw_ready_i & axi_aw_valid_o;
@@ -76,6 +80,17 @@ module ysyx_210457_axi_rw # (
     wire trans_done = w_trans ? b_hs : r_done;
 
 
+
+    always @(posedge clock) begin
+        if(reset == 1'b1) begin
+            axi_r_valid_i_nxt <= 1'b0;
+            axi_b_valid_i_nxt <= 1'b0;
+        end
+        else begin
+            axi_r_valid_i_nxt <= axi_r_valid_i;
+            axi_b_valid_i_nxt <= axi_b_valid_i;
+        end
+    end
 
 
 
@@ -222,6 +237,7 @@ module ysyx_210457_axi_rw # (
             rw_resp <= rw_resp_nxt;
         end
     end
+    assign rw_resp_o      = rw_resp;
 
 
     // ------------------Write Transaction------------------
