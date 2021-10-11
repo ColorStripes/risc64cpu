@@ -32,6 +32,7 @@ module CSR_reg (
    
 
 );
+
 reg test;
 always @(posedge clk) begin
     test <= time_inter;
@@ -69,8 +70,13 @@ end
             else begin
                 csr_mcycle <= 64'h0;
             end
-
-            csr_mip[7] <= test;                    //interrpt
+if(test) begin
+    csr_mip[7] <= test;
+end
+else begin
+    csr_mip[7] <= 1'b0;
+end
+                                //interrpt
 
             if(csr_w_ena == 1'b1) begin
                 case(csr_w_addr)
