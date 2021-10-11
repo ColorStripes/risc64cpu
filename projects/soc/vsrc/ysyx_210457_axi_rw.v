@@ -145,7 +145,6 @@ module ysyx_210457_axi_rw # (
     // ------------------Process Data------------------
     parameter ALIGNED_WIDTH = $clog2(AXI_DATA_WIDTH / 8);
     parameter OFFSET_WIDTH  = $clog2(AXI_DATA_WIDTH);
-    parameter AXI_SIZE      = $clog2(AXI_DATA_WIDTH / 8);
     parameter MASK_WIDTH    = AXI_DATA_WIDTH * 2;
     parameter TRANS_LEN     = RW_DATA_WIDTH / AXI_DATA_WIDTH;
     parameter BLOCK_TRANS   = TRANS_LEN > 1 ? 1'b1 : 1'b0;
@@ -164,7 +163,7 @@ module ysyx_210457_axi_rw # (
     wire overstep           = {addr_op1 + addr_op2}[3:ALIGNED_WIDTH] != 0;
 
     wire [7:0] axi_len      = aligned ? TRANS_LEN - 1 : {{7{1'b0}}, overstep};
-    wire [2:0] axi_size     = AXI_SIZE[2:0];
+    wire [2:0] axi_size     = rw_size_i;
     
     wire [AXI_ADDR_WIDTH-1:0] axi_addr          = {rw_addr_i[AXI_ADDR_WIDTH-1:ALIGNED_WIDTH], {ALIGNED_WIDTH{1'b0}}};
     wire [OFFSET_WIDTH-1:0] aligned_offset    = {{OFFSET_WIDTH-ALIGNED_WIDTH{1'b0}}, {rw_addr_i[ALIGNED_WIDTH-1:0]}};
