@@ -34,7 +34,7 @@ assign if_branch = pc_i;
 wire [`PC_BUS] sum;
 wire [`PC_BUS] pc_i;
 
-assign if_size = `SIZE_W;
+assign if_size = `SIZE_D;
 assign instr = if_data_read;
 assign if_req = `REQ_READ;
 
