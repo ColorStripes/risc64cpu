@@ -148,7 +148,7 @@
 `define PC_LOG 2
 
 //difftest
-`define PC_START   64'h00000000_80000000 
+`define PC_START   64'h00000000_30000000 
 `define RISCV_PRIV_MODE_U   0
 `define RISCV_PRIV_MODE_S   1
 `define RISCV_PRIV_MODE_M   3
