@@ -39,7 +39,7 @@ module Clint (
                 mtime <= 64'h0;
             end
 
-            if((mtimecmp != 64'h00000000) && (mtime >= mtimecmp)) begin
+            if(mtime >= mtimecmp) begin
                 time_inter <= 1'b1;
             end
             else begin
