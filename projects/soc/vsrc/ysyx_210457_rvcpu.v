@@ -496,8 +496,6 @@ wire [`REG_BUS] clint_data;
     .mem_w_data(MEM_w_data),
     .mem_w_ena(MEM_w_ena),
     .mem_w_addr(MEM_w_addr),
-    .mem_pc(MEM_pc),
-    .mem_instr(MEM_instr),
     
     .mem_csr_addr(MEM_csr_addr),         //csr
     .mem_w_csr_data(MEM_w_csr_data),
