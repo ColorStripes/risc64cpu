@@ -23,7 +23,6 @@ module ysyx_210457_IF_stage (
     output wire [`INST_BUS] instr,
 
     output wire if_valid,                  //AXI
-    input  wire if_ready,//
     input  wire [63 : 0] if_data_read,//
     output wire [63 : 0] IF_pc,//
     output wire [1 : 0] if_size,//
@@ -47,7 +46,6 @@ ysyx_210457_PC PC(
   .pc_con(pc_con),
   .new_pc(new_pc),
   .flush(flush),
-  .if_ready(if_ready),
   .stall(stall),
 
   .I_M_e(if_valid),
@@ -69,7 +67,6 @@ ysyx_210457_forecase forecase (
     .pc_id(pc_id),
     .add_pc(sum),
     .branch(branch),
-    .pc_con(pc_con),
     .stall(stall),
     .id_forecase(id_forecase),
     .error_branch(error_branch),

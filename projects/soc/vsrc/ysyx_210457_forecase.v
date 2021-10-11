@@ -11,7 +11,6 @@ module ysyx_210457_forecase (
     input wire [`PC_BUS] pc_id,
     input wire [`PC_BUS] add_pc,
     input wire [`PC_BUS] branch,
-    input wire pc_con,
     input wire id_forecase,
     input wire error_branch,
     input wire stall,
@@ -24,27 +23,13 @@ module ysyx_210457_forecase (
     reg [1 : 0] fore;
     reg [`PC_BUS] fore_branch[`FORECASE-1 : 0];
     reg [`PC_BUS] pc_now[3 : 0];
-    //reg if_forecase;
-
-    reg [1 : 0] fore_reg;
-    reg [`PC_BUS] fore_branch_reg[`FORECASE-1 : 0];
-    reg [`PC_BUS] pc_now_reg[3 : 0];
-    reg wash_reg;
-    reg [`PC_BUS] pc_reg;
-    reg if_forecase_reg;
-    
-
-    reg [`PC_BUS] pc_s; // pc_id + 4
-    reg ifa;  //former if_forecase
-    //reg error_branch;  //if branch != forecase_branch when mux_pc==1
 
 
 
 
 always @(posedge clock) begin
     if(reset == 1'b1) begin
-        fore <= 2'b00;
-        pc_s <= `ZERO_WORD;        
+        fore <= 2'b00;        
         for(i=0; i<`PC; i=i+1) begin
             pc_now[i] <= `ZERO_WORD; 
         end
@@ -57,10 +42,9 @@ always @(posedge clock) begin
         if(~stall) begin
             if((timeo < 2) || (pc_id != `PC_START)) begin
                 if(mux_pc == 1'b1) begin
-                    pc_s <= pc_id + 4;
-                    if(fore_branch[pc_s[`FORECASE_LOG+1 : 2]] != branch) begin
-                        fore_branch[pc_s[`FORECASE_LOG+1 : 2]] <= branch; 
-                        pc_now[pc_s[`PC_LOG+1 : 2]] <= pc_id + 4;
+                    if(fore_branch[{pc_id + 4}[`FORECASE_LOG+1 : 2]] != branch) begin
+                        fore_branch[{pc_id + 4}[`FORECASE_LOG+1 : 2]] <= branch; 
+                        pc_now[{pc_id + 4}[`PC_LOG+1 : 2]] <= pc_id + 4;
                     end
                     if(fore < 2'b11) begin
                         fore <= fore + 1;

@@ -11,14 +11,12 @@ module ysyx_210457_PC(
   input wire pc_con,
   input wire [`PC_BUS] new_pc,
   input wire flush,	
-  input wire if_ready,              //AXI
   input wire stall,                
 
   output reg I_M_e,
   output reg [`PC_BUS] pc
                            
 );
-wire handshake_done = I_M_e & if_ready;
 
 always@( posedge clock ) begin
     if( reset == 1'b1 ) begin

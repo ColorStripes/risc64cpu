@@ -43,7 +43,6 @@ module ysyx_210457_MEM_stage (
     output reg [`REG_BUS] mem_except_type,
     output reg [`PC_BUS] new_pc,
 
-    output wire [`INST_BUS] mem_instr,
     output wire [`PC_BUS] mem_pc,
 
     output reg [`REG_BUS] mem_w_data,
@@ -52,7 +51,6 @@ module ysyx_210457_MEM_stage (
 
 
     output wire mem_valid,  //                //AXI
-    input  wire mem_ready,
     input  wire [63 : 0] mem_data,//
     output reg [`REG_BUS] mem_stor_data,
     output wire [63 : 0] mem_addr,//
@@ -72,7 +70,6 @@ assign mem_addr = mem_wr ? mem_mem_waddr : mem_mem_raddr;
 
 
     assign mem_pc = ex_pc;
-    assign mem_instr = ex_instr;
     always @(*) begin
         if(reset == 1'b1) begin
             mem_w_data = `ZERO_WORD;

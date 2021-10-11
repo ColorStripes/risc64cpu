@@ -14,7 +14,6 @@ module ysyx_210457_mem_wb (
     input wire [11 : 0] mem_csr_addr,         //csr
     input wire [`REG_BUS] mem_w_csr_data,
     input wire mem_csr_ena,
-    input wire [63 : 0] except_type,
     input wire flush,
     input wire [1 : 0] stall,
 

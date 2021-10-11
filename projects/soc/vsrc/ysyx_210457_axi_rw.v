@@ -163,8 +163,7 @@ module ysyx_210457_axi_rw # (
                                 | ({4{size_w}} & {4'b11})
                                 | ({4{size_d}} & {4'b111})
                                 ;
-    wire [3:0] addr_end     = addr_op1 + addr_op2;
-    wire overstep           = addr_end[3:ALIGNED_WIDTH] != 0;
+    wire overstep           = {addr_op1 + addr_op2}[3:ALIGNED_WIDTH] != 0;
 
     wire [7:0] axi_len      = aligned ? TRANS_LEN - 1 : {{7{1'b0}}, overstep};
     wire [2:0] axi_size     = AXI_SIZE[2:0];

@@ -200,7 +200,6 @@ wire [`REG_BUS] clint_data;
     .instr(instr),
 
     .if_valid(if_valid),
-    .if_ready(if_ready),
     .if_data_read(if_data_read),
     .IF_pc(pc),
     .if_size(if_size),
@@ -473,7 +472,6 @@ wire [`REG_BUS] clint_data;
     .mem_except_type(MEM_except_type),
     .new_pc(new_pc),
 
-    .mem_instr(MEM_instr),
     .mem_pc(MEM_pc),
 
     .mem_w_data(MEM_w_data),
@@ -481,7 +479,6 @@ wire [`REG_BUS] clint_data;
     .mem_w_addr(MEM_w_addr),
 
     .mem_valid(mem_valid),
-    .mem_ready(mem_ready),
     .mem_data(mem_data),
     .mem_stor_data(MEM_stor_data),
     .mem_addr(mem_addr),
@@ -500,7 +497,6 @@ wire [`REG_BUS] clint_data;
     .mem_csr_addr(MEM_csr_addr),         //csr
     .mem_w_csr_data(MEM_w_csr_data),
     .mem_csr_ena(MEM_csr_ena),
-    .except_type(MEM_except_type),//
     .flush(flush),
     .stall(stall[1:0]),
     

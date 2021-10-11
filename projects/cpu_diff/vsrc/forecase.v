@@ -56,10 +56,10 @@ always @(posedge clk) begin
         if((timeo < 2) || (pc_id != `PC_START)) begin
             if(mux_pc == 1'b1) begin
                 pc_s = pc_id + 4;
-                if(fore_branch[pc_s[`FORECASE_LOG+1 : 2]] != branch) begin
+                if(fore_branch[{pc_id + 4}[`FORECASE_LOG+1 : 2]] != branch) begin
                     //error_branch = 1'b1;
-                    fore_branch[pc_s[`FORECASE_LOG+1 : 2]] = branch; 
-                    pc_now[pc_s[`PC_LOG+1 : 2]] = pc_id + 4;
+                    fore_branch[{pc_id + 4}[`FORECASE_LOG+1 : 2]] = branch; 
+                    pc_now[{pc_id + 4}[`PC_LOG+1 : 2]] = pc_id + 4;
                 end
                 if(fore < 2'b11) begin
                     fore = fore + 1;
