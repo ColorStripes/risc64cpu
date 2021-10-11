@@ -4,7 +4,7 @@
 module ysyx_210457_axi_rw # (
     parameter RW_DATA_WIDTH     = 64,
     parameter AXI_DATA_WIDTH    = 64,
-    parameter AXI_ADDR_WIDTH    = 64,
+    parameter AXI_ADDR_WIDTH    = 32,
     parameter AXI_ID_WIDTH      = 4
 
 )(
@@ -12,11 +12,10 @@ module ysyx_210457_axi_rw # (
     input                               reset,
 
 	input                               rw_valid_i,//
-	output                              rw_ready_o,//
     input                               rw_req_i,//
     output reg [RW_DATA_WIDTH-1:0]      data_read_o,//
     input  [RW_DATA_WIDTH-1:0]          data_write_i,
-    input  [AXI_DATA_WIDTH-1:0]         rw_addr_i,//
+    input  [AXI_ADDR_WIDTH-1:0]         rw_addr_i,//
     input  [1:0]                        rw_size_i,//
     output reg                          stall,
     input [AXI_ID_WIDTH-1:0]            cpu_id,
@@ -71,7 +70,6 @@ module ysyx_210457_axi_rw # (
 
     wire w_done     = w_hs & axi_w_last_o;
     wire r_done     = r_hs & axi_r_last_i;
-    wire trans_done = w_trans ? b_hs : r_done;
 
 
 
@@ -171,7 +169,7 @@ module ysyx_210457_axi_rw # (
     wire [AXI_ADDR_WIDTH-1:0] axi_addr          = {rw_addr_i[AXI_ADDR_WIDTH-1:ALIGNED_WIDTH], {ALIGNED_WIDTH{1'b0}}};
     wire [OFFSET_WIDTH-1:0] aligned_offset    = {{OFFSET_WIDTH-ALIGNED_WIDTH{1'b0}}, {rw_addr_i[ALIGNED_WIDTH-1:0]}};
     wire [OFFSET_WIDTH-1:0] aligned_offset_l    = {{OFFSET_WIDTH-ALIGNED_WIDTH{1'b0}}, {rw_addr_i[ALIGNED_WIDTH-1:0]}} << 3;
-    wire [OFFSET_WIDTH-1:0] aligned_offset_h    = 6'd63 + 6'd1 - aligned_offset_l;
+    wire [OFFSET_WIDTH-1:0] aligned_offset_h    = 6'd32 - aligned_offset_l;
     wire [MASK_WIDTH-1:0] mask                  = (({MASK_WIDTH{size_b}} & {{MASK_WIDTH-8{1'b0}}, 8'hff})
                                                     | ({MASK_WIDTH{size_h}} & {{MASK_WIDTH-16{1'b0}}, 16'hffff})
                                                     | ({MASK_WIDTH{size_w}} & {{MASK_WIDTH-32{1'b0}}, 32'hffffffff})
@@ -194,21 +192,6 @@ module ysyx_210457_axi_rw # (
         end
     end
     assign out_id     = id;
-
-    reg rw_ready;
-    wire rw_ready_nxt = trans_done;
-    wire rw_ready_en      = trans_done | rw_ready;
-    always @(posedge clock) begin
-        if (reset) begin
-            rw_ready <= 0;
-        end
-        else if (rw_ready_en) begin
-            rw_ready <= rw_ready_nxt;
-        end
-    end
-    assign rw_ready_o     = rw_ready;
-
-
 
 
     // ------------------Write Transaction------------------

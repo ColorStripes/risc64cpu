@@ -36,8 +36,8 @@ module ysyx_210457_EX_stage (
     output reg ex_w_ena,
     output reg [4 : 0] ex_w_addr,
 
-    output reg [`REG_BUS] ex_mem_raddr,
-    output reg [`REG_BUS] ex_mem_waddr,
+    output reg [`ADDR_BUS] ex_mem_raddr,
+    output reg [`ADDR_BUS] ex_mem_waddr,
     output reg [`REG_BUS] ex_stor_data,
     output reg [4 : 0] ex_memop,
     output reg ex_mem_wr,
@@ -98,8 +98,8 @@ ysyx_210457_ALU ALU(
             ex_stor_data = `ZERO_WORD;
             ex_mem_wr = 1'b0;
             ex_mem_ena = 1'b0;
-            ex_mem_raddr = `ZERO_WORD;
-            ex_mem_waddr = `ZERO_WORD;
+            ex_mem_raddr = `ZERO_ADDR;
+            ex_mem_waddr = `ZERO_ADDR;
             ex_memop = 5'h00;
             ex_csr_ena = 1'b0;
             ex_csr_addr = 12'h000;
@@ -113,8 +113,8 @@ ysyx_210457_ALU ALU(
             ex_w_ena = id_w_ena;
             ex_w_addr = id_w_addr;
             ex_w_data = `ZERO_WORD;
-            ex_mem_raddr = `ZERO_WORD;
-            ex_mem_waddr = `ZERO_WORD;
+            ex_mem_raddr = `ZERO_ADDR;
+            ex_mem_waddr = `ZERO_ADDR;
             ex_stor_data = `ZERO_WORD;
             ex_mem_wr = 1'b0;
             ex_mem_ena = id_mem_ena;
@@ -142,11 +142,11 @@ ysyx_210457_ALU ALU(
                       ex_w_data = ID_pc + 4;
                   end
                   `Load:begin
-                      ex_mem_raddr = result;
+                      ex_mem_raddr = result[`ADDR_BUS];
                       ex_mem_wr = id_mem_wr;
                   end
                   `Store:begin
-                      ex_mem_waddr = id_reg1_data + id_imm;
+                      ex_mem_waddr = {id_reg1_data + id_imm}[`ADDR_BUS];
                       ex_stor_data = id_reg2_data;
                       ex_mem_wr = id_mem_wr;
                   end
@@ -203,8 +203,8 @@ ysyx_210457_ALU ALU(
                   end
                   default: begin
                       ex_w_data = `ZERO_WORD;
-                      ex_mem_waddr = `ZERO_WORD;
-                      ex_mem_raddr = `ZERO_WORD;
+                      ex_mem_waddr = `ZERO_ADDR;
+                      ex_mem_raddr = `ZERO_ADDR;
                       ex_stor_data = `ZERO_WORD;
                       ex_w_csr_data = `ZERO_WORD;
                       ex_csr_addr = 12'h000;

@@ -2,10 +2,12 @@
 `timescale 1ns / 1ps
 
 `define ZERO_WORD  64'h00000000_00000000
+`define ZERO_PC    64'h00000000_00000000
+`define ZERO_ADDR  32'h00000000
 `define ZERO_INST  32'h00000000    
-`define REG_BUS    63 : 0  
-`define DATA_BUS   7 : 0  
+`define REG_BUS    63 : 0 
 `define PC_BUS     63 : 0 
+`define ADDR_BUS   31 : 0  
 `define INST_BUS   31 : 0 
 `define ZERO_ENA   1'b0
 `define ZERO_REG_ADDR   5'b00000
@@ -184,14 +186,14 @@
 
 
 //Clint
-`define msip 64'h2000000
-`define mtimecmp 64'h2004000
-`define mtime 64'h200bff8
+`define msip 32'h2000000
+`define mtimecmp 32'h2004000
+`define mtime 32'h200bff8
 `define TIME 64'd00000
 
 
 //AXI
-`define AXI_ADDR_WIDTH      64
+`define AXI_ADDR_WIDTH      32
 `define AXI_DATA_WIDTH      64
 `define AXI_ID_WIDTH        4
 `define AXI_USER_WIDTH      1
@@ -257,6 +259,6 @@
 `define RW_DATA_WIDTH      64
 `define RW_ADDR_WIDTH      64
 `define AXI_DATA_WIDTH     64
-`define AXI_ADDR_WIDTH     64
+`define AXI_ADDR_WIDTH     32
 `define AXI_ID_WIDTH       4
 `define AXI_USER_WIDTH     1

@@ -10,29 +10,27 @@ module ysyx_210457_rvcpu(
     input                 reset,
     input [5 : 0]         stall,
 
-    input  wire if_ready,
-    input  wire [63 : 0] if_data_read,
+    input  wire [31 : 0] if_data_read,
     output wire if_valid,
-    output wire [63 : 0] pc,
+    output wire [`ADDR_BUS] IF_addr,
     output wire [1 : 0] if_size,
     output wire if_req,
 
-    input  wire mem_ready,
     input  wire [63 : 0] mem_data,
     output wire [63 : 0] MEM_stor_data,
     output wire mem_valid,
-    output wire [63 : 0] mem_addr,
+    output wire [`ADDR_BUS] mem_addr,
     output wire [1 : 0] mem_sel,
     output wire mem_req,
 
     output wire flush
 
 );
-
+assign IF_addr = IF_pc[`ADDR_BUS];
 
 //IF_stage -> if_id
 wire wash;
-//wire [`PC_BUS] pc;
+wire [`PC_BUS] IF_pc;
 wire [31 : 0] instr;
 wire if_forecase;
 wire [`PC_BUS] if_branch;
@@ -105,8 +103,8 @@ wire [4 : 0] EX_w_addr;
 wire [`PC_BUS] EX_pc;
 wire [`INST_BUS] EX_instr;
 wire [4 : 0] EX_memop;
-wire [`REG_BUS] ex_mem_waddr;
-wire [`REG_BUS] ex_mem_raddr;
+wire [`ADDR_BUS] ex_mem_waddr;
+wire [`ADDR_BUS] ex_mem_raddr;
 wire [`REG_BUS] ex_stor_data;
 wire EX_mem_wr;
 wire EX_mem_ena;
@@ -121,8 +119,8 @@ wire mem_w_ena;
 wire [4 : 0] mem_w_addr;
 wire [`PC_BUS] men_pc;
 wire [`INST_BUS] men_instr;
-wire [`REG_BUS] mem_mem_waddr;
-wire [`REG_BUS] mem_mem_raddr;
+wire [`ADDR_BUS] mem_mem_waddr;
+wire [`ADDR_BUS] mem_mem_raddr;
 wire [4 : 0] mem_memop;
 wire [`REG_BUS] mem_stor_data;
 wire mem_mem_wr;
@@ -137,7 +135,6 @@ wire [`REG_BUS] MEM_w_data;
 wire MEM_w_ena;
 wire [4 : 0] MEM_w_addr;
 wire [`PC_BUS] MEM_pc;
-wire [`INST_BUS] MEM_instr;
 wire [11 : 0] MEM_csr_addr;         ///csr o
 wire [`REG_BUS] MEM_w_csr_data;
 wire MEM_csr_ena;
@@ -168,9 +165,9 @@ wire [`REG_BUS] csr_reg_data;
 //CSR_reg -> MEM_stage
 wire [`REG_BUS] mtvec;
 wire [`REG_BUS] mepc;
-wire [`REG_BUS] mie;
-wire [`REG_BUS] mip;
-wire [`REG_BUS] mstatus;
+wire mie;
+wire mip;
+wire mstatus;
 
 
 //Clint -> CSR_reg
@@ -201,7 +198,7 @@ wire [`REG_BUS] clint_data;
 
     .if_valid(if_valid),
     .if_data_read(if_data_read),
-    .IF_pc(pc),
+    .IF_pc(IF_pc),
     .if_size(if_size),
     .if_req(if_req)
 );
@@ -209,7 +206,7 @@ wire [`REG_BUS] clint_data;
     ysyx_210457_if_id if_id (
     .reset(reset),
     .clock(clock),
-    .if_pc(pc),
+    .if_pc(IF_pc),
     .if_instr(instr),
     .pc_con(pc_con),
     .wash(wash),

@@ -11,8 +11,8 @@ module ysyx_210457_MEM_stage (
     input wire ex_w_ena,
     input wire [4 : 0] ex_w_addr,
     
-    input wire [`REG_BUS] ex_mem_waddr,
-    input wire [`REG_BUS] ex_mem_raddr,
+    input wire [`ADDR_BUS] ex_mem_waddr,
+    input wire [`ADDR_BUS] ex_mem_raddr,
     input wire [`REG_BUS] ex_stor_data,
     input wire [4 : 0] ex_memop,
 
@@ -29,10 +29,10 @@ module ysyx_210457_MEM_stage (
     input wire [`REG_BUS] ex_except_type,
 
     input wire [`REG_BUS] mepc,        //csr_read
-    input wire [`REG_BUS] mip,
-    input wire [`REG_BUS] mie,
+    input wire mip,
+    input wire mie,
     input wire [`REG_BUS] mtvec,
-    input wire [`REG_BUS] mstatus,
+    input wire mstatus,
 
     input wire [`REG_BUS] clint_data,      //clint
 
@@ -53,7 +53,7 @@ module ysyx_210457_MEM_stage (
     output wire mem_valid,  //                //AXI
     input  wire [63 : 0] mem_data,//
     output reg [`REG_BUS] mem_stor_data,
-    output wire [63 : 0] mem_addr,//
+    output wire [`ADDR_BUS] mem_addr,//
     output reg [1 : 0] mem_sel,//
     output wire mem_req//
 
@@ -63,8 +63,8 @@ assign mem_valid = mem_mem_ena;
 assign mem_req = mem_wr;
 assign mem_addr = mem_wr ? mem_mem_waddr : mem_mem_raddr;
 
-    reg [`REG_BUS] mem_mem_waddr;
-    reg [`REG_BUS] mem_mem_raddr;
+    reg [`ADDR_BUS] mem_mem_waddr;
+    reg [`ADDR_BUS] mem_mem_raddr;
     reg mem_wr;
     reg mem_mem_ena;
 
@@ -75,8 +75,8 @@ assign mem_addr = mem_wr ? mem_mem_waddr : mem_mem_raddr;
             mem_w_data = `ZERO_WORD;
             mem_w_ena = 1'b0;
             mem_w_addr = `ZERO_REG_ADDR;
-            mem_mem_waddr = `ZERO_WORD;
-            mem_mem_raddr = `ZERO_WORD;
+            mem_mem_waddr = `ZERO_ADDR;
+            mem_mem_raddr = `ZERO_ADDR;
             mem_sel = `SIZE_B;
             mem_stor_data = `ZERO_WORD;
             mem_wr = 1'b0;
@@ -235,19 +235,19 @@ assign mem_addr = mem_wr ? mem_mem_waddr : mem_mem_raddr;
             mem_except_type = `ZERO_WORD;
             new_pc = `ZERO_WORD;
             if(mem_pc != `ZERO_WORD) begin
-                if(((mstatus[3] & mie[7] & time_inter) || (mstatus[3] & mie[7] & mip[7])) && (ex_instr != 32'h0) && ~ex_mem_wr) begin                             //time_interrupt
+                if(((mstatus & mie & time_inter) || (mstatus & mie & mip)) && (ex_instr != 32'h0) && ~ex_mem_wr) begin                             //time_interrupt
                     mem_except_type = 64'h1;
                     new_pc = mtvec;
                 end
-                else if(ex_except_type[16] == 1'b1) begin                          //syscall
+                else if(ex_except_type == 64'h10000) begin                          //syscall
                     mem_except_type = 64'h2;
                     new_pc = mtvec;
                 end
-                else if(ex_except_type[17] == 1'b1) begin                          //ebreak
+                else if(ex_except_type == 64'h20000) begin                          //ebreak
                     mem_except_type = 64'h3;
                     new_pc = mtvec;
                 end  
-                else if(ex_except_type[18] == 1'b1) begin                          //mret
+                else if(ex_except_type == 64'h40000) begin                          //mret
                     mem_except_type = 64'h4;
                     new_pc = mepc;
                 end 

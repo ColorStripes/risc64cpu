@@ -7,8 +7,8 @@
 module ysyx_210457_Clint (
     input wire clock,
     input wire reset,
-    input wire [`REG_BUS] ex_mem_waddr,
-    input wire [`REG_BUS] ex_mem_raddr,
+    input wire [`ADDR_BUS] ex_mem_waddr,
+    input wire [`ADDR_BUS] ex_mem_raddr,
     input wire [`REG_BUS] ex_stor_data,
     input wire ex_mem_wr,
     input wire ex_mem_ena,

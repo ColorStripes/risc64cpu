@@ -18,11 +18,11 @@ module ysyx_210457_CSR_reg (
 
 
    output reg [`REG_BUS] csr_reg_data,
-   output wire [`REG_BUS] mstatus,
+   output wire mstatus,
    output wire [`REG_BUS] mtvec,
    output wire [`REG_BUS] mepc,
-   output wire [`REG_BUS] mie,
-   output wire [`REG_BUS] mip,
+   output wire mie,
+   output wire mip,
 
    output reg flush
    
@@ -113,7 +113,7 @@ module ysyx_210457_CSR_reg (
 
             case(except_type)
                  64'h1:begin            ////time_interrupt
-                    csr_mstatus[7] <= mstatus[3];    //MPIE
+                    csr_mstatus[7] <= csr_mstatus[3];    //MPIE
                     csr_mstatus[3] <= 1'b0;          //MIE->0
                     csr_mstatus[12 : 11] <= 2'b11;   //MPP
                     csr_mcause <= {1'b1, 63'h7};
@@ -122,7 +122,7 @@ module ysyx_210457_CSR_reg (
                  end
 
                  64'h2:begin           ////ecall
-                    csr_mstatus[7] <= mstatus[3];    //MPIE
+                    csr_mstatus[7] <= csr_mstatus[3];    //MPIE
                     csr_mstatus[3] <= 1'b0;          //MIE->0
                     csr_mstatus[12 : 11] <= 2'b11;   //MPP
                     csr_mcause <= {1'b0, 59'h0, 4'b1011};
@@ -130,7 +130,7 @@ module ysyx_210457_CSR_reg (
                  end
 
                  64'h3:begin           ////ebreak
-                    csr_mstatus[7] <= mstatus[3];    //MPIE
+                    csr_mstatus[7] <= csr_mstatus[3];    //MPIE
                     csr_mstatus[3] <= 1'b0;          //MIE->0
                     csr_mstatus[12 : 11] <= 2'b11;   //MPP
                     csr_mcause <= {1'b0, 59'h0, 4'b0011};
@@ -138,7 +138,7 @@ module ysyx_210457_CSR_reg (
                  end
 
                  64'h4:begin           ////mret                   
-                    csr_mstatus[3] <= mstatus[7];
+                    csr_mstatus[3] <= csr_mstatus[7];
                     csr_mstatus[7] <= 1'b1;
                     csr_mstatus[12 : 11] <= 2'b00;
                     //csr_mepc <= except_pc;
@@ -198,10 +198,10 @@ module ysyx_210457_CSR_reg (
     end
 
 
- assign mstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ? {(csr_w_data[13] & csr_w_data[14]) | (csr_w_data[15] & csr_w_data[16]),  csr_w_data[62 : 0]} : csr_mstatus; 
+ assign mstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ? {(csr_w_data[13] & csr_w_data[14]) | (csr_w_data[15] & csr_w_data[16]),  csr_w_data[62 : 0]}[3] : csr_mstatus[3]; 
  assign mepc = ((csr_w_ena == 1'b1) & (csr_w_addr == `mepc)) ? csr_w_data : csr_mepc;
- assign mip = ((csr_w_ena == 1'b1) & (csr_w_addr == `mip)) ? csr_w_data :csr_mip; 
- assign mie = ((csr_w_ena == 1'b1) & (csr_w_addr == `mie)) ? csr_w_data : csr_mie;
+ assign mip = ((csr_w_ena == 1'b1) & (csr_w_addr == `mip)) ? csr_w_data[7] :csr_mip[7]; 
+ assign mie = ((csr_w_ena == 1'b1) & (csr_w_addr == `mie)) ? csr_w_data[7] : csr_mie[7];
  assign mtvec = ((csr_w_ena == 1'b1) & (csr_w_addr == `mtvec)) ? csr_w_data : csr_mtvec;
 
 

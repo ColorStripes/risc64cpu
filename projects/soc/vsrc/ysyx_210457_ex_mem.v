@@ -12,8 +12,8 @@ module ysyx_210457_ex_mem (
     input wire  [`REG_BUS] ex_w_data,
     input wire ex_w_ena,
     input wire [4 : 0] ex_w_addr,
-    input wire [`REG_BUS] ex_mem_waddr,
-    input wire [`REG_BUS] ex_mem_raddr,
+    input wire [`ADDR_BUS] ex_mem_waddr,
+    input wire [`ADDR_BUS] ex_mem_raddr,
     input wire [4 : 0] ex_memop,
     input wire [`REG_BUS] ex_stor_data,
     input wire ex_mem_wr,
@@ -30,8 +30,8 @@ module ysyx_210457_ex_mem (
     output reg mem_w_ena,
     output reg [4 : 0] mem_w_addr,
 
-    output reg [`REG_BUS] mem_mem_waddr,
-    output reg [`REG_BUS] mem_mem_raddr,
+    output reg [`ADDR_BUS] mem_mem_waddr,
+    output reg [`ADDR_BUS] mem_mem_raddr,
     output reg [4 : 0] mem_memop,
     output reg [`REG_BUS] mem_stor_data,
     output reg mem_mem_wr,
@@ -51,8 +51,8 @@ module ysyx_210457_ex_mem (
             mem_w_ena <= 1'b0;
             mem_w_addr <= `ZERO_REG_ADDR;
             men_pc <= `ZERO_WORD;
-            mem_mem_waddr <= `ZERO_WORD;
-            mem_mem_raddr <= `ZERO_WORD;
+            mem_mem_waddr <= `ZERO_ADDR;
+            mem_mem_raddr <= `ZERO_ADDR;
             mem_memop <= 5'b00000;
             mem_stor_data <= `ZERO_WORD;
             mem_mem_wr <= 1'b0;
@@ -72,8 +72,8 @@ module ysyx_210457_ex_mem (
             mem_w_ena <= 1'b0;
             mem_w_addr <= `ZERO_REG_ADDR;
             men_pc <= `ZERO_WORD;
-            mem_mem_waddr <= `ZERO_WORD;
-            mem_mem_raddr <= `ZERO_WORD;
+            mem_mem_waddr <= `ZERO_ADDR;
+            mem_mem_raddr <= `ZERO_ADDR;
             mem_memop <= 5'b00000;
             mem_stor_data <= `ZERO_WORD;
             mem_mem_wr <= 1'b0;
@@ -95,8 +95,8 @@ module ysyx_210457_ex_mem (
                 mem_w_ena <= 1'b0;
                 mem_w_addr <= `ZERO_REG_ADDR;
                 men_pc <= `ZERO_WORD;
-                mem_mem_waddr <= `ZERO_WORD;
-                mem_mem_raddr <= `ZERO_WORD;
+                mem_mem_waddr <= `ZERO_ADDR;
+                mem_mem_raddr <= `ZERO_ADDR;
                 mem_memop <= 5'b00000;
                 mem_stor_data <= `ZERO_WORD;
                 mem_mem_wr <= 1'b0;

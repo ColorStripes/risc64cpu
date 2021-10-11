@@ -7,10 +7,10 @@
 module ysyx_210457_IF_stage (
     input wire reset,
     input wire clock,
-    input wire [63 : 0] branch,
+    input wire [`PC_BUS] branch,
     input wire mux_pc,
     input wire pc_con,
-    input wire [63 : 0] pc_id,
+    input wire [`PC_BUS] pc_id,
     input wire [`PC_BUS] new_pc,
     input wire flush,
     input wire stall,
@@ -23,19 +23,19 @@ module ysyx_210457_IF_stage (
     output wire [`INST_BUS] instr,
 
     output wire if_valid,                  //AXI
-    input  wire [63 : 0] if_data_read,//
-    output wire [63 : 0] IF_pc,//
+    input  wire [31 : 0] if_data_read,//
+    output wire [`PC_BUS] IF_pc,//
     output wire [1 : 0] if_size,//
     output wire if_req//
 
 );
 assign if_branch = pc_i;
 
-wire [63 : 0] sum;
-wire [63 : 0] pc_i;
+wire [`PC_BUS] sum;
+wire [`PC_BUS] pc_i;
 
 assign if_size = `SIZE_W;
-assign instr = if_data_read[`INST_BUS];
+assign instr = if_data_read;
 assign if_req = `REQ_READ;
 
 

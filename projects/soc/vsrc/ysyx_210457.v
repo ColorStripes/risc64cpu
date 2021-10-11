@@ -2,6 +2,7 @@
 module ysyx_210457(
   input         clock,
   input         reset,
+  input         io_interrupt,
   input         io_master_awready,
   output        io_master_awvalid,
   output [31:0] io_master_awaddr,
@@ -16,7 +17,7 @@ module ysyx_210457(
   output        io_master_wlast,
   output        io_master_bready,
   input         io_master_bvalid,
-  //input  [1:0]  io_master_bresp,
+  input  [1:0]  io_master_bresp,
   input  [3:0]  io_master_bid,
   input         io_master_arready,
   output        io_master_arvalid,
@@ -27,15 +28,56 @@ module ysyx_210457(
   output [1:0]  io_master_arburst,
   output        io_master_rready,
   input         io_master_rvalid,
-  //input  [1:0]  io_master_rresp,
+  input  [1:0]  io_master_rresp,
   input  [63:0] io_master_rdata,
   input         io_master_rlast,
-  input  [3:0]  io_master_rid
+  input  [3:0]  io_master_rid,
+  output        io_slave_awready,
+  input         io_slave_awvalid,
+  input  [31:0] io_slave_awaddr,
+  input  [3:0]  io_slave_awid,
+  input  [7:0]  io_slave_awlen,
+  input  [2:0]  io_slave_awsize,
+  input  [1:0]  io_slave_awburst,
+  output        io_slave_wready,
+  input         io_slave_wvalid,
+  input  [63:0] io_slave_wdata,
+  input  [7:0]  io_slave_wstrb,
+  input         io_slave_wlast,
+  input         io_slave_bready,
+  output        io_slave_bvalid,
+  output [1:0]  io_slave_bresp,
+  output [3:0]  io_slave_bid,
+  output        io_slave_arready,
+  input         io_slave_arvalid,
+  input  [31:0] io_slave_araddr,
+  input  [3:0]  io_slave_arid,
+  input  [7:0]  io_slave_arlen,
+  input  [2:0]  io_slave_arsize,
+  input  [1:0]  io_slave_arburst,
+  input         io_slave_rready,
+  output        io_slave_rvalid,
+  output [1:0]  io_slave_rresp,
+  output [63:0] io_slave_rdata,
+  output        io_slave_rlast,
+  output [3:0]  io_slave_rid
 
 );
 
+assign io_slave_awready = 0;
+assign io_slave_wready = 0;
+assign io_slave_bvalid = 0;
+assign io_slave_bresp = 0;
+assign io_slave_bid = 0;
+assign io_slave_arready = 0;
+assign io_slave_rvalid = 0;
+assign io_slave_rvalid = 0;
+assign io_slave_rresp = 0;
+assign io_slave_rdata = 0;
+assign io_slave_rlast = 0;
+assign io_slave_rid = 0;
 
-
+    
 
     assign aw_ready                                 = io_master_awready;
     assign io_master_awvalid                        = aw_valid;
@@ -111,7 +153,6 @@ module ysyx_210457(
         .reset                          (reset),
 
         .rw_valid_i                     (AXI_vaild),
-        .rw_ready_o                     (AXI_ready),
         .rw_req_i                       (AXI_req),
         .data_read_o                    (AXI_r_data),
         .data_write_i                   (AXI_w_data),
@@ -160,25 +201,23 @@ module ysyx_210457(
 
 //CPU -> arbitrate
     wire if_valid;
-    wire [`PC_BUS] IF_pc;
+    wire [`ADDR_BUS] IF_pc;
     wire [1 : 0] if_size;
     wire if_req;
 ////////////////
     wire mem_valid;
-    wire [63 : 0] mem_addr;
+    wire [`ADDR_BUS] mem_addr;
     wire [63 : 0] MEM_stor_data;
     wire [1 : 0] mem_sel;
     wire mem_req;
 
 //arbitrate -> CPU
-   wire if_ready;
-   wire [63:0] if_data_read;
+   wire [31 : 0] if_data_read;
 ///////////////
-   wire mem_ready;
-   wire [63:0] mem_data;
+   wire [63 : 0] mem_data;
 
 //arbitrate -> AXI
-   wire [63 : 0] AXI_addr;
+   wire [`ADDR_BUS] AXI_addr;
    wire [`REG_BUS] AXI_w_data;
    wire AXI_vaild;
    wire AXI_req;
@@ -187,7 +226,6 @@ module ysyx_210457(
    wire [5 : 0] stall;
 
 //AXI -> arbitrate
-   wire AXI_ready;
    wire [3 : 0] AXI_out_id;
    wire [`REG_BUS] AXI_r_data;
    wire AXI_stall;
@@ -202,15 +240,13 @@ ysyx_210457_arbitrate arbitrate (
     .reset(reset),
     .flush(flush),
 
-    .if_ready(if_ready),
     .if_data_read(if_data_read),
 
     .if_valid(if_valid),
-    .IF_pc(IF_pc),
+    .if_addr(IF_pc),
     .if_size(if_size),
     .if_req(if_req),
 
-    .mem_ready(mem_ready),
     .mem_data(mem_data),
     
     .mem_stor_data(MEM_stor_data),
@@ -227,7 +263,6 @@ ysyx_210457_arbitrate arbitrate (
     .AXI_size(AXI_size),
     .AXI_id(AXI_id),
 
-    .AXI_ready(AXI_ready),
     .AXI_out_id(AXI_out_id),
     .AXI_r_data(AXI_r_data),
 
@@ -242,14 +277,12 @@ ysyx_210457_rvcpu rvcpu(
     .reset(reset),
     .stall(stall),
 
-    .if_ready(if_ready),
     .if_data_read(if_data_read),
     .if_valid(if_valid),
-    .pc(IF_pc),
+    .IF_addr(IF_pc),
     .if_size(if_size),
     .if_req(if_req),
 
-    .mem_ready(mem_ready),
     .mem_data(mem_data),
     .MEM_stor_data(MEM_stor_data),
     .mem_valid(mem_valid),
