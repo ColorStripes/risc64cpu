@@ -70,10 +70,11 @@ end
             else begin
                 csr_mcycle <= 64'h0;
             end
-if(test) begin
+
     csr_mip[7] <= test;
-end
-else begin
+
+if(test == 1'b0) begin
+    
     csr_mip[7] <= 1'b0;
 end
                                 //interrpt
