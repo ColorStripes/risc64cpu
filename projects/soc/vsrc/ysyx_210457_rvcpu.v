@@ -458,15 +458,12 @@ wire [`REG_BUS] clint_data;
     .ex_csr_ena(mem_csr_ena),
     .ex_except_type(mem_except_type),
 
-    .wb_csr_addr(wb_csr_addr),         //wb_csr
-    .wb_w_csr_data(wb_w_csr_data),
-    .wb_csr_ena(wb_csr_ena),
     
-    .csr_mepc(mepc),        //csr_read
-    .csr_mip(mip),
-    .csr_mie(mie),
-    .csr_mtvec(mtvec),
-    .csr_mstatus(mstatus),
+    .mepc(mepc),        //csr_read
+    .mip(mip),
+    .mie(mie),
+    .mtvec(mtvec),
+    .mstatus(mstatus),
 
     .clint_data(clint_data),      //clint
 
@@ -482,11 +479,6 @@ wire [`REG_BUS] clint_data;
     .mem_w_data(MEM_w_data),
     .mem_w_ena(MEM_w_ena),
     .mem_w_addr(MEM_w_addr),
-
-    //.mem_mem_waddr(MEM_mem_waddr),     //delete for AXI
-    //.mem_mem_raddr(MEM_mem_raddr),
-    //.mem_wr(mem_wr),
-    //.mem_mem_ena(MEM_mem_ena),
 
     .mem_valid(mem_valid),
     .mem_ready(mem_ready),

@@ -28,15 +28,12 @@ module ysyx_210457_MEM_stage (
     input wire ex_csr_ena,
     input wire [`REG_BUS] ex_except_type,
 
-    input wire [11 : 0] wb_csr_addr,         //wb_csr
-    input wire [`REG_BUS] wb_w_csr_data,
-    input wire wb_csr_ena,
 
-    input wire [`REG_BUS] csr_mepc,        //csr_read
-    input wire [`REG_BUS] csr_mip,
-    input wire [`REG_BUS] csr_mie,
-    input wire [`REG_BUS] csr_mtvec,
-    input wire [`REG_BUS] csr_mstatus,
+    input wire [`REG_BUS] mepc,        //csr_read
+    input wire [`REG_BUS] mip,
+    input wire [`REG_BUS] mie,
+    input wire [`REG_BUS] mtvec,
+    input wire [`REG_BUS] mstatus,
 
     input wire [`REG_BUS] clint_data,      //clint
 
@@ -237,77 +234,6 @@ assign mem_addr = mem_wr ? mem_mem_waddr : mem_mem_raddr;
         end
     end
         
-    //read epc
-    reg [`REG_BUS] mepc;
-    reg [`REG_BUS] mip;
-    reg [`REG_BUS] mie;
-    reg [`REG_BUS] mtvec;
-    reg [`REG_BUS] mstatus;
-    always @(*) begin
-        if(reset == 1'b1) begin
-            mip = `ZERO_WORD;
-        end
-        else begin
-            if((wb_csr_ena == 1'b1) && (`mip == mem_csr_addr)) begin
-                mip = mem_w_csr_data;
-            end
-            else begin
-                mip = csr_mip;
-            end
-        end
-    end
-    always @(*) begin
-        if(reset == 1'b1) begin
-            mepc = `ZERO_WORD;
-        end
-        else begin
-            if((wb_csr_ena == 1'b1) && (`mepc == mem_csr_addr)) begin
-                mepc = mem_w_csr_data;
-            end
-            else begin
-                mepc = csr_mepc;
-            end
-        end
-    end
-    always @(*) begin
-        if(reset == 1'b1) begin
-            mie = `ZERO_WORD;
-        end
-        else begin
-            if((wb_csr_ena == 1'b1) && (`mie == mem_csr_addr))begin
-                mie = mem_w_csr_data;
-            end
-            else begin
-                mie = csr_mie;
-            end
-        end
-    end
-    always @(*) begin
-        if(reset == 1'b1) begin
-            mtvec = `ZERO_WORD;
-        end
-        else begin
-            if((wb_csr_ena == 1'b1) && (`mtvec == mem_csr_addr)) begin
-                mtvec = mem_w_csr_data;
-            end
-            else begin
-                mtvec = csr_mtvec;
-            end
-        end
-    end
-    always @(*) begin
-        if(reset == 1'b1) begin
-            mstatus = `ZERO_WORD;
-        end
-        else begin
-            if((wb_csr_ena == 1'b1) && (`mstatus == mem_csr_addr)) begin
-                mstatus = mem_w_csr_data;
-            end
-            else begin
-                mstatus = csr_mstatus;
-            end
-        end
-    end
 
     always @(*) begin
         if(reset == 1'b1) begin

@@ -198,24 +198,11 @@ module ysyx_210457_CSR_reg (
     end
 
 
-assign mstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ? {(csr_w_data[13] & csr_w_data[14]) | (csr_w_data[15] & csr_w_data[16]),  csr_w_data[62 : 0]}:   
-       // ((except_type == 64'h1) | (except_type == 64'h2) | (except_type == 64'h3)) ? 
-    //{csr_mstatus[63:13], 2'b11, csr_mstatus[10:8], csr_mstatus[3], csr_mstatus[6:4], 1'b0, csr_mstatus[2:0]} : (except_type == 64'h4) ?
-    //{csr_mstatus[63:13], 2'b00, csr_mstatus[10:8], 1'b0, csr_mstatus[6:4], csr_mstatus[7], csr_mstatus[2:0]} :
-                                        csr_mstatus;     
-
-assign mepc = ((csr_w_ena == 1'b1) & (csr_w_addr == `mepc)) ? csr_w_data : 
-        //((except_type == 64'h1) | (except_type == 64'h2) | (except_type == 64'h3)) ? except_pc : 
-        csr_mepc;
-
-
-
- assign mip = ((csr_w_ena == 1'b1) & (csr_w_addr == `mip)) ? csr_w_data :
-                                              //{csr_mip[63 : 8], time_inter, csr_mip[6 : 0]} :
-                                                        csr_mip; 
-
-assign mie = ((csr_w_ena == 1'b1) & (csr_w_addr == `mie)) ? csr_w_data : csr_mie;
-assign mtvec = ((csr_w_ena == 1'b1) & (csr_w_addr == `mtvec)) ? csr_w_data : csr_mtvec;
+ assign mstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ? {(csr_w_data[13] & csr_w_data[14]) | (csr_w_data[15] & csr_w_data[16]),  csr_w_data[62 : 0]} : csr_mstatus; 
+ assign mepc = ((csr_w_ena == 1'b1) & (csr_w_addr == `mepc)) ? csr_w_data : csr_mepc;
+ assign mip = ((csr_w_ena == 1'b1) & (csr_w_addr == `mip)) ? csr_w_data :csr_mip; 
+ assign mie = ((csr_w_ena == 1'b1) & (csr_w_addr == `mie)) ? csr_w_data : csr_mie;
+ assign mtvec = ((csr_w_ena == 1'b1) & (csr_w_addr == `mtvec)) ? csr_w_data : csr_mtvec;
 
 
     always @(*) begin                          //Ctrl

@@ -482,15 +482,12 @@ wire clint;
     .ex_csr_ena(mem_csr_ena),
     .ex_except_type(mem_except_type),
 
-    .wb_csr_addr(wb_csr_addr),         //wb_csr
-    .wb_w_csr_data(wb_w_csr_data),
-    .wb_csr_ena(wb_csr_ena),
     
-    .csr_mepc(mepc),        //csr_read
-    .csr_mip(mip),
-    .csr_mie(mie),
-    .csr_mtvec(mtvec),
-    .csr_mstatus(mstatus),
+    .mepc(mepc),        //csr_read
+    .mip(mip),
+    .mie(mie),
+    .mtvec(mtvec),
+    .mstatus(mstatus),
 
     .clint_data(clint_data),      //clint
 
