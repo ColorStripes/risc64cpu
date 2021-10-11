@@ -115,7 +115,7 @@ module CSR_reg (
                     csr_mstatus[12 : 11] <= 2'b11;   //MPP
                     csr_mcause <= {1'b1, 63'h7};
                     csr_mepc <= except_pc;
-                    //csr_mip[7] <= 1'b1;
+                    csr_mip[7] <= 1'b1;
                  end
 
                  64'h2:begin           ////ecall
