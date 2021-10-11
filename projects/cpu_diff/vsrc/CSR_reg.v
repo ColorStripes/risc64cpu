@@ -73,7 +73,7 @@ end
 
     csr_mip[7] <= test;
 
-if(test == 1'b0) begin
+if(time_inter == 1'b0) begin
     
     csr_mip[7] <= 1'b0;
 end
