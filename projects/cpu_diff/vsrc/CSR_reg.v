@@ -71,7 +71,10 @@ end
                 csr_mcycle <= 64'h0;
             end
 
-    csr_mip[7] <= test;
+             csr_mip[7] <= test;
+             if(~time_inter) begin
+                 csr_mip[7] <= 1'b0;
+             end
 
                                 //interrpt
 
