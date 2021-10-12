@@ -59,7 +59,7 @@ module ysyx_210457_axi_rw # (
     wire w_trans    = rw_req_i == `REQ_WRITE;
     wire r_trans    = rw_req_i == `REQ_READ;
     wire w_valid    = rw_valid_i & w_trans;                               
-    wire r_valid    = rw_valid_i & r_trans;
+    wire r_valid    = (rw_valid_i & r_trans) || (w_valid & ~r_state_read);
 
     // handshake
     wire aw_hs      = axi_aw_ready_i & axi_aw_valid_o;
