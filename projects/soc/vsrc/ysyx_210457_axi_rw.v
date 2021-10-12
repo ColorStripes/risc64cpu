@@ -197,7 +197,7 @@ module ysyx_210457_axi_rw # (
 
     // Write address channel signals
     assign axi_aw_valid_o   = w_state_addr & w_valid;
-    assign axi_aw_addr_o    = axi_addr;
+    assign axi_aw_addr_o    = rw_addr_i;
     assign axi_aw_id_o      = axi_id;
     assign axi_aw_len_o     = axi_len;
     assign axi_aw_size_o    = axi_size;
