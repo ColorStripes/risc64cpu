@@ -73,7 +73,7 @@ module CSR_reg (
 
 
 
-            //csr_mip[7] <= time_inter;                    //interrpt
+            csr_mip[7] <= time_inter;                    //interrpt
 
             if(csr_w_ena == 1'b1) begin
                 case(csr_w_addr)
