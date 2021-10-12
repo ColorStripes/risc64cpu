@@ -178,7 +178,7 @@ reg axi_b_valid_i_nxt;
                     W_STATE_IDLE: begin w_state <= W_STATE_ADDR;  stall <= 1'b1; end              
                     W_STATE_ADDR:  if (aw_hs)   w_state <= W_STATE_WRITE;
                     W_STATE_WRITE: if (w_done)  w_state <= W_STATE_RESP;
-                    W_STATE_RESP:  if (b_hs) begin w_state <= W_STATE_IDLE; stall <= 1'b0; end   
+                    W_STATE_RESP:  if (b_hs) begin w_state <= W_STATE_IDLE; r_state <= R_STATE_IDLE; stall <= 1'b0; end   
                 endcase
             end
             else if (rw_req_i) begin
@@ -199,7 +199,7 @@ reg axi_b_valid_i_nxt;
                     R_STATE_IDLE:begin r_state <= R_STATE_VOID; stall <= 1'b1; end  
                     R_STATE_VOID:begin r_state <= R_STATE_ADDR; end             
                     R_STATE_ADDR: if (ar_hs)    r_state <= R_STATE_READ;
-                    R_STATE_READ: if (r_done) begin r_state <= R_STATE_IDLE; stall <= 1'b0; end   
+                    R_STATE_READ: if (r_done) begin r_state <= R_STATE_IDLE; w_state <= W_STATE_IDLE; stall <= 1'b0; end   
                     default:;
                 endcase
             end
