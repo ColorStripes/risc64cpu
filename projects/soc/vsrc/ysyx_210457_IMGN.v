@@ -37,7 +37,7 @@ module ysyx_210457_IMGN (
              end
              5'b00001://U_type
              begin
-                 imm = {{32{instr[31]}}, instr[31 : 12], 12'h000};  //ex alu had <<12
+                 imm = {{44{instr[31]}}, instr[31 : 12]};  //ex alu had <<12
              end
              default:
              begin
