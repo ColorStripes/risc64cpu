@@ -236,7 +236,7 @@ module ysyx_210457_axi_rw # (
     assign axi_ar_burst_o   = `AXI_BURST_TYPE_INCR;
 
     // Read data channel signals
-    assign axi_r_ready_o    = r_state_read;
+    assign axi_r_ready_o    = r_state_read & ~w_valid;
 
     wire [AXI_DATA_WIDTH-1:0] axi_r_data_l  = (axi_r_data_i & mask_l) >> aligned_offset_l;
     wire [AXI_DATA_WIDTH-1:0] axi_r_data_h  = (axi_r_data_i & mask_h) << aligned_offset_h;
