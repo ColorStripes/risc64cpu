@@ -199,7 +199,7 @@ reg axi_b_valid_i_nxt;
                     R_STATE_IDLE:begin r_state <= R_STATE_VOID; stall <= 1'b1; end  
                     R_STATE_VOID:begin r_state <= R_STATE_ADDR; end             
                     R_STATE_ADDR: if (ar_hs)    r_state <= R_STATE_READ;
-                    R_STATE_READ: if (r_done) begin r_state <= R_STATE_IDLE; w_state <= W_STATE_IDLE; stall <= 1'b0; end   
+                    R_STATE_READ: if (r_done) begin r_state <= R_STATE_IDLE;  stall <= 1'b0; end   
                     default:;
                 endcase
             end
