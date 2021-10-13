@@ -115,7 +115,7 @@ module SimTop(
 
     assign aw_ready                                 = `AXI_TOP_INTERFACE(aw_ready);
     assign `AXI_TOP_INTERFACE(aw_valid)             = aw_valid;
-    assign `AXI_TOP_INTERFACE(aw_bits_addr)         = aw_addr;
+    assign `AXI_TOP_INTERFACE(aw_bits_addr)         = {32'h0,aw_addr};
     assign `AXI_TOP_INTERFACE(aw_bits_prot)         = aw_prot;
     assign `AXI_TOP_INTERFACE(aw_bits_id)           = aw_id;
     assign `AXI_TOP_INTERFACE(aw_bits_user)         = aw_user;
@@ -140,7 +140,7 @@ module SimTop(
 
     assign ar_ready                                 = `AXI_TOP_INTERFACE(ar_ready);
     assign `AXI_TOP_INTERFACE(ar_valid)             = ar_valid;
-    assign `AXI_TOP_INTERFACE(ar_bits_addr)         = ar_addr;
+    assign `AXI_TOP_INTERFACE(ar_bits_addr)         = {32'h0,ar_addr};
     assign `AXI_TOP_INTERFACE(ar_bits_prot)         = ar_prot;
     assign `AXI_TOP_INTERFACE(ar_bits_id)           = ar_id;
     assign `AXI_TOP_INTERFACE(ar_bits_user)         = ar_user;
