@@ -14,8 +14,8 @@
 //forecase
 `define FORECASE 4
 `define FORECASE_LOG 2
-`define PC 64
-`define PC_LOG 6
+`define PC 4
+`define PC_LOG 2
 
 //funct3
 `define addi 3'b000
