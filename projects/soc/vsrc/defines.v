@@ -11,6 +11,11 @@
 `define INST_BUS   31 : 0 
 `define ZERO_ENA   1'b0
 `define ZERO_REG_ADDR   5'b00000
+//forecase
+`define FORECASE 4
+`define FORECASE_LOG 2
+`define PC 4
+`define PC_LOG 2
 
 //funct3
 `define addi 3'b000
@@ -143,12 +148,6 @@
 //DTAT_MEM
 `define D_NUM  1024
 `define D_NUMLOG  10
-
-//forecase
-`define FORECASE 4
-`define FORECASE_LOG 2
-`define PC 4
-`define PC_LOG 2
 
 //difftest
 `define PC_START   64'h00000000_30000000 
