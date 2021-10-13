@@ -13,9 +13,9 @@
 `define ZERO_REG_ADDR   5'b00000
 //forecase
 `define FORECASE 3
-`define FORECASE_LOG 1
+`define FORECASE_LOG 2
 `define PC 3
-`define PC_LOG 1
+`define PC_LOG 2
 
 //funct3
 `define addi 3'b000
