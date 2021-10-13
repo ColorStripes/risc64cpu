@@ -119,7 +119,7 @@ module ysyx_210457_CSR_reg (
 
             case(except_type)
                  64'h1:begin            ////time_interrupt
-                    csr_mstatus[7] <= mstatus[3];    //MPIE
+                    csr_mstatus[7] <= csr_mstatus[3];    //MPIE
                     csr_mstatus[3] <= 1'b0;          //MIE->0
                     csr_mstatus[12 : 11] <= 2'b11;   //MPP
                     csr_mcause <= {1'b1, 63'h7};
@@ -128,7 +128,7 @@ module ysyx_210457_CSR_reg (
                  end
 
                  64'h2:begin           ////ecall
-                    csr_mstatus[7] <= mstatus[3];    //MPIE
+                    csr_mstatus[7] <= csr_mstatus[3];    //MPIE
                     csr_mstatus[3] <= 1'b0;          //MIE->0
                     csr_mstatus[12 : 11] <= 2'b11;   //MPP
                     csr_mcause <= {1'b0, 59'h0, 4'b1011};
@@ -136,7 +136,7 @@ module ysyx_210457_CSR_reg (
                  end
 
                  64'h3:begin           ////ebreak
-                    csr_mstatus[7] <= mstatus[3];    //MPIE
+                    csr_mstatus[7] <= csr_mstatus[3];    //MPIE
                     csr_mstatus[3] <= 1'b0;          //MIE->0
                     csr_mstatus[12 : 11] <= 2'b11;   //MPP
                     csr_mcause <= {1'b0, 59'h0, 4'b0011};
@@ -144,7 +144,7 @@ module ysyx_210457_CSR_reg (
                  end
 
                  64'h4:begin           ////mret                   
-                    csr_mstatus[3] <= mstatus[7];
+                    csr_mstatus[3] <= csr_mstatus[7];
                     csr_mstatus[7] <= 1'b1;
                     csr_mstatus[12 : 11] <= 2'b00;
                     //csr_mepc <= except_pc;
