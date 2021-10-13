@@ -675,6 +675,24 @@ module ysyx_210457_ID_stage (
                        end
                   endcase
               end
+
+              7'b0001111:begin
+                    id_mem_ena = 1'b0;
+                    w_ena = 1'b0;
+                    id_csr_ena = 1'b0;
+                    aluop = `NO;
+                    alusel = `No;
+                    reg1_r_ena = 1'b0;
+                    reg2_r_ena = 1'b0;
+                    case(funct3) 
+                        `fence:begin
+                      
+                        end
+                        `fencei:begin
+                      
+                        end
+                    endcase
+              end
               
               default:begin
                     reg1_r_ena = `ZERO_ENA;

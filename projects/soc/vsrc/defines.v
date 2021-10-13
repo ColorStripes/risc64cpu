@@ -66,6 +66,9 @@
 `define csrrsi 3'b110
 `define csrrci 3'b111
 
+`define fence 3'b000
+`define fencei 3'b001
+
 //funct7
 `define add 7'b0000000
 `define sub 7'b0100000
