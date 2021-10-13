@@ -220,7 +220,7 @@ module ysyx_210457_axi_rw # (
     assign axi_w_last_o = axi_w_valid_o;
 
     //Write respond channel signals
-    assign axi_b_ready_o    = w_state_resp & w_valid;
+    assign axi_b_ready_o    = w_state_resp & w_valid;//
 
 
 

@@ -334,7 +334,7 @@ reg axi_b_valid_i_nxt;
     assign axi_w_last_o = axi_w_valid_o;
 
     //Write respond channel signals
-    assign axi_b_ready_o    = w_state_resp & w_valid;
+    assign axi_b_ready_o    = w_state_resp & w_valid;//
 
 
 
