@@ -2,12 +2,10 @@
 `timescale 1ns / 1ps
 
 `define ZERO_WORD  64'h00000000_00000000
-`define ZERO_PC    64'h00000000_00000000
-`define ZERO_ADDR  32'h00000000
 `define ZERO_INST  32'h00000000    
-`define REG_BUS    63 : 0 
+`define REG_BUS    63 : 0  
+`define DATA_BUS   7 : 0  
 `define PC_BUS     63 : 0 
-`define ADDR_BUS   31 : 0  
 `define INST_BUS   31 : 0 
 `define ZERO_ENA   1'b0
 `define ZERO_REG_ADDR   5'b00000
@@ -148,7 +146,7 @@
 `define PC_LOG 2
 
 //difftest
-`define PC_START   64'h00000000_30000000 
+`define PC_START   64'h00000000_80000000 
 `define RISCV_PRIV_MODE_U   0
 `define RISCV_PRIV_MODE_S   1
 `define RISCV_PRIV_MODE_M   3
@@ -186,14 +184,14 @@
 
 
 //Clint
-`define msip 32'h2000000
-`define mtimecmp 32'h2004000
-`define mtime 32'h200bff8
-`define TIME 64'd00000
+`define msip 64'h2000000
+`define mtimecmp 64'h2004000
+`define mtime 64'h200bff8
+`define TIME 64'd02000
 
 
 //AXI
-`define AXI_ADDR_WIDTH      32
+`define AXI_ADDR_WIDTH      64
 `define AXI_DATA_WIDTH      64
 `define AXI_ID_WIDTH        4
 `define AXI_USER_WIDTH      1
@@ -205,60 +203,3 @@
 
 `define REQ_READ            1'b0
 `define REQ_WRITE           1'b1
-
-
-//aw_axi
-// Burst types
-`define AXI_BURST_TYPE_FIXED                                2'b00
-`define AXI_BURST_TYPE_INCR                                 2'b01
-`define AXI_BURST_TYPE_WRAP                                 2'b10
-// Access permissions
-`define AXI_PROT_UNPRIVILEGED_ACCESS                        3'b000
-`define AXI_PROT_PRIVILEGED_ACCESS                          3'b001
-`define AXI_PROT_SECURE_ACCESS                              3'b000
-`define AXI_PROT_NON_SECURE_ACCESS                          3'b010
-`define AXI_PROT_DATA_ACCESS                                3'b000
-`define AXI_PROT_INSTRUCTION_ACCESS                         3'b100
-// Memory types (AR)
-`define AXI_ARCACHE_DEVICE_NON_BUFFERABLE                   4'b0000
-`define AXI_ARCACHE_DEVICE_BUFFERABLE                       4'b0001
-`define AXI_ARCACHE_NORMAL_NON_CACHEABLE_NON_BUFFERABLE     4'b0010
-`define AXI_ARCACHE_NORMAL_NON_CACHEABLE_BUFFERABLE         4'b0011
-`define AXI_ARCACHE_WRITE_THROUGH_NO_ALLOCATE               4'b1010
-`define AXI_ARCACHE_WRITE_THROUGH_READ_ALLOCATE             4'b1110
-`define AXI_ARCACHE_WRITE_THROUGH_WRITE_ALLOCATE            4'b1010
-`define AXI_ARCACHE_WRITE_THROUGH_READ_AND_WRITE_ALLOCATE   4'b1110
-`define AXI_ARCACHE_WRITE_BACK_NO_ALLOCATE                  4'b1011
-`define AXI_ARCACHE_WRITE_BACK_READ_ALLOCATE                4'b1111
-`define AXI_ARCACHE_WRITE_BACK_WRITE_ALLOCATE               4'b1011
-`define AXI_ARCACHE_WRITE_BACK_READ_AND_WRITE_ALLOCATE      4'b1111
-// Memory types (AW)
-`define AXI_AWCACHE_DEVICE_NON_BUFFERABLE                   4'b0000
-`define AXI_AWCACHE_DEVICE_BUFFERABLE                       4'b0001
-`define AXI_AWCACHE_NORMAL_NON_CACHEABLE_NON_BUFFERABLE     4'b0010
-`define AXI_AWCACHE_NORMAL_NON_CACHEABLE_BUFFERABLE         4'b0011
-`define AXI_AWCACHE_WRITE_THROUGH_NO_ALLOCATE               4'b0110
-`define AXI_AWCACHE_WRITE_THROUGH_READ_ALLOCATE             4'b0110
-`define AXI_AWCACHE_WRITE_THROUGH_WRITE_ALLOCATE            4'b1110
-`define AXI_AWCACHE_WRITE_THROUGH_READ_AND_WRITE_ALLOCATE   4'b1110
-`define AXI_AWCACHE_WRITE_BACK_NO_ALLOCATE                  4'b0111
-`define AXI_AWCACHE_WRITE_BACK_READ_ALLOCATE                4'b0111
-`define AXI_AWCACHE_WRITE_BACK_WRITE_ALLOCATE               4'b1111
-`define AXI_AWCACHE_WRITE_BACK_READ_AND_WRITE_ALLOCATE      4'b1111
-
-`define AXI_SIZE_BYTES_1                                    3'b000
-`define AXI_SIZE_BYTES_2                                    3'b001
-`define AXI_SIZE_BYTES_4                                    3'b010
-`define AXI_SIZE_BYTES_8                                    3'b011
-`define AXI_SIZE_BYTES_16                                   3'b100
-`define AXI_SIZE_BYTES_32                                   3'b101
-`define AXI_SIZE_BYTES_64                                   3'b110
-`define AXI_SIZE_BYTES_128                                  3'b111
-
-
-`define RW_DATA_WIDTH      64
-`define RW_ADDR_WIDTH      64
-`define AXI_DATA_WIDTH     64
-`define AXI_ADDR_WIDTH     32
-`define AXI_ID_WIDTH       4
-`define AXI_USER_WIDTH     1
