@@ -343,7 +343,7 @@ reg axi_b_valid_i_nxt;
     // ------------------Read Transaction------------------
 
     // Read address channel signals
-    assign axi_ar_valid_o   = r_state_addr & ~w_valid;
+    assign axi_ar_valid_o   = r_state_addr & r_valid;
     assign axi_ar_addr_o    = axi_addr;
     assign axi_ar_prot_o    = `AXI_PROT_UNPRIVILEGED_ACCESS | `AXI_PROT_SECURE_ACCESS | `AXI_PROT_DATA_ACCESS;
     assign axi_ar_id_o      = axi_id;

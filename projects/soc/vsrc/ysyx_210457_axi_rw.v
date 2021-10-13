@@ -229,7 +229,7 @@ module ysyx_210457_axi_rw # (
     // ------------------Read Transaction------------------
 
     // Read address channel signals
-    assign axi_ar_valid_o   = r_state_addr & r_valid;
+    assign axi_ar_valid_o   = r_state_addr & ~w_valid;
     assign axi_ar_addr_o    = rw_addr_i;
     assign axi_ar_id_o      = axi_id;
     assign axi_ar_len_o     = axi_len;
