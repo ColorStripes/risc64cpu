@@ -676,6 +676,7 @@ module ysyx_210457_ID_stage (
                   endcase
               end
 
+              //fence
               7'b0001111:begin
                     id_mem_ena = 1'b0;
                     w_ena = 1'b0;
@@ -690,6 +691,9 @@ module ysyx_210457_ID_stage (
                         end
                         `fencei:begin
                       
+                        end
+                        default:begin
+                            
                         end
                     endcase
               end
