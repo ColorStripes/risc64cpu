@@ -3,7 +3,7 @@
 //xu xin
 `include "defines.v"
 
-module ysyx_210457_arbitrate (
+module ysyx_210457_arbiter (
     input clock,
     input reset,
     input flush,
