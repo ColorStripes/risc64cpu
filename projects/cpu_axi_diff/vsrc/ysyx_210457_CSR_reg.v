@@ -18,11 +18,11 @@ module ysyx_210457_CSR_reg (
 
 
    output reg [`REG_BUS] csr_reg_data,
-   output wire mstatus,
+   output wire [`REG_BUS] mstatus,//
    output wire [`REG_BUS] mtvec,
    output wire [`REG_BUS] mepc,
-   output wire mie,
-   output wire mip,
+   output wire [`REG_BUS]mie,//
+   output wire [`REG_BUS]mip,//
 
 output wire [`REG_BUS] mcause,
 output wire [`REG_BUS] mscratch,

@@ -482,10 +482,10 @@ wire [`PC_BUS] IF_pc;
 
     
     .mepc(mepc),        //csr_read
-    .mip(mip),
-    .mie(mie),
+    .mip(mip[7]),
+    .mie(mie[7]),
     .mtvec(mtvec),
-    .mstatus(mstatus),
+    .mstatus(mstatus[3]),
 
     .clint_data(clint_data),      //clint
 
