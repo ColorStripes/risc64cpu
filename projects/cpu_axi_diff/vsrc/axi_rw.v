@@ -128,7 +128,7 @@ reg axi_b_valid_i_nxt;
     wire w_trans    = rw_req_i == `REQ_WRITE;
     wire r_trans    = rw_req_i == `REQ_READ;
     wire w_valid    = rw_valid_i & w_trans;// & ~axi_b_valid_i_nxt;                               
-    wire r_valid    = (rw_valid_i & r_trans) || (w_valid & ~r_state_read);// & ~axi_r_valid_i_nxt;
+    wire r_valid    = (rw_valid_i & r_trans) || (w_valid & ~r_state_idle);// & ~axi_r_valid_i_nxt;
 
     // handshake
     wire aw_hs      = axi_aw_ready_i & axi_aw_valid_o;
@@ -178,7 +178,7 @@ reg axi_b_valid_i_nxt;
                     W_STATE_IDLE: begin w_state <= W_STATE_ADDR;  stall <= 1'b1; end              
                     W_STATE_ADDR:  if (aw_hs)   w_state <= W_STATE_WRITE;
                     W_STATE_WRITE: if (w_done)  w_state <= W_STATE_RESP;
-                    W_STATE_RESP:  if (b_hs) begin w_state <= W_STATE_IDLE; r_state <= R_STATE_IDLE; stall <= 1'b0; end   
+                    W_STATE_RESP:  if (b_hs) begin w_state <= W_STATE_IDLE; stall <= 1'b0; end   
                 endcase
             end
             else if (rw_req_i) begin
@@ -356,7 +356,7 @@ reg axi_b_valid_i_nxt;
     assign axi_ar_qos_o     = 4'h0;
 
     // Read data channel signals
-    assign axi_r_ready_o    = r_state_read & ~w_valid;
+    assign axi_r_ready_o    = r_state_read;
 
     wire [AXI_DATA_WIDTH-1:0] axi_r_data_l  = (axi_r_data_i & mask_l) >> aligned_offset_l;
     wire [AXI_DATA_WIDTH-1:0] axi_r_data_h  = (axi_r_data_i & mask_h) << aligned_offset_h;
