@@ -436,10 +436,6 @@ module ysyx_210457_ID_stage (
                     reg1_r_ena = 1'b1;
                     reg2_r_ena = 1'b1;
                     branch = IF_pc + imm ;
-                    if((if_branch != branch) && (mux_pc)) begin
-                        error_branch = 1'b1;
-                    end
-
                     case(funct3)
                          `beq:begin
                              aluop = `SUB;
@@ -502,9 +498,12 @@ module ysyx_210457_ID_stage (
                                  reg2_r_ena = `ZERO_ENA;
                                  id_mem_ena = 1'b0;
                                  w_ena = 1'b0;
-                                 error_branch = 1'b0;
                          end
                     endcase
+                    if((if_branch != branch) && (mux_pc)) begin
+                        error_branch = 1'b1;
+                    end
+                    
               end
               
               //jal

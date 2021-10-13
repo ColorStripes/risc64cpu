@@ -52,7 +52,7 @@ always @(posedge clock) begin
                 end
             
                 else begin
-                    if(add_pc == pc_now[add_pc[`PC_LOG+1 : 2]]) begin
+                    if(pc_now[{pc_id + 4}[`PC_LOG+1 : 2]] == {pc_id + 4}) begin
                         if(fore > 2'b00) begin
                             fore <= fore - 1;
                         end
@@ -99,6 +99,7 @@ end
                         if((mux_pc != id_forecase) || (error_branch)) begin  
                            wash = 1'b1;
                            pc = branch;
+                           if_forecase = 1'b0;
                         end
                     end
                 
@@ -106,6 +107,7 @@ end
                         if(mux_pc != id_forecase) begin
                             wash = 1'b1;
                             pc = pc_id + 4;
+                            if_forecase = 1'b0;
                         end
                     end
                     
