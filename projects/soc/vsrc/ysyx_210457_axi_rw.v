@@ -115,8 +115,8 @@ module ysyx_210457_axi_rw # (
         else begin
             if (r_valid) begin
                 case (r_state)
-                    R_STATE_IDLE:begin r_state <= R_STATE_VOID; stall <= 1'b1; end
-                    R_STATE_VOID:begin r_state <= R_STATE_ADDR; end               
+                    R_STATE_IDLE:begin r_state <= R_STATE_ADDR; stall <= 1'b1; end
+                    //R_STATE_VOID:begin r_state <= R_STATE_ADDR; end               
                     R_STATE_ADDR: if (ar_hs)    r_state <= R_STATE_READ;
                     R_STATE_READ: if (r_done) begin r_state <= R_STATE_IDLE; stall <= 1'b0; end   
                     default:;
@@ -220,7 +220,7 @@ module ysyx_210457_axi_rw # (
     assign axi_w_last_o = axi_w_valid_o;
 
     //Write respond channel signals
-    assign axi_b_ready_o    = w_state_resp;
+    assign axi_b_ready_o    = w_state_resp & w_valid;
 
 
 
