@@ -143,7 +143,7 @@
 
 //forecase
 `define FORECASE 64
-`define FORECASE_LOG 6
+`define FORECASE_LOG 7
 `define PC 4
 `define PC_LOG 2
 
