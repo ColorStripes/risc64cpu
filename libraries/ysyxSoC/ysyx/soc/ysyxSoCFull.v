@@ -84889,7 +84889,7 @@ module CPU(
   wire [63:0] cpu_io_slave_rdata; // @[CPU.scala 37:21]
   wire [1:0] cpu_io_slave_rresp; // @[CPU.scala 37:21]
   wire  cpu_io_slave_rlast; // @[CPU.scala 37:21]
-  ysyx_000000 cpu ( // @[CPU.scala 37:21]
+  ysyx_210457 cpu ( // @[CPU.scala 37:21]
     .clock(cpu_clock),
     .reset(cpu_reset),
     .io_interrupt(cpu_io_interrupt),
