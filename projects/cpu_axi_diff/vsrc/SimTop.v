@@ -145,7 +145,7 @@ module SimTop(
     assign `AXI_TOP_INTERFACE(ar_bits_id)           = ar_id;
     assign `AXI_TOP_INTERFACE(ar_bits_user)         = ar_user;
     assign `AXI_TOP_INTERFACE(ar_bits_len)          = ar_len;
-    assign `AXI_TOP_INTERFACE(ar_bits_size)         = ar_size;
+    assign `AXI_TOP_INTERFACE(ar_bits_size)         = 011;
     assign `AXI_TOP_INTERFACE(ar_bits_burst)        = ar_burst;
     assign `AXI_TOP_INTERFACE(ar_bits_lock)         = ar_lock;
     assign `AXI_TOP_INTERFACE(ar_bits_cache)        = ar_cache;
