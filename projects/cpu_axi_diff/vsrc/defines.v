@@ -12,8 +12,8 @@
 `define ZERO_ENA   1'b0
 `define ZERO_REG_ADDR   5'b00000
 //forecase
-`define FORECASE 64
-`define FORECASE_LOG 6
+`define FORECASE 4
+`define FORECASE_LOG 2
 `define PC 64
 `define PC_LOG 6
 
