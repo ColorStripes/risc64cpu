@@ -142,8 +142,8 @@
 `define D_NUMLOG  10
 
 //forecase
-`define FORECASE 64
-`define FORECASE_LOG 6
+`define FORECASE 4
+`define FORECASE_LOG 2
 `define PC 4
 `define PC_LOG 2
 
