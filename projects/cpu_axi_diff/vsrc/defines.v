@@ -12,9 +12,9 @@
 `define ZERO_ENA   1'b0
 `define ZERO_REG_ADDR   5'b00000
 //forecase
-`define FORECASE 10
+`define FORECASE 11
 `define FORECASE_LOG 5
-`define PC 10
+`define PC 11
 `define PC_LOG 5
 
 //funct3
