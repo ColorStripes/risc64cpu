@@ -21,8 +21,8 @@ module ysyx_210457_forecase (
 );
     integer i;
     reg [1 : 0] fore;
-    reg [`PC_BUS] fore_branch[`FORECASE-1 : 0];
-    reg [`PC_BUS] pc_now[8-1 : 0];
+    reg [`PC_BUS] fore_branch[`FORECASE : 0];
+    reg [`PC_BUS] pc_now[`PC-1 : 0];
 
 
 
