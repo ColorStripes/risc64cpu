@@ -1,6 +1,7 @@
 *
 !*/
 !*.v
+!*.png
 !*.h
 !*.c
 !*.cc
@@ -11,6 +12,10 @@
 !*.py
 !*.mk
 !*.bin
+!*.scala
+!*.elf
+!*.txt
+!*.sc
 !Makefile
 !README
 !README.md
@@ -19,7 +24,10 @@
 **/build/
 **/build_test/
 **/difftest
+**/out/
 !libraries/difftest
 !libraries/NEMU
 !libraries/DRAMsim3
+!submit/*
+!*.xlsx
 myinfo.txt
