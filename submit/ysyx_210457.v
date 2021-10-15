@@ -1,4 +1,4 @@
-`include "defines.v"
+`include "ysyx_210457_defines.v"
 module ysyx_210457(
   input         clock,
   input         reset,
