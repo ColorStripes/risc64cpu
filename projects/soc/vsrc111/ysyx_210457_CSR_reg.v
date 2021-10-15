@@ -1,6 +1,6 @@
 //2021.9.14
 //xu xin 
-`include "ysyx_210457_defines.v"
+`include "defines.v"
 
 module ysyx_210457_CSR_reg (
    input wire reset,

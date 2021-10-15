@@ -1,7 +1,7 @@
 
 //2021.10.3
 //xu xin
-`include "ysyx_210457_defines.v"
+`include "defines.v"
 
 module ysyx_210457_arbiter (
     input clock,

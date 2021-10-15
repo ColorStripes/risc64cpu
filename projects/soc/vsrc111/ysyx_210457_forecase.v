@@ -2,7 +2,7 @@
 //2021.8.15
 //xu xin
 
-`include "ysyx_210457_defines.v"
+`include "defines.v"
 
 module ysyx_210457_forecase (
     input wire reset,

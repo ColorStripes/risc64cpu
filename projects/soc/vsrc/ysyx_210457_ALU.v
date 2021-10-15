@@ -2,7 +2,7 @@
 //2021.7.25
 //xuxin
 
-`include "defines.v"
+`include "ysyx_210457_defines.v"
 
 module ysyx_210457_ALU(
     input wire [63:0] num1,

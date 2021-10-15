@@ -2,7 +2,7 @@
 //2021.8.5
 //xuxin
 
-`include "defines.v"
+`include "ysyx_210457_defines.v"
 
 module ysyx_210457_mem_wb (
     input wire clock,

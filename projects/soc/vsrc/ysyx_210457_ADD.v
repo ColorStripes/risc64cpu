@@ -2,7 +2,7 @@
 //2021.8.3
 //xu xin
 
-`include "defines.v"
+`include "ysyx_210457_defines.v"
 
 module ysyx_210457_ADD (
     input wire [63:0] num1,

@@ -1,6 +1,6 @@
 //2021.9.18
 //xu xin
-`include "ysyx_210457_defines.v"
+`include "defines.v"
 
 
 

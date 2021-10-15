@@ -2,7 +2,7 @@
 //2021.8.4
 //xu xin
 
-`include "ysyx_210457_defines.v"
+`include "defines.v"
 
 module ysyx_210457_IF_stage (
     input wire reset,

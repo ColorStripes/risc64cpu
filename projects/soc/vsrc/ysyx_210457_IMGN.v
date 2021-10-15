@@ -2,7 +2,7 @@
 //2021.8.3
 //xuxin
 
-`include "defines.v"
+`include "ysyx_210457_defines.v"
 
 module ysyx_210457_IMGN (
     input wire [31:0] instr,

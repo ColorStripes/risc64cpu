@@ -2,7 +2,7 @@
 //2021.8.5
 //xu xin
 
-`include "defines.v"
+`include "ysyx_210457_defines.v"
 
 module ysyx_210457_ex_mem (
     input wire reset,
