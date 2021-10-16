@@ -9,7 +9,11 @@
 `define ZERO_ADDR  32'h00000000
 `define ZERO_INST  32'h00000000    
 `define REG_BUS    63 : 0 
+`define PC_BUS     63 : 0 
 `define ADDR_BUS   31 : 0  
+`define INST_BUS   31 : 0 
+`define ZERO_ENA   1'b0
+`define ZERO_REG_ADDR   5'b00000
 
 module ysyx_210457_arbiter (
     input clock,
