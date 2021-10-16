@@ -10,6 +10,7 @@
 `define INST_BUS   31 : 0 
 `define ZERO_ENA   1'b0
 `define ZERO_REG_ADDR   5'b00000
+`define PC_START   64'h00000000_30000000 
 //forecase
 `define FORECASE 64
 `define FORECASE_LOG 6
@@ -140,7 +141,6 @@
 `define W_EIG 5'b01011
 
 //difftest
-`define PC_START   64'h00000000_30000000 
 `define RISCV_PRIV_MODE_U   0
 `define RISCV_PRIV_MODE_S   1
 `define RISCV_PRIV_MODE_M   3
@@ -2385,8 +2385,6 @@ module ysyx_210457_ID_stage (
             pc_con = 1'b1;
             id_mem_wr = 1'b0;
             id_csr_ena = 1'b0;
-            ID_pc = `PC_START;      //difftest
-            ID_instr = `ZERO_INST;  //difftest
          end
     end
 end
