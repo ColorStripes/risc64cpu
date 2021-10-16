@@ -10,12 +10,262 @@
 `define INST_BUS   31 : 0 
 `define ZERO_ENA   1'b0
 `define ZERO_REG_ADDR   5'b00000
-`define PC_START   64'h00000000_30000000 
+//forecase
+`define FORECASE 64
+`define FORECASE_LOG 6
+`define PC 64
+`define PC_LOG 6
 
+//funct3
+`define addi 3'b000
+`define andi 3'b111
+`define xori 3'b100
+`define ori 3'b110
+`define slti 3'b010
+`define sltiu 3'b011
+`define slli 3'b001
+`define srlisrai 3'b101
+`define srlsra 3'b101
+`define addiw 3'b000
+`define slliw 3'b001
+`define sllw 3'b001
+`define srliwsraiw 3'b101
+`define srlwsraw 3'b101
+
+`define lb 3'b000
+`define lbu 3'b100
+`define ld 3'b011
+`define lh 3'b001
+`define lhu 3'b101
+`define lw 3'b010
+`define lwu 3'b110
+
+`define sb 3'b000
+`define sh 3'b001
+`define sw 3'b010
+`define sd 3'b011
+
+
+`define addsub 3'b000
+`define addwsubw 3'b000
+`define and 3'b111
+`define xor 3'b100
+`define or 3'b110
+`define slt 3'b010
+`define sltu 3'b011
+`define sll 3'b001
+
+`define beq 3'b000
+`define bge 3'b101
+`define bgeu 3'b111
+`define blt 3'b100
+`define bltu 3'b110
+`define bne 3'b001
+
+`define system 3'b000
+`define csrrw 3'b001
+`define csrrs 3'b010
+`define csrrc 3'b011
+`define csrrwi 3'b101
+`define csrrsi 3'b110
+`define csrrci 3'b111
+
+`define fence 3'b000
+`define fencei 3'b001
+
+
+//funct7
+`define add 7'b0000000
+`define sub 7'b0100000
+`define addw 7'b0000000
+`define subw 7'b0100000
+`define srl 7'b0000000
+`define sra 7'b0100000
+`define srlw 7'b0000000
+`define sraw 7'b0100000
+`define srli 6'b000000
+`define srai 6'b010000
+`define srliw 6'b000000
+`define sraiw 6'b010000
+`define mret 12'b001100000010
+`define ebreak 12'b000000000001
+`define ecall 12'b000000000000
+
+//ALUOP
+`define NO 7'b0000_000
+`define ADD 7'b0000_001
+`define SUB 7'b0000_010
+`define AND 7'b0000_100
+`define XOR 7'b0010_000
+`define OR 7'b0001_000
+`define COMu 7'b0000_011
+`define COM 7'b0000_110
+`define SHIL 7'b0001_100
+`define SHIR 7'b0011_000
+`define SRA 7'b0110_000
+`define LEFT12 7'b1100_000
+`define SHILw 7'b0001_101
+`define SRAw 7'b0110_001
+`define SHIRw 7'b0011_001
+
+//ALUSEL
+`define No 4'b0000
+`define Logic  4'b0001
+`define Arith  4'b0010
+`define Jump  4'b0100
+`define Load  4'b0011
+`define Store  4'b0101
+`define Long  4'b0110
+`define Short  4'b0111
+`define CSRRC  4'b1001
+`define CSRRCI 4'b1010
+`define CSRRS  4'b1011
+`define CSRRSI  4'b1100
+`define CSRRW  4'b1101
+`define CSRRWI  4'b1110
+`define SYSTEM  4'b1111
+
+
+//MEMOP
+`define R_ONE  5'b00001
+`define R_ONEu  5'b00010
+`define R_DOU  5'b00011
+`define R_DOUu  5'b00100
+`define R_FOR  5'b00101
+`define R_FORu  5'b00110
+`define R_EIG  5'b00111
+
+`define W_ONE  5'b01000
+`define W_DOU  5'b01001
+`define W_FOR 5'b01010
+`define W_EIG 5'b01011
+
+
+//ROM
+`define ROM_NUM  1024
+`define ROM_NUMLOG  10
+
+//DTAT_MEM
+`define D_NUM  1024
+`define D_NUMLOG  10
+
+
+
+//difftest
+`define PC_START   64'h00000000_80000000 
+`define RISCV_PRIV_MODE_U   0
+`define RISCV_PRIV_MODE_S   1
+`define RISCV_PRIV_MODE_M   3
+
+
+//CSR_ADDR
+`define mvendorid 12'hf11    //MRO
+`define marchid 12'hf12
+`define mimpid 12'hf13
+`define mhartid 12'hf14
+
+`define mstatus 12'h300
+`define misa 12'h301
+`define medeleg 12'h302
+`define mideleg 12'h303
+`define mie 12'h304
+`define mtvec 12'h305
+`define mcounteren 12'h306
+`define mscratch 12'h340
+`define mepc 12'h341
+`define mcause 12'h342
+`define mtval 12'h343
+`define mip 12'h344
+`define mcycle 12'hb00
+`define minstret 12'hb02
+`define mcycleh 12'hb80         //32
+`define minstreth 12'hb82       //32
+`define mcountinhibit 12'h320
+`define tselect 12'h7a0
+`define tdata1 12'h7a1
+`define tdata2 12'h7a2
+`define tdata3 12'h7a3
+
+`define sstatus 12'h100
+
+
+//Clint
+`define msip 32'h2000000
+`define mtimecmp 32'h2004000
+`define mtime 32'h200bff8
+`define TIME 64'd00000
+
+
+//AXI
+`define AXI_ADDR_WIDTH      32
+`define AXI_DATA_WIDTH      64
+`define AXI_ID_WIDTH        4
+`define AXI_USER_WIDTH      1
+
+`define SIZE_B              2'b00
+`define SIZE_H              2'b01
+`define SIZE_W              2'b10
+`define SIZE_D              2'b11
+
+`define REQ_READ            1'b0
+`define REQ_WRITE           1'b1
+
+
+//aw_axi
+// Burst types
+`define AXI_BURST_TYPE_FIXED                                2'b00
+`define AXI_BURST_TYPE_INCR                                 2'b01
+`define AXI_BURST_TYPE_WRAP                                 2'b10
+// Access permissions
+`define AXI_PROT_UNPRIVILEGED_ACCESS                        3'b000
+`define AXI_PROT_PRIVILEGED_ACCESS                          3'b001
+`define AXI_PROT_SECURE_ACCESS                              3'b000
+`define AXI_PROT_NON_SECURE_ACCESS                          3'b010
+`define AXI_PROT_DATA_ACCESS                                3'b000
+`define AXI_PROT_INSTRUCTION_ACCESS                         3'b100
+// Memory types (AR)
+`define AXI_ARCACHE_DEVICE_NON_BUFFERABLE                   4'b0000
+`define AXI_ARCACHE_DEVICE_BUFFERABLE                       4'b0001
+`define AXI_ARCACHE_NORMAL_NON_CACHEABLE_NON_BUFFERABLE     4'b0010
+`define AXI_ARCACHE_NORMAL_NON_CACHEABLE_BUFFERABLE         4'b0011
+`define AXI_ARCACHE_WRITE_THROUGH_NO_ALLOCATE               4'b1010
+`define AXI_ARCACHE_WRITE_THROUGH_READ_ALLOCATE             4'b1110
+`define AXI_ARCACHE_WRITE_THROUGH_WRITE_ALLOCATE            4'b1010
+`define AXI_ARCACHE_WRITE_THROUGH_READ_AND_WRITE_ALLOCATE   4'b1110
+`define AXI_ARCACHE_WRITE_BACK_NO_ALLOCATE                  4'b1011
+`define AXI_ARCACHE_WRITE_BACK_READ_ALLOCATE                4'b1111
+`define AXI_ARCACHE_WRITE_BACK_WRITE_ALLOCATE               4'b1011
+`define AXI_ARCACHE_WRITE_BACK_READ_AND_WRITE_ALLOCATE      4'b1111
+// Memory types (AW)
+`define AXI_AWCACHE_DEVICE_NON_BUFFERABLE                   4'b0000
+`define AXI_AWCACHE_DEVICE_BUFFERABLE                       4'b0001
+`define AXI_AWCACHE_NORMAL_NON_CACHEABLE_NON_BUFFERABLE     4'b0010
+`define AXI_AWCACHE_NORMAL_NON_CACHEABLE_BUFFERABLE         4'b0011
+`define AXI_AWCACHE_WRITE_THROUGH_NO_ALLOCATE               4'b0110
+`define AXI_AWCACHE_WRITE_THROUGH_READ_ALLOCATE             4'b0110
+`define AXI_AWCACHE_WRITE_THROUGH_WRITE_ALLOCATE            4'b1110
+`define AXI_AWCACHE_WRITE_THROUGH_READ_AND_WRITE_ALLOCATE   4'b1110
+`define AXI_AWCACHE_WRITE_BACK_NO_ALLOCATE                  4'b0111
+`define AXI_AWCACHE_WRITE_BACK_READ_ALLOCATE                4'b0111
+`define AXI_AWCACHE_WRITE_BACK_WRITE_ALLOCATE               4'b1111
+`define AXI_AWCACHE_WRITE_BACK_READ_AND_WRITE_ALLOCATE      4'b1111
+
+`define AXI_SIZE_BYTES_1                                    3'b000
+`define AXI_SIZE_BYTES_2                                    3'b001
+`define AXI_SIZE_BYTES_4                                    3'b010
+`define AXI_SIZE_BYTES_8                                    3'b011
+`define AXI_SIZE_BYTES_16                                   3'b100
+`define AXI_SIZE_BYTES_32                                   3'b101
+`define AXI_SIZE_BYTES_64                                   3'b110
+`define AXI_SIZE_BYTES_128                                  3'b111
+
+
+`define RW_DATA_WIDTH      64
 `define RW_ADDR_WIDTH      64
 `define AXI_DATA_WIDTH     64
 `define AXI_ADDR_WIDTH     32
 `define AXI_ID_WIDTH       4
+`define AXI_USER_WIDTH     1
 
 module ysyx_210457(
   input         clock,
@@ -118,21 +368,22 @@ module ysyx_210457(
 
 
 //CPU -> arbiter
-    wire if_valid;
-    wire [`ADDR_BUS] IF_pc;
-    wire [1 : 0] if_size;
-    wire if_req;
+    wire cpu_if_valid;
+    wire [`ADDR_BUS] cpu_IF_pc;
+    wire [1 : 0] cpu_if_size;
+    wire cpu_if_req;
 ////////////////
-    wire mem_valid;
-    wire [`ADDR_BUS] mem_addr;
-    wire [63 : 0] MEM_stor_data;
-    wire [1 : 0] mem_sel;
-    wire mem_req;
+    wire cpu_mem_valid;
+    wire [`ADDR_BUS] cpu_mem_addr;
+    wire [63 : 0] cpu_MEM_stor_data;
+    wire [1 : 0] cpu_mem_sel;
+    wire cpu_mem_req;   
+    wire cpu_flush;
 
 //arbiter -> CPU
-   wire [31 : 0] if_data_read;
+   wire [31 : 0] cpu_if_data_read;
 ///////////////
-   wire [63 : 0] mem_data;
+   wire [63 : 0] cpu_mem_data;
 
 //arbiter -> AXI
    wire [`ADDR_BUS] AXI_addr;
@@ -141,14 +392,14 @@ module ysyx_210457(
    wire AXI_req;
    wire [1 : 0] AXI_size;
    wire [3 : 0] AXI_id;
-   wire [5 : 0] stall;
+   wire [5 : 0] cpu_stall;
 
 //AXI -> arbiter
    wire [3 : 0] AXI_out_id;
    wire [`REG_BUS] AXI_r_data;
    wire AXI_stall;
 
-   wire flush;
+
 
 
 
@@ -262,22 +513,22 @@ assign io_slave_rid = 0;
 ysyx_210457_arbiter arbiter (
     .clock(clock),
     .reset(reset),
-    .flush(flush),
+    .flush(cpu_flush),
 
-    .if_data_read(if_data_read),
+    .if_data_read(cpu_if_data_read),
 
-    .if_valid(if_valid),
-    .if_addr(IF_pc),
-    .if_size(if_size),
-    .if_req(if_req),
+    .if_valid(cpu_if_valid),
+    .if_addr(cpu_IF_pc),
+    .if_size(cpu_if_size),
+    .if_req(cpu_if_req),
 
-    .mem_data(mem_data),
+    .mem_data(cpu_mem_data),
     
-    .mem_stor_data(MEM_stor_data),
-    .mem_valid(mem_valid),
-    .mem_addr(mem_addr),
-    .mem_sel(mem_sel),
-    .mem_req(mem_req),
+    .mem_stor_data(cpu_MEM_stor_data),
+    .mem_valid(cpu_mem_valid),
+    .mem_addr(cpu_mem_addr),
+    .mem_sel(cpu_mem_sel),
+    .mem_req(cpu_mem_req),
 
 
     .AXI_addr(AXI_addr),
@@ -292,32 +543,3467 @@ ysyx_210457_arbiter arbiter (
 
     .AXI_stall(AXI_stall),
 
-    .stall(stall)
+    .stall(cpu_stall)
     
 );
 
 ysyx_210457_rvcpu rvcpu(
     .clock(clock),
     .reset(reset),
-    .stall(stall),
+    .stall(cpu_stall),
 
-    .if_data_read(if_data_read),
-    .if_valid(if_valid),
-    .IF_addr(IF_pc),
-    .if_size(if_size),
-    .if_req(if_req),
+    .if_data_read(cpu_if_data_read),
+    .if_valid(cpu_if_valid),
+    .IF_addr(cpu_IF_pc),
+    .if_size(cpu_if_size),
+    .if_req(cpu_if_req),
 
-    .mem_data(mem_data),
-    .MEM_stor_data(MEM_stor_data),
-    .mem_valid(mem_valid),
-    .mem_addr(mem_addr),
-    .mem_sel(mem_sel),
-    .mem_req(mem_req),
+    .mem_data(cpu_mem_data),
+    .MEM_stor_data(cpu_MEM_stor_data),
+    .mem_valid(cpu_mem_valid),
+    .mem_addr(cpu_mem_addr),
+    .mem_sel(cpu_mem_sel),
+    .mem_req(cpu_mem_req),
 
-    .flush(flush)
+    .flush(cpu_flush)
+
+);
+
+endmodule
+
+module ysyx_210457_axi_rw # (
+    parameter RW_DATA_WIDTH     = 64,
+    parameter AXI_DATA_WIDTH    = 64,
+    parameter AXI_ADDR_WIDTH    = 32,
+    parameter AXI_ID_WIDTH      = 4
+
+)(
+    input                               clock,
+    input                               reset,
+
+	input                               rw_valid_i,//
+    input                               rw_req_i,//
+    output reg [RW_DATA_WIDTH-1:0]      data_read_o,//
+    input  [RW_DATA_WIDTH-1:0]          data_write_i,
+    input  [AXI_ADDR_WIDTH-1:0]         rw_addr_i,//
+    input  [1:0]                        rw_size_i,//
+    output reg                          stall,
+    input [AXI_ID_WIDTH-1:0]            cpu_id,
+    output [AXI_ID_WIDTH-1:0]           out_id,
+
+    // Advanced eXtensible Interface
+    input                               axi_aw_ready_i,
+    output                              axi_aw_valid_o,
+    output [AXI_ADDR_WIDTH-1:0]         axi_aw_addr_o,
+    output [AXI_ID_WIDTH-1:0]           axi_aw_id_o,
+    output [7:0]                        axi_aw_len_o,
+    output [2:0]                        axi_aw_size_o,
+    output [1:0]                        axi_aw_burst_o,
+
+
+    input                               axi_w_ready_i,
+    output                              axi_w_valid_o,
+    output [AXI_DATA_WIDTH-1:0]         axi_w_data_o,
+    output [AXI_DATA_WIDTH/8-1:0]       axi_w_strb_o,
+    output                              axi_w_last_o,
+    
+    output                              axi_b_ready_o,
+    input                               axi_b_valid_i,
+    input  [AXI_ID_WIDTH-1:0]           axi_b_id_i,
+
+    input                               axi_ar_ready_i,
+    output                              axi_ar_valid_o,
+    output [AXI_ADDR_WIDTH-1:0]         axi_ar_addr_o,
+    output [AXI_ID_WIDTH-1:0]           axi_ar_id_o,
+    output [7:0]                        axi_ar_len_o,
+    output [2:0]                        axi_ar_size_o,
+    output [1:0]                        axi_ar_burst_o,
+
+    output                              axi_r_ready_o,
+    input                               axi_r_valid_i,
+    input  [AXI_DATA_WIDTH-1:0]         axi_r_data_i,
+    input                               axi_r_last_i,
+    input  [AXI_ID_WIDTH-1:0]           axi_r_id_i
+);
+
+    wire w_trans    = rw_req_i == `REQ_WRITE;
+    wire r_trans    = rw_req_i == `REQ_READ;
+    wire w_valid    = rw_valid_i & w_trans;                               
+    
+
+    // handshake
+    wire aw_hs      = axi_aw_ready_i & axi_aw_valid_o;
+    wire w_hs       = axi_w_ready_i  & axi_w_valid_o;
+    wire b_hs       = axi_b_ready_o  & axi_b_valid_i;
+    wire ar_hs      = axi_ar_ready_i & axi_ar_valid_o;
+    wire r_hs       = axi_r_ready_o  & axi_r_valid_i;
+
+    wire w_done     = w_hs & axi_w_last_o;
+    wire r_done     = r_hs & axi_r_last_i;
+
+
+
+
+
+
+    
+    // ------------------State Machine------------------
+    parameter [1:0] W_STATE_IDLE = 2'b00, W_STATE_ADDR = 2'b01, W_STATE_WRITE = 2'b10, W_STATE_RESP = 2'b11;
+    parameter [1:0] R_STATE_IDLE = 2'b00, R_STATE_VOID = 2'b01, R_STATE_ADDR = 2'b10, R_STATE_READ  = 2'b11;
+
+    reg [1:0] w_state, r_state;
+    wire w_state_idle = w_state == W_STATE_IDLE, w_state_addr = w_state == W_STATE_ADDR, w_state_write = w_state == W_STATE_WRITE, w_state_resp = w_state == W_STATE_RESP;
+    wire r_state_idle = r_state == R_STATE_IDLE, r_state_addr = r_state == R_STATE_ADDR, r_state_read  = r_state == R_STATE_READ;
+    wire r_valid    = (rw_valid_i & r_trans) || (w_valid & ~r_state_read);
+    // Wirte State Machine
+    always @(posedge clock) begin
+        if (reset) begin
+            w_state <= W_STATE_IDLE;
+            stall <= 1'b0;
+        end
+        else begin
+            if (w_valid) begin
+                case (w_state)
+                    W_STATE_IDLE: begin w_state <= W_STATE_ADDR;  stall <= 1'b1; end              
+                    W_STATE_ADDR:  if (aw_hs)   w_state <= W_STATE_WRITE;
+                    W_STATE_WRITE: if (w_done)  w_state <= W_STATE_RESP;
+                    W_STATE_RESP:  if (b_hs) begin w_state <= W_STATE_IDLE; stall <= 1'b0; end   
+                endcase
+            end
+            else if (rw_req_i) begin
+                stall <= ~axi_b_valid_i;
+            end
+        end
+    end
+
+    // Read State Machine
+    always @(posedge clock) begin
+        if (reset) begin
+            r_state <= R_STATE_IDLE;
+            stall <= 1'b0;
+        end
+        else begin
+            if (r_valid) begin
+                case (r_state)
+                    R_STATE_IDLE:begin r_state <= R_STATE_VOID; stall <= 1'b1; end
+                    R_STATE_VOID:begin r_state <= R_STATE_ADDR; end               
+                    R_STATE_ADDR: if (ar_hs)    r_state <= R_STATE_READ;
+                    R_STATE_READ: if (r_done) begin r_state <= R_STATE_IDLE; stall <= 1'b0; end   
+                    default:;
+                endcase
+            end
+            else if (~rw_req_i) begin
+                stall <= ~axi_r_valid_i;
+            end
+        end
+    end
+
+
+
+
+    // ------------------Process Data------------------
+    parameter ALIGNED_WIDTH = $clog2(AXI_DATA_WIDTH / 8);
+    parameter OFFSET_WIDTH  = $clog2(AXI_DATA_WIDTH);
+    parameter MASK_WIDTH    = AXI_DATA_WIDTH * 2;
+    parameter TRANS_LEN     = RW_DATA_WIDTH / AXI_DATA_WIDTH;
+    parameter BLOCK_TRANS   = TRANS_LEN > 1 ? 1'b1 : 1'b0;
+
+    wire aligned            = BLOCK_TRANS | rw_addr_i[ALIGNED_WIDTH-1:0] == 0;
+    wire size_b             = rw_size_i == `SIZE_B;
+    wire size_h             = rw_size_i == `SIZE_H;
+    wire size_w             = rw_size_i == `SIZE_W;
+    wire size_d             = rw_size_i == `SIZE_D;
+    wire [3:0] addr_op1     = {{4-ALIGNED_WIDTH{1'b0}}, rw_addr_i[ALIGNED_WIDTH-1:0]};
+    wire [3:0] addr_op2     = ({4{size_b}} & {4'b0})
+                                | ({4{size_h}} & {4'b1})
+                                | ({4{size_w}} & {4'b11})
+                                | ({4{size_d}} & {4'b111})
+                                ;
+    wire overstep           = {addr_op1 + addr_op2}[3:ALIGNED_WIDTH] != 0;
+    wire [7:0] axi_len      = aligned ? TRANS_LEN - 1 : {{7{1'b0}}, overstep};    
+    wire [2:0] axi_size     = {1'b0, rw_size_i};
+    
+    //wire [AXI_ADDR_WIDTH-1:0] axi_addr          = {rw_addr_i[AXI_ADDR_WIDTH-1:ALIGNED_WIDTH], {ALIGNED_WIDTH{1'b0}}};
+    wire [OFFSET_WIDTH-1:0] aligned_offset    = {{OFFSET_WIDTH-ALIGNED_WIDTH{1'b0}}, {rw_addr_i[ALIGNED_WIDTH-1:0]}};
+    wire [OFFSET_WIDTH-1:0] aligned_offset_l    = {{OFFSET_WIDTH-ALIGNED_WIDTH{1'b0}}, {rw_addr_i[ALIGNED_WIDTH-1:0]}} << 3;
+    wire [OFFSET_WIDTH-1:0] aligned_offset_h    = 6'd32 - aligned_offset_l;
+    wire [MASK_WIDTH-1:0] mask                  = (({MASK_WIDTH{size_b}} & {{MASK_WIDTH-8{1'b0}}, 8'hff})
+                                                    | ({MASK_WIDTH{size_h}} & {{MASK_WIDTH-16{1'b0}}, 16'hffff})
+                                                    | ({MASK_WIDTH{size_w}} & {{MASK_WIDTH-32{1'b0}}, 32'hffffffff})
+                                                    | ({MASK_WIDTH{size_d}} & {{MASK_WIDTH-64{1'b0}}, 64'hffffffff_ffffffff})
+                                                    ) << aligned_offset_l;
+    wire [AXI_DATA_WIDTH-1:0] mask_l            = mask[AXI_DATA_WIDTH-1:0];
+    wire [AXI_DATA_WIDTH-1:0] mask_h            = mask[MASK_WIDTH-1:AXI_DATA_WIDTH];
+
+    wire [AXI_ID_WIDTH-1:0] axi_id              = {cpu_id[AXI_ID_WIDTH-1 : 0]};
+
+    
+    reg [3: 0] id;
+    wire [3 : 0] out_id_nxt = (axi_r_valid_i) ? axi_r_id_i : (axi_b_valid_i) ? axi_b_id_i : 0;
+    always @(posedge clock) begin
+        if (reset) begin
+            id <= 0;
+        end
+        else begin
+            id <= out_id_nxt;
+        end
+    end
+    assign out_id     = id;
+
+
+
+
+    // ------------------Number of transmission------------------
+    reg [7:0] len;
+    wire len_reset      = reset | (w_trans & w_state_idle) | (r_trans & r_state_idle);
+    wire len_incr_en    = (len != axi_len) & (w_hs | r_hs);
+    always @(posedge clock) begin
+        if (len_reset) begin
+            len <= 0;
+        end
+        else if (len_incr_en) begin
+            len <= len + 1;
+        end
+    end
+
+
+    // ------------------Write Transaction------------------
+
+    // Write address channel signals
+    assign axi_aw_valid_o   = w_state_addr & w_valid;
+    assign axi_aw_addr_o    = rw_addr_i;
+    assign axi_aw_id_o      = axi_id;
+    assign axi_aw_len_o     = axi_len;
+    assign axi_aw_size_o    = axi_size;
+    assign axi_aw_burst_o   = `AXI_BURST_TYPE_INCR;
+
+
+    // Write data channel signals
+    assign axi_w_valid_o    = w_state_write;
+    assign axi_w_strb_o     = (size_b) ? {{AXI_DATA_WIDTH/8-1{1'b0}}, 1'b1} << aligned_offset : 
+                              (size_h) ? {{AXI_DATA_WIDTH/8-2{1'b0}}, 2'b11} << aligned_offset :
+                              (size_w) ? {{AXI_DATA_WIDTH/8-4{1'b0}}, 4'b1111} << aligned_offset :
+                              (size_d) ? {{AXI_DATA_WIDTH/8-8{1'b0}}, 8'b11111111} << aligned_offset : {AXI_DATA_WIDTH/8-0{1'b0}};
+
+
+    assign  axi_w_data_o  = (data_write_i & mask_l) ;
+    //wire [AXI_DATA_WIDTH-1:0] axi_w_data_h  = (data_write_i & mask_h) ;
+
+
+    assign axi_w_last_o = axi_w_valid_o;
+
+    //Write respond channel signals
+    assign axi_b_ready_o    = w_state_resp & w_valid;//
+
+
+
+
+    
+    // ------------------Read Transaction------------------
+
+    // Read address channel signals
+    assign axi_ar_valid_o   = r_state_addr & ~w_valid;
+    assign axi_ar_addr_o    = rw_addr_i;
+    assign axi_ar_id_o      = axi_id;
+    assign axi_ar_len_o     = axi_len;
+    assign axi_ar_size_o    = axi_size;
+    assign axi_ar_burst_o   = `AXI_BURST_TYPE_INCR;
+
+    // Read data channel signals
+    assign axi_r_ready_o    = r_state_read & ~w_valid;
+
+    wire [AXI_DATA_WIDTH-1:0] axi_r_data_l  = (axi_r_data_i & mask_l) >> aligned_offset_l;
+    wire [AXI_DATA_WIDTH-1:0] axi_r_data_h  = (axi_r_data_i & mask_h) << aligned_offset_h;
+
+    generate
+        for (genvar i = 0; i < TRANS_LEN; i += 1) begin
+            always @(posedge clock) begin
+                if (reset) begin
+                    data_read_o[i*AXI_DATA_WIDTH+:AXI_DATA_WIDTH] <= 0;
+                end
+                else if (axi_r_ready_o & axi_r_valid_i) begin
+                    if (~aligned & overstep) begin
+                        if (len[0]) begin
+                            data_read_o[AXI_DATA_WIDTH-1:0] <= data_read_o[AXI_DATA_WIDTH-1:0] | axi_r_data_h;
+                        end
+                        else begin
+                            data_read_o[AXI_DATA_WIDTH-1:0] <= axi_r_data_l;
+                        end
+                    end
+                    else if (len == i) begin
+                        data_read_o[i*AXI_DATA_WIDTH+:AXI_DATA_WIDTH] <= axi_r_data_l;
+                    end
+                end
+            end
+        end
+    endgenerate
+
+endmodule
+
+
+module ysyx_210457_arbiter (
+    input clock,
+    input reset,
+    input flush,
+
+    output reg [31 : 0] if_data_read,
+    input wire if_valid,
+    input wire [`ADDR_BUS] if_addr,
+    input wire [1 : 0] if_size,
+    input wire if_req,
+
+    output reg [63 : 0] mem_data,
+    
+    input wire [`REG_BUS] mem_stor_data,
+    input wire mem_valid,
+    input wire [`ADDR_BUS] mem_addr,
+    input wire [1 : 0] mem_sel,
+    input wire mem_req,
+
+
+    output reg [`ADDR_BUS] AXI_addr,
+    output reg [`REG_BUS] AXI_w_data,
+    output reg AXI_vaild,
+    output reg AXI_req,
+    output reg [1 : 0] AXI_size,
+    output reg [3:0] AXI_id,
+
+    input wire [3:0] AXI_out_id,
+    input wire [`REG_BUS] AXI_r_data,
+    input wire AXI_stall,
+
+    output reg [5 : 0] stall
+    
+);
+
+reg flush_reg;
+always @(posedge clock) begin
+    if(reset == 1'b1) begin
+        flush_reg <= 1'b0;
+    end
+    else begin
+        if(flush) begin
+            flush_reg <= 1'b1;
+        end
+        if(~AXI_stall) begin
+            flush_reg <= 1'b0;
+        end
+    end
+end
+
+
+always @(*) begin
+    if(reset == 1'b1) begin
+        AXI_addr = `ZERO_ADDR;
+        AXI_w_data = `ZERO_WORD;
+        AXI_vaild = 1'b0;
+        AXI_req = 1'b0;
+        AXI_size = 2'b0;
+        AXI_id = 4'b0000;
+    end
+    else begin
+        AXI_addr = `ZERO_ADDR;
+        AXI_w_data = `ZERO_WORD;
+        AXI_vaild = 1'b0;
+        AXI_req = 1'b0;
+        AXI_size = 2'b0;
+        AXI_id = 4'b0000;
+        if(mem_valid) begin
+            AXI_addr = mem_addr;
+            AXI_w_data = mem_stor_data;
+            AXI_vaild = mem_valid;
+            AXI_req = mem_req;
+            AXI_size = mem_sel;
+            AXI_id = 4'b0001;
+        end
+        else if(if_valid) begin
+            AXI_addr = if_addr;
+            AXI_w_data = `ZERO_WORD;
+            AXI_vaild = if_valid;
+            AXI_req = if_req;
+            AXI_size = if_size;
+            AXI_id = 4'b0011;
+        end
+    end
+end
+
+
+
+
+always @(*) begin
+    if(reset == 1'b1) begin
+        mem_data = `ZERO_WORD;
+        if_data_read = `ZERO_INST;
+    end
+    else begin
+
+            if(AXI_out_id == 4'b1) begin
+                mem_data = AXI_r_data;
+                if_data_read = `ZERO_INST;
+            end
+            else if(AXI_out_id == 4'b11) begin
+                if_data_read = AXI_r_data[31 : 0];
+                mem_data = `ZERO_WORD;
+            end
+            else begin
+                mem_data = `ZERO_WORD;
+                if_data_read = `ZERO_INST;
+            end
+    end
+end
+
+always @(*) begin
+    if(reset == 1'b1) begin
+        stall = 6'b000000;
+    end
+    else begin
+        stall = 6'b000000;
+        if(mem_valid & if_valid & ~flush_reg) begin
+            if(mem_req) begin
+                stall = {3'b111, AXI_stall, AXI_stall, 1'b0};
+            end
+            else begin
+                stall = {5'b11111, 1'b0};
+                if(AXI_out_id == 4'b1) begin
+                    stall = {3'b111, AXI_stall, AXI_stall, 1'b0};
+                end
+            end
+        end
+        else if(mem_valid & ~if_valid & ~flush_reg) begin
+            stall = {{5{AXI_stall}}, 1'b0};
+        end
+        else if(if_valid & ~flush_reg) begin
+            stall = {AXI_stall, AXI_stall, AXI_stall, 3'b0};
+        end
+        if(flush) begin
+            stall = 6'b000000;
+        end
+        else if(flush_reg) begin
+            stall = 6'b111110;
+        end
+    end
+end
+
+endmodule
+
+
+
+module ysyx_210457_rvcpu(
+    input                 clock,
+    input                 reset,
+    input [5 : 0]         stall,
+
+    input  wire [31 : 0] if_data_read,
+    output wire if_valid,
+    output wire [`ADDR_BUS] IF_addr,
+    output wire [1 : 0] if_size,
+    output wire if_req,
+
+    input  wire [63 : 0] mem_data,
+    output wire [63 : 0] MEM_stor_data,
+    output wire mem_valid,
+    output wire [`ADDR_BUS] mem_addr,
+    output wire [1 : 0] mem_sel,
+    output wire mem_req,
+
+    output wire flush
 
 );
 
 
+//IF_stage -> if_id
+wire N_wash;
+wire [`PC_BUS] N_IF_pc;
+wire [31 : 0] N_instr;
+wire N_if_forecase;
+wire [`PC_BUS] N_if_branch;
+
+assign IF_addr = N_IF_pc[`ADDR_BUS];
+
+//if_id -> ID_stage
+wire [`INST_BUS] N_id_instr;
+wire [`PC_BUS] N_id_branch;
+//if_id -> IF_stage too
+wire [`PC_BUS] N_id_pc;
+
+//if_id -> IF_stage
+wire N_id_forecase;
+
+//regfile -> ID_stage
+wire [`REG_BUS] N_r_data1;
+wire [`REG_BUS] N_r_data2;
+
+
+//ID_stage -> regfile
+wire N_reg1_r_ena;
+wire N_reg2_r_ena;
+wire [4 : 0] N_reg1_addr;
+wire [4 : 0] N_reg2_addr;
+
+//ID_stage -> IF_stage
+wire [`PC_BUS] N_branch;
+wire N_pc_con;
+wire N_mux_pc;
+wire N_error_branch;
+
+//ID_stage -> id_ex
+wire [`PC_BUS] N_ID_pc; 
+wire [`INST_BUS] N_ID_instr; 
+wire [6 : 0] N_aluop;
+wire [3 : 0] N_alusel;
+wire [`REG_BUS] N_reg1_data;
+wire [`REG_BUS] N_reg2_data;
+wire [4 : 0] N_w_addr;
+wire N_w_ena;
+wire [4 : 0] N_memop;
+wire [63 : 0] N_imm;
+wire N_id_mem_wr;
+wire N_id_mem_ena;
+wire N_id_csr_ena;
+
+
+//id_ex -> EX_stage
+wire [4 : 0] N_ex_w_addr;
+wire N_ex_w_ena;
+wire [`REG_BUS] N_ex_reg1_data;
+wire [`REG_BUS] N_ex_reg2_data;
+wire [6 : 0] N_ex_aluop;
+wire [3 : 0] N_ex_alusel;
+wire [`PC_BUS] N_ex_pc;
+wire [`INST_BUS] N_ex_instr;
+wire [4 : 0] N_ex_memop;
+wire [63 : 0] N_ex_imm;
+wire N_ex_csr_ena;
+//id_ex -> ID_stage too
+wire N_ex_mem_wr;
+wire N_ex_mem_ena;
+
+
+//EX_stage -> ex_mem
+wire [`REG_BUS] N_ex_w_data;
+wire N_EX_w_ena;
+wire [4 : 0] N_EX_w_addr;
+wire [`PC_BUS] N_EX_pc;
+wire [`INST_BUS] N_EX_instr;
+wire [4 : 0] N_EX_memop;
+wire [`ADDR_BUS] N_ex_mem_waddr;
+wire [`ADDR_BUS] N_ex_mem_raddr;
+wire [`REG_BUS] N_ex_stor_data;
+wire N_EX_mem_wr;
+wire N_EX_mem_ena;
+wire [11 : 0] N_ex_csr_addr;    //csr read     ///csr o
+wire [`REG_BUS] N_ex_w_csr_data;
+wire N_EX_csr_ena;
+wire [`REG_BUS] N_except_type;
+
+//ex_men -> MEM_stage
+wire [`REG_BUS] N_mem_w_data;
+wire N_mem_w_ena;
+wire [4 : 0] N_mem_w_addr;
+wire [`PC_BUS] N_men_pc;
+wire [`INST_BUS] N_men_instr;
+wire [`ADDR_BUS] N_mem_mem_waddr;
+wire [`ADDR_BUS] N_mem_mem_raddr;
+wire [4 : 0] N_mem_memop;
+wire [`REG_BUS] N_mem_stor_data;
+wire N_mem_mem_wr;
+wire N_mem_mem_ena;
+wire N_mem_csr_ena;                 ///csr o
+wire [11 : 0] N_mem_csr_addr;         
+wire [`REG_BUS] N_mem_w_csr_data;
+wire [`REG_BUS] N_mem_except_type;
+
+//MEM_stage -> mem_wb
+wire [`REG_BUS] N_MEM_w_data;
+wire N_MEM_w_ena;
+wire [4 : 0] N_MEM_w_addr;
+wire [`PC_BUS] N_MEM_pc;
+wire [11 : 0] N_MEM_csr_addr;         ///csr o
+wire [`REG_BUS] N_MEM_w_csr_data;
+wire N_MEM_csr_ena;
+wire [`REG_BUS] N_MEM_except_type;
+//MEM_stage -> IF_stage
+wire [`PC_BUS] N_new_pc;
+
+//mem_wb -> WB_stage
+wire [`REG_BUS] N_wb_w_data;
+wire N_wb_w_ena;
+wire [4 : 0] N_wb_w_addr;
+wire [11 : 0] N_wb_csr_addr;        ///csr_o
+wire [`REG_BUS] N_wb_w_csr_data;
+wire N_wb_csr_ena;
+
+//WB_stage -> regfile
+wire N_WB_w_ena;
+wire [`REG_BUS] N_WB_w_data;
+wire [4 : 0] N_WB_w_addr;
+
+//WB_stage -> CSR_reg
+wire [11 : 0] N_WB_csr_addr;
+wire [`REG_BUS] N_WB_w_csr_data;
+wire N_WB_csr_ena;
+
+//CSR_reg -> EX_stage
+wire [`REG_BUS] N_csr_reg_data;
+//CSR_reg -> MEM_stage
+wire [`REG_BUS] N_mtvec;
+wire [`REG_BUS] N_mepc;
+wire N_mie;
+wire N_mip;
+wire N_mstatus;
+
+
+//Clint -> CSR_reg
+wire N_time_inter;
+//Clint -> MEM_reg
+wire [`REG_BUS] N_clint_data;
+
+
+
+
+    ysyx_210457_IF_stage IF_stage (
+    .reset(reset),
+    .clock(clock),
+    .branch(N_branch),
+    .mux_pc(N_mux_pc),
+    .pc_con(N_pc_con),
+    .pc_id(N_id_pc),
+    .new_pc(N_new_pc),
+    .flush(flush),
+    .id_forecase(N_id_forecase),
+    .error_branch(N_error_branch),
+    .stall(stall[5]),
+
+    .if_branch(N_if_branch),
+    .if_forecase(N_if_forecase),
+    .wash(N_wash),
+    .instr(N_instr),
+
+    .if_valid(if_valid),
+    .if_data_read(if_data_read),
+    .IF_pc(N_IF_pc),
+    .if_size(if_size),
+    .if_req(if_req)
+);
+
+    ysyx_210457_if_id if_id (
+    .reset(reset),
+    .clock(clock),
+    .if_pc(N_IF_pc),
+    .if_instr(N_instr),
+    .pc_con(N_pc_con),
+    .wash(N_wash),
+    .flush(flush),
+    .if_forecase(N_if_forecase),
+    .if_branch(N_if_branch),
+    .stall(stall[4:3]),
+
+    .id_branch(N_id_branch),
+    .id_forecase(N_id_forecase),
+    .id_pc(N_id_pc),
+    .id_instr(N_id_instr)
+);
+
+    ysyx_210457_regfile regfile(
+    .clock(clock),
+	.reset(reset),
+	
+	.w_addr(N_WB_w_addr),
+	.w_data(N_WB_w_data),
+	.w_ena(N_WB_w_ena),
+	
+  	.r_addr1(N_reg1_addr),
+	.r_ena1(N_reg1_r_ena),
+  	.r_data1(N_r_data1),  //OUT1
+
+	.r_addr2(N_reg2_addr),
+	.r_ena2(N_reg2_r_ena),
+	.r_data2(N_r_data2)  //OUT2
+  
+
+);
+
+    ysyx_210457_ID_stage ID_stage (
+    .reset(reset),
+    .IF_pc(N_id_pc), 
+    .IF_instr(N_id_instr),
+
+    .reg_data1(N_r_data1), //
+    .reg_data2(N_r_data2), //
+
+    .ex_w_data(N_ex_w_data),    //ex_stage for data
+    .ex_w_ena(N_ex_w_ena),
+    .ex_w_addr(N_ex_w_addr),
+
+    .mem_w_data(N_MEM_w_data),   //men_stage for data
+    .mem_w_ena(N_MEM_w_ena),
+    .mem_w_addr(N_MEM_w_addr),
+
+    .idex_mem_ena(N_ex_mem_ena),          //id_ex memory enable
+    .idex_mem_wr(N_ex_mem_wr),
+
+    .if_branch(N_id_branch),
+
+    .error_branch(N_error_branch),
+
+    .reg1_r_ena(N_reg1_r_ena),
+    .reg2_r_ena(N_reg2_r_ena),
+
+    .reg1_addr(N_reg1_addr),
+    .reg2_addr(N_reg2_addr),
+
+    .aluop(N_aluop),          //ALUoptions
+    .alusel(N_alusel),
+
+    .reg1_data(N_reg1_data),  //
+    .reg2_data(N_reg2_data),  //
+
+    .w_addr(N_w_addr),       
+    .w_ena(N_w_ena),                  //write enable
+
+    .ID_pc(N_ID_pc),       //pc now
+    .ID_instr(N_ID_instr), 
+    .branch(N_branch),    //pc next
+    .mux_pc(N_mux_pc),
+    .pc_con(N_pc_con),
+    .imm(N_imm),
+
+    .memop(N_memop),
+    .id_mem_wr(N_id_mem_wr),
+    .id_mem_ena(N_id_mem_ena),
+
+    .id_csr_ena(N_id_csr_ena) 
+
+);
+
+    ysyx_210457_id_ex id_ex (
+    .reset(reset),
+    .clock(clock),
+    .id_imm(N_imm),
+
+    .id_pc(N_ID_pc),
+    .id_instr(N_ID_instr),
+
+    .id_memop(N_memop),
+    .id_aluop(N_aluop),
+    .id_alusel(N_alusel),
+    .id_mem_wr(N_id_mem_wr),
+    .id_mem_ena(N_id_mem_ena),
+
+    .id_reg1_data(N_reg1_data),
+    .id_reg2_data(N_reg2_data),
+
+    .id_w_ena(N_w_ena),
+    .id_w_addr(N_w_addr),
+    .flush(flush),
+    .stall(stall[3 : 2]),
+
+    .id_csr_ena(N_id_csr_ena),
+
+
+    .ex_csr_ena(N_ex_csr_ena),
+
+    .ex_w_addr(N_ex_w_addr),
+    .ex_w_ena(N_ex_w_ena),
+
+    .ex_reg1_data(N_ex_reg1_data),
+    .ex_reg2_data(N_ex_reg2_data),
+
+    .ex_memop(N_ex_memop),
+    .ex_aluop(N_ex_aluop),
+    .ex_alusel(N_ex_alusel),
+    .ex_imm(N_ex_imm),
+    .ex_mem_wr(N_ex_mem_wr),
+    .ex_mem_ena(N_ex_mem_ena),
+
+    .ex_instr(N_ex_instr),
+    .ex_pc(N_ex_pc)
+    
+); 
+
+    ysyx_210457_EX_stage EX_stage (
+    .reset(reset),
+
+    .ID_pc(N_ex_pc),
+    .ID_instr(N_ex_instr),
+
+    .id_w_addr(N_ex_w_addr),
+    .id_w_ena(N_ex_w_ena),
+
+    .id_reg1_data(N_ex_reg1_data),
+    .id_reg2_data(N_ex_reg2_data),
+    .id_imm(N_ex_imm),
+
+    .id_memop(N_ex_memop),
+    .id_mem_wr(N_ex_mem_wr),
+    .id_mem_ena(N_ex_mem_ena),
+    .id_aluop(N_ex_aluop),
+    .id_alusel(N_ex_alusel),
+
+    .csr_reg_data(N_csr_reg_data),               //csr
+    .id_csr_ena(N_ex_csr_ena),
+
+    .mem_csr_addr(N_mem_csr_addr),
+    .mem_w_csr_data(N_mem_w_csr_data),
+    .mem_csr_ena(N_mem_csr_ena),
+    .wb_csr_addr(N_wb_csr_addr),
+    .wb_w_csr_data(N_wb_w_csr_data),
+    .wb_csr_ena(N_wb_csr_ena),
+
+
+    .ex_w_data(N_ex_w_data),
+    .ex_w_ena(N_EX_w_ena),
+    .ex_w_addr(N_EX_w_addr),
+
+    .ex_mem_raddr(N_ex_mem_raddr),
+    .ex_mem_waddr(N_ex_mem_waddr),
+    .ex_stor_data(N_ex_stor_data),
+    .ex_memop(N_EX_memop),
+    .ex_mem_wr(N_EX_mem_wr),
+    .ex_mem_ena(N_EX_mem_ena),
+
+    .ex_csr_addr(N_ex_csr_addr),         ///csr o
+    .ex_w_csr_data(N_ex_w_csr_data),
+    .ex_csr_ena(N_EX_csr_ena), 
+
+    .EX_instr(N_EX_instr),
+    .EX_pc(N_EX_pc),
+
+    .except_type(N_except_type)
+);
+
+    ysyx_210457_ex_mem ex_mem (
+    .reset(reset),
+    .clock(clock),
+    .ex_pc(N_EX_pc),
+    .ex_instr(N_EX_instr),
+    .ex_w_data(N_ex_w_data),
+    .ex_w_ena(N_EX_w_ena),
+    .ex_w_addr(N_EX_w_addr),
+    .ex_mem_waddr(N_ex_mem_waddr),
+    .ex_mem_raddr(N_ex_mem_raddr),
+    .ex_memop(N_EX_memop),
+    .ex_stor_data(N_ex_stor_data),
+    .ex_mem_wr(N_EX_mem_wr),
+    .ex_mem_ena(N_EX_mem_ena),
+
+    .ex_csr_ena(N_EX_csr_ena),               ///csr
+    .ex_csr_addr(N_ex_csr_addr),         
+    .ex_w_csr_data(N_ex_w_csr_data),
+    .ex_except_type(N_except_type),
+    .flush(flush),
+    .stall(stall[2 : 1]),
+
+    .mem_w_data(N_mem_w_data),
+    .mem_w_ena(N_mem_w_ena),
+    .mem_w_addr(N_mem_w_addr),
+
+    .mem_mem_waddr(N_mem_mem_waddr),
+    .mem_mem_raddr(N_mem_mem_raddr),
+    .mem_memop(N_mem_memop),
+    .mem_stor_data(N_mem_stor_data),
+    .mem_mem_wr(N_mem_mem_wr),
+    .mem_mem_ena(N_mem_mem_ena),
+
+    .mem_csr_ena(N_mem_csr_ena),             ///csr o
+    .mem_csr_addr(N_mem_csr_addr),         
+    .mem_w_csr_data(N_mem_w_csr_data),
+    .mem_except_type(N_mem_except_type),
+
+    .men_instr(N_men_instr),
+    .men_pc(N_men_pc)
+);
+
+    ysyx_210457_MEM_stage MEM_stage (
+    .reset(reset),
+    .time_inter(N_time_inter),
+    .ex_w_data(N_mem_w_data),
+    .ex_w_ena(N_mem_w_ena),
+    .ex_w_addr(N_mem_w_addr),
+    .ex_mem_waddr(N_mem_mem_waddr),
+    .ex_mem_raddr(N_mem_mem_raddr),
+    .ex_stor_data(N_mem_stor_data),
+    .ex_memop(N_mem_memop),
+    
+    .ex_mem_wr(N_mem_mem_wr),
+    .ex_mem_ena(N_mem_mem_ena),
+    //.mem_data(data),              //delete for AXI
+
+    .ex_pc(N_men_pc),
+    .ex_instr(N_men_instr),
+
+    .ex_csr_addr(N_mem_csr_addr),         ///csr
+    .ex_w_csr_data(N_mem_w_csr_data),
+    .ex_csr_ena(N_mem_csr_ena),
+    .ex_except_type(N_mem_except_type),
+
+    
+    .mepc(N_mepc),        //csr_read
+    .mip(N_mip),
+    .mie(N_mie),
+    .mtvec(N_mtvec),
+    .mstatus(N_mstatus),
+
+    .clint_data(N_clint_data),      //clint
+
+    .mem_csr_addr(N_MEM_csr_addr),         ///csr o
+    .mem_w_csr_data(N_MEM_w_csr_data),
+    .mem_csr_ena(N_MEM_csr_ena),
+    .mem_except_type(N_MEM_except_type),
+    .new_pc(N_new_pc),
+
+    .mem_pc(N_MEM_pc),
+
+    .mem_w_data(N_MEM_w_data),
+    .mem_w_ena(N_MEM_w_ena),
+    .mem_w_addr(N_MEM_w_addr),
+
+    .mem_valid(mem_valid),
+    .mem_data(mem_data),
+    .mem_stor_data(MEM_stor_data),
+    .mem_addr(mem_addr),
+    .mem_sel(mem_sel),
+    .mem_req(mem_req)
+);
+
+
+    ysyx_210457_mem_wb mem_wb (
+    .clock(clock),
+    .reset(reset),
+    .mem_w_data(N_MEM_w_data),
+    .mem_w_ena(N_MEM_w_ena),
+    .mem_w_addr(N_MEM_w_addr),
+    
+    .mem_csr_addr(N_MEM_csr_addr),         //csr
+    .mem_w_csr_data(N_MEM_w_csr_data),
+    .mem_csr_ena(N_MEM_csr_ena),
+    .flush(flush),
+    .stall(stall[1:0]),
+    
+
+    .wb_csr_addr(N_wb_csr_addr),         ///csr o
+    .wb_w_csr_data(N_wb_w_csr_data),
+    .wb_csr_ena(N_wb_csr_ena),
+    
+    .wb_w_data(N_wb_w_data),
+    .wb_w_ena(N_wb_w_ena),
+    .wb_w_addr(N_wb_w_addr)
+);
+
+   ysyx_210457_WB_stage WB_stage (
+    .reset(reset),
+    .mem_w_ena(N_wb_w_ena),
+    .mem_w_data(N_wb_w_data),
+    .mem_w_addr(N_wb_w_addr),
+    .mem_csr_ena(N_wb_csr_ena),           //csr
+    .mem_csr_addr(N_wb_csr_addr),         
+    .mem_w_csr_data(N_wb_w_csr_data),
+
+    
+    .wb_csr_ena(N_WB_csr_ena),                 ///csr o
+    .wb_csr_addr(N_WB_csr_addr),         
+    .wb_w_csr_data(N_WB_w_csr_data),
+    .wb_w_ena(N_WB_w_ena),
+    .wb_w_data(N_WB_w_data),
+    .wb_w_addr(N_WB_w_addr)
+);
+
+   ysyx_210457_CSR_reg CSR_reg (
+    .reset(reset),
+    .clock(clock),
+    .csr_r_addr(N_ex_csr_addr),
+
+    .csr_w_ena(N_WB_csr_ena),
+    .csr_w_addr(N_WB_csr_addr),
+    .csr_w_data(N_WB_w_csr_data),
+   
+    .except_type(N_MEM_except_type),
+    .except_pc(N_MEM_pc),             //mem_pc
+    .time_inter(N_time_inter),
+    .stall(stall[1]),
+
+    .csr_reg_data(N_csr_reg_data),
+    .mtvec(N_mtvec),
+    .mepc(N_mepc),
+    .mie(N_mie),
+    .mip(N_mip),
+    .mstatus(N_mstatus),
+
+
+    .flush(flush)
+);
+
+    ysyx_210457_Clint Clint (
+    .clock(clock),
+    .reset(reset),
+    .ex_mem_waddr(N_mem_mem_waddr),
+    .ex_mem_raddr(N_mem_mem_raddr),
+    .ex_stor_data(N_mem_stor_data),
+    .ex_mem_wr(N_mem_mem_wr),
+    .ex_mem_ena(N_mem_mem_ena),
+
+
+    .time_inter(N_time_inter),
+    .clint_data(N_clint_data)
+);
 
 endmodule
+
+
+
+
+
+
+module ysyx_210457_IF_stage (
+    input wire reset,
+    input wire clock,
+    input wire [`PC_BUS] branch,
+    input wire mux_pc,
+    input wire pc_con,
+    input wire [`PC_BUS] pc_id,
+    input wire [`PC_BUS] new_pc,
+    input wire flush,
+    input wire stall,
+    input wire id_forecase,
+    input wire error_branch,
+
+    output wire [`PC_BUS] if_branch,
+    output wire if_forecase,
+    output wire wash,
+    output wire [`INST_BUS] instr,
+
+    output wire if_valid,                  //AXI
+    input  wire [31 : 0] if_data_read,//
+    output wire [`PC_BUS] IF_pc,//
+    output wire [1 : 0] if_size,//
+    output wire if_req//
+
+);
+wire [`PC_BUS] sum;
+wire [`PC_BUS] pc_i;
+
+assign if_branch = pc_i;
+
+assign if_size = `SIZE_W;
+assign instr = if_data_read;
+assign if_req = `REQ_READ;
+
+
+ysyx_210457_PC PC(
+  .clock(clock),
+  .reset(reset),
+  .pc_i(pc_i),
+  .pc_con(pc_con),
+  .new_pc(new_pc),
+  .flush(flush),
+  .stall(stall),
+
+  .I_M_e(if_valid),
+  .pc(IF_pc)
+  
+);
+
+ysyx_210457_ADD ADD (
+    .num1(64'd4),
+    .num2(IF_pc),
+
+    .sum(sum)
+);
+
+ysyx_210457_forecase forecase (
+    .reset(reset),
+    .clock(clock),
+    .mux_pc(mux_pc),
+    .pc_id(pc_id),
+    .add_pc(sum),
+    .branch(branch),
+    .stall(stall),
+    .id_forecase(id_forecase),
+    .error_branch(error_branch),
+
+    .wash(wash),
+    .if_forecase(if_forecase),
+    .pc(pc_i)
+);
+
+endmodule
+
+
+module ysyx_210457_if_id (
+    input wire reset,
+    input wire clock,
+    input wire [`PC_BUS] if_pc,
+    input wire [`INST_BUS] if_instr,
+    input wire pc_con,
+    input wire wash,
+    input wire flush,
+    input wire if_forecase,
+    input wire [`PC_BUS] if_branch,
+    input wire [1: 0] stall,
+
+    output reg [`PC_BUS] id_branch,
+    output reg id_forecase,
+    output reg [`PC_BUS] id_pc,
+    output reg [`INST_BUS] id_instr
+);
+    always @(posedge clock) begin
+        if(reset == 1'b1) begin
+            id_pc <= `PC_START;
+            id_instr <= `ZERO_INST;
+            id_forecase <= 1'b0;
+            id_branch <= `ZERO_PC;
+        end
+        else begin
+            if(flush == 1'b1) begin
+                id_pc <= `PC_START;
+                id_instr <= `ZERO_INST;
+                id_forecase <= 1'b0;
+                id_branch <= `ZERO_PC;
+            end
+            else if(stall[1] & ~stall[0]) begin
+                id_pc <= `PC_START;
+                id_instr <= `ZERO_INST;
+            end
+            else if(~stall[1]) begin
+                if(wash == 1'b1) begin
+                    if(pc_con == 1'b0) begin
+                        id_pc <= `PC_START;
+                        id_instr <= `ZERO_INST;
+                        id_forecase <= 1'b0;
+                        id_branch <= `ZERO_PC;
+                    end
+                end
+                else begin
+                    if (pc_con == 1'b0) begin
+                        id_pc <= if_pc;
+                        id_instr <= if_instr;
+                        id_forecase <= if_forecase;
+                        id_branch <= if_branch;
+                    end 
+                end        
+            end
+        end
+    end
+endmodule
+
+
+module ysyx_210457_ID_stage (
+    input wire reset,
+    input wire [`PC_BUS] IF_pc, 
+    input wire [`INST_BUS] IF_instr,
+
+    input wire [`REG_BUS] reg_data1, //
+    input wire [`REG_BUS] reg_data2, //
+
+    input wire [`REG_BUS] ex_w_data,    //ex_stage for data
+    input wire ex_w_ena,
+    input wire [4 : 0] ex_w_addr,
+
+    input wire [`REG_BUS] mem_w_data,   //men_stage for data
+    input wire mem_w_ena,
+    input wire [4 : 0] mem_w_addr,
+
+    input wire idex_mem_ena,          //id_ex memory enable
+    input wire idex_mem_wr,
+
+    
+    input wire [`PC_BUS] if_branch,
+
+    output reg error_branch,
+
+    output reg reg1_r_ena,
+    output reg reg2_r_ena,
+    output reg [4 : 0] reg1_addr,
+    output reg [4 : 0] reg2_addr,
+
+    output reg [6 : 0] aluop,          //ALUoptions
+    output reg [3 : 0] alusel,
+
+    output reg [`REG_BUS] reg1_data,  //
+    output reg [`REG_BUS] reg2_data,  //
+
+    output reg [4 : 0] w_addr,       
+    output reg w_ena,                  //write enable
+
+    output wire [`PC_BUS] ID_pc,    //pc now
+    output wire [`INST_BUS] ID_instr,
+    output reg [`PC_BUS] branch,    //pc next
+    output reg mux_pc,
+    output reg pc_con,
+    output wire [63 : 0] imm,
+
+    output reg [4 : 0] memop,
+    output reg id_mem_wr,
+    output reg id_mem_ena,
+
+    output reg id_csr_ena           //csr_ena
+
+);
+    wire [6 : 0] opcode;
+    wire [2 : 0] funct3;
+    wire [6 : 0] funct7;
+    
+    
+    assign ID_pc = IF_pc;
+    assign ID_instr = IF_instr;
+    assign opcode = IF_instr[6:0];
+    assign funct3 = IF_instr[14 : 12];
+    assign funct7 = IF_instr[31 : 25];
+
+
+    ysyx_210457_IMGN IMGN (
+    .instr(IF_instr),
+
+    .imm(imm)
+);
+
+    always @(*) begin                 //ID
+        if(reset == 1) begin
+            reg1_r_ena = `ZERO_ENA;
+            reg2_r_ena = `ZERO_ENA;
+            reg1_addr = `ZERO_REG_ADDR;
+            reg2_addr = `ZERO_REG_ADDR;
+            w_addr = `ZERO_REG_ADDR;
+            w_ena = 1'b0;
+
+            aluop = 7'b0000_000;          //ALUoptions
+            alusel = 4'b0000;
+
+            mux_pc = 1'b0;
+            branch = `ZERO_WORD;
+            memop = 5'b00000;
+            id_mem_wr = 1'b0;
+            id_mem_ena = 1'b0;
+            pc_con = 1'b0;
+            id_csr_ena = 1'b0;
+
+        end
+        else begin
+            reg1_r_ena = `ZERO_ENA;
+            reg2_r_ena = `ZERO_ENA;
+            reg1_addr = IF_instr[19 : 15];
+            reg2_addr = IF_instr[24 : 20];
+            w_addr = IF_instr[11 : 7];
+            w_ena = 1'b0;
+
+            aluop = 7'b0000_000;          //ALUoptions
+            alusel = 4'b0000;
+
+            mux_pc = 1'b0;
+            branch = IF_pc;
+
+            memop = 5'b00000;
+            id_mem_wr = 1'b0;
+            id_mem_ena = 1'b0;
+            pc_con = 1'b0;
+            id_csr_ena = 1'b0;
+
+            error_branch = 1'b0;
+
+        case (opcode)
+            //I
+            7'b0010011:begin
+                    w_ena = 1'b1;
+                    reg1_r_ena = 1'b1;
+                    reg2_r_ena = 1'b0;
+                    
+                    case (funct3) 
+                          `addi:begin
+                                aluop = `ADD;
+                                alusel = `Arith;
+                           end
+                          `andi:begin
+                                aluop = `AND;
+                                alusel = `Arith;
+                           end
+                           `xori:begin
+                                aluop = `XOR;
+                                alusel = `Arith;
+                           end
+                           `ori:begin
+                                aluop = `OR;
+                                alusel = `Arith;
+                           end
+                           `slti:begin
+                                aluop = `COM;
+                                alusel = `Logic;
+                           end
+                           `sltiu:begin
+                                aluop = `COMu;
+                                alusel = `Logic;
+                           end
+                           `slli:begin
+                                aluop = `SHIL;
+                                alusel = `Arith;
+                           end
+                           `srlisrai:begin
+                                alusel = `Arith;
+                            case (funct7[6 : 1])
+                                `srli:begin
+                                 aluop = `SHIR;
+                                end
+                                `srai:begin
+                                 aluop = `SRA;
+                                end
+                                default:begin
+                                 reg1_r_ena = `ZERO_ENA;
+                                 reg2_r_ena = `ZERO_ENA;
+                                 id_mem_ena = 1'b0;
+                                 w_ena = 1'b0;
+                                 id_mem_wr = 1'b0;
+                                end
+                            endcase        
+                           end
+                    endcase
+              end
+              //addiw
+              7'b0011011:begin
+                  case(funct3)
+                       `addiw:begin
+                           w_ena = 1'b1;
+                           reg1_r_ena = 1'b1;
+                           reg2_r_ena = 1'b0;
+                           aluop = `ADD;
+                           alusel = `Short; 
+                        end
+                        `slliw:begin
+                            if(IF_instr[25] == 0) begin
+                                 w_ena = 1'b1;
+                                 reg1_r_ena = 1'b1;
+                                 reg2_r_ena = 1'b0;
+                                 aluop = `SHIL;
+                                 alusel = `Short;
+                            end  
+                        end
+                        `srliwsraiw:begin
+                            case(funct7[6 : 1])
+                                 `sraiw:begin
+                                     if(IF_instr[25] == 0) begin
+                                         w_ena = 1'b1;
+                                         reg1_r_ena = 1'b1;
+                                         reg2_r_ena = 1'b0;
+                                         aluop = `SRAw;
+                                         alusel = `Short;
+                                     end  
+                                 end
+                                 `srliw:begin
+                                      if(IF_instr[25] == 0) begin
+                                        w_ena = 1'b1;
+                                        reg1_r_ena = 1'b1;
+                                        reg2_r_ena = 1'b0;
+                                        aluop = `SHIRw;
+                                        alusel = `Short;
+                                      end  
+                                 end
+                                 default:begin
+                                      reg1_r_ena = `ZERO_ENA;
+                                      reg2_r_ena = `ZERO_ENA;
+                                      id_mem_ena = 1'b0;
+                                      w_ena = 1'b0;
+                                 end
+                            endcase
+                        end
+                        default:begin
+                            reg1_r_ena = `ZERO_ENA;
+                            reg2_r_ena = `ZERO_ENA;
+                            id_mem_ena = 1'b0;
+                            w_ena = 1'b0;
+                        end
+                  endcase
+              end
+              //addw
+              7'b0111011:begin
+                  case (funct3)
+                        `addwsubw:begin
+                            case (funct7)
+                                  `addw:begin
+                                         w_ena = 1'b1;
+                                         reg1_r_ena = 1'b1;
+                                         reg2_r_ena = 1'b1;
+                                         aluop = `ADD;
+                                         alusel = `Short;
+                                  end 
+                                  `subw:begin
+                                         w_ena = 1'b1;
+                                         reg1_r_ena = 1'b1;
+                                         reg2_r_ena = 1'b1;
+                                         aluop = `SUB;
+                                         alusel = `Short;
+                                  end
+                                  default:begin
+                                         w_ena = 1'b0;
+                                         reg1_r_ena = 1'b0;
+                                         reg2_r_ena = 1'b0;
+                                         aluop = `NO;
+                                         alusel = `No;
+                                  end  
+                            endcase
+                        end
+                        
+                        `srlwsraw:begin
+                            case(funct7)
+                                 `sraw:begin
+                                       w_ena = 1'b1;
+                                       reg1_r_ena = 1'b1;
+                                       reg2_r_ena = 1'b1;
+                                       aluop = `SRAw;
+                                       alusel = `Short; 
+                                 end
+                                 `srlw:begin
+                                       w_ena = 1'b1;
+                                       reg1_r_ena = 1'b1;
+                                       reg2_r_ena = 1'b1;
+                                       aluop = `SHIRw;
+                                       alusel = `Short;  
+                                 end
+                                 default:begin
+                                    w_ena = 1'b0;
+                                    reg1_r_ena = 1'b0;
+                                    reg2_r_ena = 1'b0;
+                                    aluop = `NO;
+                                    alusel = `No; 
+                                 end
+                            endcase
+                        end
+
+                        `sllw:begin
+                              w_ena = 1'b1;
+                              reg1_r_ena = 1'b1;
+                              reg2_r_ena = 1'b1;
+                              aluop = `SHILw;
+                              alusel = `Short;
+                        end
+
+                        default:begin
+                                 reg1_r_ena = `ZERO_ENA;
+                                 reg2_r_ena = `ZERO_ENA;
+                                 id_mem_ena = 1'b0;
+                                 w_ena = 1'b0;
+                        end
+                  endcase
+              end
+
+              //I-L
+              7'b0000011:begin
+                    w_ena = 1'b1;
+                    reg1_r_ena = 1'b1;
+                    reg2_r_ena = 1'b0;
+                    id_mem_wr = 1'b0;
+                    id_mem_ena = 1'b1;
+                    case(funct3)
+                         `lb:begin
+                             alusel = `Load;
+                             aluop = `ADD;
+                             memop = `R_ONE;
+                         end
+                         `lbu:begin
+                             alusel = `Load;
+                             aluop = `ADD;
+                             memop = `R_ONEu;
+                         end
+                         `ld:begin
+                             alusel = `Load;
+                             aluop = `ADD;
+                             memop = `R_EIG;
+                         end
+                         `lh:begin
+                             alusel = `Load;
+                             aluop = `ADD;
+                             memop = `R_DOU;
+                         end
+                         `lhu:begin
+                             alusel = `Load;
+                             aluop = `ADD;
+                             memop = `R_DOUu;
+                         end
+                         `lw:begin
+                             alusel = `Load;
+                             aluop = `ADD;
+                             memop = `R_FOR;
+                         end
+                         `lwu:begin
+                             alusel = `Load;
+                             aluop = `ADD;
+                             memop = `R_FORu;
+                         end
+                         default:begin
+                             w_ena = 1'b0;
+                             reg1_r_ena = 1'b0;
+                             reg2_r_ena = 1'b0;
+                             id_mem_wr = 1'b0;
+                             id_mem_ena = 1'b0;
+                             alusel = `No;
+                             aluop = `NO;
+                         end
+                    endcase
+              end
+
+
+              //R
+              7'b0110011:begin
+                    w_ena = 1'b1;
+                    reg1_r_ena = 1'b1;
+                    reg2_r_ena = 1'b1;
+
+                    case(funct3)
+                         `addsub:begin
+                             alusel = `Arith;
+                             case(funct7)
+                                  `add:begin
+                                      aluop = `ADD;
+                                  end
+                                  `sub:begin
+                                      aluop = `SUB;
+                                  end
+                                  default:begin
+                                      reg1_r_ena = `ZERO_ENA;
+                                      reg2_r_ena = `ZERO_ENA;
+                                      id_mem_ena = 1'b0;
+                                      w_ena = 1'b0;
+                                  end
+                             endcase
+                         end
+                         `or:begin
+                             aluop = `OR;
+                             alusel = `Arith;
+                         end
+                         `xor:begin
+                             aluop = `XOR;
+                             alusel = `Arith;
+                         end
+                         `and:begin
+                             aluop = `AND;
+                             alusel = `Arith;
+                         end
+                         `slt:begin
+                             aluop = `COM;
+                             alusel = `Logic;
+                         end
+                         `sltu:begin
+                             aluop = `COMu;
+                             alusel = `Logic;
+                         end
+                         `sll:begin
+                             aluop = `SHIL;
+                             alusel = `Arith;  
+                         end
+                         `srlsra:begin
+                            alusel = `Arith;
+                            case (funct7)
+                                `srl:begin
+                                 aluop = `SHIR;
+                                end
+                                `sra:begin
+                                 aluop = `SRA;
+                                end
+                                default:begin
+                                 reg1_r_ena = `ZERO_ENA;
+                                 reg2_r_ena = `ZERO_ENA;
+                                 id_mem_ena = 1'b0;
+                                 w_ena = 1'b0;
+                                end
+                            endcase        
+                         end
+                         default:begin
+                                 reg1_r_ena = `ZERO_ENA;
+                                 reg2_r_ena = `ZERO_ENA;
+                                 id_mem_ena = 1'b0;
+                                 w_ena = 1'b0;
+                         end
+                    endcase
+              end
+
+              //B
+              7'b1100011:begin
+                    w_ena = 1'b0;
+                    reg1_r_ena = 1'b1;
+                    reg2_r_ena = 1'b1;
+                    branch = IF_pc + imm ;
+                    case(funct3)
+                         `beq:begin
+                             aluop = `SUB;
+                             alusel = `Jump;
+                             if(reg1_data == reg2_data) begin
+                                 mux_pc = 1'b1; 
+                             end
+                         end
+                         `bge:begin
+                             aluop = `SUB;
+                             alusel = `Jump;
+                             if(reg1_data[63] == reg2_data[63]) begin
+                                 if(reg1_data >= reg2_data) begin
+                                     mux_pc = 1'b1; 
+                                     end
+                             end
+                             else begin
+                                 if(reg1_data[63] < reg2_data[63]) begin
+                                     mux_pc = 1'b1;
+                                 end
+                             end  
+                         end
+                         `bgeu:begin
+                             aluop = `SUB;
+                             alusel = `Jump;
+                             if(reg1_data >= reg2_data) begin
+                                 mux_pc = 1'b1; 
+                             end
+                         end
+                         `blt:begin
+                             aluop = `SUB;
+                             alusel = `Jump;
+                             if(reg1_data[63] == reg2_data[63]) begin
+                                 if(reg1_data < reg2_data) begin
+                                     mux_pc = 1'b1; 
+                                     end
+                             end
+                             else begin
+                                 if(reg1_data[63] > reg2_data[63]) begin
+                                     mux_pc = 1'b1;
+                                 end
+                             end  
+                         end
+                         `bltu:begin
+                             aluop = `SUB;
+                             alusel = `Jump;
+                             if(reg1_data < reg2_data) begin
+                                 mux_pc = 1'b1; 
+                             end
+                         end
+                         `bne:begin
+                             aluop = `SUB;
+                             alusel = `Jump;
+                             if(reg1_data != reg2_data) begin
+                                 mux_pc = 1'b1; 
+                             end
+                         end
+                         default:begin
+                                 reg1_r_ena = `ZERO_ENA;
+                                 reg2_r_ena = `ZERO_ENA;
+                                 id_mem_ena = 1'b0;
+                                 w_ena = 1'b0;
+                         end
+                    endcase
+                    if((if_branch != branch) && (mux_pc)) begin
+                        error_branch = 1'b1;
+                    end
+                    
+              end
+              
+              //jal
+              7'b1101111:begin
+                  w_ena = 1'b1;
+                  reg1_r_ena = 1'b0;
+                  reg2_r_ena = 1'b0;
+                  aluop = `NO;
+                  alusel = `Jump;
+                  branch = IF_pc + imm;
+                  mux_pc = 1'b1;
+                  if((if_branch != branch) && (mux_pc)) begin
+                        error_branch = 1'b1;
+                  end
+              end
+
+              //jalr
+              7'b1100111:begin
+                  mux_pc = 1'b1;
+                  w_ena = 1'b1;
+                  reg1_r_ena = 1'b1;
+                  reg2_r_ena = 1'b0;
+                  aluop = `NO;
+                  alusel = `Jump;
+                  branch = ((reg1_data + imm) & 64'hffff_ffff_ffff_fffe);
+                  if((if_branch != branch) && (mux_pc)) begin
+                        error_branch = 1'b1;
+                  end
+              end
+
+              //S
+              7'b0100011:begin
+                    w_ena = 1'b0;
+                    reg1_r_ena = 1'b1;
+                    reg2_r_ena = 1'b1;
+                    id_mem_wr = 1'b1;
+                    id_mem_ena = 1'b1;
+                    case (funct3)
+                        `sb:begin
+                            aluop = `NO;
+                            alusel = `Store;
+                            memop = `W_ONE;
+                        end
+                        `sd:begin
+                            aluop = `NO;
+                            alusel = `Store;
+                            memop = `W_EIG;
+                        end
+                        `sh:begin
+                            aluop = `NO;
+                            alusel = `Store;
+                            memop = `W_DOU;
+                        end
+                        `sw:begin
+                            aluop = `NO;
+                            alusel = `Store;
+                            memop = `W_FOR;
+                        end
+                        default:begin
+                            reg1_r_ena = `ZERO_ENA;
+                            reg2_r_ena = `ZERO_ENA;
+                            id_mem_ena = 1'b0;
+                            w_ena = 1'b0;
+                        end
+                    endcase
+              end
+
+              //lui
+              7'b0110111:begin
+                    w_ena = 1'b1;
+                    reg1_r_ena = 1'b0;
+                    reg2_r_ena = 1'b0;
+                    aluop = `LEFT12;
+                    alusel = `Arith;
+              end
+
+              //auipc
+              7'b0010111:begin
+                    w_ena = 1'b1;
+                    reg1_r_ena = 1'b0;
+                    reg2_r_ena = 1'b0;
+                    aluop = `LEFT12;
+                    alusel = `Long;
+              end
+
+
+              //CSR
+              7'b1110011:begin
+                  id_csr_ena = 1'b1;
+                  w_ena = 1'b1;
+                  case(funct3)
+                       `csrrw:begin
+                           aluop = `NO;
+                           alusel = `CSRRW;
+                           reg1_r_ena = 1'b1;
+                           reg2_r_ena = 1'b0;
+                       end
+                       `csrrs:begin
+                           aluop = `NO;
+                           alusel = `CSRRS;
+                           reg1_r_ena = 1'b1;
+                           reg2_r_ena = 1'b0;
+                       end
+                       `csrrc:begin
+                           aluop = `NO;
+                           alusel = `CSRRC;
+                           reg1_r_ena = 1'b1;
+                           reg2_r_ena = 1'b0;
+                       end
+                       `csrrwi:begin
+                           aluop = `NO;
+                           alusel = `CSRRWI;
+                           reg1_r_ena = 1'b0;
+                           reg2_r_ena = 1'b0;
+                       end
+                       `csrrsi:begin
+                           aluop = `NO;
+                           alusel = `CSRRSI;
+                           reg1_r_ena = 1'b0;
+                           reg2_r_ena = 1'b0;
+                       end
+                       `csrrci:begin
+                           aluop = `NO;
+                           alusel = `CSRRCI;
+                           reg1_r_ena = 1'b0;
+                           reg2_r_ena = 1'b0;
+                       end
+                       `system:begin
+                           case(IF_instr[31 : 20])
+                                `mret:begin
+                                   aluop = `NO;
+                                   alusel = `SYSTEM;
+                                   reg1_r_ena = 1'b0;
+                                   reg2_r_ena = 1'b0;
+                                   w_ena = 1'b0; 
+                                end
+                                `ebreak:begin
+                                   aluop = `NO;
+                                   alusel = `SYSTEM;
+                                   reg1_r_ena = 1'b0;
+                                   reg2_r_ena = 1'b0;
+                                   w_ena = 1'b0;
+                                end
+                                `ecall:begin
+                                   aluop = `NO;
+                                   alusel = `SYSTEM;
+                                   reg1_r_ena = 1'b0;
+                                   reg2_r_ena = 1'b0;
+                                   w_ena = 1'b0;
+                                end
+                                default:begin
+                                   aluop = `NO;
+                                   alusel = `No;
+                                   reg1_r_ena = 1'b0;
+                                   reg2_r_ena = 1'b0;
+                                   w_ena = 1'b0;
+                                   id_csr_ena = 1'b0;
+                                end
+                           endcase
+                       end
+
+                       default:begin
+                           aluop = `NO;
+                           alusel = `No;
+                           reg1_r_ena = 1'b0;
+                           reg2_r_ena = 1'b0;
+                           id_csr_ena = 1'b0;
+                       end
+                  endcase
+              end
+
+              //fence
+              7'b0001111:begin
+                    id_mem_ena = 1'b0;
+                    w_ena = 1'b0;
+                    id_csr_ena = 1'b0;
+                    aluop = `NO;
+                    alusel = `No;
+                    reg1_r_ena = 1'b0;
+                    reg2_r_ena = 1'b0;
+                    case(funct3) 
+                        `fence:begin
+                      
+                        end
+                        `fencei:begin
+                      
+                        end
+                        default:begin
+                            
+                        end
+                    endcase
+              end
+              
+              default:begin
+                    reg1_r_ena = `ZERO_ENA;
+                    reg2_r_ena = `ZERO_ENA;
+                    id_mem_ena = 1'b0;
+                    w_ena = 1'b0;
+                    id_csr_ena = 1'b0;
+              end
+        endcase
+
+        if( ((idex_mem_ena == 1'b1) && (idex_mem_wr == 1'b0)) && (ex_w_ena == 1'b1) &&
+         ( ((ex_w_addr == reg1_addr) && (ex_w_addr != 5'b00000)) || ((ex_w_addr == reg2_addr) && (ex_w_addr != 5'b00000)) ) ) 
+         begin
+            id_mem_ena = 1'b0;
+            w_ena = 1'b0;
+            pc_con = 1'b1;
+            id_mem_wr = 1'b0;
+            id_csr_ena = 1'b0;
+            ID_pc = `PC_START;      //difftest
+            ID_instr = `ZERO_INST;  //difftest
+         end
+    end
+end
+
+    always @(*) begin
+        if(reset == 1'b1) begin
+            reg1_data = `ZERO_WORD;
+        end
+        else if(reg1_r_ena == 1'b1) begin
+            if((ex_w_ena == 1'b1) && (ex_w_addr == reg1_addr) && (ex_w_addr != 5'b00000)) begin
+                reg1_data = ex_w_data;
+            end
+            else if((mem_w_ena == 1'b1) && (mem_w_addr == reg1_addr) && (mem_w_addr != 5'b00000)) begin
+                reg1_data = mem_w_data;
+            end
+            else begin
+                reg1_data = reg_data1;
+            end
+        end
+        else if(reg1_r_ena == 1'b0) begin
+            reg1_data = imm;
+        end
+        else begin
+            reg1_data = `ZERO_WORD;
+        end
+    end
+
+    always @(*) begin
+        if(reset == 1'b1) begin
+            reg2_data = `ZERO_WORD;
+        end
+        else if(reg2_r_ena == 1'b1) begin
+            if((ex_w_ena == 1'b1) && (ex_w_addr == reg2_addr) && (ex_w_addr != 5'b00000)) begin
+                reg2_data = ex_w_data;
+            end
+            else if((mem_w_ena == 1'b1) && (mem_w_addr == reg2_addr) && (mem_w_addr != 5'b00000)) begin
+                reg2_data = mem_w_data;
+            end
+            else begin
+                reg2_data = reg_data2;
+            end
+        end
+        else if(reg2_r_ena == 1'b0) begin
+            reg2_data = imm;
+        end
+        else begin
+            reg2_data = `ZERO_WORD;
+        end
+    end
+
+endmodule
+
+module ysyx_210457_id_ex (
+    input wire reset,
+    input wire clock,
+    input wire [63 : 0] id_imm,
+
+    input wire [`PC_BUS] id_pc,
+    input wire [`INST_BUS] id_instr,
+
+    input wire [4 : 0] id_memop,
+    input wire [6 : 0] id_aluop,
+    input wire [3 : 0] id_alusel,
+    input wire id_mem_wr,
+    input wire id_mem_ena,
+
+    input wire [`REG_BUS] id_reg1_data,
+    input wire [`REG_BUS] id_reg2_data,
+
+    input wire id_w_ena,
+    input wire [4 : 0] id_w_addr,
+    input wire flush,
+    input wire [1: 0] stall,
+
+    input wire id_csr_ena,           //csr
+
+    output reg ex_csr_ena,
+
+    output reg [4 : 0] ex_w_addr,
+    output reg ex_w_ena,
+
+    output reg [`REG_BUS] ex_reg1_data,
+    output reg [`REG_BUS] ex_reg2_data,
+
+    output reg [4 : 0] ex_memop,
+    output reg [6 : 0] ex_aluop,
+    output reg [3 : 0] ex_alusel,
+    output reg [63 : 0] ex_imm,
+    output reg ex_mem_wr,
+    output reg ex_mem_ena,
+
+    output reg [`INST_BUS] ex_instr,
+    output reg [`PC_BUS] ex_pc
+
+); 
+
+always @(posedge clock) begin
+    if (reset == 1'b1) begin
+        ex_w_addr <= `ZERO_REG_ADDR;
+        ex_w_ena <= 1'b0;
+
+        ex_reg1_data <= `ZERO_WORD;
+        ex_reg2_data <= `ZERO_WORD;
+
+        ex_memop <= 5'b00000;
+        ex_aluop <= 7'b0000000;
+        ex_alusel <= 4'b000;
+        ex_imm <= `ZERO_WORD;
+        ex_mem_wr <= 1'b0;
+        ex_mem_ena <= 1'b0;
+
+        ex_pc <= `PC_START;
+        ex_instr <= `ZERO_INST;
+
+        ex_csr_ena <= 1'b0;
+    end
+    else begin
+        if(flush == 1'b1) begin
+            ex_w_addr <= `ZERO_REG_ADDR;
+            ex_w_ena <= 1'b0;
+
+            ex_reg1_data <= `ZERO_WORD;
+            ex_reg2_data <= `ZERO_WORD;
+
+            ex_memop <= 5'b00000;
+            ex_aluop <= 7'b0000000;
+            ex_alusel <= 4'b000;
+            ex_imm <= `ZERO_WORD;
+            ex_mem_wr <= 1'b0;
+            ex_mem_ena <= 1'b0;
+
+            ex_pc <= `PC_START;
+            ex_instr <= `ZERO_INST;
+            ex_csr_ena <= 1'b0;
+        end
+        else if(stall[1] & ~stall[0]) begin
+            ex_w_addr <= `ZERO_REG_ADDR;
+            ex_w_ena <= 1'b0;
+
+            ex_reg1_data <= `ZERO_WORD;
+            ex_reg2_data <= `ZERO_WORD;
+
+            ex_memop <= 5'b00000;
+            ex_aluop <= 7'b0000000;
+            ex_alusel <= 4'b000;
+            ex_imm <= `ZERO_WORD;
+            ex_mem_wr <= 1'b0;
+            ex_mem_ena <= 1'b0;
+
+            ex_pc <= `PC_START;
+            ex_instr <= `ZERO_INST;
+            ex_csr_ena <= 1'b0;
+        end
+        else if(~stall[1]) begin
+            
+            ex_w_addr <= id_w_addr;
+            ex_w_ena <= id_w_ena;
+
+            ex_reg1_data <= id_reg1_data;
+            ex_reg2_data <= id_reg2_data;
+
+            ex_memop <= id_memop;
+            ex_aluop <= id_aluop;
+            ex_alusel <= id_alusel;
+            ex_imm <= id_imm;
+            ex_mem_wr <= id_mem_wr;
+            ex_mem_ena <= id_mem_ena;
+
+            ex_pc <= id_pc;
+            ex_instr <= id_instr;
+            ex_csr_ena <= id_csr_ena;
+            
+        end
+    end
+  end
+endmodule
+
+module ysyx_210457_EX_stage (
+    input wire reset,
+
+    input wire [`PC_BUS] ID_pc,
+    input wire [`INST_BUS] ID_instr,
+
+    input wire [4 : 0] id_w_addr,
+    input wire id_w_ena,
+
+    input wire [`REG_BUS] id_reg1_data,
+    input wire [`REG_BUS] id_reg2_data,
+    input wire [`REG_BUS] id_imm,
+
+    input wire [4 : 0] id_memop,
+    input wire id_mem_wr,
+    input wire id_mem_ena,
+    input wire [6 : 0] id_aluop,
+    input wire [3 : 0] id_alusel,
+
+    input wire [`REG_BUS] csr_reg_data,     //csr
+    input wire id_csr_ena,
+    
+    input wire[11 : 0] mem_csr_addr,        //qian di
+    input wire [`REG_BUS] mem_w_csr_data,
+    input wire mem_csr_ena,
+    input wire [11 : 0] wb_csr_addr,
+    input wire [`REG_BUS] wb_w_csr_data,
+    input wire wb_csr_ena,
+
+    output reg [`REG_BUS] ex_w_data,
+    output reg ex_w_ena,
+    output reg [4 : 0] ex_w_addr,
+
+    output reg [`ADDR_BUS] ex_mem_raddr,
+    output reg [`ADDR_BUS] ex_mem_waddr,
+    output reg [`REG_BUS] ex_stor_data,
+    output reg [4 : 0] ex_memop,
+    output reg ex_mem_wr,
+    output reg ex_mem_ena,
+
+    output reg [11 : 0] ex_csr_addr,         ///csr o
+    output reg [`REG_BUS] ex_w_csr_data,
+    output reg ex_csr_ena, 
+
+    output wire [`INST_BUS] EX_instr,
+    output wire [`PC_BUS] EX_pc,
+
+    output wire [`REG_BUS] except_type
+);
+    wire [`REG_BUS] result;
+    assign EX_pc = ID_pc;
+    assign EX_instr = ID_instr;
+
+    reg mret;
+    reg ebreak;
+    reg ecall;
+    assign except_type = {45'b0, mret, ebreak, ecall, 16'b0};
+
+ysyx_210457_ALU ALU(
+    .num1(id_reg1_data),
+    .num2(id_reg2_data),
+    .op(id_aluop),
+    
+    .out(result)
+);
+    reg [`REG_BUS] csr_data;
+    always @(*) begin
+        if(reset == 1'b1) begin
+            csr_data =`ZERO_WORD;
+        end
+        else begin
+            csr_data =`ZERO_WORD;
+            if(ex_csr_ena == 1'b1) begin
+                if((mem_csr_ena == 1'b1) && (ex_csr_addr == mem_csr_addr)) begin
+                    csr_data = mem_w_csr_data;
+                end
+                else if((wb_csr_ena == 1'b1) && (ex_csr_addr == wb_csr_addr)) begin
+                    csr_data = wb_w_csr_data;
+                end
+                else begin
+                    csr_data = csr_reg_data;
+                end
+            end
+        end
+    end
+
+ 
+    always @(*) begin
+        if(reset == 1'b1) begin
+            ex_w_data = `ZERO_WORD;
+            ex_w_ena = 1'b0;
+            ex_w_addr = `ZERO_REG_ADDR;
+            ex_stor_data = `ZERO_WORD;
+            ex_mem_wr = 1'b0;
+            ex_mem_ena = 1'b0;
+            ex_mem_raddr = `ZERO_ADDR;
+            ex_mem_waddr = `ZERO_ADDR;
+            ex_memop = 5'h00;
+            ex_csr_ena = 1'b0;
+            ex_csr_addr = 12'h000;
+            ex_w_csr_data = `ZERO_WORD;
+            mret = 1'b0;
+            ebreak = 1'b0;
+            ecall = 1'b0;
+
+        end
+        else begin
+            ex_w_ena = id_w_ena;
+            ex_w_addr = id_w_addr;
+            ex_w_data = `ZERO_WORD;
+            ex_mem_raddr = `ZERO_ADDR;
+            ex_mem_waddr = `ZERO_ADDR;
+            ex_stor_data = `ZERO_WORD;
+            ex_mem_wr = 1'b0;
+            ex_mem_ena = id_mem_ena;
+            ex_memop = id_memop;
+            ex_csr_ena = id_csr_ena;
+            ex_csr_addr = 12'h000;
+            ex_w_csr_data = `ZERO_WORD;
+            mret = 1'b0;
+            ebreak = 1'b0;
+            ecall = 1'b0;
+
+            case (id_alusel)
+                  `Logic:begin
+                      if(result == 64'h0000_0000_0000_0001) begin  
+                           ex_w_data = 64'h0000_0000_0000_0001;
+                      end
+                      else begin
+                           ex_w_data = 64'h00000000_00000000;
+                      end           
+                  end 
+                  `Arith:begin
+                      ex_w_data = result;
+                  end
+                  `Jump:begin
+                      ex_w_data = ID_pc + 4;
+                  end
+                  `Load:begin
+                      ex_mem_raddr = result[`ADDR_BUS];
+                      ex_mem_wr = id_mem_wr;
+                  end
+                  `Store:begin
+                      ex_mem_waddr = {id_reg1_data + id_imm}[`ADDR_BUS];
+                      ex_stor_data = id_reg2_data;
+                      ex_mem_wr = id_mem_wr;
+                  end
+                  `Long:begin
+                      ex_w_data = ID_pc + result;
+                  end
+                  `Short:begin
+                      ex_w_data = {{32{result[31]}}, result[31 : 0]};
+                  end
+                  `CSRRC:begin
+                      ex_w_data = csr_data;
+                      ex_w_csr_data = csr_data & (~id_reg1_data);
+                      ex_csr_addr = id_imm[11 : 0];
+
+                  end
+                  `CSRRCI:begin
+                      ex_w_data = csr_data;
+                      ex_w_csr_data = csr_data & (~{59'b0, ID_instr[19 : 15]});
+                      ex_csr_addr = id_imm[11 : 0];
+
+                  end
+                  `CSRRS:begin
+                      ex_w_data = csr_data;
+                      ex_w_csr_data = csr_data | id_reg1_data;
+                      ex_csr_addr = id_imm[11 : 0];
+
+                  end
+                  `CSRRSI:begin
+                      ex_w_data = csr_data;
+                      ex_w_csr_data = csr_data | {59'b0, ID_instr[19 : 15]};
+                      ex_csr_addr = id_imm[11 : 0];
+
+                  end
+                  `CSRRW:begin
+                      ex_w_data = csr_data;
+                      ex_w_csr_data = id_reg1_data;
+                      ex_csr_addr = id_imm[11 : 0];
+
+                  end
+                  `CSRRWI:begin
+                      ex_w_data = csr_data;
+                      ex_w_csr_data = {59'b0, ID_instr[19 : 15]};
+                      ex_csr_addr = id_imm[11 : 0];
+
+                  end
+                  `SYSTEM:begin
+                      ex_w_data = `ZERO_WORD;
+                      ex_w_csr_data = `ZERO_WORD;
+                      ex_csr_addr = id_imm[11 : 0];
+                      ex_csr_ena = 1'b0;
+                      mret =  ~id_imm[0] & id_imm[1] & id_imm[8] & id_imm[9];
+                      ebreak = id_imm[0] & ~id_imm[1] & ~id_imm[8] & ~id_imm[9];
+                      ecall = ~id_imm[0] & ~id_imm[1] & ~id_imm[8] & ~id_imm[9];
+                  end
+                  default: begin
+                      ex_w_data = `ZERO_WORD;
+                      ex_mem_waddr = `ZERO_ADDR;
+                      ex_mem_raddr = `ZERO_ADDR;
+                      ex_stor_data = `ZERO_WORD;
+                      ex_w_csr_data = `ZERO_WORD;
+                      ex_csr_addr = 12'h000;
+                      ex_csr_ena = 1'b0;
+            
+                  end
+            endcase
+        end
+    end
+endmodule
+
+module ysyx_210457_ex_mem (
+    input wire reset,
+    input wire clock,
+    input wire [`PC_BUS] ex_pc,
+    input wire [`INST_BUS] ex_instr,
+    input wire  [`REG_BUS] ex_w_data,
+    input wire ex_w_ena,
+    input wire [4 : 0] ex_w_addr,
+    input wire [`ADDR_BUS] ex_mem_waddr,
+    input wire [`ADDR_BUS] ex_mem_raddr,
+    input wire [4 : 0] ex_memop,
+    input wire [`REG_BUS] ex_stor_data,
+    input wire ex_mem_wr,
+    input wire ex_mem_ena,
+
+    input wire ex_csr_ena,               ///csr
+    input wire [11 : 0] ex_csr_addr,         
+    input wire [`REG_BUS] ex_w_csr_data,
+    input wire [`REG_BUS] ex_except_type,
+    input wire flush,
+    input wire [1 : 0] stall,
+
+    output reg [`REG_BUS] mem_w_data,
+    output reg mem_w_ena,
+    output reg [4 : 0] mem_w_addr,
+
+    output reg [`ADDR_BUS] mem_mem_waddr,
+    output reg [`ADDR_BUS] mem_mem_raddr,
+    output reg [4 : 0] mem_memop,
+    output reg [`REG_BUS] mem_stor_data,
+    output reg mem_mem_wr,
+    output reg mem_mem_ena,
+
+    output reg mem_csr_ena,             ///csr o
+    output reg [11 : 0] mem_csr_addr,         
+    output reg [`REG_BUS] mem_w_csr_data,
+    output reg [`REG_BUS] mem_except_type,
+
+    output reg [`INST_BUS] men_instr,
+    output reg [`PC_BUS] men_pc 
+);
+    always @(posedge clock) begin
+        if(reset == 1'b1) begin
+            mem_w_data <= `ZERO_WORD;
+            mem_w_ena <= 1'b0;
+            mem_w_addr <= `ZERO_REG_ADDR;
+            mem_mem_waddr <= `ZERO_ADDR;
+            mem_mem_raddr <= `ZERO_ADDR;
+            mem_memop <= 5'b00000;
+            mem_stor_data <= `ZERO_WORD;
+            mem_mem_wr <= 1'b0;
+            mem_mem_ena <= 1'b0;
+            men_pc <= `PC_START;
+            men_instr <= `ZERO_INST;
+            mem_csr_addr <= 12'h000;
+            mem_w_csr_data <= `ZERO_WORD;
+            mem_csr_ena <= 1'b0;
+            mem_except_type <= `ZERO_WORD;
+        end
+        else begin
+            if(flush == 1'b1) begin
+                mem_w_data <= `ZERO_WORD;
+                mem_w_ena <= 1'b0;
+                mem_w_addr <= `ZERO_REG_ADDR;
+                mem_mem_waddr <= `ZERO_ADDR;
+                mem_mem_raddr <= `ZERO_ADDR;
+                mem_memop <= 5'b00000;
+                mem_stor_data <= `ZERO_WORD;
+                mem_mem_wr <= 1'b0;
+                mem_mem_ena <= 1'b0;
+                men_pc <= `PC_START;
+                men_instr <= `ZERO_INST;
+                mem_csr_ena <= 1'b0;
+                mem_csr_addr <= 12'h000;
+                mem_w_csr_data <= `ZERO_WORD;
+                mem_except_type <= `ZERO_WORD;
+            end
+            else if(stall[1] & ~stall[0]) begin
+                mem_w_data <= `ZERO_WORD;
+                mem_w_ena <= 1'b0;
+                mem_w_addr <= `ZERO_REG_ADDR;
+                mem_mem_waddr <= `ZERO_ADDR;
+                mem_mem_raddr <= `ZERO_ADDR;
+                mem_memop <= 5'b00000;
+                mem_stor_data <= `ZERO_WORD;
+                mem_mem_wr <= 1'b0;
+                mem_mem_ena <= 1'b0;
+                men_pc <= `PC_START;
+                men_instr <= `ZERO_INST;
+                mem_csr_addr <= 12'h000;
+                mem_w_csr_data <= `ZERO_WORD;
+                mem_csr_ena <= 1'b0;
+                mem_except_type <= `ZERO_WORD;
+            end
+            else if(~stall[1]) begin
+                mem_w_data <= ex_w_data;
+                mem_w_ena <= ex_w_ena;
+                mem_w_addr <= ex_w_addr;
+                mem_mem_waddr <= ex_mem_waddr;
+                mem_mem_raddr <= ex_mem_raddr;
+                mem_memop <= ex_memop;
+                mem_stor_data <= ex_stor_data;
+                mem_mem_wr <= ex_mem_wr;
+                mem_mem_ena <= ex_mem_ena;
+                men_pc <= ex_pc;
+                men_instr <= ex_instr;
+                mem_csr_addr <= ex_csr_addr;
+                mem_w_csr_data <= ex_w_csr_data;
+                mem_csr_ena <= ex_csr_ena;
+                mem_except_type <= ex_except_type;
+            end   
+        end
+    end
+endmodule
+
+module ysyx_210457_MEM_stage (
+    input wire reset,
+    input wire time_inter,
+    input wire [`REG_BUS] ex_w_data,
+    input wire ex_w_ena,
+    input wire [4 : 0] ex_w_addr,
+    
+    input wire [`ADDR_BUS] ex_mem_waddr,
+    input wire [`ADDR_BUS] ex_mem_raddr,
+    input wire [`REG_BUS] ex_stor_data,
+    input wire [4 : 0] ex_memop,
+
+    input wire ex_mem_wr,
+    input wire ex_mem_ena,
+
+    input wire [`PC_BUS] ex_pc,
+    input wire [`INST_BUS] ex_instr,
+
+    input wire [11 : 0] ex_csr_addr,         ///csr
+    input wire [`REG_BUS] ex_w_csr_data,
+    input wire ex_csr_ena,
+    input wire [`REG_BUS] ex_except_type,
+
+    input wire [`REG_BUS] mepc,        //csr_read
+    input wire mip,
+    input wire mie,
+    input wire [`REG_BUS] mtvec,
+    input wire mstatus,
+
+    input wire [`REG_BUS] clint_data,      //clint
+
+    
+    output reg [11 : 0] mem_csr_addr,         ///csr o
+    output reg [`REG_BUS] mem_w_csr_data,
+    output reg mem_csr_ena,
+    output reg [`REG_BUS] mem_except_type,
+    output reg [`PC_BUS] new_pc,
+
+    output wire [`PC_BUS] mem_pc,
+
+    output reg [`REG_BUS] mem_w_data,
+    output reg mem_w_ena,
+    output reg [4 : 0] mem_w_addr,
+
+
+    output wire mem_valid,  //                //AXI
+    input  wire [63 : 0] mem_data,//
+    output reg [`REG_BUS] mem_stor_data,
+    output wire [`ADDR_BUS] mem_addr,//
+    output reg [1 : 0] mem_sel,//
+    output wire mem_req//
+
+);
+
+
+    reg [`ADDR_BUS] mem_mem_waddr;
+    reg [`ADDR_BUS] mem_mem_raddr;
+    reg mem_wr;
+    reg mem_mem_ena;
+
+
+
+assign mem_valid = mem_mem_ena;
+assign mem_req = mem_wr;
+assign mem_addr = mem_wr ? mem_mem_waddr : mem_mem_raddr;
+assign mem_pc = ex_pc;
+
+
+    always @(*) begin
+        if(reset == 1'b1) begin
+            mem_w_data = `ZERO_WORD;
+            mem_w_ena = 1'b0;
+            mem_w_addr = `ZERO_REG_ADDR;
+            mem_mem_waddr = `ZERO_ADDR;
+            mem_mem_raddr = `ZERO_ADDR;
+            mem_sel = `SIZE_B;
+            mem_stor_data = `ZERO_WORD;
+            mem_wr = 1'b0;
+            mem_mem_ena = 1'b0;
+        end
+        else begin
+            mem_w_data = ex_w_data;
+            mem_w_ena = ex_w_ena;
+            mem_w_addr = ex_w_addr;
+            mem_mem_waddr = ex_mem_waddr;
+            mem_mem_raddr = ex_mem_raddr;
+            mem_stor_data = `ZERO_WORD;
+            mem_sel = `SIZE_B;
+            mem_wr = ex_mem_wr;
+            mem_mem_ena = (ex_mem_ena && (mem_except_type == 64'h0));////////////////////////
+            case(ex_memop)
+                 `R_ONE:begin
+                     mem_sel = `SIZE_B;
+                     mem_w_data = {{56{mem_data[7]}} , mem_data[7 : 0]}; 
+                 end
+                 `R_ONEu:begin   
+                     mem_sel = `SIZE_B;
+                     mem_w_data = {{56{1'b0}} , mem_data[7 : 0]};                   
+                 end
+                 `R_DOU:begin
+                     mem_sel = `SIZE_H;
+                     mem_w_data = {{48{mem_data[15]}} , mem_data[15 : 0]};
+                 end
+                 `R_DOUu:begin
+                     mem_sel = `SIZE_H;
+                     mem_w_data = {{48{1'b0}} , mem_data[15 : 0]};
+                 end
+                 `R_FOR:begin
+                     mem_sel = `SIZE_W;
+                     mem_w_data = {{32{mem_data[31]}} , mem_data[31 : 0]};
+                 end
+                 `R_FORu:begin
+                     mem_sel = `SIZE_W;
+                     mem_w_data = {{32{1'b0}} , mem_data[31 : 0]};
+                 end
+                 `R_EIG:begin
+                     mem_sel = `SIZE_D;
+                     mem_w_data = mem_data;
+                     if((ex_mem_raddr == `msip) || (ex_mem_raddr == `mtimecmp) || (ex_mem_raddr == `mtime)) begin  ////////////
+                         mem_mem_ena = 1'b0;
+                         mem_w_data = clint_data;
+                     end
+                 end
+
+                 //write
+                 `W_ONE:begin
+                     case(ex_mem_waddr[2 : 0])
+                         3'b000:begin
+                             mem_sel = `SIZE_B;
+                             mem_stor_data = {56'b0, ex_stor_data[7 : 0]};
+                         end
+                         3'b001:begin
+                             mem_sel = `SIZE_B;
+                             mem_stor_data = {48'b0, ex_stor_data[7 : 0], 8'b0};
+                         end
+                         3'b010:begin
+                             mem_sel = `SIZE_B;
+                             mem_stor_data = {40'b0, ex_stor_data[7 : 0], 16'b0};
+                         end
+                         3'b011:begin
+                             mem_sel = `SIZE_B;
+                             mem_stor_data = {32'b0, ex_stor_data[7 : 0], 24'b0};
+                         end
+                         3'b100:begin
+                             mem_sel = `SIZE_B;
+                             mem_stor_data = {24'b0, ex_stor_data[7 : 0], 32'b0};
+                         end
+                         3'b101:begin
+                             mem_sel = `SIZE_B;
+                             mem_stor_data = {16'b0, ex_stor_data[7 : 0], 40'b0};
+                         end
+                         3'b110:begin
+                             mem_sel = `SIZE_B;
+                             mem_stor_data = {8'b0, ex_stor_data[7 : 0], 48'b0};
+                         end
+                         3'b111:begin
+                             mem_sel = `SIZE_B;
+                             mem_stor_data = {ex_stor_data[7 : 0], 56'b0};
+                         end
+                     endcase  
+                 end
+                 `W_DOU:begin
+                     case(ex_mem_waddr[2 : 1])
+                         2'b00:begin
+                             mem_sel = `SIZE_H;
+                             mem_stor_data = {48'b0, ex_stor_data[15 : 0]};
+                         end
+                         2'b01:begin
+                             mem_sel = `SIZE_H;
+                             mem_stor_data = {32'b0, ex_stor_data[15 : 0], 16'b0};
+                         end
+                         2'b10:begin
+                             mem_sel = `SIZE_H;
+                             mem_stor_data = {16'b0, ex_stor_data[15 : 0], 32'b0};
+                         end
+                         2'b11:begin
+                             mem_sel = `SIZE_H;
+                             mem_stor_data = {ex_stor_data[15 : 0], 48'b0};
+                         end 
+                     endcase
+                 end
+                 `W_FOR:begin
+                     case(ex_mem_waddr[2])
+                         1'b0:begin
+                             mem_sel = `SIZE_W;
+                             mem_stor_data = {32'b0, ex_stor_data[31 : 0]};
+                         end
+                         1'b1:begin
+                             mem_sel = `SIZE_W;
+                             mem_stor_data = {ex_stor_data[31 : 0], 32'b0};
+                         end
+                     endcase
+                 end
+                 `W_EIG:begin
+                     mem_sel = `SIZE_D;
+                     mem_stor_data = ex_stor_data;
+                     if((ex_mem_waddr == `msip) || (ex_mem_waddr == `mtimecmp) || (ex_mem_waddr == `mtime)) begin  ////////////
+                         mem_mem_ena = 1'b0;
+                     end
+                 end
+                 default:begin
+                     mem_w_data = ex_w_data;
+                     mem_sel = `SIZE_B;
+                     mem_wr = 1'b0;
+                     mem_mem_ena = 1'b0;
+                 end
+            endcase
+        end
+    end
+
+    always @(*) begin                    //csr
+        if(reset == 1'b1) begin
+            mem_csr_addr = 12'h000;
+            mem_w_csr_data = `ZERO_WORD;
+            mem_csr_ena = 1'b0;
+        end
+        else begin
+            mem_csr_addr = ex_csr_addr;
+            mem_w_csr_data = ex_w_csr_data;
+            mem_csr_ena = ex_csr_ena;
+        end
+    end
+        
+
+    always @(*) begin
+        if(reset == 1'b1) begin
+            mem_except_type = `ZERO_WORD;
+            new_pc = `ZERO_WORD;
+        end
+        else begin
+            mem_except_type = `ZERO_WORD;
+            new_pc = `ZERO_WORD;
+            if(mem_pc != `ZERO_WORD) begin
+                if(((mstatus & mie & time_inter) || (mstatus & mie & mip)) && (ex_instr != 32'h0) && ~ex_mem_wr) begin                             //time_interrupt
+                    mem_except_type = 64'h1;
+                    new_pc = mtvec;
+                end
+                else if(ex_except_type == 64'h10000) begin                          //syscall
+                    mem_except_type = 64'h2;
+                    new_pc = mtvec;
+                end
+                else if(ex_except_type == 64'h20000) begin                          //ebreak
+                    mem_except_type = 64'h3;
+                    new_pc = mtvec;
+                end  
+                else if(ex_except_type == 64'h40000) begin                          //mret
+                    mem_except_type = 64'h4;
+                    new_pc = mepc;
+                end 
+
+            end
+        end
+    end
+
+
+endmodule
+
+module ysyx_210457_mem_wb (
+    input wire clock,
+    input wire reset,
+    input wire [`REG_BUS] mem_w_data,
+    input wire mem_w_ena,
+    input wire [4 : 0] mem_w_addr,
+
+    input wire [11 : 0] mem_csr_addr,         //csr
+    input wire [`REG_BUS] mem_w_csr_data,
+    input wire mem_csr_ena,
+    input wire flush,
+    input wire [1 : 0] stall,
+
+    output reg [11 : 0] wb_csr_addr,         ///csr o
+    output reg [`REG_BUS] wb_w_csr_data,
+    output reg wb_csr_ena,
+    
+    output reg [`REG_BUS] wb_w_data,
+    output reg wb_w_ena,
+    output reg [4 : 0] wb_w_addr
+);
+    always @(posedge clock) begin
+        if(reset == 1'b1) begin
+            wb_w_data <= `ZERO_WORD;
+            wb_w_ena <= 1'b0;
+            wb_w_addr <= `ZERO_REG_ADDR;
+            wb_csr_addr <= 12'h000;
+            wb_w_csr_data <= `ZERO_WORD;
+            wb_csr_ena <= 1'b0;
+        end
+        else begin
+            if(flush == 1'b1) begin
+                wb_w_data <= `ZERO_WORD;
+                wb_w_ena <= 1'b0;
+                wb_w_addr <= `ZERO_REG_ADDR;
+                
+                wb_csr_addr <= 12'h000;
+                wb_w_csr_data <= `ZERO_WORD;
+                wb_csr_ena <= 1'b0;
+            end
+            else if(stall[1] & ~stall[0]) begin
+                wb_w_data <= `ZERO_WORD;
+                wb_w_ena <= 1'b0;
+                wb_w_addr <= `ZERO_REG_ADDR;
+                wb_csr_addr <= 12'h000;
+                wb_w_csr_data <= `ZERO_WORD;
+                wb_csr_ena <= 1'b0;
+            end
+            else if(~stall[1]) begin
+                wb_w_data <= mem_w_data;
+                wb_w_ena <= mem_w_ena;
+                wb_w_addr <= mem_w_addr;
+                wb_csr_addr <= mem_csr_addr;
+                wb_w_csr_data <= mem_w_csr_data;
+                wb_csr_ena <= mem_csr_ena;
+            end
+        end
+    end
+endmodule
+
+module ysyx_210457_WB_stage (
+    input wire reset,
+    input wire mem_w_ena,
+    input wire [`REG_BUS] mem_w_data,
+    input wire [4 : 0] mem_w_addr,
+    input wire mem_csr_ena,                 //csr
+    input wire [11 : 0] mem_csr_addr,         
+    input wire [`REG_BUS] mem_w_csr_data,
+    
+
+    output reg wb_csr_ena,                 ///csr o
+    output reg [11 : 0] wb_csr_addr,         
+    output reg [`REG_BUS] wb_w_csr_data,
+    output reg wb_w_ena,
+    output reg [`REG_BUS] wb_w_data,
+    output reg [4 : 0] wb_w_addr
+);
+
+    always @( * ) begin
+        if(reset == 1'b1) begin
+            wb_w_ena = 1'b0;
+            wb_w_data = `ZERO_WORD;
+            wb_w_addr = `ZERO_REG_ADDR;
+        end
+        else begin
+            wb_w_ena = mem_w_ena;
+            wb_w_addr = mem_w_addr;
+            wb_w_data = mem_w_data;
+        end
+    end
+
+    always @(*) begin                    //csr
+        if(reset == 1'b1) begin
+            wb_csr_addr = 12'h000;
+            wb_w_csr_data = `ZERO_WORD;
+            wb_csr_ena = 1'b0;
+        end
+        else begin
+            wb_csr_addr = mem_csr_addr;
+            wb_w_csr_data = mem_w_csr_data;
+            wb_csr_ena = mem_csr_ena;
+        end
+    end
+
+endmodule
+
+module ysyx_210457_ADD (
+    input wire [63:0] num1,
+    input wire [63:0] num2,
+
+    output wire [63:0] sum
+);
+    assign sum = num1 + num2;
+
+endmodule
+
+
+module ysyx_210457_ALU(
+    input wire [63:0] num1,
+    input wire [63:0] num2,
+    input wire [6:0] op,
+
+    output reg [63:0] out
+);
+wire signed [63 : 0] num1_s;
+wire signed [31 : 0] num1_sw;
+
+assign num1_s = num1;
+assign num1_sw = num1[31 : 0];
+ 
+    always @(*) begin
+        case (op)
+            7'b0000_001: begin
+                out = num1 + num2;
+            end
+            7'b0000_010: begin
+                out = num1 - num2;
+            end
+            7'b0000_100: begin
+                out = num1 & num2;
+            end
+            7'b0001_000: begin
+                out = num1 | num2;
+            end
+            7'b0010_000: begin
+                out = num1 ^ num2;
+            end
+            7'b0100_000: begin
+                out = ~num1;
+            end
+            7'b1000_000: begin
+                out = ~num2;
+            end
+            7'b0000_110: begin
+                if(num1[63] == num2[63]) begin
+                    if(num1[62 :0] < num2[62 :0]) begin
+                        out = 1;
+                    end
+                    else begin
+                        out = 0;
+                    end
+                end
+                else begin
+                    if(num1[63] > num2[63]) begin
+                        out = 1;
+                    end
+                    else begin
+                        out = 0;
+                    end
+                end
+            end
+            7'b0000_011: begin
+                if(num1 < num2)
+                out = 1;
+                else
+                out = 0;
+            end
+            7'b0001_100:begin
+                out = num1 << num2[5 : 0];
+            end
+            7'b0001_101:begin
+                out = num1 << num2[4 : 0];
+            end
+            7'b0011_000:begin
+                out = num1 >> num2[5 : 0];
+            end
+            7'b0011_001:begin
+                out = {{32{1'b0}} , {num1[31 : 0] >> num2[4 : 0]}};
+            end
+            7'b0110_000:begin
+                //num1_s = num1;
+                out =  num1_s >>> num2[5 : 0];
+            end    
+            7'b0110_001:begin
+                //num1_sw = num1[31 : 0];
+                out =  {{32{num1_sw[31]}} , {num1_sw >>> num2[4 : 0]}};
+            end   
+            7'b1100_000:begin
+                out = num1 << 12;
+            end       
+            default: begin
+                out = 64'h00000000_00000000;
+            end
+        endcase
+    end
+endmodule
+
+module ysyx_210457_Clint (
+    input wire clock,
+    input wire reset,
+    input wire [`ADDR_BUS] ex_mem_waddr,
+    input wire [`ADDR_BUS] ex_mem_raddr,
+    input wire [`REG_BUS] ex_stor_data,
+    input wire ex_mem_wr,
+    input wire ex_mem_ena,
+
+
+    output reg time_inter,
+    output reg [`REG_BUS] clint_data
+
+);
+    reg [`REG_BUS] msip;
+    reg [`REG_BUS] mtime;
+    reg [`REG_BUS] mtimecmp;
+
+
+    always @(posedge clock) begin
+        if(reset == 1'b1) begin
+            mtime <= `ZERO_WORD;
+            mtimecmp <= `TIME;
+            msip <= `ZERO_WORD;
+            time_inter <= 1'b0;
+        end
+        else begin
+            if(mtime != 64'hffff_ffff_ffff_ffff) begin
+                mtime <= mtime + 1;
+            end
+            else begin
+                mtime <= 64'h0;
+            end
+
+            if(mtime >= mtimecmp) begin
+                time_inter <= 1'b1;
+            end
+            else begin
+                time_inter <= 1'b0;
+            end
+
+            if(ex_mem_wr & ex_mem_ena) begin
+                case(ex_mem_waddr)
+                 `msip:begin
+                     msip <= ex_stor_data;
+                 end
+                 `mtimecmp:begin
+                     mtimecmp <= ex_stor_data;
+                 end
+                 `mtime:begin
+                     mtime <= ex_stor_data;
+                 end
+                 default:begin
+                    
+                 end
+                endcase
+            end
+
+        end  
+    end
+
+
+
+
+
+
+
+
+
+    always @( * ) begin                      //read
+        if (reset == 1'b1) begin
+			clint_data = `ZERO_WORD;
+		end
+        else begin
+            clint_data = `ZERO_WORD;
+            if(~ex_mem_wr & ex_mem_ena) begin
+                case(ex_mem_raddr)
+                     `msip:begin
+                         clint_data = msip;
+                     end
+                     `mtimecmp:begin
+                         clint_data = mtimecmp;
+                     end
+                     `mtime:begin
+                         clint_data = mtime;
+                     end
+                     default:begin
+                         clint_data = `ZERO_WORD;
+                     end
+                endcase
+            end
+            else begin
+                clint_data = `ZERO_WORD;
+            end 
+        end
+    end
+
+endmodule
+
+module ysyx_210457_CSR_reg (
+   input wire reset,
+   input wire clock,
+   input wire [11 : 0] csr_r_addr,
+
+   input wire csr_w_ena,
+   input wire [11 : 0] csr_w_addr,
+   input wire [`REG_BUS] csr_w_data,
+   
+   input wire [`REG_BUS] except_type,
+   input wire [`PC_BUS] except_pc,             //mem_pc
+   input wire time_inter,
+   input wire stall,
+
+
+   output reg [`REG_BUS] csr_reg_data,
+   output wire mstatus,
+   output wire [`REG_BUS] mtvec,
+   output wire [`REG_BUS] mepc,
+   output wire mie,
+   output wire mip,
+
+   output reg flush
+   
+
+);
+
+
+   
+   reg [`REG_BUS] csr_mepc;
+   reg [`REG_BUS] csr_mstatus;
+   reg [`REG_BUS] csr_mip;
+   reg [`REG_BUS] csr_mie;
+   reg [`REG_BUS] csr_mtvec;
+   
+   reg [`REG_BUS] csr_mscratch;        
+   reg [`REG_BUS] csr_mcause;   
+   reg [`REG_BUS] csr_mcycle;
+   reg [`REG_BUS] csr_minstret;
+   reg [`REG_BUS] csr_sstatus;
+
+    always @(posedge clock) begin                //write csr
+        if(reset == 1'b1) begin
+            csr_mtvec <= `ZERO_WORD;
+            csr_mepc <= `ZERO_WORD;
+            csr_mcause <= `ZERO_WORD;
+            csr_mstatus <= `ZERO_WORD;
+            csr_mie <= `ZERO_WORD;
+            csr_mip <= `ZERO_WORD;
+            csr_mcycle <= `ZERO_WORD;
+            csr_minstret <= 64'h1;
+            csr_mscratch <= `ZERO_WORD;
+            csr_sstatus <= `ZERO_WORD;
+        end
+        else begin
+
+            csr_mcycle <= csr_mcycle + 1;        //cycle
+
+            csr_mip[7] <= time_inter;            //interrpt
+
+            if((except_pc != `PC_START) && (except_type != 64'h1) && (stall != 1'b1)) begin
+                csr_minstret <= csr_minstret + 1;
+            end
+
+            if(csr_w_ena == 1'b1) begin
+                case(csr_w_addr)
+                    `mstatus:begin
+                        csr_mstatus[62 : 0] <= csr_w_data[62 : 0];
+                        csr_mstatus[63] <= (csr_w_data[13] & csr_w_data[14]) | (csr_w_data[15] & csr_w_data[16]);
+                        csr_sstatus[63] <= (csr_w_data[13] & csr_w_data[14]) | (csr_w_data[15] & csr_w_data[16]);
+                        csr_sstatus[16 : 13] <= csr_w_data[16 : 13];
+                    end
+                     `mtvec:begin
+                        csr_mtvec <= csr_w_data;
+                    end
+                    `mie:begin
+                        csr_mie <= csr_w_data;
+                    end
+                    `mepc:begin
+                        csr_mepc <= csr_w_data;
+                    end
+                    `mcause:begin
+                        csr_mcause <= csr_w_data;
+                    end
+                    `mscratch:begin
+                        csr_mscratch <= csr_w_data;
+                    end
+                    `mcycle:begin
+                        csr_mcycle <= csr_w_data;
+                    end
+                    `minstret:begin
+                        csr_minstret <= csr_w_data;
+                    end
+                    `mip:begin
+                        csr_mip[3 : 0] <= csr_w_data[3 : 0];
+                    end
+                    `sstatus:begin
+                        csr_sstatus <= csr_w_data;
+                    end
+                    default:begin
+                        
+                    end
+                endcase
+            end
+            
+
+            case(except_type)
+                 64'h1:begin            ////time_interrupt
+                    csr_mstatus[7] <= csr_mstatus[3];    //MPIE
+                    csr_mstatus[3] <= 1'b0;          //MIE->0
+                    csr_mstatus[12 : 11] <= 2'b11;   //MPP
+                    csr_mcause <= {1'b1, 63'h7};
+                    csr_mepc <= except_pc;
+                    csr_mip[7] <= 1'b0;
+                 end
+
+                 64'h2:begin           ////ecall
+                    csr_mstatus[7] <= csr_mstatus[3];    //MPIE
+                    csr_mstatus[3] <= 1'b0;          //MIE->0
+                    csr_mstatus[12 : 11] <= 2'b11;   //MPP
+                    csr_mcause <= {1'b0, 59'h0, 4'b1011};
+                    csr_mepc <= except_pc;
+                 end
+
+                 64'h3:begin           ////ebreak
+                    csr_mstatus[7] <= csr_mstatus[3];    //MPIE
+                    csr_mstatus[3] <= 1'b0;          //MIE->0
+                    csr_mstatus[12 : 11] <= 2'b11;   //MPP
+                    csr_mcause <= {1'b0, 59'h0, 4'b0011};
+                    csr_mepc <= except_pc;
+                 end
+
+                 64'h4:begin           ////mret                   
+                    csr_mstatus[3] <= csr_mstatus[7];
+                    csr_mstatus[7] <= 1'b1;
+                    csr_mstatus[12 : 11] <= 2'b00;
+                    //csr_mepc <= except_pc;
+                 end
+
+                 default:begin
+                     
+                 end
+            endcase
+        end
+    end
+
+    always @(*) begin                          //read csr
+        if(reset == 1'b1) begin
+            csr_reg_data = `ZERO_WORD;
+        end
+        else if((csr_w_ena == 1'b1) && (csr_r_addr == csr_w_addr)) begin
+            csr_reg_data = csr_w_data;
+        end
+        else begin
+            case(csr_r_addr)
+                `mstatus:begin
+                    csr_reg_data = csr_mstatus;
+                end
+                `mtvec:begin
+                    csr_reg_data = csr_mtvec;
+                end
+                `mie:begin
+                    csr_reg_data = csr_mie;
+                end
+                `mepc:begin
+                    csr_reg_data = csr_mepc;
+                end
+                `mcause:begin
+                    csr_reg_data = csr_mcause;
+                end
+                `mcycle:begin
+                    csr_reg_data = csr_mcycle;
+                end
+                `minstret:begin
+                    csr_reg_data = csr_minstret;
+                end
+                `mip:begin
+                    csr_reg_data = csr_mip;
+                end
+                `mscratch:begin
+                    csr_reg_data = csr_mscratch;
+                end
+                `sstatus:begin
+                    csr_reg_data = csr_sstatus;
+                end
+                default:begin
+                    csr_reg_data = `ZERO_WORD;    
+                end
+            endcase
+        end
+    end
+
+
+ assign mstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ? {(csr_w_data[13] & csr_w_data[14]) | (csr_w_data[15] & csr_w_data[16]),  csr_w_data[62 : 0]}[3] : csr_mstatus[3]; 
+ assign mepc = ((csr_w_ena == 1'b1) & (csr_w_addr == `mepc)) ? csr_w_data : csr_mepc;
+ assign mip = ((csr_w_ena == 1'b1) & (csr_w_addr == `mip)) ? csr_w_data[7] :csr_mip[7]; 
+ assign mie = ((csr_w_ena == 1'b1) & (csr_w_addr == `mie)) ? csr_w_data[7] : csr_mie[7];
+ assign mtvec = ((csr_w_ena == 1'b1) & (csr_w_addr == `mtvec)) ? csr_w_data : csr_mtvec;
+
+
+    always @(*) begin                          //Ctrl
+        if(reset == 1'b1) begin
+            flush = 1'b0;         
+        end
+        else begin
+            if(except_type != `ZERO_WORD) begin
+                flush = 1'b1;
+            end
+            else begin
+                flush = 1'b0;
+            end
+        end
+    end
+
+
+endmodule
+
+module ysyx_210457_forecase (
+    input wire reset,
+    input wire clock,
+    input wire mux_pc,
+    input wire [`PC_BUS] pc_id,
+    input wire [`PC_BUS] add_pc,
+    input wire [`PC_BUS] branch,
+    input wire id_forecase,
+    input wire error_branch,
+    input wire stall,
+
+    output reg wash,
+    output reg if_forecase,
+    output reg [`PC_BUS] pc
+);
+    integer i;
+    reg [1 : 0] fore;
+    reg [`PC_BUS] fore_branch[`FORECASE-1 : 0];
+    reg [`PC_BUS] pc_now[`PC-1 : 0];
+
+
+
+reg [1 : 0] timeo;
+always @(posedge clock) begin   //count
+    if(reset == 1'b1) begin
+        timeo <= 2'b0;
+    end
+    else begin
+        if(pc_id == `PC_START) begin
+           if(timeo < 2) begin
+               timeo <= timeo + 1 ;
+           end
+        end
+    end
+end
+
+
+always @(posedge clock) begin
+    if(reset == 1'b1) begin
+        fore <= 2'b00;        
+        for(i=0; i<`PC; i=i+1) begin
+            pc_now[i] <= `ZERO_WORD; 
+        end
+        for(i=0; i<`FORECASE; i=i+1) begin
+            fore_branch[i] <= `ZERO_WORD; 
+        end
+    end
+    else begin
+
+        if(~stall) begin
+            if((timeo < 2) || (pc_id != `PC_START)) begin
+                if(mux_pc == 1'b1) begin
+                    if(fore_branch[{pc_id + 4}[`FORECASE_LOG+1 : 2]] != branch) begin
+                        fore_branch[{pc_id + 4}[`FORECASE_LOG+1 : 2]] <= branch; 
+                        pc_now[{pc_id + 4}[`PC_LOG+1 : 2]] <= pc_id + 4;
+                    end
+                    if(fore < 2'b11) begin
+                        fore <= fore + 1;
+                    end
+                end
+            
+                else begin
+                    if(pc_now[{pc_id + 4}[`PC_LOG+1 : 2]] == {pc_id + 4}) begin
+                        if(fore > 2'b00) begin
+                            fore <= fore - 1;
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+
+
+    always @(*) begin
+        if(reset == 1'b1) begin
+            wash = 1'b0;
+            pc = `ZERO_WORD;
+            if_forecase = 1'b0;
+        end
+        else begin
+            wash = 1'b0;
+            pc = add_pc;
+            if_forecase = 1'b0;
+            if(~stall) begin
+                wash = 1'b0;
+                pc = add_pc;
+                if_forecase = 1'b0;
+                if((timeo < 2) || (pc_id != `PC_START)) begin
+                    if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]]) begin
+                        if(fore >= 2'b10) begin
+                            pc = fore_branch[add_pc[`FORECASE_LOG + 1 : 2]];
+                            if_forecase = 1'b1;
+                        end
+                        else begin
+                            pc = add_pc;
+                            if_forecase = 1'b0;
+                        end
+                    end
+                    else begin
+                        if_forecase = 1'b0;
+                        pc = add_pc;
+                    end
+
+                    if(mux_pc == 1'b1) begin
+                        if((mux_pc != id_forecase) || (error_branch)) begin  
+                           wash = 1'b1;
+                           pc = branch;
+                           if_forecase = 1'b0;
+                        end
+                    end
+                
+                    if(mux_pc == 1'b0) begin
+                        if(mux_pc != id_forecase) begin
+                            wash = 1'b1;
+                            pc = pc_id + 4;
+                            if_forecase = 1'b0;
+                        end
+                    end
+                    
+                end
+            end
+        end
+    end
+
+endmodule
+
+
+module ysyx_210457_IMGN (
+    input wire [31:0] instr,
+
+    output reg [63 : 0] imm
+);
+
+    wire [4 : 0] op;
+    assign op[4] = (~instr[6] & ~instr[5] & ~instr[2]) | (instr[6] & instr[5] & ~instr[3] & instr[2]) | (instr[6] & instr[5] & instr[4]);
+    assign op[3] = ~instr[6] & instr[5] & ~instr[4] & instr[1] & instr[0];
+    assign op[2] = instr[6] & instr[5] & ~instr[4] & ~instr[2];
+    assign op[1] = instr[6] & instr[5] & instr[3] & instr[1] & instr[0];
+    assign op[0] = (~instr[6] & instr[5] & instr[2]) | (~instr[6] & ~instr[5] & instr[2]);
+
+    always @ (*) begin
+        case(op)
+             5'b10000://I-type
+             begin
+                 imm = {{52{instr[31]}}, instr[31:20]};
+             end
+             5'b01000://S-type
+             begin
+                 imm = {{52{instr[31]}}, instr[31:25], instr[11:7]};
+             end
+             5'b00100://B-type
+             begin
+                 imm = {{51{instr[31]}}, instr[31], instr[7], instr[30:25], instr[11:8], 1'b0};
+             end
+             5'b00010://J-type
+             begin
+                 imm = {{43{instr[31]}}, instr[31], instr[19 : 12], instr[20], instr[30 : 21], 1'b0};
+             end
+             5'b00001://U_type
+             begin
+                 imm = {{44{instr[31]}}, instr[31 : 12]};  //ex alu had <<12
+             end
+             default:
+             begin
+                 imm = 64'b00000000_00000000;
+             end
+         endcase
+    end
+
+endmodule
+
+module ysyx_210457_PC(
+  input wire clock,
+  input wire reset,
+  input wire [`PC_BUS] pc_i,
+  input wire pc_con,
+  input wire [`PC_BUS] new_pc,
+  input wire flush,	
+  input wire stall,                
+
+  output reg I_M_e,
+  output reg [`PC_BUS] pc
+                           
+);
+
+always@( posedge clock ) begin
+    if( reset == 1'b1 ) begin
+      I_M_e <= 1'b0;
+    end
+    else begin
+      I_M_e <= 1'b1;
+    end
+end
+
+
+always@( posedge clock ) begin
+    if(reset == 1'b1) begin
+       pc <= `PC_START ;
+    end
+    else begin
+        if( I_M_e == 1'b0 ) begin
+            pc <= `PC_START ;
+        end
+        else begin  
+            if(flush == 1'b1) begin
+               pc <= new_pc;
+            end  
+            else if(~stall) begin
+                if (pc_con == 1'b0) begin
+                    pc <= pc_i;
+                end
+            end 
+        end
+    end
+end
+endmodule
+
+
+module ysyx_210457_regfile(
+    input  wire clock,
+	input  wire reset,
+	
+	input  wire  [4  : 0] w_addr,
+	input  wire  [`REG_BUS] w_data,
+	input  wire 		  w_ena,
+	
+	input  wire  [4  : 0] r_addr1,
+	input  wire 		  r_ena1,
+	output reg   [`REG_BUS] r_data1,  //OUT1
+
+	input  wire  [4  : 0] r_addr2,
+	input  wire 		  r_ena2,
+	output reg   [`REG_BUS] r_data2   //OUT2
+
+
+    );
+
+    // 32 registers
+	reg [`REG_BUS] 	regs[0 : 31];
+	
+	always @(posedge clock) 
+	begin
+		if ( reset == 1'b1 ) 
+		begin
+			regs[ 0] <= `ZERO_WORD;  //0
+			regs[ 1] <= `ZERO_WORD;
+			regs[ 2] <= `ZERO_WORD;
+			regs[ 3] <= `ZERO_WORD;
+			regs[ 4] <= `ZERO_WORD;
+			regs[ 5] <= `ZERO_WORD;
+			regs[ 6] <= `ZERO_WORD;
+			regs[ 7] <= `ZERO_WORD;
+			regs[ 8] <= `ZERO_WORD;
+			regs[ 9] <= `ZERO_WORD;
+			regs[10] <= `ZERO_WORD;
+			regs[11] <= `ZERO_WORD;
+			regs[12] <= `ZERO_WORD;
+			regs[13] <= `ZERO_WORD;
+			regs[14] <= `ZERO_WORD;
+			regs[15] <= `ZERO_WORD;
+			regs[16] <= `ZERO_WORD;
+			regs[17] <= `ZERO_WORD;
+			regs[18] <= `ZERO_WORD;
+			regs[19] <= `ZERO_WORD;
+			regs[20] <= `ZERO_WORD;
+			regs[21] <= `ZERO_WORD;
+			regs[22] <= `ZERO_WORD;
+			regs[23] <= `ZERO_WORD;
+			regs[24] <= `ZERO_WORD;
+			regs[25] <= `ZERO_WORD;
+			regs[26] <= `ZERO_WORD;
+			regs[27] <= `ZERO_WORD;
+			regs[28] <= `ZERO_WORD;
+			regs[29] <= `ZERO_WORD;
+			regs[30] <= `ZERO_WORD;
+			regs[31] <= `ZERO_WORD;
+		end
+		else 
+		begin
+			if ((w_ena == 1'b1) && (w_addr != 5'h00))	
+				regs[w_addr] <= w_data;
+		end
+	end
+	
+	always @(*) begin
+		if (reset == 1'b1) begin
+			r_data1 = `ZERO_WORD;
+		end
+		else if (r_ena1 == 1'b1) begin
+			if((r_addr1 == w_addr) && (w_addr != 5'h00) && (w_ena == 1'b1)) begin
+				r_data1 = w_data;
+			end
+			else begin
+				r_data1 = regs[r_addr1];
+			end
+		end
+		else begin
+			r_data1 = `ZERO_WORD;
+		end
+	end
+	
+	always @(*) begin
+		if (reset == 1'b1) begin
+			r_data2 = `ZERO_WORD;
+		end
+		else if (r_ena2 == 1'b1) begin
+			if((r_addr2 == w_addr) && (w_addr != 5'h00) && (w_ena == 1'b1)) begin
+				r_data2 = w_data;
+			end
+			else begin
+				r_data2 = regs[r_addr2];
+			end
+		end	
+		else begin
+			r_data2 = `ZERO_WORD;
+		end
+	end
+endmodule
+
+
+
