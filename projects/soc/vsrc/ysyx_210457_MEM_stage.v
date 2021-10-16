@@ -90,9 +90,6 @@ module ysyx_210457_MEM_stage (
 
 );
 
-assign mem_valid = mem_mem_ena;
-assign mem_req = mem_wr;
-assign mem_addr = mem_wr ? mem_mem_waddr : mem_mem_raddr;
 
     reg [`ADDR_BUS] mem_mem_waddr;
     reg [`ADDR_BUS] mem_mem_raddr;
@@ -100,7 +97,13 @@ assign mem_addr = mem_wr ? mem_mem_waddr : mem_mem_raddr;
     reg mem_mem_ena;
 
 
-    assign mem_pc = ex_pc;
+
+assign mem_valid = mem_mem_ena;
+assign mem_req = mem_wr;
+assign mem_addr = mem_wr ? mem_mem_waddr : mem_mem_raddr;
+assign mem_pc = ex_pc;
+
+
     always @(*) begin
         if(reset == 1'b1) begin
             mem_w_data = `ZERO_WORD;

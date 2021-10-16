@@ -38,7 +38,7 @@ module ysyx_210457_rvcpu(
     output wire flush
 
 );
-assign IF_addr = IF_pc[`ADDR_BUS];
+
 
 //IF_stage -> if_id
 wire wash;
@@ -47,7 +47,7 @@ wire [31 : 0] instr;
 wire if_forecase;
 wire [`PC_BUS] if_branch;
 
-
+assign IF_addr = IF_pc[`ADDR_BUS];
 
 //if_id -> ID_stage
 wire [`INST_BUS] id_instr;

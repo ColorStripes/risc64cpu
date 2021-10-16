@@ -61,7 +61,6 @@ module ysyx_210457_ex_mem (
             mem_w_data <= `ZERO_WORD;
             mem_w_ena <= 1'b0;
             mem_w_addr <= `ZERO_REG_ADDR;
-            men_pc <= `ZERO_WORD;
             mem_mem_waddr <= `ZERO_ADDR;
             mem_mem_raddr <= `ZERO_ADDR;
             mem_memop <= 5'b00000;
@@ -80,7 +79,6 @@ module ysyx_210457_ex_mem (
                 mem_w_data <= `ZERO_WORD;
                 mem_w_ena <= 1'b0;
                 mem_w_addr <= `ZERO_REG_ADDR;
-                men_pc <= `ZERO_WORD;
                 mem_mem_waddr <= `ZERO_ADDR;
                 mem_mem_raddr <= `ZERO_ADDR;
                 mem_memop <= 5'b00000;
@@ -98,7 +96,6 @@ module ysyx_210457_ex_mem (
                 mem_w_data <= `ZERO_WORD;
                 mem_w_ena <= 1'b0;
                 mem_w_addr <= `ZERO_REG_ADDR;
-                men_pc <= `ZERO_WORD;
                 mem_mem_waddr <= `ZERO_ADDR;
                 mem_mem_raddr <= `ZERO_ADDR;
                 mem_memop <= 5'b00000;
@@ -116,13 +113,13 @@ module ysyx_210457_ex_mem (
                 mem_w_data <= ex_w_data;
                 mem_w_ena <= ex_w_ena;
                 mem_w_addr <= ex_w_addr;
-                men_pc <= ex_pc;
                 mem_mem_waddr <= ex_mem_waddr;
                 mem_mem_raddr <= ex_mem_raddr;
                 mem_memop <= ex_memop;
                 mem_stor_data <= ex_stor_data;
                 mem_mem_wr <= ex_mem_wr;
                 mem_mem_ena <= ex_mem_ena;
+                men_pc <= ex_pc;
                 men_instr <= ex_instr;
                 mem_csr_addr <= ex_csr_addr;
                 mem_w_csr_data <= ex_w_csr_data;

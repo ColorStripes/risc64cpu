@@ -43,6 +43,20 @@ module ysyx_210457_forecase (
 
 
 
+reg [1 : 0] timeo;
+always @(posedge clock) begin   //count
+    if(reset == 1'b1) begin
+        timeo <= 2'b0;
+    end
+    else begin
+        if(pc_id == `PC_START) begin
+           if(timeo < 2) begin
+               timeo <= timeo + 1 ;
+           end
+        end
+    end
+end
+
 
 always @(posedge clock) begin
     if(reset == 1'b1) begin
@@ -135,19 +149,7 @@ end
 
     
 
-reg [1 : 0] timeo;
-always @(posedge clock) begin   //count
-    if(reset == 1'b1) begin
-        timeo <= 2'b0;
-    end
-    else begin
-        if(pc_id == `PC_START) begin
-           if(timeo < 2) begin
-               timeo <= timeo + 1 ;
-           end
-        end
-    end
-end
+
 
 
 endmodule

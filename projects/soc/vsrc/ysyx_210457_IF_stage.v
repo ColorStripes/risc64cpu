@@ -49,10 +49,10 @@ module ysyx_210457_IF_stage (
     output wire if_req//
 
 );
-assign if_branch = pc_i;
-
 wire [`PC_BUS] sum;
 wire [`PC_BUS] pc_i;
+
+assign if_branch = pc_i;
 
 assign if_size = `SIZE_W;
 assign instr = if_data_read;

@@ -82,54 +82,6 @@ module ysyx_210457(
 
 );
 
-assign io_slave_awready = 0;
-assign io_slave_wready = 0;
-assign io_slave_bvalid = 0;
-assign io_slave_bresp = 0;
-assign io_slave_bid = 0;
-assign io_slave_arready = 0;
-assign io_slave_rvalid = 0;
-assign io_slave_rvalid = 0;
-assign io_slave_rresp = 0;
-assign io_slave_rdata = 0;
-assign io_slave_rlast = 0;
-assign io_slave_rid = 0;
-
-    
-
-    assign aw_ready                                 = io_master_awready;
-    assign io_master_awvalid                        = aw_valid;
-    assign io_master_awaddr                         = aw_addr[31 : 0];
-    assign io_master_awid                           = aw_id;    
-    assign io_master_awlen                          = aw_len;
-    assign io_master_awsize                         = aw_size;
-    assign io_master_awburst                        = aw_burst;    
-
-    assign w_ready                                  = io_master_wready;
-    assign io_master_wvalid                         = w_valid;
-    assign io_master_wdata                          = w_data;
-    assign io_master_wstrb                          = w_strb;
-    assign io_master_wlast                          = w_last;
-
-    assign io_master_bready                         = b_ready;
-    assign b_valid                                  = io_master_bvalid;
-    //assign b_resp                                   = io_master_bresp;
-    assign b_id                                     = io_master_bid;
-
-    assign ar_ready                                 = io_master_arready;
-    assign io_master_arvalid                        = ar_valid;
-    assign io_master_araddr                         = ar_addr[31 : 0];
-    assign io_master_arid                           = ar_id;
-    assign io_master_arlen                          = ar_len;
-    assign io_master_arsize                         = ar_size;
-    assign io_master_arburst                        = ar_burst;
-
-    assign io_master_rready                         = r_ready;
-    assign r_valid                                  = io_master_rvalid;
-    //assign r_resp                                   = io_master_rresp;
-    assign r_data                                   = io_master_rdata;
-    assign r_last                                   = io_master_rlast;
-    assign r_id                                     = io_master_rid;
 
     wire aw_ready;
     wire aw_valid;
@@ -162,6 +114,95 @@ assign io_slave_rid = 0;
     wire [`AXI_DATA_WIDTH-1:0] r_data;
     wire r_last;
     wire [`AXI_ID_WIDTH-1:0] r_id;
+
+
+
+//CPU -> arbiter
+    wire if_valid;
+    wire [`ADDR_BUS] IF_pc;
+    wire [1 : 0] if_size;
+    wire if_req;
+////////////////
+    wire mem_valid;
+    wire [`ADDR_BUS] mem_addr;
+    wire [63 : 0] MEM_stor_data;
+    wire [1 : 0] mem_sel;
+    wire mem_req;
+
+//arbiter -> CPU
+   wire [31 : 0] if_data_read;
+///////////////
+   wire [63 : 0] mem_data;
+
+//arbiter -> AXI
+   wire [`ADDR_BUS] AXI_addr;
+   wire [`REG_BUS] AXI_w_data;
+   wire AXI_vaild;
+   wire AXI_req;
+   wire [1 : 0] AXI_size;
+   wire [3 : 0] AXI_id;
+   wire [5 : 0] stall;
+
+//AXI -> arbiter
+   wire [3 : 0] AXI_out_id;
+   wire [`REG_BUS] AXI_r_data;
+   wire AXI_stall;
+
+   wire flush;
+
+
+
+
+
+assign io_slave_awready = 0;
+assign io_slave_wready = 0;
+assign io_slave_bvalid = 0;
+assign io_slave_bresp = 0;
+assign io_slave_bid = 0;
+assign io_slave_arready = 0;
+assign io_slave_rvalid = 0;
+assign io_slave_rvalid = 0;
+assign io_slave_rresp = 0;
+assign io_slave_rdata = 0;
+assign io_slave_rlast = 0;
+assign io_slave_rid = 0;
+
+    
+
+    assign aw_ready                                 = io_master_awready;
+    assign io_master_awvalid                        = aw_valid;               //
+    assign io_master_awaddr                         = aw_addr[31 : 0];          //
+    assign io_master_awid                           = aw_id;      //
+    assign io_master_awlen                          = aw_len;     //
+    assign io_master_awsize                         = aw_size;    //
+    assign io_master_awburst                        = aw_burst;    //
+
+    assign w_ready                                  = io_master_wready;
+    assign io_master_wvalid                         = w_valid;   //
+    assign io_master_wdata                          = w_data;  // 
+    assign io_master_wstrb                          = w_strb;  //
+    assign io_master_wlast                          = w_last;   //
+
+    assign io_master_bready                         = b_ready;  //
+    assign b_valid                                  = io_master_bvalid;
+    //assign b_resp                                   = io_master_bresp;
+    assign b_id                                     = io_master_bid;
+
+    assign ar_ready                                 = io_master_arready;
+    assign io_master_arvalid                        = ar_valid;   //
+    assign io_master_araddr                         = ar_addr[31 : 0];  //
+    assign io_master_arid                           = ar_id; //
+    assign io_master_arlen                          = ar_len; //
+    assign io_master_arsize                         = ar_size;  //
+    assign io_master_arburst                        = ar_burst;  //
+
+    assign io_master_rready                         = r_ready;   //
+    assign r_valid                                  = io_master_rvalid;
+    //assign r_resp                                   = io_master_rresp;
+    assign r_data                                   = io_master_rdata;
+    assign r_last                                   = io_master_rlast;
+    assign r_id                                     = io_master_rid;
+
 
 
 
@@ -216,41 +257,6 @@ assign io_slave_rid = 0;
         .axi_r_id_i                     (r_id)
 
     );
-
-//CPU -> arbiter
-    wire if_valid;
-    wire [`ADDR_BUS] IF_pc;
-    wire [1 : 0] if_size;
-    wire if_req;
-////////////////
-    wire mem_valid;
-    wire [`ADDR_BUS] mem_addr;
-    wire [63 : 0] MEM_stor_data;
-    wire [1 : 0] mem_sel;
-    wire mem_req;
-
-//arbiter -> CPU
-   wire [31 : 0] if_data_read;
-///////////////
-   wire [63 : 0] mem_data;
-
-//arbiter -> AXI
-   wire [`ADDR_BUS] AXI_addr;
-   wire [`REG_BUS] AXI_w_data;
-   wire AXI_vaild;
-   wire AXI_req;
-   wire [1 : 0] AXI_size;
-   wire [3 : 0] AXI_id;
-   wire [5 : 0] stall;
-
-//AXI -> arbiter
-   wire [3 : 0] AXI_out_id;
-   wire [`REG_BUS] AXI_r_data;
-   wire AXI_stall;
-
-   wire flush;
-
-    
 
 
 ysyx_210457_arbiter arbiter (
@@ -311,11 +317,6 @@ ysyx_210457_rvcpu rvcpu(
     .flush(flush)
 
 );
-
-
-
-
-
 
 
 

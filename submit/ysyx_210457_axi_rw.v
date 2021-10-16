@@ -130,7 +130,7 @@ module ysyx_210457_axi_rw # (
     wire w_trans    = rw_req_i == `REQ_WRITE;
     wire r_trans    = rw_req_i == `REQ_READ;
     wire w_valid    = rw_valid_i & w_trans;                               
-    wire r_valid    = (rw_valid_i & r_trans) || (w_valid & ~r_state_read);
+    
 
     // handshake
     wire aw_hs      = axi_aw_ready_i & axi_aw_valid_o;
@@ -155,7 +155,7 @@ module ysyx_210457_axi_rw # (
     reg [1:0] w_state, r_state;
     wire w_state_idle = w_state == W_STATE_IDLE, w_state_addr = w_state == W_STATE_ADDR, w_state_write = w_state == W_STATE_WRITE, w_state_resp = w_state == W_STATE_RESP;
     wire r_state_idle = r_state == R_STATE_IDLE, r_state_addr = r_state == R_STATE_ADDR, r_state_read  = r_state == R_STATE_READ;
-
+    wire r_valid    = (rw_valid_i & r_trans) || (w_valid & ~r_state_read);
     // Wirte State Machine
     always @(posedge clock) begin
         if (reset) begin
@@ -200,18 +200,6 @@ module ysyx_210457_axi_rw # (
     end
 
 
-    // ------------------Number of transmission------------------
-    reg [7:0] len;
-    wire len_reset      = reset | (w_trans & w_state_idle) | (r_trans & r_state_idle);
-    wire len_incr_en    = (len != axi_len) & (w_hs | r_hs);
-    always @(posedge clock) begin
-        if (len_reset) begin
-            len <= 0;
-        end
-        else if (len_incr_en) begin
-            len <= len + 1;
-        end
-    end
 
 
     // ------------------Process Data------------------
@@ -233,8 +221,7 @@ module ysyx_210457_axi_rw # (
                                 | ({4{size_d}} & {4'b111})
                                 ;
     wire overstep           = {addr_op1 + addr_op2}[3:ALIGNED_WIDTH] != 0;
-
-    wire [7:0] axi_len      = aligned ? TRANS_LEN - 1 : {{7{1'b0}}, overstep};
+    wire [7:0] axi_len      = aligned ? TRANS_LEN - 1 : {{7{1'b0}}, overstep};    
     wire [2:0] axi_size     = {1'b0, rw_size_i};
     
     //wire [AXI_ADDR_WIDTH-1:0] axi_addr          = {rw_addr_i[AXI_ADDR_WIDTH-1:ALIGNED_WIDTH], {ALIGNED_WIDTH{1'b0}}};
@@ -263,6 +250,22 @@ module ysyx_210457_axi_rw # (
         end
     end
     assign out_id     = id;
+
+
+
+
+    // ------------------Number of transmission------------------
+    reg [7:0] len;
+    wire len_reset      = reset | (w_trans & w_state_idle) | (r_trans & r_state_idle);
+    wire len_incr_en    = (len != axi_len) & (w_hs | r_hs);
+    always @(posedge clock) begin
+        if (len_reset) begin
+            len <= 0;
+        end
+        else if (len_incr_en) begin
+            len <= len + 1;
+        end
+    end
 
 
     // ------------------Write Transaction------------------
