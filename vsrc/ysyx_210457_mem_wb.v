@@ -1,0 +1,77 @@
+
+//2021.8.5
+//xuxin
+
+`timescale 1ns / 1ps
+
+`define ZERO_WORD  64'h00000000_00000000
+`define ZERO_PC    64'h00000000_00000000
+`define ZERO_ADDR  32'h00000000
+`define ZERO_INST  32'h00000000    
+`define REG_BUS    63 : 0 
+`define PC_BUS     63 : 0 
+`define ADDR_BUS   31 : 0  
+`define INST_BUS   31 : 0 
+`define ZERO_ENA   1'b0
+`define ZERO_REG_ADDR   5'b00000
+`define PC_START   64'h00000000_30000000 
+
+module ysyx_210457_mem_wb (
+    input wire clock,
+    input wire reset,
+    input wire [`REG_BUS] mem_w_data,
+    input wire mem_w_ena,
+    input wire [4 : 0] mem_w_addr,
+
+    input wire [11 : 0] mem_csr_addr,         //csr
+    input wire [`REG_BUS] mem_w_csr_data,
+    input wire mem_csr_ena,
+    input wire flush,
+    input wire [1 : 0] stall,
+
+    output reg [11 : 0] wb_csr_addr,         ///csr o
+    output reg [`REG_BUS] wb_w_csr_data,
+    output reg wb_csr_ena,
+    
+    output reg [`REG_BUS] wb_w_data,
+    output reg wb_w_ena,
+    output reg [4 : 0] wb_w_addr
+);
+    always @(posedge clock) begin
+        if(reset == 1'b1) begin
+            wb_w_data <= `ZERO_WORD;
+            wb_w_ena <= 1'b0;
+            wb_w_addr <= `ZERO_REG_ADDR;
+            wb_csr_addr <= 12'h000;
+            wb_w_csr_data <= `ZERO_WORD;
+            wb_csr_ena <= 1'b0;
+        end
+        else begin
+            if(flush == 1'b1) begin
+                wb_w_data <= `ZERO_WORD;
+                wb_w_ena <= 1'b0;
+                wb_w_addr <= `ZERO_REG_ADDR;
+                
+                wb_csr_addr <= 12'h000;
+                wb_w_csr_data <= `ZERO_WORD;
+                wb_csr_ena <= 1'b0;
+            end
+            else if(stall[1] & ~stall[0]) begin
+                wb_w_data <= `ZERO_WORD;
+                wb_w_ena <= 1'b0;
+                wb_w_addr <= `ZERO_REG_ADDR;
+                wb_csr_addr <= 12'h000;
+                wb_w_csr_data <= `ZERO_WORD;
+                wb_csr_ena <= 1'b0;
+            end
+            else if(~stall[1]) begin
+                wb_w_data <= mem_w_data;
+                wb_w_ena <= mem_w_ena;
+                wb_w_addr <= mem_w_addr;
+                wb_csr_addr <= mem_csr_addr;
+                wb_w_csr_data <= mem_w_csr_data;
+                wb_csr_ena <= mem_csr_ena;
+            end
+        end
+    end
+endmodule
