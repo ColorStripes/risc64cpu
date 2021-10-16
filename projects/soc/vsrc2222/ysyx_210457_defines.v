@@ -11,7 +11,6 @@
 `define INST_BUS   31 : 0 
 `define ZERO_ENA   1'b0
 `define ZERO_REG_ADDR   5'b00000
-`define PC_START   64'h00000000_30000000 
 //forecase
 `define FORECASE 64
 `define FORECASE_LOG 6
@@ -142,10 +141,16 @@
 `define W_EIG 5'b01011
 
 
+//ROM
+`define ROM_NUM  1024
+`define ROM_NUMLOG  10
 
+//DTAT_MEM
+`define D_NUM  1024
+`define D_NUMLOG  10
 
 //difftest
-
+`define PC_START   64'h00000000_30000000 
 `define RISCV_PRIV_MODE_U   0
 `define RISCV_PRIV_MODE_S   1
 `define RISCV_PRIV_MODE_M   3

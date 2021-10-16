@@ -2,7 +2,7 @@
 //2021.8.3
 //xuxin
 
-`timescale 1ns / 1ps
+`include "ysyx_210457_defines.v"
 
 module ysyx_210457_IMGN (
     input wire [31:0] instr,
@@ -41,7 +41,7 @@ module ysyx_210457_IMGN (
              end
              default:
              begin
-                 imm = 64'b00000000_00000000;
+                 imm = `ZERO_WORD;
              end
          endcase
     end

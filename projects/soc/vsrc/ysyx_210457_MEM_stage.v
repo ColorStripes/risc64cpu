@@ -2,7 +2,39 @@
 //2021.8.5
 //xu xin
 
-`include "ysyx_210457_defines.v"
+`timescale 1ns / 1ps
+
+`define ZERO_WORD  64'h00000000_00000000
+`define ZERO_PC    64'h00000000_00000000
+`define ZERO_ADDR  32'h00000000
+`define ZERO_INST  32'h00000000    
+`define REG_BUS    63 : 0 
+`define PC_BUS     63 : 0 
+`define ADDR_BUS   31 : 0  
+`define INST_BUS   31 : 0 
+`define ZERO_ENA   1'b0
+`define ZERO_REG_ADDR   5'b00000
+`define PC_START   64'h00000000_30000000 
+
+//MEMOP
+`define R_ONE  5'b00001
+`define R_ONEu  5'b00010
+`define R_DOU  5'b00011
+`define R_DOUu  5'b00100
+`define R_FOR  5'b00101
+`define R_FORu  5'b00110
+`define R_EIG  5'b00111
+
+`define W_ONE  5'b01000
+`define W_DOU  5'b01001
+`define W_FOR 5'b01010
+`define W_EIG 5'b01011
+
+//Clint
+`define msip 32'h2000000
+`define mtimecmp 32'h2004000
+`define mtime 32'h200bff8
+
 
 module ysyx_210457_MEM_stage (
     input wire reset,
@@ -18,7 +50,6 @@ module ysyx_210457_MEM_stage (
 
     input wire ex_mem_wr,
     input wire ex_mem_ena,
-    //input wire [`REG_BUS] mem_data,                   //delete for AXI
 
     input wire [`PC_BUS] ex_pc,
     input wire [`INST_BUS] ex_instr,

@@ -1,7 +1,35 @@
 
 //2021.8.4
 //xu xin
-`include "ysyx_210457_defines.v"
+`timescale 1ns / 1ps
+
+`define ZERO_WORD  64'h00000000_00000000
+`define ZERO_PC    64'h00000000_00000000
+`define ZERO_ADDR  32'h00000000
+`define ZERO_INST  32'h00000000    
+`define REG_BUS    63 : 0 
+`define PC_BUS     63 : 0 
+`define ADDR_BUS   31 : 0  
+`define INST_BUS   31 : 0 
+`define ZERO_ENA   1'b0
+`define ZERO_REG_ADDR   5'b00000
+
+//ALUSEL
+`define No 4'b0000
+`define Logic  4'b0001
+`define Arith  4'b0010
+`define Jump  4'b0100
+`define Load  4'b0011
+`define Store  4'b0101
+`define Long  4'b0110
+`define Short  4'b0111
+`define CSRRC  4'b1001
+`define CSRRCI 4'b1010
+`define CSRRS  4'b1011
+`define CSRRSI  4'b1100
+`define CSRRW  4'b1101
+`define CSRRWI  4'b1110
+`define SYSTEM  4'b1111
 
 module ysyx_210457_EX_stage (
     input wire reset,
