@@ -73,7 +73,6 @@
 `define fence 3'b000
 `define fencei 3'b001
 
-
 //funct7
 `define add 7'b0000000
 `define sub 7'b0100000
@@ -140,19 +139,8 @@
 `define W_FOR 5'b01010
 `define W_EIG 5'b01011
 
-
-//ROM
-`define ROM_NUM  1024
-`define ROM_NUMLOG  10
-
-//DTAT_MEM
-`define D_NUM  1024
-`define D_NUMLOG  10
-
-
-
 //difftest
-`define PC_START   64'h00000000_80000000 
+`define PC_START   64'h00000000_30000000 
 `define RISCV_PRIV_MODE_U   0
 `define RISCV_PRIV_MODE_S   1
 `define RISCV_PRIV_MODE_M   3
