@@ -397,12 +397,18 @@ always @(posedge clock) begin
             default: begin end   
         endcase
     end
-    else if (r_valid) begin
+    else if (rw_req_i) begin
+        stall <= ~axi_b_valid_i;
+    end
+    if (r_valid) begin
         case (r_state)
             `R_STATE_IDLE:begin  stall <= 1'b1; end
             `R_STATE_READ: if (r_done) begin  stall <= 1'b0; end   
             default:begin  end
         endcase
+    end
+    else if (~rw_req_i) begin
+        stall <= ~axi_r_valid_i;
     end
 end
 
