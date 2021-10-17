@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps
-/////////////////////////
+////////////////
 `define ZERO_WORD  64'h00000000_00000000
 `define ZERO_PC    64'h00000000_00000000
 `define ZERO_ADDR  32'h00000000
@@ -10,7 +10,6 @@
 `define INST_BUS   31 : 0 
 `define ZERO_ENA   1'b0
 `define ZERO_REG_ADDR   5'b00000
-`define PC_START   64'h00000000_30000000 
 //forecase
 `define FORECASE 64
 `define FORECASE_LOG 6
@@ -141,6 +140,7 @@
 `define W_EIG 5'b01011
 
 //difftest
+`define PC_START   64'h00000000_30000000 
 `define RISCV_PRIV_MODE_U   0
 `define RISCV_PRIV_MODE_S   1
 `define RISCV_PRIV_MODE_M   3
@@ -334,15 +334,19 @@ module ysyx_210457_axi_rw # (
 
     
     // ------------------State Machine------------------
-    `define W_STATE_IDLE  2'b00;
-    `define W_STATE_ADDR  2'b01; 
-    `define W_STATE_WRITE 2'b10; 
-    `define W_STATE_RESP  2'b11;
-    `define R_STATE_IDLE  2'b00; 
-    `define R_STATE_VOID  2'b01;
-    `define R_STATE_ADDR  2'b10;
-    `define R_STATE_READ  2'b11;
+    `define W_STATE_IDLE  2'b00
+    `define W_STATE_ADDR  2'b01
+    `define W_STATE_WRITE 2'b10 
+    `define W_STATE_RESP  2'b11
+    `define R_STATE_IDLE  2'b00 
+    `define R_STATE_VOID  2'b01
+    `define R_STATE_ADDR  2'b10
+    `define R_STATE_READ  2'b11
 
+    reg [1:0] w_state, r_state;
+    wire w_state_idle = w_state == `W_STATE_IDLE, w_state_addr = w_state == `W_STATE_ADDR, w_state_write = w_state == `W_STATE_WRITE, w_state_resp = w_state == `W_STATE_RESP;
+    wire r_state_idle = r_state == `R_STATE_IDLE, r_state_addr = r_state == `R_STATE_ADDR, r_state_read  = r_state == `R_STATE_READ;
+    wire r_valid    = (rw_valid_i & r_trans) || (w_valid & ~r_state_read);
     // Wirte State Machine
     always @(posedge clock) begin
         if (reset) begin
@@ -503,8 +507,8 @@ module ysyx_210457_axi_rw # (
     wire [AXI_DATA_WIDTH-1:0] axi_r_data_l  = (axi_r_data_i & mask_l) >> aligned_offset_l;
     wire [AXI_DATA_WIDTH-1:0] axi_r_data_h  = (axi_r_data_i & mask_h) << aligned_offset_h;
 
-    parameter i = 0;
-        for ( i = 0; i < TRANS_LEN; i = i +1) begin
+    generate
+        for (genvar i = 0; i < TRANS_LEN; i = i+1) begin
             always @(posedge clock) begin
                 if (reset) begin
                     data_read_o[i*AXI_DATA_WIDTH+:AXI_DATA_WIDTH] <= 0;
@@ -524,6 +528,7 @@ module ysyx_210457_axi_rw # (
                 end
             end
         end
+    endgenerate
 
 endmodule
 
@@ -743,7 +748,7 @@ wire [`REG_BUS] N_reg2_data;
 wire [4 : 0] N_w_addr;
 wire N_w_ena;
 wire [4 : 0] N_memop;
-wire [63 : 0] N_imm;
+wire [31 : 0] N_imm;
 wire N_id_mem_wr;
 wire N_id_mem_ena;
 wire N_id_csr_ena;
@@ -759,7 +764,7 @@ wire [3 : 0] N_ex_alusel;
 wire [`PC_BUS] N_ex_pc;
 wire [`INST_BUS] N_ex_instr;
 wire [4 : 0] N_ex_memop;
-wire [63 : 0] N_ex_imm;
+wire [31 : 0] N_ex_imm;
 wire N_ex_csr_ena;
 //id_ex -> ID_stage too
 wire N_ex_mem_wr;
@@ -953,7 +958,7 @@ wire [`REG_BUS] N_clint_data;
     .branch(N_branch),    //pc next
     .mux_pc(N_mux_pc),
     .pc_con(N_pc_con),
-    .imm(N_imm),
+    .imm_32(N_imm),
 
     .memop(N_memop),
     .id_mem_wr(N_id_mem_wr),
@@ -1417,7 +1422,7 @@ module ysyx_210457_ID_stage (
     output reg [`PC_BUS] branch,    //pc next
     output reg mux_pc,
     output reg pc_con,
-    output wire [63 : 0] imm,
+    output wire [31 : 0] imm_32,
 
     output reg [4 : 0] memop,
     output reg id_mem_wr,
@@ -1429,7 +1434,7 @@ module ysyx_210457_ID_stage (
     wire [6 : 0] opcode;
     wire [2 : 0] funct3;
     wire [6 : 0] funct7;
-    
+    wire [63 : 0] imm;
     
     assign ID_pc = IF_pc;
     assign ID_instr = IF_instr;
@@ -1438,12 +1443,13 @@ module ysyx_210457_ID_stage (
     assign funct7 = IF_instr[31 : 25];
 
 
+
     ysyx_210457_IMGN IMGN (
     .instr(IF_instr),
 
     .imm(imm)
 );
-
+assign imm_32 = imm[31 : 0];
     always @(*) begin                 //ID
         if(reset == 1) begin
             reg1_r_ena = `ZERO_ENA;
@@ -2084,6 +2090,8 @@ module ysyx_210457_ID_stage (
             pc_con = 1'b1;
             id_mem_wr = 1'b0;
             id_csr_ena = 1'b0;
+            ID_pc = `PC_START;      //difftest
+            ID_instr = `ZERO_INST;  //difftest
          end
     end
 end
@@ -2139,7 +2147,7 @@ endmodule
 module ysyx_210457_id_ex (
     input wire reset,
     input wire clock,
-    input wire [63 : 0] id_imm,
+    input wire [31 : 0] id_imm,
 
     input wire [`PC_BUS] id_pc,
     input wire [`INST_BUS] id_instr,
@@ -2171,7 +2179,7 @@ module ysyx_210457_id_ex (
     output reg [4 : 0] ex_memop,
     output reg [6 : 0] ex_aluop,
     output reg [3 : 0] ex_alusel,
-    output reg [63 : 0] ex_imm,
+    output reg [31 : 0] ex_imm,
     output reg ex_mem_wr,
     output reg ex_mem_ena,
 
@@ -2191,7 +2199,7 @@ always @(posedge clock) begin
         ex_memop <= 5'b00000;
         ex_aluop <= 7'b0000000;
         ex_alusel <= 4'b000;
-        ex_imm <= `ZERO_WORD;
+        ex_imm <= 32'h0;
         ex_mem_wr <= 1'b0;
         ex_mem_ena <= 1'b0;
 
@@ -2211,7 +2219,7 @@ always @(posedge clock) begin
             ex_memop <= 5'b00000;
             ex_aluop <= 7'b0000000;
             ex_alusel <= 4'b000;
-            ex_imm <= `ZERO_WORD;
+            ex_imm <= 32'h0;
             ex_mem_wr <= 1'b0;
             ex_mem_ena <= 1'b0;
 
@@ -2229,7 +2237,7 @@ always @(posedge clock) begin
             ex_memop <= 5'b00000;
             ex_aluop <= 7'b0000000;
             ex_alusel <= 4'b000;
-            ex_imm <= `ZERO_WORD;
+            ex_imm <= 32'h0;
             ex_mem_wr <= 1'b0;
             ex_mem_ena <= 1'b0;
 
@@ -2272,7 +2280,7 @@ module ysyx_210457_EX_stage (
 
     input wire [`REG_BUS] id_reg1_data,
     input wire [`REG_BUS] id_reg2_data,
-    input wire [`REG_BUS] id_imm,
+    input wire [31 : 0] id_imm,
 
     input wire [4 : 0] id_memop,
     input wire id_mem_wr,
@@ -2404,7 +2412,7 @@ ysyx_210457_ALU ALU(
                       ex_mem_wr = id_mem_wr;
                   end
                   `Store:begin
-                      ex_mem_waddr = {id_reg1_data + id_imm} & 64'h00000000_ffffffff;
+                      ex_mem_waddr = {id_reg1_data[`ADDR_BUS] + id_imm[`ADDR_BUS]} ;
                       ex_stor_data = id_reg2_data;
                       ex_mem_wr = id_mem_wr;
                   end
@@ -3345,7 +3353,7 @@ module ysyx_210457_CSR_reg (
     end
 
 
- assign mstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ?  csr_w_data[3] : csr_mstatus[3]; 
+ assign mstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ? csr_w_data[3] : csr_mstatus[3]; 
  assign mepc = ((csr_w_ena == 1'b1) & (csr_w_addr == `mepc)) ? csr_w_data : csr_mepc;
  assign mip = ((csr_w_ena == 1'b1) & (csr_w_addr == `mip)) ? csr_w_data[7] :csr_mip[7]; 
  assign mie = ((csr_w_ena == 1'b1) & (csr_w_addr == `mie)) ? csr_w_data[7] : csr_mie[7];
@@ -3408,8 +3416,8 @@ end
 reg [`PC_BUS] pc_s;
 always @(posedge clock) begin
     if(reset == 1'b1) begin
-        fore <= 2'b00;  
-        pc_s <= `ZERO_WORD;      
+        fore <= 2'b00; 
+        pc_s <= `ZERO_WORD;       
         for(i=0; i<`PC; i=i+1) begin
             pc_now[i] <= `ZERO_WORD; 
         end
@@ -3445,7 +3453,7 @@ end
 
 
 
-    always @(*) begin
+   always @(*) begin
         if(reset == 1'b1) begin
             wash = 1'b0;
             pc = `ZERO_WORD;
@@ -3473,10 +3481,6 @@ end
 
                 if(mux_pc == 1'b1) begin
                     if((mux_pc != id_forecase) || (error_branch)) begin  
-                        if((mux_pc != id_forecase) || (error_branch)) begin  
-                    if((mux_pc != id_forecase) || (error_branch)) begin  
-                        if((mux_pc != id_forecase) || (error_branch)) begin  
-                    if((mux_pc != id_forecase) || (error_branch)) begin  
                         wash = 1'b1;
                         pc = branch;
                         if_forecase = 1'b0;
@@ -3489,20 +3493,14 @@ end
                         pc = pc_id + 4;
                         if_forecase = 1'b0;
                     end
-                end   
-                    end
-                end   
-                    end
-                end   
-            end
-                end   
+                end
             end
         end
         else begin
             wash = 1'b0;
             pc = add_pc;
             if_forecase = 1'b0;
-        end
+        end 
     end
 
 endmodule
