@@ -343,10 +343,6 @@ module ysyx_210457_axi_rw # (
     `define R_STATE_ADDR  2'b10;
     `define R_STATE_READ  2'b11;
 
-    reg [1:0] w_state, r_state;
-    wire w_state_idle = w_state == `W_STATE_IDLE, w_state_addr = w_state == `W_STATE_ADDR, w_state_write = w_state == `W_STATE_WRITE, w_state_resp = w_state == `W_STATE_RESP;
-    wire r_state_idle = r_state == `R_STATE_IDLE, r_state_addr = r_state == `R_STATE_ADDR, r_state_read  = r_state == `R_STATE_READ;
-    wire r_valid    = (rw_valid_i & r_trans) || (w_valid & ~r_state_read);
     // Wirte State Machine
     always @(posedge clock) begin
         if (reset) begin
