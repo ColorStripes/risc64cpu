@@ -2090,8 +2090,6 @@ assign imm_32 = imm[31 : 0];
             pc_con = 1'b1;
             id_mem_wr = 1'b0;
             id_csr_ena = 1'b0;
-            ID_pc = `PC_START;      //difftest
-            ID_instr = `ZERO_INST;  //difftest
          end
     end
 end
