@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps
-
+///////////////////////
 `define ZERO_WORD  64'h00000000_00000000
 `define ZERO_PC    64'h00000000_00000000
 `define ZERO_ADDR  32'h00000000
@@ -255,309 +255,7 @@
 `define AXI_ID_WIDTH       4
 `define AXI_USER_WIDTH     1
 
-module ysyx_210457(
-  input         clock,
-  input         reset,
-  input         io_interrupt,
-  input         io_master_awready,
-  output        io_master_awvalid,
-  output [31:0] io_master_awaddr,
-  output [3:0]  io_master_awid,
-  output [7:0]  io_master_awlen,
-  output [2:0]  io_master_awsize,
-  output [1:0]  io_master_awburst,
-  input         io_master_wready,
-  output        io_master_wvalid,
-  output [63:0] io_master_wdata,
-  output [7:0]  io_master_wstrb,
-  output        io_master_wlast,
-  output        io_master_bready,
-  input         io_master_bvalid,
-  input  [1:0]  io_master_bresp,
-  input  [3:0]  io_master_bid,
-  input         io_master_arready,
-  output        io_master_arvalid,
-  output [31:0] io_master_araddr,
-  output [3:0]  io_master_arid,
-  output [7:0]  io_master_arlen,
-  output [2:0]  io_master_arsize,
-  output [1:0]  io_master_arburst,
-  output        io_master_rready,
-  input         io_master_rvalid,
-  input  [1:0]  io_master_rresp,
-  input  [63:0] io_master_rdata,
-  input         io_master_rlast,
-  input  [3:0]  io_master_rid,
-  output        io_slave_awready,
-  input         io_slave_awvalid,
-  input  [31:0] io_slave_awaddr,
-  input  [3:0]  io_slave_awid,
-  input  [7:0]  io_slave_awlen,
-  input  [2:0]  io_slave_awsize,
-  input  [1:0]  io_slave_awburst,
-  output        io_slave_wready,
-  input         io_slave_wvalid,
-  input  [63:0] io_slave_wdata,
-  input  [7:0]  io_slave_wstrb,
-  input         io_slave_wlast,
-  input         io_slave_bready,
-  output        io_slave_bvalid,
-  output [1:0]  io_slave_bresp,
-  output [3:0]  io_slave_bid,
-  output        io_slave_arready,
-  input         io_slave_arvalid,
-  input  [31:0] io_slave_araddr,
-  input  [3:0]  io_slave_arid,
-  input  [7:0]  io_slave_arlen,
-  input  [2:0]  io_slave_arsize,
-  input  [1:0]  io_slave_arburst,
-  input         io_slave_rready,
-  output        io_slave_rvalid,
-  output [1:0]  io_slave_rresp,
-  output [63:0] io_slave_rdata,
-  output        io_slave_rlast,
-  output [3:0]  io_slave_rid
 
-);
-
-
-    wire aw_ready;
-    wire aw_valid;
-    wire [`AXI_ADDR_WIDTH-1:0] aw_addr;
-    wire [`AXI_ID_WIDTH-1:0] aw_id;
-    wire [7:0] aw_len;
-    wire [2:0] aw_size;
-    wire [1:0] aw_burst;
-
-    wire w_ready;
-    wire w_valid;
-    wire [`AXI_DATA_WIDTH-1:0] w_data;
-    wire [`AXI_DATA_WIDTH/8-1:0] w_strb;
-    wire w_last;
-    
-    wire b_ready;
-    wire b_valid;
-    wire [`AXI_ID_WIDTH-1:0] b_id;
-
-    wire ar_ready;
-    wire ar_valid;
-    wire [`AXI_ADDR_WIDTH-1:0] ar_addr;
-    wire [`AXI_ID_WIDTH-1:0] ar_id;
-    wire [7:0] ar_len;
-    wire [2:0] ar_size;
-    wire [1:0] ar_burst;
-    
-    wire r_ready;
-    wire r_valid;
-    wire [`AXI_DATA_WIDTH-1:0] r_data;
-    wire r_last;
-    wire [`AXI_ID_WIDTH-1:0] r_id;
-
-
-
-//CPU -> arbiter
-    wire cpu_if_valid;
-    wire [`ADDR_BUS] cpu_IF_pc;
-    wire [1 : 0] cpu_if_size;
-    wire cpu_if_req;
-////////////////
-    wire cpu_mem_valid;
-    wire [`ADDR_BUS] cpu_mem_addr;
-    wire [63 : 0] cpu_MEM_stor_data;
-    wire [1 : 0] cpu_mem_sel;
-    wire cpu_mem_req;   
-    wire cpu_flush;
-
-//arbiter -> CPU
-   wire [31 : 0] cpu_if_data_read;
-///////////////
-   wire [63 : 0] cpu_mem_data;
-
-//arbiter -> AXI
-   wire [`ADDR_BUS] AXI_addr;
-   wire [`REG_BUS] AXI_w_data;
-   wire AXI_vaild;
-   wire AXI_req;
-   wire [1 : 0] AXI_size;
-   wire [3 : 0] AXI_id;
-   wire [5 : 0] cpu_stall;
-
-//AXI -> arbiter
-   wire [3 : 0] AXI_out_id;
-   wire [`REG_BUS] AXI_r_data;
-   wire AXI_stall;
-
-
-
-
-
-
-
-assign io_slave_awready = 0;
-assign io_slave_wready = 0;
-assign io_slave_bvalid = 0;
-assign io_slave_bresp = 0;
-assign io_slave_bid = 0;
-assign io_slave_arready = 0;
-assign io_slave_rvalid = 0;
-assign io_slave_rvalid = 0;
-assign io_slave_rresp = 0;
-assign io_slave_rdata = 0;
-assign io_slave_rlast = 0;
-assign io_slave_rid = 0;
-
-    
-
-    assign aw_ready                                 = io_master_awready;
-    assign io_master_awvalid                        = aw_valid;               //
-    assign io_master_awaddr                         = aw_addr[31 : 0];          //
-    assign io_master_awid                           = aw_id;      //
-    assign io_master_awlen                          = aw_len;     //
-    assign io_master_awsize                         = aw_size;    //
-    assign io_master_awburst                        = aw_burst;    //
-
-    assign w_ready                                  = io_master_wready;
-    assign io_master_wvalid                         = w_valid;   //
-    assign io_master_wdata                          = w_data;  // 
-    assign io_master_wstrb                          = w_strb;  //
-    assign io_master_wlast                          = w_last;   //
-
-    assign io_master_bready                         = b_ready;  //
-    assign b_valid                                  = io_master_bvalid;
-    //assign b_resp                                   = io_master_bresp;
-    assign b_id                                     = io_master_bid;
-
-    assign ar_ready                                 = io_master_arready;
-    assign io_master_arvalid                        = ar_valid;   //
-    assign io_master_araddr                         = ar_addr[31 : 0];  //
-    assign io_master_arid                           = ar_id; //
-    assign io_master_arlen                          = ar_len; //
-    assign io_master_arsize                         = ar_size;  //
-    assign io_master_arburst                        = ar_burst;  //
-
-    assign io_master_rready                         = r_ready;   //
-    assign r_valid                                  = io_master_rvalid;
-    //assign r_resp                                   = io_master_rresp;
-    assign r_data                                   = io_master_rdata;
-    assign r_last                                   = io_master_rlast;
-    assign r_id                                     = io_master_rid;
-
-
-
-
-
-    ysyx_210457_axi_rw u_axi_rw (
-        .clock                          (clock),
-        .reset                          (reset),
-
-        .rw_valid_i                     (AXI_vaild),
-        .rw_req_i                       (AXI_req),
-        .data_read_o                    (AXI_r_data),
-        .data_write_i                   (AXI_w_data),
-        .rw_addr_i                      (AXI_addr),
-        .rw_size_i                      (AXI_size),
-        .stall                          (AXI_stall),
-        .cpu_id                         (AXI_id),
-        .out_id                         (AXI_out_id),
-
-        .axi_aw_ready_i                 (aw_ready),
-        .axi_aw_valid_o                 (aw_valid),
-        .axi_aw_addr_o                  (aw_addr),
-        .axi_aw_id_o                    (aw_id),
-        .axi_aw_len_o                   (aw_len),
-        .axi_aw_size_o                  (aw_size),
-        .axi_aw_burst_o                 (aw_burst),
-
-        .axi_w_ready_i                  (w_ready),
-        .axi_w_valid_o                  (w_valid),
-        .axi_w_data_o                   (w_data),
-        .axi_w_strb_o                   (w_strb),
-        .axi_w_last_o                   (w_last),
-        
-        .axi_b_ready_o                  (b_ready),
-        .axi_b_valid_i                  (b_valid),
-        //.axi_b_resp_i                   (b_resp),
-        .axi_b_id_i                     (b_id),
-
-
-        .axi_ar_ready_i                 (ar_ready),
-        .axi_ar_valid_o                 (ar_valid),
-        .axi_ar_addr_o                  (ar_addr),
-        .axi_ar_id_o                    (ar_id),
-        .axi_ar_len_o                   (ar_len),
-        .axi_ar_size_o                  (ar_size),
-        .axi_ar_burst_o                 (ar_burst),
-  
-        .axi_r_ready_o                  (r_ready),
-        .axi_r_valid_i                  (r_valid),
-        //.axi_r_resp_i                   (r_resp),
-        .axi_r_data_i                   (r_data),
-        .axi_r_last_i                   (r_last),
-        .axi_r_id_i                     (r_id)
-
-    );
-
-
-ysyx_210457_arbiter arbiter (
-    .clock(clock),
-    .reset(reset),
-    .flush(cpu_flush),
-
-    .if_data_read(cpu_if_data_read),
-
-    .if_valid(cpu_if_valid),
-    .if_addr(cpu_IF_pc),
-    .if_size(cpu_if_size),
-    .if_req(cpu_if_req),
-
-    .mem_data(cpu_mem_data),
-    
-    .mem_stor_data(cpu_MEM_stor_data),
-    .mem_valid(cpu_mem_valid),
-    .mem_addr(cpu_mem_addr),
-    .mem_sel(cpu_mem_sel),
-    .mem_req(cpu_mem_req),
-
-
-    .AXI_addr(AXI_addr),
-    .AXI_w_data(AXI_w_data),
-    .AXI_vaild(AXI_vaild),
-    .AXI_req(AXI_req),
-    .AXI_size(AXI_size),
-    .AXI_id(AXI_id),
-
-    .AXI_out_id(AXI_out_id),
-    .AXI_r_data(AXI_r_data),
-
-    .AXI_stall(AXI_stall),
-
-    .stall(cpu_stall)
-    
-);
-
-ysyx_210457_rvcpu rvcpu(
-    .clock(clock),
-    .reset(reset),
-    .stall(cpu_stall),
-
-    .if_data_read(cpu_if_data_read),
-    .if_valid(cpu_if_valid),
-    .IF_addr(cpu_IF_pc),
-    .if_size(cpu_if_size),
-    .if_req(cpu_if_req),
-
-    .mem_data(cpu_mem_data),
-    .MEM_stor_data(cpu_MEM_stor_data),
-    .mem_valid(cpu_mem_valid),
-    .mem_addr(cpu_mem_addr),
-    .mem_sel(cpu_mem_sel),
-    .mem_req(cpu_mem_req),
-
-    .flush(cpu_flush)
-
-);
-
-endmodule
 
 module ysyx_210457_axi_rw # (
     parameter RW_DATA_WIDTH     = 64,
@@ -636,26 +334,32 @@ module ysyx_210457_axi_rw # (
 
     
     // ------------------State Machine------------------
-    parameter [1:0] W_STATE_IDLE = 2'b00, W_STATE_ADDR = 2'b01, W_STATE_WRITE = 2'b10, W_STATE_RESP = 2'b11;
-    parameter [1:0] R_STATE_IDLE = 2'b00, R_STATE_VOID = 2'b01, R_STATE_ADDR = 2'b10, R_STATE_READ  = 2'b11;
+    `define W_STATE_IDLE  2'b00;
+    `define W_STATE_ADDR  2'b01; 
+    `define W_STATE_WRITE 2'b10; 
+    `define W_STATE_RESP  2'b11;
+    `define R_STATE_IDLE  2'b00; 
+    `define R_STATE_VOID  2'b01;
+    `define R_STATE_ADDR  2'b10;
+    `define R_STATE_READ  2'b11;
 
     reg [1:0] w_state, r_state;
-    wire w_state_idle = w_state == W_STATE_IDLE, w_state_addr = w_state == W_STATE_ADDR, w_state_write = w_state == W_STATE_WRITE, w_state_resp = w_state == W_STATE_RESP;
-    wire r_state_idle = r_state == R_STATE_IDLE, r_state_addr = r_state == R_STATE_ADDR, r_state_read  = r_state == R_STATE_READ;
+    wire w_state_idle = w_state == `W_STATE_IDLE, w_state_addr = w_state == `W_STATE_ADDR, w_state_write = w_state == `W_STATE_WRITE, w_state_resp = w_state == `W_STATE_RESP;
+    wire r_state_idle = r_state == `R_STATE_IDLE, r_state_addr = r_state == `R_STATE_ADDR, r_state_read  = r_state == `R_STATE_READ;
     wire r_valid    = (rw_valid_i & r_trans) || (w_valid & ~r_state_read);
     // Wirte State Machine
     always @(posedge clock) begin
         if (reset) begin
-            w_state <= W_STATE_IDLE;
+            w_state <= `W_STATE_IDLE;
             stall <= 1'b0;
         end
         else begin
             if (w_valid) begin
                 case (w_state)
-                    W_STATE_IDLE: begin w_state <= W_STATE_ADDR;  stall <= 1'b1; end              
-                    W_STATE_ADDR:  if (aw_hs)   w_state <= W_STATE_WRITE;
-                    W_STATE_WRITE: if (w_done)  w_state <= W_STATE_RESP;
-                    W_STATE_RESP:  if (b_hs) begin w_state <= W_STATE_IDLE; stall <= 1'b0; end   
+                    `W_STATE_IDLE: begin w_state <= `W_STATE_ADDR;  stall <= 1'b1; end              
+                    `W_STATE_ADDR:  if (aw_hs)   w_state <= `W_STATE_WRITE;
+                    `W_STATE_WRITE: if (w_done)  w_state <= `W_STATE_RESP;
+                    `W_STATE_RESP:  if (b_hs) begin w_state <= `W_STATE_IDLE; stall <= 1'b0; end   
                 endcase
             end
             else if (rw_req_i) begin
@@ -667,16 +371,16 @@ module ysyx_210457_axi_rw # (
     // Read State Machine
     always @(posedge clock) begin
         if (reset) begin
-            r_state <= R_STATE_IDLE;
+            r_state <= `R_STATE_IDLE;
             stall <= 1'b0;
         end
         else begin
             if (r_valid) begin
                 case (r_state)
-                    R_STATE_IDLE:begin r_state <= R_STATE_VOID; stall <= 1'b1; end
-                    R_STATE_VOID:begin r_state <= R_STATE_ADDR; end               
-                    R_STATE_ADDR: if (ar_hs)    r_state <= R_STATE_READ;
-                    R_STATE_READ: if (r_done) begin r_state <= R_STATE_IDLE; stall <= 1'b0; end   
+                    `R_STATE_IDLE:begin r_state <= `R_STATE_VOID; stall <= 1'b1; end
+                    `R_STATE_VOID:begin r_state <= `R_STATE_ADDR; end               
+                    `R_STATE_ADDR: if (ar_hs)    r_state <= `R_STATE_READ;
+                    `R_STATE_READ: if (r_done) begin r_state <= `R_STATE_IDLE; stall <= 1'b0; end   
                     default:;
                 endcase
             end
@@ -707,7 +411,7 @@ module ysyx_210457_axi_rw # (
                                 | ({4{size_w}} & {4'b11})
                                 | ({4{size_d}} & {4'b111})
                                 ;
-    wire overstep           = {addr_op1 + addr_op2}[3:ALIGNED_WIDTH] != 0;
+    wire overstep           = {{addr_op1 + addr_op2} & 4'b1000} != 0;
     wire [7:0] axi_len      = aligned ? TRANS_LEN - 1 : {{7{1'b0}}, overstep};    
     wire [2:0] axi_size     = {1'b0, rw_size_i};
     
@@ -803,8 +507,8 @@ module ysyx_210457_axi_rw # (
     wire [AXI_DATA_WIDTH-1:0] axi_r_data_l  = (axi_r_data_i & mask_l) >> aligned_offset_l;
     wire [AXI_DATA_WIDTH-1:0] axi_r_data_h  = (axi_r_data_i & mask_h) << aligned_offset_h;
 
-    generate
-        for (genvar i = 0; i < TRANS_LEN; i += 1) begin
+    parameter i = 0;
+        for ( i = 0; i < TRANS_LEN; i = i +1) begin
             always @(posedge clock) begin
                 if (reset) begin
                     data_read_o[i*AXI_DATA_WIDTH+:AXI_DATA_WIDTH] <= 0;
@@ -824,7 +528,6 @@ module ysyx_210457_axi_rw # (
                 end
             end
         end
-    endgenerate
 
 endmodule
 
@@ -2705,7 +2408,7 @@ ysyx_210457_ALU ALU(
                       ex_mem_wr = id_mem_wr;
                   end
                   `Store:begin
-                      ex_mem_waddr = {id_reg1_data + id_imm}[`ADDR_BUS];
+                      ex_mem_waddr = {id_reg1_data + id_imm} & 64'h00000000_ffffffff;
                       ex_stor_data = id_reg2_data;
                       ex_mem_wr = id_mem_wr;
                   end
@@ -3646,7 +3349,7 @@ module ysyx_210457_CSR_reg (
     end
 
 
- assign mstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ? {(csr_w_data[13] & csr_w_data[14]) | (csr_w_data[15] & csr_w_data[16]),  csr_w_data[62 : 0]}[3] : csr_mstatus[3]; 
+ assign mstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ?  csr_w_data[3] : csr_mstatus[3]; 
  assign mepc = ((csr_w_ena == 1'b1) & (csr_w_addr == `mepc)) ? csr_w_data : csr_mepc;
  assign mip = ((csr_w_ena == 1'b1) & (csr_w_addr == `mip)) ? csr_w_data[7] :csr_mip[7]; 
  assign mie = ((csr_w_ena == 1'b1) & (csr_w_addr == `mie)) ? csr_w_data[7] : csr_mie[7];
@@ -3706,10 +3409,11 @@ always @(posedge clock) begin   //count
     end
 end
 
-
+reg [`PC_BUS] pc_s;
 always @(posedge clock) begin
     if(reset == 1'b1) begin
-        fore <= 2'b00;        
+        fore <= 2'b00;  
+        pc_s <= `ZERO_WORD;      
         for(i=0; i<`PC; i=i+1) begin
             pc_now[i] <= `ZERO_WORD; 
         end
@@ -3718,13 +3422,13 @@ always @(posedge clock) begin
         end
     end
     else begin
-
+    pc_s <= pc_id + 4;
         if(~stall) begin
             if((timeo < 2) || (pc_id != `PC_START)) begin
                 if(mux_pc == 1'b1) begin
-                    if(fore_branch[{pc_id + 4}[`FORECASE_LOG+1 : 2]] != branch) begin
-                        fore_branch[{pc_id + 4}[`FORECASE_LOG+1 : 2]] <= branch; 
-                        pc_now[{pc_id + 4}[`PC_LOG+1 : 2]] <= pc_id + 4;
+                    if(fore_branch[pc_s[`FORECASE_LOG+1 : 2]] != branch) begin
+                        fore_branch[pc_s[`FORECASE_LOG+1 : 2]] <= branch; 
+                        pc_now[pc_s[`PC_LOG+1 : 2]] <= pc_id + 4;
                     end
                     if(fore < 2'b11) begin
                         fore <= fore + 1;
@@ -3732,7 +3436,7 @@ always @(posedge clock) begin
                 end
             
                 else begin
-                    if(pc_now[{pc_id + 4}[`PC_LOG+1 : 2]] == {pc_id + 4}) begin
+                    if(pc_now[pc_s[`PC_LOG+1 : 2]] == pc_s) begin
                         if(fore > 2'b00) begin
                             fore <= fore - 1;
                         end
@@ -3751,48 +3455,57 @@ end
             pc = `ZERO_WORD;
             if_forecase = 1'b0;
         end
+        else if(~stall) begin
+            wash = 1'b0;
+            pc = add_pc;
+            if_forecase = 1'b0;
+            if((timeo < 2) || (pc_id != `PC_START)) begin
+                if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]]) begin
+                    if(fore >= 2'b10) begin
+                        pc = fore_branch[add_pc[`FORECASE_LOG + 1 : 2]];
+                        if_forecase = 1'b1;
+                    end
+                    else begin
+                        pc = add_pc;
+                        if_forecase = 1'b0;
+                    end
+                end
+                else begin
+                    if_forecase = 1'b0;
+                    pc = add_pc;
+                end
+
+                if(mux_pc == 1'b1) begin
+                    if((mux_pc != id_forecase) || (error_branch)) begin  
+                        if((mux_pc != id_forecase) || (error_branch)) begin  
+                    if((mux_pc != id_forecase) || (error_branch)) begin  
+                        if((mux_pc != id_forecase) || (error_branch)) begin  
+                    if((mux_pc != id_forecase) || (error_branch)) begin  
+                        wash = 1'b1;
+                        pc = branch;
+                        if_forecase = 1'b0;
+                    end
+                end
+                
+                if(mux_pc == 1'b0) begin
+                    if(mux_pc != id_forecase) begin
+                        wash = 1'b1;
+                        pc = pc_id + 4;
+                        if_forecase = 1'b0;
+                    end
+                end   
+                    end
+                end   
+                    end
+                end   
+            end
+                end   
+            end
+        end
         else begin
             wash = 1'b0;
             pc = add_pc;
             if_forecase = 1'b0;
-            if(~stall) begin
-                wash = 1'b0;
-                pc = add_pc;
-                if_forecase = 1'b0;
-                if((timeo < 2) || (pc_id != `PC_START)) begin
-                    if(add_pc == pc_now[add_pc[`PC_LOG + 1 : 2]]) begin
-                        if(fore >= 2'b10) begin
-                            pc = fore_branch[add_pc[`FORECASE_LOG + 1 : 2]];
-                            if_forecase = 1'b1;
-                        end
-                        else begin
-                            pc = add_pc;
-                            if_forecase = 1'b0;
-                        end
-                    end
-                    else begin
-                        if_forecase = 1'b0;
-                        pc = add_pc;
-                    end
-
-                    if(mux_pc == 1'b1) begin
-                        if((mux_pc != id_forecase) || (error_branch)) begin  
-                           wash = 1'b1;
-                           pc = branch;
-                           if_forecase = 1'b0;
-                        end
-                    end
-                
-                    if(mux_pc == 1'b0) begin
-                        if(mux_pc != id_forecase) begin
-                            wash = 1'b1;
-                            pc = pc_id + 4;
-                            if_forecase = 1'b0;
-                        end
-                    end
-                    
-                end
-            end
         end
     end
 
@@ -3992,4 +3705,306 @@ module ysyx_210457_regfile(
 endmodule
 
 
+module ysyx_210457(
+  input         clock,
+  input         reset,
+  input         io_interrupt,
+  input         io_master_awready,
+  output        io_master_awvalid,
+  output [31:0] io_master_awaddr,
+  output [3:0]  io_master_awid,
+  output [7:0]  io_master_awlen,
+  output [2:0]  io_master_awsize,
+  output [1:0]  io_master_awburst,
+  input         io_master_wready,
+  output        io_master_wvalid,
+  output [63:0] io_master_wdata,
+  output [7:0]  io_master_wstrb,
+  output        io_master_wlast,
+  output        io_master_bready,
+  input         io_master_bvalid,
+  input  [1:0]  io_master_bresp,
+  input  [3:0]  io_master_bid,
+  input         io_master_arready,
+  output        io_master_arvalid,
+  output [31:0] io_master_araddr,
+  output [3:0]  io_master_arid,
+  output [7:0]  io_master_arlen,
+  output [2:0]  io_master_arsize,
+  output [1:0]  io_master_arburst,
+  output        io_master_rready,
+  input         io_master_rvalid,
+  input  [1:0]  io_master_rresp,
+  input  [63:0] io_master_rdata,
+  input         io_master_rlast,
+  input  [3:0]  io_master_rid,
+  output        io_slave_awready,
+  input         io_slave_awvalid,
+  input  [31:0] io_slave_awaddr,
+  input  [3:0]  io_slave_awid,
+  input  [7:0]  io_slave_awlen,
+  input  [2:0]  io_slave_awsize,
+  input  [1:0]  io_slave_awburst,
+  output        io_slave_wready,
+  input         io_slave_wvalid,
+  input  [63:0] io_slave_wdata,
+  input  [7:0]  io_slave_wstrb,
+  input         io_slave_wlast,
+  input         io_slave_bready,
+  output        io_slave_bvalid,
+  output [1:0]  io_slave_bresp,
+  output [3:0]  io_slave_bid,
+  output        io_slave_arready,
+  input         io_slave_arvalid,
+  input  [31:0] io_slave_araddr,
+  input  [3:0]  io_slave_arid,
+  input  [7:0]  io_slave_arlen,
+  input  [2:0]  io_slave_arsize,
+  input  [1:0]  io_slave_arburst,
+  input         io_slave_rready,
+  output        io_slave_rvalid,
+  output [1:0]  io_slave_rresp,
+  output [63:0] io_slave_rdata,
+  output        io_slave_rlast,
+  output [3:0]  io_slave_rid
 
+);
+
+
+    wire aw_ready;
+    wire aw_valid;
+    wire [`AXI_ADDR_WIDTH-1:0] aw_addr;
+    wire [`AXI_ID_WIDTH-1:0] aw_id;
+    wire [7:0] aw_len;
+    wire [2:0] aw_size;
+    wire [1:0] aw_burst;
+
+    wire w_ready;
+    wire w_valid;
+    wire [`AXI_DATA_WIDTH-1:0] w_data;
+    wire [`AXI_DATA_WIDTH/8-1:0] w_strb;
+    wire w_last;
+    
+    wire b_ready;
+    wire b_valid;
+    wire [`AXI_ID_WIDTH-1:0] b_id;
+
+    wire ar_ready;
+    wire ar_valid;
+    wire [`AXI_ADDR_WIDTH-1:0] ar_addr;
+    wire [`AXI_ID_WIDTH-1:0] ar_id;
+    wire [7:0] ar_len;
+    wire [2:0] ar_size;
+    wire [1:0] ar_burst;
+    
+    wire r_ready;
+    wire r_valid;
+    wire [`AXI_DATA_WIDTH-1:0] r_data;
+    wire r_last;
+    wire [`AXI_ID_WIDTH-1:0] r_id;
+
+
+
+//CPU -> arbiter
+    wire cpu_if_valid;
+    wire [`ADDR_BUS] cpu_IF_pc;
+    wire [1 : 0] cpu_if_size;
+    wire cpu_if_req;
+////////////////
+    wire cpu_mem_valid;
+    wire [`ADDR_BUS] cpu_mem_addr;
+    wire [63 : 0] cpu_MEM_stor_data;
+    wire [1 : 0] cpu_mem_sel;
+    wire cpu_mem_req;   
+    wire cpu_flush;
+
+//arbiter -> CPU
+   wire [31 : 0] cpu_if_data_read;
+///////////////
+   wire [63 : 0] cpu_mem_data;
+
+//arbiter -> AXI
+   wire [`ADDR_BUS] AXI_addr;
+   wire [`REG_BUS] AXI_w_data;
+   wire AXI_vaild;
+   wire AXI_req;
+   wire [1 : 0] AXI_size;
+   wire [3 : 0] AXI_id;
+   wire [5 : 0] cpu_stall;
+
+//AXI -> arbiter
+   wire [3 : 0] AXI_out_id;
+   wire [`REG_BUS] AXI_r_data;
+   wire AXI_stall;
+
+
+
+
+
+
+
+assign io_slave_awready = 0;
+assign io_slave_wready = 0;
+assign io_slave_bvalid = 0;
+assign io_slave_bresp = 0;
+assign io_slave_bid = 0;
+assign io_slave_arready = 0;
+assign io_slave_rvalid = 0;
+assign io_slave_rvalid = 0;
+assign io_slave_rresp = 0;
+assign io_slave_rdata = 0;
+assign io_slave_rlast = 0;
+assign io_slave_rid = 0;
+
+    
+
+    assign aw_ready                                 = io_master_awready;
+    assign io_master_awvalid                        = aw_valid;               //
+    assign io_master_awaddr                         = aw_addr[31 : 0];          //
+    assign io_master_awid                           = aw_id;      //
+    assign io_master_awlen                          = aw_len;     //
+    assign io_master_awsize                         = aw_size;    //
+    assign io_master_awburst                        = aw_burst;    //
+
+    assign w_ready                                  = io_master_wready;
+    assign io_master_wvalid                         = w_valid;   //
+    assign io_master_wdata                          = w_data;  // 
+    assign io_master_wstrb                          = w_strb;  //
+    assign io_master_wlast                          = w_last;   //
+
+    assign io_master_bready                         = b_ready;  //
+    assign b_valid                                  = io_master_bvalid;
+    //assign b_resp                                   = io_master_bresp;
+    assign b_id                                     = io_master_bid;
+
+    assign ar_ready                                 = io_master_arready;
+    assign io_master_arvalid                        = ar_valid;   //
+    assign io_master_araddr                         = ar_addr[31 : 0];  //
+    assign io_master_arid                           = ar_id; //
+    assign io_master_arlen                          = ar_len; //
+    assign io_master_arsize                         = ar_size;  //
+    assign io_master_arburst                        = ar_burst;  //
+
+    assign io_master_rready                         = r_ready;   //
+    assign r_valid                                  = io_master_rvalid;
+    //assign r_resp                                   = io_master_rresp;
+    assign r_data                                   = io_master_rdata;
+    assign r_last                                   = io_master_rlast;
+    assign r_id                                     = io_master_rid;
+
+
+
+
+
+    ysyx_210457_axi_rw u_axi_rw (
+        .clock                          (clock),
+        .reset                          (reset),
+
+        .rw_valid_i                     (AXI_vaild),
+        .rw_req_i                       (AXI_req),
+        .data_read_o                    (AXI_r_data),
+        .data_write_i                   (AXI_w_data),
+        .rw_addr_i                      (AXI_addr),
+        .rw_size_i                      (AXI_size),
+        .stall                          (AXI_stall),
+        .cpu_id                         (AXI_id),
+        .out_id                         (AXI_out_id),
+
+        .axi_aw_ready_i                 (aw_ready),
+        .axi_aw_valid_o                 (aw_valid),
+        .axi_aw_addr_o                  (aw_addr),
+        .axi_aw_id_o                    (aw_id),
+        .axi_aw_len_o                   (aw_len),
+        .axi_aw_size_o                  (aw_size),
+        .axi_aw_burst_o                 (aw_burst),
+
+        .axi_w_ready_i                  (w_ready),
+        .axi_w_valid_o                  (w_valid),
+        .axi_w_data_o                   (w_data),
+        .axi_w_strb_o                   (w_strb),
+        .axi_w_last_o                   (w_last),
+        
+        .axi_b_ready_o                  (b_ready),
+        .axi_b_valid_i                  (b_valid),
+        //.axi_b_resp_i                   (b_resp),
+        .axi_b_id_i                     (b_id),
+
+
+        .axi_ar_ready_i                 (ar_ready),
+        .axi_ar_valid_o                 (ar_valid),
+        .axi_ar_addr_o                  (ar_addr),
+        .axi_ar_id_o                    (ar_id),
+        .axi_ar_len_o                   (ar_len),
+        .axi_ar_size_o                  (ar_size),
+        .axi_ar_burst_o                 (ar_burst),
+  
+        .axi_r_ready_o                  (r_ready),
+        .axi_r_valid_i                  (r_valid),
+        //.axi_r_resp_i                   (r_resp),
+        .axi_r_data_i                   (r_data),
+        .axi_r_last_i                   (r_last),
+        .axi_r_id_i                     (r_id)
+
+    );
+
+
+ysyx_210457_arbiter arbiter (
+    .clock(clock),
+    .reset(reset),
+    .flush(cpu_flush),
+
+    .if_data_read(cpu_if_data_read),
+
+    .if_valid(cpu_if_valid),
+    .if_addr(cpu_IF_pc),
+    .if_size(cpu_if_size),
+    .if_req(cpu_if_req),
+
+    .mem_data(cpu_mem_data),
+    
+    .mem_stor_data(cpu_MEM_stor_data),
+    .mem_valid(cpu_mem_valid),
+    .mem_addr(cpu_mem_addr),
+    .mem_sel(cpu_mem_sel),
+    .mem_req(cpu_mem_req),
+
+
+    .AXI_addr(AXI_addr),
+    .AXI_w_data(AXI_w_data),
+    .AXI_vaild(AXI_vaild),
+    .AXI_req(AXI_req),
+    .AXI_size(AXI_size),
+    .AXI_id(AXI_id),
+
+    .AXI_out_id(AXI_out_id),
+    .AXI_r_data(AXI_r_data),
+
+    .AXI_stall(AXI_stall),
+
+    .stall(cpu_stall)
+    
+);
+
+ysyx_210457_rvcpu rvcpu(
+    .clock(clock),
+    .reset(reset),
+    .stall(cpu_stall),
+
+    .if_data_read(cpu_if_data_read),
+    .if_valid(cpu_if_valid),
+    .IF_addr(cpu_IF_pc),
+    .if_size(cpu_if_size),
+    .if_req(cpu_if_req),
+
+    .mem_data(cpu_mem_data),
+    .MEM_stor_data(cpu_MEM_stor_data),
+    .mem_valid(cpu_mem_valid),
+    .mem_addr(cpu_mem_addr),
+    .mem_sel(cpu_mem_sel),
+    .mem_req(cpu_mem_req),
+
+    .flush(cpu_flush)
+
+);
+
+endmodule
