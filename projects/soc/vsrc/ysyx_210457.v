@@ -397,9 +397,6 @@ always @(posedge clock) begin
             default: begin end   
         endcase
     end
-    //else if (rw_req_i) begin
-        //stall <= ~axi_b_valid_i;
-    //end
     else if (r_valid) begin
         case (r_state)
             `R_STATE_IDLE:begin  stall <= 1'b1; end
@@ -407,9 +404,6 @@ always @(posedge clock) begin
             default:begin  end
         endcase
     end
-    //else if (~rw_req_i) begin
-        //stall <= ~axi_r_valid_i;
-    //end
 end
 
 
@@ -1470,6 +1464,8 @@ module ysyx_210457_ID_stage (
 
     .imm(imm)
 );
+
+
 assign imm_32 = imm[31 : 0];
     always @(*) begin                 //ID
         if(reset == 1) begin
@@ -1490,6 +1486,7 @@ assign imm_32 = imm[31 : 0];
             id_mem_ena = 1'b0;
             pc_con = 1'b0;
             id_csr_ena = 1'b0;
+            error_branch = 1'b0;
 
         end
         else begin
@@ -1819,10 +1816,10 @@ assign imm_32 = imm[31 : 0];
                             endcase        
                          end
                          default:begin
-                                 reg1_r_ena = `ZERO_ENA;
-                                 reg2_r_ena = `ZERO_ENA;
-                                 id_mem_ena = 1'b0;
-                                 w_ena = 1'b0;
+                            reg1_r_ena = `ZERO_ENA;
+                            reg2_r_ena = `ZERO_ENA;
+                            id_mem_ena = 1'b0;
+                            w_ena = 1'b0;
                          end
                     endcase
               end
