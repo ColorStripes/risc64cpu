@@ -11,10 +11,10 @@
 `define ZERO_ENA   1'b0
 `define ZERO_REG_ADDR   5'b00000
 //forecase
-`define FORECASE 64
-`define FORECASE_LOG 6
-`define PC 64
-`define PC_LOG 6
+`define FORECASE 32
+`define FORECASE_LOG 5
+`define PC 32
+`define PC_LOG 5
 
 //funct3
 `define addi 3'b000
@@ -351,19 +351,15 @@ module ysyx_210457_axi_rw # (
     always @(posedge clock) begin
         if (reset) begin
             w_state <= `W_STATE_IDLE;
-            stall <= 1'b0;
         end
         else begin
             if (w_valid) begin
                 case (w_state)
-                    `W_STATE_IDLE: begin w_state <= `W_STATE_ADDR;  stall <= 1'b1; end              
+                    `W_STATE_IDLE: begin w_state <= `W_STATE_ADDR;   end              
                     `W_STATE_ADDR:  if (aw_hs)   w_state <= `W_STATE_WRITE;
                     `W_STATE_WRITE: if (w_done)  w_state <= `W_STATE_RESP;
-                    `W_STATE_RESP:  if (b_hs) begin w_state <= `W_STATE_IDLE; stall <= 1'b0; end   
+                    `W_STATE_RESP:  if (b_hs) begin w_state <= `W_STATE_IDLE;  end   
                 endcase
-            end
-            else if (rw_req_i) begin
-                stall <= ~axi_b_valid_i;
             end
         end
     end
@@ -372,31 +368,54 @@ module ysyx_210457_axi_rw # (
     always @(posedge clock) begin
         if (reset) begin
             r_state <= `R_STATE_IDLE;
-            stall <= 1'b0;
         end
         else begin
             if (r_valid) begin
                 case (r_state)
-                    `R_STATE_IDLE:begin r_state <= `R_STATE_VOID; stall <= 1'b1; end
+                    `R_STATE_IDLE:begin r_state <= `R_STATE_VOID;  end
                     `R_STATE_VOID:begin r_state <= `R_STATE_ADDR; end               
                     `R_STATE_ADDR: if (ar_hs)    r_state <= `R_STATE_READ;
-                    `R_STATE_READ: if (r_done) begin r_state <= `R_STATE_IDLE; stall <= 1'b0; end   
+                    `R_STATE_READ: if (r_done) begin r_state <= `R_STATE_IDLE; end   
                     default:;
                 endcase
-            end
-            else if (~rw_req_i) begin
-                stall <= ~axi_r_valid_i;
             end
         end
     end
 
-
+always @(posedge clock) begin
+    if(reset) begin
+        stall <= 1'b0;
+    end
+    else if (w_valid) begin
+        case (w_state)
+            `W_STATE_IDLE: begin  stall <= 1'b1; end              
+            `W_STATE_RESP: begin 
+                if (b_hs) begin 
+                    stall <= 1'b0; 
+                end 
+            end
+            default: begin end   
+        endcase
+    end
+    else if (rw_req_i) begin
+        stall <= ~axi_b_valid_i;
+    end
+    else if (r_valid) begin
+        case (r_state)
+            `R_STATE_IDLE:begin  stall <= 1'b1; end
+            `R_STATE_READ: if (r_done) begin  stall <= 1'b0; end   
+            default:begin  end
+        endcase
+    end
+    else if (~rw_req_i) begin
+        stall <= ~axi_r_valid_i;
+    end
+end
 
 
     // ------------------Process Data------------------
     localparam ALIGNED_WIDTH = $clog2(AXI_DATA_WIDTH / 8);
     localparam OFFSET_WIDTH  = $clog2(AXI_DATA_WIDTH);
-    localparam AXI_SIZE      = $clog2(AXI_DATA_WIDTH / 8);
     localparam MASK_WIDTH    = AXI_DATA_WIDTH * 2;
     localparam TRANS_LEN     = RW_DATA_WIDTH / AXI_DATA_WIDTH;
     localparam BLOCK_TRANS   = TRANS_LEN > 1 ? 1'b1 : 1'b0;
@@ -476,7 +495,7 @@ module ysyx_210457_axi_rw # (
     assign axi_w_strb_o     = (size_b) ? {{AXI_DATA_WIDTH/8-1{1'b0}}, 1'b1} << aligned_offset : 
                               (size_h) ? {{AXI_DATA_WIDTH/8-2{1'b0}}, 2'b11} << aligned_offset :
                               (size_w) ? {{AXI_DATA_WIDTH/8-4{1'b0}}, 4'b1111} << aligned_offset :
-                              (size_d) ? {{AXI_DATA_WIDTH/8-8{1'b0}}, 8'b11111111} << aligned_offset : {AXI_DATA_WIDTH/8-0{1'b0}};
+                              (size_d) ? {8'b11111111} << aligned_offset : {AXI_DATA_WIDTH/8-0{1'b0}};
 
 
     assign  axi_w_data_o  = (data_write_i & mask_l) ;
@@ -653,15 +672,15 @@ always @(*) begin
     else begin
         stall = 6'b000000;
         if(mem_valid & if_valid & ~flush_reg) begin
-            if(mem_req) begin
+            //if(mem_req) begin
                 stall = {3'b111, AXI_stall, AXI_stall, 1'b0};
-            end
-            else begin
-                stall = {5'b11111, 1'b0};
-                if(AXI_out_id == 4'b1) begin
-                    stall = {3'b111, AXI_stall, AXI_stall, 1'b0};
-                end
-            end
+            //end
+            //else begin
+                //stall = {5'b11111, 1'b0};
+                //if(AXI_out_id == 4'b1) begin
+                    //stall = {3'b111, AXI_stall, AXI_stall, 1'b0};
+                //end
+            //end
         end
         else if(mem_valid & ~if_valid & ~flush_reg) begin
             stall = {{5{AXI_stall}}, 1'b0};
