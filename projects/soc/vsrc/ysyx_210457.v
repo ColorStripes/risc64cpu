@@ -397,9 +397,9 @@ always @(posedge clock) begin
             default: begin end   
         endcase
     end
-    //else if (rw_req_i) begin
-       // stall <= ~axi_b_valid_i;
-    //end
+    else if (rw_req_i) begin
+        stall <= ~axi_b_valid_i;
+    end
     if (r_valid) begin
         case (r_state)
             `R_STATE_IDLE:begin  stall <= 1'b1; end
@@ -407,9 +407,9 @@ always @(posedge clock) begin
             default:begin  end
         endcase
     end
-    //else if (~rw_req_i) begin
-      //  stall <= ~axi_r_valid_i;
-    //end
+    else if (~rw_req_i) begin
+        stall <= ~axi_r_valid_i;
+    end
 end
 
 
@@ -672,15 +672,15 @@ always @(*) begin
     else begin
         stall = 6'b000000;
         if(mem_valid & if_valid & ~flush_reg) begin
-            if(mem_req) begin
+            //if(mem_req) begin
                 stall = {3'b111, AXI_stall, AXI_stall, 1'b0};
-            end
-            else begin
-                stall = {5'b11111, 1'b0};
-                if(AXI_out_id == 4'b1) begin
-                    stall = {3'b111, AXI_stall, AXI_stall, 1'b0};
-                end
-            end
+            //end
+            //else begin
+                //stall = {5'b11111, 1'b0};
+                //if(AXI_out_id == 4'b1) begin
+                    //stall = {3'b111, AXI_stall, AXI_stall, 1'b0};
+                //end
+            //end
         end
         else if(mem_valid & ~if_valid & ~flush_reg) begin
             stall = {{5{AXI_stall}}, 1'b0};
