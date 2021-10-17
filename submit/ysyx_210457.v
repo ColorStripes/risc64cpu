@@ -261,12 +261,12 @@ module ysyx_210457_axi_rw # (
     parameter RW_DATA_WIDTH     = 64,
     parameter AXI_DATA_WIDTH    = 64,
     parameter AXI_ADDR_WIDTH    = 32,
-    parameter AXI_ID_WIDTH      = 4
-    parameter ALIGNED_WIDTH = $clog2(AXI_DATA_WIDTH / 8);
-    parameter OFFSET_WIDTH  = $clog2(AXI_DATA_WIDTH);
-    parameter MASK_WIDTH    = AXI_DATA_WIDTH * 2;
-    parameter TRANS_LEN     = RW_DATA_WIDTH / AXI_DATA_WIDTH;
-    parameter BLOCK_TRANS   = TRANS_LEN > 1 ? 1'b1 : 1'b0;
+    parameter AXI_ID_WIDTH      = 4,
+    parameter ALIGNED_WIDTH = $clog2(AXI_DATA_WIDTH / 8),
+    parameter OFFSET_WIDTH  = $clog2(AXI_DATA_WIDTH),
+    parameter MASK_WIDTH    = AXI_DATA_WIDTH * 2,
+    parameter TRANS_LEN     = RW_DATA_WIDTH / AXI_DATA_WIDTH,
+    parameter BLOCK_TRANS   = TRANS_LEN > 1 ? 1'b1 : 1'b0
 
 )(
     input                               clock,
