@@ -262,6 +262,11 @@ module ysyx_210457_axi_rw # (
     parameter AXI_DATA_WIDTH    = 64,
     parameter AXI_ADDR_WIDTH    = 32,
     parameter AXI_ID_WIDTH      = 4
+    parameter ALIGNED_WIDTH = $clog2(AXI_DATA_WIDTH / 8);
+    parameter OFFSET_WIDTH  = $clog2(AXI_DATA_WIDTH);
+    parameter MASK_WIDTH    = AXI_DATA_WIDTH * 2;
+    parameter TRANS_LEN     = RW_DATA_WIDTH / AXI_DATA_WIDTH;
+    parameter BLOCK_TRANS   = TRANS_LEN > 1 ? 1'b1 : 1'b0;
 
 )(
     input                               clock,
@@ -394,11 +399,7 @@ module ysyx_210457_axi_rw # (
 
 
     // ------------------Process Data------------------
-    parameter ALIGNED_WIDTH = $clog2(AXI_DATA_WIDTH / 8);
-    parameter OFFSET_WIDTH  = $clog2(AXI_DATA_WIDTH);
-    parameter MASK_WIDTH    = AXI_DATA_WIDTH * 2;
-    parameter TRANS_LEN     = RW_DATA_WIDTH / AXI_DATA_WIDTH;
-    parameter BLOCK_TRANS   = TRANS_LEN > 1 ? 1'b1 : 1'b0;
+
 
     wire aligned            = BLOCK_TRANS | rw_addr_i[ALIGNED_WIDTH-1:0] == 0;
     wire size_b             = rw_size_i == `SIZE_B;
@@ -507,8 +508,9 @@ module ysyx_210457_axi_rw # (
     wire [AXI_DATA_WIDTH-1:0] axi_r_data_l  = (axi_r_data_i & mask_l) >> aligned_offset_l;
     wire [AXI_DATA_WIDTH-1:0] axi_r_data_h  = (axi_r_data_i & mask_h) << aligned_offset_h;
 
+    genvar i;
     generate
-        for (genvar i = 0; i < TRANS_LEN; i = i+1) begin
+        for (i = 0; i < TRANS_LEN; i = i+1) begin
             always @(posedge clock) begin
                 if (reset) begin
                     data_read_o[i*AXI_DATA_WIDTH+:AXI_DATA_WIDTH] <= 0;
