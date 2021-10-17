@@ -666,15 +666,15 @@ always @(*) begin
     else begin
         stall = 6'b000000;
         if(mem_valid & if_valid & ~flush_reg) begin
-            //if(mem_req) begin
+            if(mem_req) begin
                 stall = {3'b111, AXI_stall, AXI_stall, 1'b0};
-            //end
-            //else begin
-                //stall = {5'b11111, 1'b0};
-                //if(AXI_out_id == 4'b1) begin
-                    //stall = {3'b111, AXI_stall, AXI_stall, 1'b0};
-                //end
-            //end
+            end
+            else begin
+                stall = {5'b11111, 1'b0};
+                if(AXI_out_id == 4'b1) begin
+                    stall = {3'b111, AXI_stall, AXI_stall, 1'b0};
+                end
+            end
         end
         else if(mem_valid & ~if_valid & ~flush_reg) begin
             stall = {{5{AXI_stall}}, 1'b0};
