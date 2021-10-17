@@ -1464,6 +1464,8 @@ module ysyx_210457_ID_stage (
 
     .imm(imm)
 );
+
+
 assign imm_32 = imm[31 : 0];
     always @(*) begin                 //ID
         if(reset == 1) begin
@@ -1484,6 +1486,7 @@ assign imm_32 = imm[31 : 0];
             id_mem_ena = 1'b0;
             pc_con = 1'b0;
             id_csr_ena = 1'b0;
+            error_branch = 1'b0;
 
         end
         else begin
@@ -1813,10 +1816,10 @@ assign imm_32 = imm[31 : 0];
                             endcase        
                          end
                          default:begin
-                                 reg1_r_ena = `ZERO_ENA;
-                                 reg2_r_ena = `ZERO_ENA;
-                                 id_mem_ena = 1'b0;
-                                 w_ena = 1'b0;
+                            reg1_r_ena = `ZERO_ENA;
+                            reg2_r_ena = `ZERO_ENA;
+                            id_mem_ena = 1'b0;
+                            w_ena = 1'b0;
                          end
                     endcase
               end
