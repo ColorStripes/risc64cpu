@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps
-///////////////////////////////////////////
+/////define
 `define YSYX210457_ZERO_WORD  64'h00000000_00000000
 `define YSYX210457_ZERO_PC    64'h00000000_00000000
 `define YSYX210457_ZERO_ADDR  32'h00000000
