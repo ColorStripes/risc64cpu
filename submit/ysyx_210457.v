@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps
-/////define
+///////...defines
 `define YSYX210457_ZERO_WORD  64'h00000000_00000000
 `define YSYX210457_ZERO_PC    64'h00000000_00000000
 `define YSYX210457_ZERO_ADDR  32'h00000000
@@ -381,7 +381,6 @@ end
     wire [7:0] axi_len      = aligned ? TRANS_LEN - 1 : {{7{1'b0}}, overstep};    
     wire [2:0] axi_size     = {1'b0, rw_size_i};
     
-    //wire [AXI_ADDR_WIDTH-1:0] axi_addr          = {rw_addr_i[AXI_ADDR_WIDTH-1:ALIGNED_WIDTH], {ALIGNED_WIDTH{1'b0}}};
     wire [OFFSET_WIDTH-1:0] aligned_offset    = {{OFFSET_WIDTH-ALIGNED_WIDTH{1'b0}}, {rw_addr_i[ALIGNED_WIDTH-1:0]}};
     wire [OFFSET_WIDTH-1:0] aligned_offset_l    = {{OFFSET_WIDTH-ALIGNED_WIDTH{1'b0}}, {rw_addr_i[ALIGNED_WIDTH-1:0]}} << 3;
     wire [OFFSET_WIDTH-1:0] aligned_offset_h    = 6'd32 - aligned_offset_l;
@@ -1238,7 +1237,6 @@ module ysyx_210457_IF_stage (
     output wire if_req//
 
 );
-wire [`YSYX210457_PC_BUS] sum;
 wire [`YSYX210457_PC_BUS] pc_i;
 
 assign if_branch = pc_i;
@@ -1262,19 +1260,12 @@ ysyx_210457_PC PC(
   
 );
 
-ysyx_210457_ADD ADD (
-    .num1(64'd4),
-    .num2(IF_pc),
-
-    .sum(sum)
-);
-
 ysyx_210457_forecase forecase (
     .reset(reset),
     .clock(clock),
     .mux_pc(mux_pc),
     .pc_id(pc_id),
-    .add_pc(sum),
+    .IF_pc(IF_pc),
     .branch(branch),
     .stall(stall),
     .id_forecase(id_forecase),
@@ -2928,16 +2919,6 @@ module ysyx_210457_WB_stage (
 
 endmodule
 
-module ysyx_210457_ADD (
-    input wire [63:0] num1,
-    input wire [63:0] num2,
-
-    output wire [63:0] sum
-);
-    assign sum = num1 + num2;
-
-endmodule
-
 
 module ysyx_210457_ALU(
     input wire [63:0] num1,
@@ -3350,7 +3331,7 @@ module ysyx_210457_forecase (
     input wire clock,
     input wire mux_pc,
     input wire [`YSYX210457_PC_BUS] pc_id,
-    input wire [`YSYX210457_PC_BUS] add_pc,
+    input wire [`YSYX210457_PC_BUS] IF_pc,
     input wire [`YSYX210457_PC_BUS] branch,
     input wire id_forecase,
     input wire error_branch,
@@ -3364,6 +3345,7 @@ module ysyx_210457_forecase (
     reg [1 : 0] fore;
     reg [`YSYX210457_PC_BUS] fore_branch[`YSYX210457_FORECASE-1 : 0];
     reg [`YSYX210457_PC_BUS] pc_now[`YSYX210457_PC-1 : 0];
+    reg [`YSYX210457_PC_BUS] add_pc = IF_pc + 4;
 
 
 
@@ -3805,18 +3787,17 @@ module ysyx_210457(
 
 
 
-assign io_slave_awready = 0;
-assign io_slave_wready = 0;
-assign io_slave_bvalid = 0;
-assign io_slave_bresp = 0;
-assign io_slave_bid = 0;
-assign io_slave_arready = 0;
-assign io_slave_rvalid = 0;
-assign io_slave_rvalid = 0;
-assign io_slave_rresp = 0;
-assign io_slave_rdata = 0;
-assign io_slave_rlast = 0;
-assign io_slave_rid = 0;
+assign io_slave_awready = 1'b0;
+assign io_slave_wready = 1'b0;
+assign io_slave_bvalid = 1'b0;
+assign io_slave_bresp = 2'b0;
+assign io_slave_bid = 4'b0;
+assign io_slave_arready = 1'b0;
+assign io_slave_rvalid = 1'b0;
+assign io_slave_rresp = 2'b0;
+assign io_slave_rdata = 64'h00000000_00000000;
+assign io_slave_rlast = 1'b0;
+assign io_slave_rid = 4'b0;
 
     
 
