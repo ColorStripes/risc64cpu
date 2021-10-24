@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps
-///////...defines////
+///////defines////
 `define YSYX210457_ZERO_WORD  64'h00000000_00000000
 `define YSYX210457_ZERO_PC    64'h00000000_00000000
 `define YSYX210457_ZERO_ADDR  32'h00000000
@@ -3345,7 +3345,7 @@ module ysyx_210457_forecase (
     reg [1 : 0] fore;
     reg [`YSYX210457_PC_BUS] fore_branch[`YSYX210457_FORECASE-1 : 0];
     reg [`YSYX210457_PC_BUS] pc_now[`YSYX210457_PC-1 : 0];
-    reg [`YSYX210457_PC_BUS] add_pc = IF_pc + 4;
+    reg [`YSYX210457_PC_BUS] add_pc;
 
 
 
@@ -3405,11 +3405,13 @@ end
 
    always @(*) begin
         if(reset == 1'b1) begin
+            add_pc = `YSYX210457_ZERO_WORD;
             wash = 1'b0;
             pc = `YSYX210457_ZERO_WORD;
             if_forecase = 1'b0;
         end
         else if(~stall) begin
+            add_pc = IF_pc + 4;
             wash = 1'b0;
             pc = add_pc;
             if_forecase = 1'b0;
@@ -3447,6 +3449,7 @@ end
             end
         end
         else begin
+            add_pc = IF_pc + 4;
             wash = 1'b0;
             pc = add_pc;
             if_forecase = 1'b0;
