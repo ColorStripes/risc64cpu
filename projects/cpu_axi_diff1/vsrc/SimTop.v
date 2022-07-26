@@ -1,5 +1,6 @@
-
+//2022.7.26 xuxin
 `include "defines.v"
+
 `define AXI_TOP_INTERFACE(name) io_memAXI_0_``name
 
 module SimTop(
@@ -63,6 +64,7 @@ module SimTop(
     input  [`AXI_ID_WIDTH-1:0]          `AXI_TOP_INTERFACE(r_bits_id),
     input  [`AXI_USER_WIDTH-1:0]        `AXI_TOP_INTERFACE(r_bits_user)
 );
+
 
     wire aw_ready;
     wire aw_valid;
@@ -161,12 +163,13 @@ module SimTop(
 
 
 
-ysyx_210457 ysyx_210457(
-  .clock(clock),
-  .reset(reset),
-  .io_interrupt(),
- .io_master_awready(aw_ready),
- .io_master_awvalid(aw_valid),
+
+rvcpu rvcpu(
+.clock(clock),
+.reset(reset),
+.io_interrupt(),
+.io_master_awready(aw_ready),
+.io_master_awvalid(aw_valid),
 .io_master_awaddr(aw_addr),
 .io_master_awid(aw_id),
 .io_master_awlen(aw_len),
