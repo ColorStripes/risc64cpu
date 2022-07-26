@@ -152,7 +152,7 @@ assign io_slave_rid = 0;
         .clock                          (clock),
         .reset                          (reset),
 
-        .rw_valid_i                     (1'b1),
+        .rw_valid_i                     (AXI_vaild),
         .rw_req_i                       (AXI_req),
         .data_read_o                    (AXI_r_data),
         .data_write_i                   (AXI_w_data),
