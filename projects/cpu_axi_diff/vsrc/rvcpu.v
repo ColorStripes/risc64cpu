@@ -220,7 +220,7 @@ assign io_slave_rid = 0;
         .data_read_o                    (AXI_r_data),
         .data_write_i                   (AXI_w_data),
         .rw_addr_i                      (2147483648),
-        .rw_size_i                      (AXI_size),
+        .rw_size_i                      (2'b10),
         .stall                          (),
         .cpu_id                         (3),
         .out_id                         (AXI_ret_id),
