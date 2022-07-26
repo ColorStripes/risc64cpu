@@ -47,9 +47,6 @@ module arbiter (
     
 );
 
-initial begin
-        $monitor("率:%lx  \n", AXI_addr);
-end
 
 
 wire axi_fetch_ready = (AXI_ret_id == 1) ? AXI_ready : 1'b0;
