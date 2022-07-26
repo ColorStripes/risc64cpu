@@ -104,7 +104,7 @@ assign AXI_size = ex_to_axi_valid ? mem_size : if_size;
 assign AXI_addr = ex_to_axi_valid ? mem_addr : if_addr;
 assign AXI_id = ex_to_axi_valid ? 4'b0011 : 4'b0001;
 assign AXI_req = ex_to_axi_valid ? mem_req : if_req;
-assign AXI_vaild = ex_to_axi_valid | axi_fetch_ready;
+assign AXI_vaild = ex_to_axi_valid | pc_to_axi_valid;
 assign AXI_w_data = mem_stor_data;
 
 
