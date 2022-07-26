@@ -65,7 +65,7 @@ module SimTop(
 );
 
 initial begin
-        $monitor("率:%d\n", aw_addr);
+        $monitor("率:%d,%d\n", aw_addr,aw_valid);
 end
 
     wire aw_ready;
