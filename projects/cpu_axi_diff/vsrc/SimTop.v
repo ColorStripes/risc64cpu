@@ -162,9 +162,9 @@ module SimTop(
     assign r_user                                   = `AXI_TOP_INTERFACE(r_bits_user);
 
 
-initial begin
-        $monitor("率:%d,%d\n", aw_addr, ar_valid);
-end
+// initial begin
+//         $monitor("率:%d,%d\n", aw_addr, ar_valid);
+// end
 
 
 
