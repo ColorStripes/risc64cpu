@@ -23,7 +23,7 @@
 `define ysyx_22040931_REG        32
 `define ysyx_22040931_MEM        64
 `define ysyx_22040931_ZERO_NUM   64'h00000000_00000000
-`define ysyx_22040931_ZERO_PC    64'h00000000_30000000
+`define ysyx_22040931_ZERO_PC    64'h00000000_80000000
 `define ysyx_22040931_NONE_INST  32'h00000000
 `define ysyx_22040931_ZERO_REG   5'b00000
 `define ysyx_22040931_PC_BUS     63 : 0

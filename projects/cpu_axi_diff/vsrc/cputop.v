@@ -481,9 +481,6 @@ wire [`ysyx_22040931_DATA_BUS] wb_w_data;
 
 
 
-
-
-
 // Difftest
 reg cmt_wen;
 reg [7:0] cmt_wdest;
