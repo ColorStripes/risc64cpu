@@ -64,6 +64,10 @@ module SimTop(
     input  [`AXI_USER_WIDTH-1:0]        `AXI_TOP_INTERFACE(r_bits_user)
 );
 
+initial begin
+        $monitor("率:%lx  \n", aw_addr);
+end
+
     wire aw_ready;
     wire aw_valid;
     wire [`AXI_ADDR_WIDTH-1:0] aw_addr;
