@@ -1,143 +1,4 @@
-
 `timescale 1ns / 1ps
-
-`define ZERO_WORD  64'h00000000_00000000
-`define ZERO_PC    64'h00000000_00000000
-`define ZERO_ADDR  32'h00000000
-`define ZERO_INST  32'h00000000    
-`define REG_BUS    63 : 0 
-`define PC_BUS     63 : 0 
-`define ADDR_BUS   31 : 0  
-`define INST_BUS   31 : 0 
-`define ZERO_ENA   1'b0
-`define ZERO_REG_ADDR   5'b00000
-//forecase
-`define FORECASE 64
-`define FORECASE_LOG 6
-`define PC 64
-`define PC_LOG 6
-
-//funct3
-`define addi 3'b000
-`define andi 3'b111
-`define xori 3'b100
-`define ori 3'b110
-`define slti 3'b010
-`define sltiu 3'b011
-`define slli 3'b001
-`define srlisrai 3'b101
-`define srlsra 3'b101
-`define addiw 3'b000
-`define slliw 3'b001
-`define sllw 3'b001
-`define srliwsraiw 3'b101
-`define srlwsraw 3'b101
-
-`define lb 3'b000
-`define lbu 3'b100
-`define ld 3'b011
-`define lh 3'b001
-`define lhu 3'b101
-`define lw 3'b010
-`define lwu 3'b110
-
-`define sb 3'b000
-`define sh 3'b001
-`define sw 3'b010
-`define sd 3'b011
-
-
-`define addsub 3'b000
-`define addwsubw 3'b000
-`define and 3'b111
-`define xor 3'b100
-`define or 3'b110
-`define slt 3'b010
-`define sltu 3'b011
-`define sll 3'b001
-
-`define beq 3'b000
-`define bge 3'b101
-`define bgeu 3'b111
-`define blt 3'b100
-`define bltu 3'b110
-`define bne 3'b001
-
-`define system 3'b000
-`define csrrw 3'b001
-`define csrrs 3'b010
-`define csrrc 3'b011
-`define csrrwi 3'b101
-`define csrrsi 3'b110
-`define csrrci 3'b111
-
-//funct7
-`define add 7'b0000000
-`define sub 7'b0100000
-`define addw 7'b0000000
-`define subw 7'b0100000
-`define srl 7'b0000000
-`define sra 7'b0100000
-`define srlw 7'b0000000
-`define sraw 7'b0100000
-`define srli 6'b000000
-`define srai 6'b010000
-`define srliw 6'b000000
-`define sraiw 6'b010000
-`define mret 12'b001100000010
-`define ebreak 12'b000000000001
-`define ecall 12'b000000000000
-
-//ALUOP
-`define NO 7'b0000_000
-`define ADD 7'b0000_001
-`define SUB 7'b0000_010
-`define AND 7'b0000_100
-`define XOR 7'b0010_000
-`define OR 7'b0001_000
-`define COMu 7'b0000_011
-`define COM 7'b0000_110
-`define SHIL 7'b0001_100
-`define SHIR 7'b0011_000
-`define SRA 7'b0110_000
-`define LEFT12 7'b1100_000
-`define SHILw 7'b0001_101
-`define SRAw 7'b0110_001
-`define SHIRw 7'b0011_001
-
-//ALUSEL
-`define No 4'b0000
-`define Logic  4'b0001
-`define Arith  4'b0010
-`define Jump  4'b0100
-`define Load  4'b0011
-`define Store  4'b0101
-`define Long  4'b0110
-`define Short  4'b0111
-`define CSRRC  4'b1001
-`define CSRRCI 4'b1010
-`define CSRRS  4'b1011
-`define CSRRSI  4'b1100
-`define CSRRW  4'b1101
-`define CSRRWI  4'b1110
-`define SYSTEM  4'b1111
-
-
-//MEMOP
-`define R_ONE  5'b00001
-`define R_ONEu  5'b00010
-`define R_DOU  5'b00011
-`define R_DOUu  5'b00100
-`define R_FOR  5'b00101
-`define R_FORu  5'b00110
-`define R_EIG  5'b00111
-
-`define W_ONE  5'b01000
-`define W_DOU  5'b01001
-`define W_FOR 5'b01010
-`define W_EIG 5'b01011
-
-
 //ROM
 `define ROM_NUM  1024
 `define ROM_NUMLOG  10
@@ -146,59 +7,193 @@
 `define D_NUM  1024
 `define D_NUMLOG  10
 
+//forcase
+`define ysyx_22040931_PHT_SIZE  256     //1<<`ysyx_22040931_BHT_WIDTH
+`define ysyx_22040931_BHT_WIDTH  8      //ysyx_22040931_HASH_WIDTH
+`define ysyx_22040931_BHT_SIZE  256     //1<<`ysyx_22040931_HASH_WIDTH
+`define ysyx_22040931_HASH_WIDTH 8      //
+//
+`define ysyx_22040931_BTB_WIDTH 98       //
+`define ysyx_22040931_BTB_SIZE 256
+`define ysyx_22040931_RAS_INDEX 4
+`define ysyx_22040931_RAS_SIZE 16
+
+`define ysyx_22040931_ALU        6
+`define ysyx_22040931_ALU_BUS    5 : 0
+`define ysyx_22040931_REG        32
+`define ysyx_22040931_MEM        64
+`define ysyx_22040931_ZERO_NUM   64'h00000000_00000000
+`define ysyx_22040931_ZERO_PC    64'h00000000_80000000
+`define ysyx_22040931_NONE_INST  32'h00000000
+`define ysyx_22040931_ZERO_REG   5'b00000
+`define ysyx_22040931_PC_BUS     63 : 0
+`define ysyx_22040931_DATA_BUS   63 : 0
+`define ysyx_22040931_MEM_BUS    63 : 0
+`define ysyx_22040931_CSR_BUS    63 : 0
+`define ysyx_22040931_INST_BUS   31 : 0
+`define ysyx_22040931_REG_BUS     4 : 0
+`define ysyx_22040931_N_ENA        1'b0
+`define ysyx_22040931_ENA          1'b1
+`define ysyx_22040931_READ         1'b0 
+
+//ALUOP
+`define ysyx_22040931_NO      6'b000000
+`define ysyx_22040931_ADD     6'b000001
+`define ysyx_22040931_SUB     6'b000010
+`define ysyx_22040931_AND     6'b000011
+`define ysyx_22040931_XOR     6'b000100
+`define ysyx_22040931_OR      6'b000101
+`define ysyx_22040931_COM     6'b000110
+`define ysyx_22040931_COMU    6'b000111
+`define ysyx_22040931_SHIL    6'b001000
+`define ysyx_22040931_SHIR    6'b001001
+`define ysyx_22040931_SRA     6'b001010
+`define ysyx_22040931_SHILW   6'b001011
+`define ysyx_22040931_SRAW    6'b001100
+`define ysyx_22040931_SHIRW   6'b001101
+`define ysyx_22040931_PC      6'b001110
+`define ysyx_22040931_SORT    6'b001111
+`define ysyx_22040931_JUMP    6'b010000
+`define ysyx_22040931_REMW    6'b010001
+`define ysyx_22040931_REMUW   6'b010010
+`define ysyx_22040931_REMU    6'b010011
+`define ysyx_22040931_REM     6'b010100
+`define ysyx_22040931_MUL     6'b010101
+`define ysyx_22040931_MULH    6'b010110
+`define ysyx_22040931_MULHSU  6'b010111
+`define ysyx_22040931_MULHU   6'b011000
+`define ysyx_22040931_MULW    6'b011001
+`define ysyx_22040931_DIV     6'b011010
+`define ysyx_22040931_DIVU    6'b011011
+`define ysyx_22040931_DIVUW   6'b011100
+`define ysyx_22040931_DIVW    6'b011101
 
 
-//difftest
-`define PC_START   64'h00000000_80000000 
-`define RISCV_PRIV_MODE_U   0
-`define RISCV_PRIV_MODE_S   1
-`define RISCV_PRIV_MODE_M   3
+
+//EXOP
+`define ysyx_22040931_No      3'b000
+`define ysyx_22040931_Arith   3'b111
+`define ysyx_22040931_Short   3'b110
+`define ysyx_22040931_Stort   3'b101
+`define ysyx_22040931_LOAD    3'b100
+`define ysyx_22040931_System  3'b011
+`define ysyx_22040931_LUI     3'b010
+
+//MEMROP
+`define ysyx_22040931_MNO   3'b000
+`define ysyx_22040931_R_ONE   3'b001
+`define ysyx_22040931_R_ONEU  3'b010
+`define ysyx_22040931_R_DOU   3'b011
+`define ysyx_22040931_R_DOUU  3'b100
+`define ysyx_22040931_R_FOR   3'b101
+`define ysyx_22040931_R_FORU  3'b110
+`define ysyx_22040931_R_EIG   3'b111
+
+//MEMWOP
+`define ysyx_22040931_MNO   3'b000
+`define ysyx_22040931_W_ONE   3'b001
+`define ysyx_22040931_W_DOU   3'b011
+`define ysyx_22040931_W_FOR   3'b101
+`define ysyx_22040931_W_EIG   3'b111
+
+//MEMOP
+`define ysyx_22040931_SIZE_B    2'b00
+`define ysyx_22040931_SIZE_H    2'b01
+`define ysyx_22040931_SIZE_W    2'b10
+`define ysyx_22040931_SIZE_D    2'b11
 
 
-//CSR_ADDR
-`define mvendorid 12'hf11    //MRO
-`define marchid 12'hf12
-`define mimpid 12'hf13
-`define mhartid 12'hf14
-
-`define mstatus 12'h300
-`define misa 12'h301
-`define medeleg 12'h302
-`define mideleg 12'h303
-`define mie 12'h304
-`define mtvec 12'h305
-`define mcounteren 12'h306
-`define mscratch 12'h340
-`define mepc 12'h341
-`define mcause 12'h342
-`define mtval 12'h343
-`define mip 12'h344
-`define mcycle 12'hb00
-`define minstret 12'hb02
-`define mcycleh 12'hb80         //32
-`define minstreth 12'hb82       //32
-`define mcountinhibit 12'h320
-`define tselect 12'h7a0
-`define tdata1 12'h7a1
-`define tdata2 12'h7a2
-`define tdata3 12'h7a3
-
-`define sstatus 12'h100
+//TYPE
+`define ysyx_22040931_It     3'b111
+`define ysyx_22040931_St     3'b110
+`define ysyx_22040931_Bt     3'b101
+`define ysyx_22040931_Jt     3'b100
+`define ysyx_22040931_Ut     3'b011
+`define ysyx_22040931_Rt     3'b010
 
 
-//Clint
-`define msip 32'h2000000
-`define mtimecmp 32'h2004000
-`define mtime 32'h200bff8
-`define TIME 64'd00000
+
+//R
+`define ysyx_22040931_add    17'b0000000_000_0110011
+`define ysyx_22040931_addw   17'b0000000_000_0111011
+`define ysyx_22040931_and    17'b0000000_111_0110011
+`define ysyx_22040931_sll    17'b0000000_001_0110011
+`define ysyx_22040931_sllw   17'b0000000_001_0111011
+`define ysyx_22040931_slt    17'b0000000_010_0110011
+`define ysyx_22040931_sltu   17'b0000000_011_0110011
+`define ysyx_22040931_sra    17'b0100000_101_0110011
+`define ysyx_22040931_sraw   17'b0100000_101_0111011
+`define ysyx_22040931_srl    17'b0000000_101_0110011
+`define ysyx_22040931_srlw   17'b0000000_101_0111011
+`define ysyx_22040931_sub    17'b0100000_000_0110011
+`define ysyx_22040931_subw   17'b0100000_000_0111011
+`define ysyx_22040931_xor    17'b0000000_100_0110011
+`define ysyx_22040931_remw   17'b0000001_110_0111011
+`define ysyx_22040931_remuw  17'b0000001_111_0111011
+`define ysyx_22040931_remu   17'b0000001_111_0110011
+`define ysyx_22040931_rem    17'b0000001_110_0110011
+`define ysyx_22040931_or     17'b0000000_110_0110011
+`define ysyx_22040931_mul    17'b0000001_000_0110011
+`define ysyx_22040931_mulh   17'b0000001_001_0110011
+`define ysyx_22040931_mulhsu 17'b0000001_010_0110011
+`define ysyx_22040931_mulhu  17'b0000001_011_0110011
+`define ysyx_22040931_mulw   17'b0000001_000_0111011
+`define ysyx_22040931_div    17'b0000001_100_0110011
+`define ysyx_22040931_divu   17'b0000001_101_0110011
+`define ysyx_22040931_divuw  17'b0000001_101_0111011
+`define ysyx_22040931_divw   17'b0000001_100_0111011
+
+//I
+`define ysyx_22040931_addi    10'b000_0010011 
+`define ysyx_22040931_addiw   10'b000_0011011
+`define ysyx_22040931_andi    10'b111_0010011   
+`define ysyx_22040931_ld      10'b011_0000011 
+`define ysyx_22040931_lw      10'b010_0000011
+`define ysyx_22040931_lh      10'b001_0000011
+`define ysyx_22040931_lb      10'b000_0000011
+`define ysyx_22040931_lwu     10'b110_0000011 
+`define ysyx_22040931_lhu     10'b101_0000011 
+`define ysyx_22040931_lbu     10'b100_0000011 
+`define ysyx_22040931_xori    10'b100_0010011
+`define ysyx_22040931_jalr    10'b000_1100111 
+`define ysyx_22040931_ori     10'b110_0010011    
+`define ysyx_22040931_slli    16'b000000_001_0010011 
+`define ysyx_22040931_srai    16'b010000_101_0010011
+`define ysyx_22040931_srli    16'b000000_101_0010011     
+`define ysyx_22040931_slliw   17'b0000000_001_0011011
+`define ysyx_22040931_slti    17'b0000000_010_0010011
+`define ysyx_22040931_sltiu   17'b0000000_011_0010011 
+`define ysyx_22040931_sraiw   17'b0100000_101_0011011 
+`define ysyx_22040931_srliw   17'b0000000_101_0011011
+
+`define ysyx_22040931_ecall   18'b0000000_0_000_1110011
+`define ysyx_22040931_ebreak  18'b0000000_1_000_1110011 
+
+//S
+`define ysyx_22040931_sd  10'b011_0100011
+`define ysyx_22040931_sw  10'b010_0100011
+`define ysyx_22040931_sh  10'b001_0100011
+`define ysyx_22040931_sb  10'b000_0100011
+
+//B
+`define ysyx_22040931_beq   10'b000_1100011
+`define ysyx_22040931_bge   10'b101_1100011
+`define ysyx_22040931_bgeu  10'b111_1100011
+`define ysyx_22040931_blt   10'b100_1100011
+`define ysyx_22040931_bltu  10'b110_1100011
+`define ysyx_22040931_bne   10'b001_1100011
+
+//J
+`define ysyx_22040931_jal     7'b1101111
+
+//U
+`define ysyx_22040931_auipc   7'b0010111
+`define ysyx_22040931_lui     7'b0110111
 
 
-//AXI
-`define AXI_ADDR_WIDTH      32
-`define AXI_DATA_WIDTH      64
-`define AXI_ID_WIDTH        4
-`define AXI_USER_WIDTH      1
 
+
+///////////////////////   AIX4    //////////////////////////////////   
 `define SIZE_B              2'b00
 `define SIZE_H              2'b01
 `define SIZE_W              2'b10

@@ -1,5 +1,6 @@
-
+//2022.7.26 xuxin
 `include "defines.v"
+
 `define AXI_TOP_INTERFACE(name) io_memAXI_0_``name
 
 module SimTop(
@@ -64,6 +65,7 @@ module SimTop(
     input  [`AXI_USER_WIDTH-1:0]        `AXI_TOP_INTERFACE(r_bits_user)
 );
 
+
     wire aw_ready;
     wire aw_valid;
     wire [`AXI_ADDR_WIDTH-1:0] aw_addr;
@@ -115,12 +117,12 @@ module SimTop(
 
     assign aw_ready                                 = `AXI_TOP_INTERFACE(aw_ready);
     assign `AXI_TOP_INTERFACE(aw_valid)             = aw_valid;
-    assign `AXI_TOP_INTERFACE(aw_bits_addr)         = {32'h0,aw_addr};
+    assign `AXI_TOP_INTERFACE(aw_bits_addr)         = aw_addr;
     assign `AXI_TOP_INTERFACE(aw_bits_prot)         = aw_prot;
     assign `AXI_TOP_INTERFACE(aw_bits_id)           = aw_id;
     assign `AXI_TOP_INTERFACE(aw_bits_user)         = aw_user;
     assign `AXI_TOP_INTERFACE(aw_bits_len)          = aw_len;
-    assign `AXI_TOP_INTERFACE(aw_bits_size)         = 2'b11;
+    assign `AXI_TOP_INTERFACE(aw_bits_size)         = aw_size;
     assign `AXI_TOP_INTERFACE(aw_bits_burst)        = aw_burst;
     assign `AXI_TOP_INTERFACE(aw_bits_lock)         = aw_lock;
     assign `AXI_TOP_INTERFACE(aw_bits_cache)        = aw_cache;
@@ -140,12 +142,12 @@ module SimTop(
 
     assign ar_ready                                 = `AXI_TOP_INTERFACE(ar_ready);
     assign `AXI_TOP_INTERFACE(ar_valid)             = ar_valid;
-    assign `AXI_TOP_INTERFACE(ar_bits_addr)         = {32'h0,ar_addr};
+    assign `AXI_TOP_INTERFACE(ar_bits_addr)         = ar_addr;
     assign `AXI_TOP_INTERFACE(ar_bits_prot)         = ar_prot;
     assign `AXI_TOP_INTERFACE(ar_bits_id)           = ar_id;
     assign `AXI_TOP_INTERFACE(ar_bits_user)         = ar_user;
     assign `AXI_TOP_INTERFACE(ar_bits_len)          = ar_len;
-    assign `AXI_TOP_INTERFACE(ar_bits_size)         = 2'b11;
+    assign `AXI_TOP_INTERFACE(ar_bits_size)         = ar_size;
     assign `AXI_TOP_INTERFACE(ar_bits_burst)        = ar_burst;
     assign `AXI_TOP_INTERFACE(ar_bits_lock)         = ar_lock;
     assign `AXI_TOP_INTERFACE(ar_bits_cache)        = ar_cache;
@@ -161,12 +163,13 @@ module SimTop(
 
 
 
-ysyx_210457 ysyx_210457(
-  .clock(clock),
-  .reset(reset),
-  .io_interrupt(),
- .io_master_awready(aw_ready),
- .io_master_awvalid(aw_valid),
+
+rvcpu rvcpu(
+.clock(clock),
+.reset(reset),
+.io_interrupt(),
+.io_master_awready(aw_ready),
+.io_master_awvalid(aw_valid),
 .io_master_awaddr(aw_addr),
 .io_master_awid(aw_id),
 .io_master_awlen(aw_len),
