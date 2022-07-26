@@ -48,7 +48,7 @@ module arbiter (
 );
 
 initial begin
-        $monitor("率:%d  \n", AXI_addr);
+        $monitor("率:%lx  \n", AXI_addr);
 end
 
 
