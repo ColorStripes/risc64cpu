@@ -150,122 +150,122 @@ assign io_slave_rid = 0;
 
 
 
-    AXI4 AXI4 (
-    .reset(reset),
-    .clock(clock),
-	.rw_valid_i(AXI_vaild),     //
-    .rw_ready_o(),    //stall
-    //read
-    .data_read_o(AXI_r_data),  //
-    //write
-    .data_write_i(AXI_w_data),
-    .rw_addr_i(AXI_addr),    //
-    .rw_size_i(AXI_size),    //
-    .rw_req_i(AXI_req),      //
-    //ready
-    .cpu_id(AXI_id),
-    .out_id(AXI_ret_id),
+    // AXI4 AXI4 (
+    // .reset(reset),
+    // .clock(clock),
+	// .rw_valid_i(AXI_vaild),     //
+    // .rw_ready_o(AXI_ready),    //stall
+    // //read
+    // .data_read_o(AXI_r_data),  //
+    // //write
+    // .data_write_i(AXI_w_data),
+    // .rw_addr_i(AXI_addr),    //
+    // .rw_size_i(AXI_size),    //
+    // .rw_req_i(AXI_req),      //
+    // //ready
+    // .cpu_id(AXI_id),
+    // .out_id(AXI_ret_id),
 
-    // Advanced eXtensible Interface
-    .axi_aw_ready_i                 (aw_ready),
-    .axi_aw_valid_o                 (aw_valid),
-    .axi_aw_addr_o                  (aw_addr),
-    .axi_aw_id_o                    (aw_id),
-    .axi_aw_len_o                   (aw_len),
-    .axi_aw_size_o                  (aw_size),
-    .axi_aw_burst_o                 (aw_burst),
-    .axi_w_ready_i                  (w_ready),
-    .axi_w_valid_o                  (w_valid),
-    .axi_w_data_o                   (w_data),
-    .axi_w_strb_o                   (w_strb),
-    .axi_w_last_o                   (w_last),
+    // // Advanced eXtensible Interface
+    // .axi_aw_ready_i                 (aw_ready),
+    // .axi_aw_valid_o                 (aw_valid),
+    // .axi_aw_addr_o                  (aw_addr),
+    // .axi_aw_id_o                    (aw_id),
+    // .axi_aw_len_o                   (aw_len),
+    // .axi_aw_size_o                  (aw_size),
+    // .axi_aw_burst_o                 (aw_burst),
+    // .axi_w_ready_i                  (w_ready),
+    // .axi_w_valid_o                  (w_valid),
+    // .axi_w_data_o                   (w_data),
+    // .axi_w_strb_o                   (w_strb),
+    // .axi_w_last_o                   (w_last),
     
-    .axi_b_ready_o                  (b_ready),
-    .axi_b_valid_i                  (b_valid),
-    //.axi_b_resp_i                   (b_resp),
-    .axi_b_id_i                     (b_id),
-    .axi_ar_ready_i                 (ar_ready),
-    .axi_ar_valid_o                 (ar_valid),
-    .axi_ar_addr_o                  (ar_addr),
-    .axi_ar_id_o                    (ar_id),
-    .axi_ar_len_o                   (ar_len),
-    .axi_ar_size_o                  (ar_size),
-    .axi_ar_burst_o                 (ar_burst),
+    // .axi_b_ready_o                  (b_ready),
+    // .axi_b_valid_i                  (b_valid),
+    // //.axi_b_resp_i                   (b_resp),
+    // .axi_b_id_i                     (b_id),
+    // .axi_ar_ready_i                 (ar_ready),
+    // .axi_ar_valid_o                 (ar_valid),
+    // .axi_ar_addr_o                  (ar_addr),
+    // .axi_ar_id_o                    (ar_id),
+    // .axi_ar_len_o                   (ar_len),
+    // .axi_ar_size_o                  (ar_size),
+    // .axi_ar_burst_o                 (ar_burst),
 
-    .axi_r_ready_o                  (r_ready),
-    .axi_r_valid_i                  (r_valid),
-    //.axi_r_resp_i                   (r_resp),
-    .axi_r_data_i                   (r_data),
-    .axi_r_last_i                   (r_last),
-    .axi_r_id_i                     (r_id)
-    );
+    // .axi_r_ready_o                  (r_ready),
+    // .axi_r_valid_i                  (r_valid),
+    // //.axi_r_resp_i                   (r_resp),
+    // .axi_r_data_i                   (r_data),
+    // .axi_r_last_i                   (r_last),
+    // .axi_r_id_i                     (r_id)
+    // );
 
 
-//     .reset(reset),
-//     .clock(clock),
-// 	.rw_valid_i(AXI_vaild),     //
-//     .rw_ready_o(AXI_ready),    //stall
-//     //read
-//     .data_read_o(AXI_r_data),  //
-//     //write
-//     .data_write_i(AXI_w_data),
-//     .rw_addr_i(AXI_addr),    //
-//     .rw_size_i(AXI_size),    //
-//     .rw_req_i(AXI_req),      //
-//     //ready
-//     .cpu_id(AXI_id),
-//     .out_id(AXI_ret_id),
+    // .reset(reset),
+    // .clock(clock),
+	// .rw_valid_i(AXI_vaild),     //
+    // .rw_ready_o(AXI_ready),    //stall
+    // //read
+    // .data_read_o(AXI_r_data),  //
+    // //write
+    // .data_write_i(AXI_w_data),
+    // .rw_addr_i(AXI_addr),    //
+    // .rw_size_i(AXI_size),    //
+    // .rw_req_i(AXI_req),      //
+    // //ready
+    // .cpu_id(AXI_id),
+    // .out_id(AXI_ret_id),
 
-//    ysyx_210457_axi_rw u_axi_rw (
-//         .clock                          (clock),
-//         .reset                          (reset),
+   ysyx_210457_axi_rw u_axi_rw (
+        .clock                          (clock),
+        .reset                          (reset),
 
-//         .rw_valid_i                     (AXI_vaild),
-//         .rw_req_i                       (AXI_req),
-//         .data_read_o                    (AXI_r_data),
-//         .data_write_i                   (AXI_w_data),
-//         .rw_addr_i                      (AXI_addr),
-//         .rw_size_i                      (AXI_size),
-//         .stall                          (AXI_stall),
-//         .cpu_id                         (AXI_id),
-//         .out_id                         (AXI_out_id),
+        .rw_valid_i                     (AXI_vaild),
+        .rw_req_i                       (AXI_req),
+        .data_read_o                    (AXI_r_data),
+        .data_write_i                   (AXI_w_data),
+        .rw_addr_i                      (AXI_addr),
+        .rw_size_i                      (AXI_size),
+        .stall                          (),
+        .cpu_id                         (AXI_id),
+        .out_id                         (AXI_ret_id),
 
-//         .axi_aw_ready_i                 (aw_ready),
-//         .axi_aw_valid_o                 (aw_valid),
-//         .axi_aw_addr_o                  (aw_addr),
-//         .axi_aw_id_o                    (aw_id),
-//         .axi_aw_len_o                   (aw_len),
-//         .axi_aw_size_o                  (aw_size),
-//         .axi_aw_burst_o                 (aw_burst),
+        .axi_aw_ready_i                 (aw_ready),
+        .axi_aw_valid_o                 (aw_valid),
+        .axi_aw_addr_o                  (aw_addr),
+        .axi_aw_id_o                    (aw_id),
+        .axi_aw_len_o                   (aw_len),
+        .axi_aw_size_o                  (aw_size),
+        .axi_aw_burst_o                 (aw_burst),
 
-//         .axi_w_ready_i                  (w_ready),
-//         .axi_w_valid_o                  (w_valid),
-//         .axi_w_data_o                   (w_data),
-//         .axi_w_strb_o                   (w_strb),
-//         .axi_w_last_o                   (w_last),
+        .axi_w_ready_i                  (w_ready),
+        .axi_w_valid_o                  (w_valid),
+        .axi_w_data_o                   (w_data),
+        .axi_w_strb_o                   (w_strb),
+        .axi_w_last_o                   (w_last),
         
-//         .axi_b_ready_o                  (b_ready),
-//         .axi_b_valid_i                  (b_valid),
-//         //.axi_b_resp_i                   (b_resp),
-//         .axi_b_id_i                     (b_id),
+        .axi_b_ready_o                  (b_ready),
+        .axi_b_valid_i                  (b_valid),
+        //.axi_b_resp_i                   (b_resp),
+        .axi_b_id_i                     (b_id),
 
 
-//         .axi_ar_ready_i                 (ar_ready),
-//         .axi_ar_valid_o                 (ar_valid),
-//         .axi_ar_addr_o                  (ar_addr),
-//         .axi_ar_id_o                    (ar_id),
-//         .axi_ar_len_o                   (ar_len),
-//         .axi_ar_size_o                  (ar_size),
-//         .axi_ar_burst_o                 (ar_burst),
+        .axi_ar_ready_i                 (ar_ready),
+        .axi_ar_valid_o                 (ar_valid),
+        .axi_ar_addr_o                  (ar_addr),
+        .axi_ar_id_o                    (ar_id),
+        .axi_ar_len_o                   (ar_len),
+        .axi_ar_size_o                  (ar_size),
+        .axi_ar_burst_o                 (ar_burst),
   
-//         .axi_r_ready_o                  (r_ready),
-//         .axi_r_valid_i                  (r_valid),
-//         //.axi_r_resp_i                   (r_resp),
-//         .axi_r_data_i                   (r_data),
-//         .axi_r_last_i                   (r_last),
-//         .axi_r_id_i                     (r_id)
+        .axi_r_ready_o                  (r_ready),
+        .axi_r_valid_i                  (r_valid),
+        //.axi_r_resp_i                   (r_resp),
+        .axi_r_data_i                   (r_data),
+        .axi_r_last_i                   (r_last),
+        .axi_r_id_i                     (r_id)
 
-//     );
+    );
 
 
 
