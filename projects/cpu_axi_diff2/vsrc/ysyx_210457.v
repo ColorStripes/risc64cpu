@@ -153,13 +153,13 @@ assign io_slave_rid = 0;
         .reset                          (reset),
 
         .rw_valid_i                     (AXI_vaild),
-        .rw_req_i                       (0),
+        .rw_req_i                       (AXI_req),
         .data_read_o                    (AXI_r_data),
-        .data_write_i                   (0),
-        .rw_addr_i                      (2147483648),
-        .rw_size_i                      (2),
+        .data_write_i                   (AXI_w_data),
+        .rw_addr_i                      (AXI_addr),
+        .rw_size_i                      (AXI_size),
         .stall                          (AXI_stall),
-        .cpu_id                         (3),
+        .cpu_id                         (AXI_id),
         .out_id                         (AXI_out_id),
 
         .axi_aw_ready_i                 (aw_ready),
