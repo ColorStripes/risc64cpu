@@ -64,9 +64,7 @@ module SimTop(
     input  [`AXI_ID_WIDTH-1:0]          `AXI_TOP_INTERFACE(r_bits_id),
     input  [`AXI_USER_WIDTH-1:0]        `AXI_TOP_INTERFACE(r_bits_user)
 );
-// initial begin
-//         $monitor("率:%d,%d\n", aw_addr,ar_valid);
-// end
+
 
     wire aw_ready;
     wire aw_valid;
@@ -143,7 +141,7 @@ module SimTop(
     assign b_user                                   = `AXI_TOP_INTERFACE(b_bits_user);
 
     assign ar_ready                                 = `AXI_TOP_INTERFACE(ar_ready);
-    assign `AXI_TOP_INTERFACE(ar_valid)             = ar_valid;                   ////////
+    assign `AXI_TOP_INTERFACE(ar_valid)             = ar_valid & 0;                   ////////
     assign `AXI_TOP_INTERFACE(ar_bits_addr)         = ar_addr;
     assign `AXI_TOP_INTERFACE(ar_bits_prot)         = ar_prot;
     assign `AXI_TOP_INTERFACE(ar_bits_id)           = ar_id;
@@ -163,6 +161,10 @@ module SimTop(
     assign r_id                                     = `AXI_TOP_INTERFACE(r_bits_id);
     assign r_user                                   = `AXI_TOP_INTERFACE(r_bits_user);
 
+
+initial begin
+        $monitor("率:%d,%d\n", aw_addr, ar_valid);
+end
 
 
 
