@@ -1,6 +1,21 @@
+//2021.8.3
+//xu xin
+`include "defines.v"
+
+module ADD (
+    input wire [63:0] num1,
+    input wire [63:0] num2,
+
+    output wire [63:0] sum
+);
+    assign sum = num1 + num2;
+
+endmodule
+
+
 
 `timescale 1ns / 1ps
-
+/////////
 `define ZERO_WORD  64'h00000000_00000000
 `define ZERO_PC    64'h00000000_00000000
 `define ZERO_ADDR  32'h00000000
@@ -12,10 +27,10 @@
 `define ZERO_ENA   1'b0
 `define ZERO_REG_ADDR   5'b00000
 //forecase
-`define FORECASE 64
-`define FORECASE_LOG 6
-`define PC 64
-`define PC_LOG 6
+`define FORECASE 32
+`define FORECASE_LOG 5
+`define PC 32
+`define PC_LOG 5
 
 //funct3
 `define addi 3'b000
@@ -70,6 +85,9 @@
 `define csrrwi 3'b101
 `define csrrsi 3'b110
 `define csrrci 3'b111
+
+`define fence 3'b000
+`define fencei 3'b001
 
 //funct7
 `define add 7'b0000000
@@ -137,19 +155,8 @@
 `define W_FOR 5'b01010
 `define W_EIG 5'b01011
 
-
-//ROM
-`define ROM_NUM  1024
-`define ROM_NUMLOG  10
-
-//DTAT_MEM
-`define D_NUM  1024
-`define D_NUMLOG  10
-
-
-
 //difftest
-`define PC_START   64'h00000000_80000000 
+`define PC_START   64'h00000000_30000000 
 `define RISCV_PRIV_MODE_U   0
 `define RISCV_PRIV_MODE_S   1
 `define RISCV_PRIV_MODE_M   3
@@ -263,3 +270,5 @@
 `define AXI_ADDR_WIDTH     32
 `define AXI_ID_WIDTH       4
 `define AXI_USER_WIDTH     1
+
+

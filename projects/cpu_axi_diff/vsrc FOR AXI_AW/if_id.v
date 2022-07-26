@@ -1,10 +1,9 @@
-
 //2021.8.4
 //xu xin
 
 `include "defines.v"
 
-module ysyx_210457_if_id (
+module if_id (
     input wire reset,
     input wire clock,
     input wire [`PC_BUS] if_pc,
@@ -25,15 +24,11 @@ module ysyx_210457_if_id (
         if(reset == 1'b1) begin
             id_pc <= `PC_START;
             id_instr <= `ZERO_INST;
-            id_forecase <= 1'b0;
-            id_branch <= `ZERO_PC;
         end
         else begin
             if(flush == 1'b1) begin
                 id_pc <= `PC_START;
                 id_instr <= `ZERO_INST;
-                id_forecase <= 1'b0;
-                id_branch <= `ZERO_PC;
             end
             else if(stall[1] & ~stall[0]) begin
                 id_pc <= `PC_START;
@@ -44,8 +39,6 @@ module ysyx_210457_if_id (
                     if(pc_con == 1'b0) begin
                         id_pc <= `PC_START;
                         id_instr <= `ZERO_INST;
-                        id_forecase <= 1'b0;
-                        id_branch <= `ZERO_PC;
                     end
                 end
                 else begin

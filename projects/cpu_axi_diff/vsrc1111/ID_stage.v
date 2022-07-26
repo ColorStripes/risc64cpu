@@ -1,10 +1,10 @@
-
 //2021.8.4
 //xu xin
 
+
 `include "defines.v"
 
-module ysyx_210457_ID_stage (
+module ID_stage (
     input wire reset,
     input wire [`PC_BUS] IF_pc, 
     input wire [`INST_BUS] IF_instr,
@@ -68,7 +68,7 @@ module ysyx_210457_ID_stage (
     assign funct7 = IF_instr[31 : 25];
 
 
-    ysyx_210457_IMGN IMGN (
+    IMGN IMGN (
     .instr(IF_instr),
 
     .imm(imm)
@@ -84,7 +84,7 @@ module ysyx_210457_ID_stage (
             w_ena = 1'b0;
 
             aluop = 7'b0000_000;          //ALUoptions
-            alusel = 4'b0000;
+            alusel = 3'b000;
 
             mux_pc = 1'b0;
             branch = `ZERO_WORD;
@@ -93,7 +93,6 @@ module ysyx_210457_ID_stage (
             id_mem_ena = 1'b0;
             pc_con = 1'b0;
             id_csr_ena = 1'b0;
-            error_branch = 1'b0;
 
         end
         else begin
@@ -105,7 +104,7 @@ module ysyx_210457_ID_stage (
             w_ena = 1'b0;
 
             aluop = 7'b0000_000;          //ALUoptions
-            alusel = 4'b0000;
+            alusel = 3'b000;
 
             mux_pc = 1'b0;
             branch = IF_pc;
@@ -437,6 +436,9 @@ module ysyx_210457_ID_stage (
                     reg1_r_ena = 1'b1;
                     reg2_r_ena = 1'b1;
                     branch = IF_pc + imm ;
+                    if((if_branch != branch) && (mux_pc)) begin
+                        error_branch = 1'b1;
+                    end
 
                     case(funct3)
                          `beq:begin
@@ -503,9 +505,6 @@ module ysyx_210457_ID_stage (
                                  error_branch = 1'b0;
                          end
                     endcase
-                    if((if_branch != branch) && (mux_pc)) begin
-                        error_branch = 1'b1;
-                    end
               end
               
               //jal
@@ -591,6 +590,14 @@ module ysyx_210457_ID_stage (
                     alusel = `Long;
               end
 
+              //write
+              7'b1111011:begin
+                   reg1_addr = 64'd10;
+                   reg1_r_ena = 1'b1;
+                   reg2_r_ena = 1'b0;
+                   aluop = `ADD;
+                   alusel = `Arith;
+              end
 
               //CSR
               7'b1110011:begin
@@ -673,7 +680,6 @@ module ysyx_210457_ID_stage (
                            reg1_r_ena = 1'b0;
                            reg2_r_ena = 1'b0;
                            id_csr_ena = 1'b0;
-                           error_branch = 1'b0;
                        end
                   endcase
               end
@@ -684,7 +690,6 @@ module ysyx_210457_ID_stage (
                     id_mem_ena = 1'b0;
                     w_ena = 1'b0;
                     id_csr_ena = 1'b0;
-                    error_branch = 1'b0;
               end
         endcase
 

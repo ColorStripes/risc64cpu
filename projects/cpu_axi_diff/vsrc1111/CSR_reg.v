@@ -2,7 +2,7 @@
 //xu xin 
 `include "defines.v"
 
-module ysyx_210457_CSR_reg (
+module CSR_reg (
    input wire reset,
    input wire clock,
    input wire [11 : 0] csr_r_addr,
@@ -18,19 +18,17 @@ module ysyx_210457_CSR_reg (
 
 
    output reg [`REG_BUS] csr_reg_data,
-   output wire [`REG_BUS] mstatus,//
+   output wire [`REG_BUS] mstatus,
    output wire [`REG_BUS] mtvec,
    output wire [`REG_BUS] mepc,
-   output wire [`REG_BUS]mie,//
-   output wire [`REG_BUS]mip,//
+   output wire [`REG_BUS] mie,
+   output wire [`REG_BUS] mip,
+   output wire [`REG_BUS] mcause,
+   output wire [`REG_BUS] mscratch,
+   output wire [`REG_BUS] sstatus,
 
-output wire [`REG_BUS] mcause,
-output wire [`REG_BUS] mscratch,
-output wire [`REG_BUS] sstatus,
-
-output wire [`REG_BUS] mcycle,            ////////////////////
-output wire [`REG_BUS] minstret,
-
+   output wire [`REG_BUS] mcycle,            ////////////////////
+   output wire [`REG_BUS] minstret,
 
    output reg flush
    
@@ -121,7 +119,7 @@ output wire [`REG_BUS] minstret,
 
             case(except_type)
                  64'h1:begin            ////time_interrupt
-                    csr_mstatus[7] <= csr_mstatus[3];    //MPIE
+                    csr_mstatus[7] <= mstatus[3];    //MPIE
                     csr_mstatus[3] <= 1'b0;          //MIE->0
                     csr_mstatus[12 : 11] <= 2'b11;   //MPP
                     csr_mcause <= {1'b1, 63'h7};
@@ -130,7 +128,7 @@ output wire [`REG_BUS] minstret,
                  end
 
                  64'h2:begin           ////ecall
-                    csr_mstatus[7] <= csr_mstatus[3];    //MPIE
+                    csr_mstatus[7] <= mstatus[3];    //MPIE
                     csr_mstatus[3] <= 1'b0;          //MIE->0
                     csr_mstatus[12 : 11] <= 2'b11;   //MPP
                     csr_mcause <= {1'b0, 59'h0, 4'b1011};
@@ -138,7 +136,7 @@ output wire [`REG_BUS] minstret,
                  end
 
                  64'h3:begin           ////ebreak
-                    csr_mstatus[7] <= csr_mstatus[3];    //MPIE
+                    csr_mstatus[7] <= mstatus[3];    //MPIE
                     csr_mstatus[3] <= 1'b0;          //MIE->0
                     csr_mstatus[12 : 11] <= 2'b11;   //MPP
                     csr_mcause <= {1'b0, 59'h0, 4'b0011};
@@ -146,7 +144,7 @@ output wire [`REG_BUS] minstret,
                  end
 
                  64'h4:begin           ////mret                   
-                    csr_mstatus[3] <= csr_mstatus[7];
+                    csr_mstatus[3] <= mstatus[7];
                     csr_mstatus[7] <= 1'b1;
                     csr_mstatus[12 : 11] <= 2'b00;
                     //csr_mepc <= except_pc;
@@ -206,12 +204,6 @@ output wire [`REG_BUS] minstret,
     end
 
 
- //assign mstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ? {(csr_w_data[13] & csr_w_data[14]) | (csr_w_data[15] & csr_w_data[16]),  csr_w_data[62 : 0]}[3] : csr_mstatus[3]; 
- //assign mepc = ((csr_w_ena == 1'b1) & (csr_w_addr == `mepc)) ? csr_w_data : csr_mepc;
- //assign mip = ((csr_w_ena == 1'b1) & (csr_w_addr == `mip)) ? csr_w_data[7] :csr_mip[7]; 
- //assign mie = ((csr_w_ena == 1'b1) & (csr_w_addr == `mie)) ? csr_w_data[7] : csr_mie[7];
- //assign mtvec = ((csr_w_ena == 1'b1) & (csr_w_addr == `mtvec)) ? csr_w_data : csr_mtvec;
-
 assign mstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ? {(csr_w_data[13] & csr_w_data[14]) | (csr_w_data[15] & csr_w_data[16]),  csr_w_data[62 : 0]}:   
        // ((except_type == 64'h1) | (except_type == 64'h2) | (except_type == 64'h3)) ? 
     //{csr_mstatus[63:13], 2'b11, csr_mstatus[10:8], csr_mstatus[3], csr_mstatus[6:4], 1'b0, csr_mstatus[2:0]} : (except_type == 64'h4) ?
@@ -237,6 +229,7 @@ assign minstret = ((csr_w_ena == 1'b1) & (csr_w_addr == `mcycle)) ? csr_w_data :
 assign mtvec = ((csr_w_ena == 1'b1) & (csr_w_addr == `mtvec)) ? csr_w_data : csr_mtvec;
 assign mscratch = ((csr_w_ena == 1'b1) & (csr_w_addr == `mscratch)) ? csr_w_data : csr_mscratch;
 assign sstatus = ((csr_w_ena == 1'b1) & (csr_w_addr == `mstatus)) ? {{(csr_w_data[13] & csr_w_data[14]) | (csr_w_data[15] & csr_w_data[16])}, 46'h0, csr_w_data[16 : 13], 13'h0} : csr_sstatus;
+
 
     always @(*) begin                          //Ctrl
         if(reset == 1'b1) begin

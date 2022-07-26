@@ -115,12 +115,12 @@ module SimTop(
 
     assign aw_ready                                 = `AXI_TOP_INTERFACE(aw_ready);
     assign `AXI_TOP_INTERFACE(aw_valid)             = aw_valid;
-    assign `AXI_TOP_INTERFACE(aw_bits_addr)         = {32'h0,aw_addr};
+    assign `AXI_TOP_INTERFACE(aw_bits_addr)         = aw_addr;
     assign `AXI_TOP_INTERFACE(aw_bits_prot)         = aw_prot;
     assign `AXI_TOP_INTERFACE(aw_bits_id)           = aw_id;
     assign `AXI_TOP_INTERFACE(aw_bits_user)         = aw_user;
     assign `AXI_TOP_INTERFACE(aw_bits_len)          = aw_len;
-    assign `AXI_TOP_INTERFACE(aw_bits_size)         = 2'b11;
+    assign `AXI_TOP_INTERFACE(aw_bits_size)         = aw_size;
     assign `AXI_TOP_INTERFACE(aw_bits_burst)        = aw_burst;
     assign `AXI_TOP_INTERFACE(aw_bits_lock)         = aw_lock;
     assign `AXI_TOP_INTERFACE(aw_bits_cache)        = aw_cache;
@@ -140,12 +140,12 @@ module SimTop(
 
     assign ar_ready                                 = `AXI_TOP_INTERFACE(ar_ready);
     assign `AXI_TOP_INTERFACE(ar_valid)             = ar_valid;
-    assign `AXI_TOP_INTERFACE(ar_bits_addr)         = {32'h0,ar_addr};
+    assign `AXI_TOP_INTERFACE(ar_bits_addr)         = ar_addr;
     assign `AXI_TOP_INTERFACE(ar_bits_prot)         = ar_prot;
     assign `AXI_TOP_INTERFACE(ar_bits_id)           = ar_id;
     assign `AXI_TOP_INTERFACE(ar_bits_user)         = ar_user;
     assign `AXI_TOP_INTERFACE(ar_bits_len)          = ar_len;
-    assign `AXI_TOP_INTERFACE(ar_bits_size)         = 2'b11;
+    assign `AXI_TOP_INTERFACE(ar_bits_size)         = ar_size;
     assign `AXI_TOP_INTERFACE(ar_bits_burst)        = ar_burst;
     assign `AXI_TOP_INTERFACE(ar_bits_lock)         = ar_lock;
     assign `AXI_TOP_INTERFACE(ar_bits_cache)        = ar_cache;
@@ -159,71 +159,197 @@ module SimTop(
     assign r_id                                     = `AXI_TOP_INTERFACE(r_bits_id);
     assign r_user                                   = `AXI_TOP_INTERFACE(r_bits_user);
 
+    axi_rw u_axi_rw (
+        .clock                          (clock),
+        .reset                          (reset),
+
+        .rw_valid_i                     (AXI_vaild),
+        .rw_ready_o                     (AXI_ready),
+        .rw_req_i                       (AXI_req),
+        .data_read_o                    (AXI_r_data),
+        .data_write_i                   (AXI_w_data),
+        .rw_addr_i                      (AXI_addr),
+        .rw_size_i                      (AXI_size),
+        .rw_resp_o                      (rw_resp),
+        .stall                          (AXI_stall),
+        .cpu_id                         (AXI_id),
+        .out_id                         (AXI_out_id),
+
+        .axi_aw_ready_i                 (aw_ready),
+        .axi_aw_valid_o                 (aw_valid),
+        .axi_aw_addr_o                  (aw_addr),
+        .axi_aw_prot_o                  (aw_prot),
+        .axi_aw_id_o                    (aw_id),
+        .axi_aw_user_o                  (aw_user),
+        .axi_aw_len_o                   (aw_len),
+        .axi_aw_size_o                  (aw_size),
+        .axi_aw_burst_o                 (aw_burst),
+        .axi_aw_lock_o                  (aw_lock),
+        .axi_aw_cache_o                 (aw_cache),
+        .axi_aw_qos_o                   (aw_qos),
+        .axi_aw_region_o                (aw_region),
+
+        .axi_w_ready_i                  (w_ready),
+        .axi_w_valid_o                  (w_valid),
+        .axi_w_data_o                   (w_data),
+        .axi_w_strb_o                   (w_strb),
+        .axi_w_last_o                   (w_last),
+        .axi_w_user_o                   (w_user),
+        
+        .axi_b_ready_o                  (b_ready),
+        .axi_b_valid_i                  (b_valid),
+        .axi_b_resp_i                   (b_resp),
+        .axi_b_id_i                     (b_id),
+        .axi_b_user_i                   (b_user),
+
+        .axi_ar_ready_i                 (ar_ready),
+        .axi_ar_valid_o                 (ar_valid),
+        .axi_ar_addr_o                  (ar_addr),
+        .axi_ar_prot_o                  (ar_prot),
+        .axi_ar_id_o                    (ar_id),
+        .axi_ar_user_o                  (ar_user),
+        .axi_ar_len_o                   (ar_len),
+        .axi_ar_size_o                  (ar_size),
+        .axi_ar_burst_o                 (ar_burst),
+        .axi_ar_lock_o                  (ar_lock),
+        .axi_ar_cache_o                 (ar_cache),
+        .axi_ar_qos_o                   (ar_qos),
+        .axi_ar_region_o                (ar_region),
+        
+        .axi_r_ready_o                  (r_ready),
+        .axi_r_valid_i                  (r_valid),
+        .axi_r_resp_i                   (r_resp),
+        .axi_r_data_i                   (r_data),
+        .axi_r_last_i                   (r_last),
+        .axi_r_id_i                     (r_id),
+        .axi_r_user_i                   (r_user)
 
 
-ysyx_210457 ysyx_210457(
-  .clock(clock),
-  .reset(reset),
-  .io_interrupt(),
- .io_master_awready(aw_ready),
- .io_master_awvalid(aw_valid),
-.io_master_awaddr(aw_addr),
-.io_master_awid(aw_id),
-.io_master_awlen(aw_len),
-.io_master_awsize(aw_size),
-.io_master_awburst(aw_burst),
-.io_master_wready(w_ready),
-.io_master_wvalid(w_valid),
-.io_master_wdata(w_data),
-.io_master_wstrb(w_strb),
-.io_master_wlast(w_last),
-.io_master_bready(b_ready),
-.io_master_bvalid(b_valid),
-.io_master_bresp(b_resp),
-.io_master_bid(b_id),
-.io_master_arready(ar_ready),
-.io_master_arvalid(ar_valid),
-.io_master_araddr(ar_addr),
-.io_master_arid(ar_id),
-.io_master_arlen(ar_len),
-.io_master_arsize(ar_size),
-.io_master_arburst(ar_burst),
-.io_master_rready(r_ready),
-.io_master_rvalid(r_valid),
-.io_master_rresp(r_resp),
-.io_master_rdata(r_data),
-.io_master_rlast(r_last),
-.io_master_rid(r_id),
-.io_slave_awready(),
-.io_slave_awvalid(),
-.io_slave_awaddr(),
-.io_slave_awid(),
-.io_slave_awlen(),
-.io_slave_awsize(),
-.io_slave_awburst(),
-.io_slave_wready(),
-.io_slave_wvalid(),
-.io_slave_wdata(),
-.io_slave_wstrb(),
-.io_slave_wlast(),
-.io_slave_bready(),
-.io_slave_bvalid(),
-.io_slave_bresp(),
-.io_slave_bid(),
-.io_slave_arready(),
-.io_slave_arvalid(),
-.io_slave_araddr(),
-.io_slave_arid(),
-.io_slave_arlen(),
-.io_slave_arsize(),
-.io_slave_arburst(),
-.io_slave_rready(),
-.io_slave_rvalid(),
-.io_slave_rresp(),
-.io_slave_rdata(),
-.io_slave_rlast(),
-.io_slave_rid()
+    );
+
+//CPU -> arbitrate
+    wire if_valid;
+    wire [`PC_BUS] IF_pc;
+    wire [1 : 0] if_size;
+    wire [1 : 0] if_req;
+////////////////
+    wire mem_valid;
+    wire [63 : 0] mem_addr;
+    wire [63 : 0] MEM_stor_data;
+    wire [1 : 0] mem_sel;
+    wire [1 : 0] mem_req;
+
+//arbitrate -> CPU
+   wire if_ready;
+   wire [63:0] if_data_read;
+///////////////
+   wire mem_ready;
+   wire [63:0] mem_data;
+
+//arbitrate -> AXI
+   wire [63 : 0] AXI_addr;
+   wire [`REG_BUS] AXI_w_data;
+   wire AXI_vaild;
+   wire [1 : 0] AXI_req;
+   wire [1 : 0] AXI_size;
+   wire [64-1:0] AXI_id;
+   wire [5 : 0] stall;
+
+//AXI -> arbitrate
+   wire AXI_ready;
+   wire [64-1:0] AXI_out_id;
+   wire [`REG_BUS] AXI_r_data;
+   wire AXI_stall;
+
+   wire [1: 0] rw_resp;
+
+wire flush;
+
+    
+
+
+arbitrate arbitrate (
+    .clock(clock),
+    .reset(reset),
+    .flush(flush),
+
+    .if_ready(if_ready),
+    .if_data_read(if_data_read),
+
+    .if_valid(if_valid),
+    .IF_pc(IF_pc),
+    .if_size(if_size),
+    .if_req(if_req),
+
+    .mem_ready(mem_ready),
+    .mem_data(mem_data),
+    
+    .mem_stor_data(MEM_stor_data),
+    .mem_valid(mem_valid),
+    .mem_addr(mem_addr),
+    .mem_sel(mem_sel),
+    .mem_req(mem_req),
+
+
+    .AXI_addr(AXI_addr),
+    .AXI_w_data(AXI_w_data),
+    .AXI_vaild(AXI_vaild),
+    .AXI_req(AXI_req),
+    .AXI_size(AXI_size),
+    .AXI_id(AXI_id),
+
+    .AXI_ready(AXI_ready),
+    .AXI_out_id(AXI_out_id),
+    .AXI_r_data(AXI_r_data),
+
+    .AXI_stall(AXI_stall),
+
+    .stall(stall)
+    
+);
+
+rvcpu rvcpu(
+    .clock(clock),
+    .reset(reset),
+    .stall(stall),
+
+    .if_ready(if_ready),
+    .if_data_read(if_data_read),
+    .if_valid(if_valid),
+    .pc(IF_pc),
+    .if_size(if_size),
+    .if_req(if_req),
+
+    .mem_ready(mem_ready),
+    .mem_data(mem_data),
+    .MEM_stor_data(MEM_stor_data),
+    .mem_valid(mem_valid),
+    .mem_addr(mem_addr),
+    .mem_sel(mem_sel),
+    .mem_req(mem_req),
+
+    .flush(flush)
 
 );
 
+
+
+
+
 endmodule
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

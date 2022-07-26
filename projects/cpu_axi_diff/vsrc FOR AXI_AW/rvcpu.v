@@ -1,32 +1,32 @@
 
-//2021.10.10
-//xu xin
-
+//--xuezhen--
 
 `include "defines.v"
 
-module ysyx_210457_rvcpu(
+module rvcpu(
     input                 clock,
     input                 reset,
     input [5 : 0]         stall,
 
-    input  wire [31 : 0] if_data_read,
+    input  wire if_ready,
+    input  wire [63 : 0] if_data_read,
     output wire if_valid,
-    output wire [`ADDR_BUS] IF_addr,
+    output wire [63 : 0] pc,
     output wire [1 : 0] if_size,
-    output wire if_req,
+    output wire [1 : 0] if_req,
 
+    input  wire mem_ready,
     input  wire [63 : 0] mem_data,
     output wire [63 : 0] MEM_stor_data,
     output wire mem_valid,
-    output wire [`ADDR_BUS] mem_addr,
+    output wire [63 : 0] mem_addr,
     output wire [1 : 0] mem_sel,
-    output wire mem_req,
+    output wire [1 : 0] mem_req,
 
     output wire flush
 
 );
-assign IF_addr = IF_pc[`ADDR_BUS];
+
 
 //IF_stage -> if_id
 wire wash;
@@ -200,10 +200,9 @@ wire [`REG_BUS] clint_data;
 //Clint -> difftest
 wire clint;
 
-wire [`PC_BUS] IF_pc;
 
 
-    ysyx_210457_IF_stage IF_stage (
+    IF_stage IF_stage (
     .reset(reset),
     .clock(clock),
     .branch(branch),
@@ -222,16 +221,17 @@ wire [`PC_BUS] IF_pc;
     .instr(instr),
 
     .if_valid(if_valid),
+    .if_ready(if_ready),
     .if_data_read(if_data_read),
-    .IF_pc(IF_pc),
+    .IF_pc(pc),
     .if_size(if_size),
     .if_req(if_req)
 );
 
-    ysyx_210457_if_id if_id (
+    if_id if_id (
     .reset(reset),
     .clock(clock),
-    .if_pc(IF_pc),
+    .if_pc(pc),
     .if_instr(instr),
     .pc_con(pc_con),
     .wash(wash),
@@ -246,27 +246,27 @@ wire [`PC_BUS] IF_pc;
     .id_instr(id_instr)
 );
 
-    ysyx_210457_regfile regfile(
+    regfile regfile(
     .clock(clock),
-	.reset(reset),
+	  .reset(reset),
 	
-	.w_addr(WB_w_addr),
-	.w_data(WB_w_data),
-	.w_ena(WB_w_ena),
+	  .w_addr(WB_w_addr),
+	  .w_data(WB_w_data),
+	  .w_ena(WB_w_ena),
 	
   	.r_addr1(reg1_addr),
-	.r_ena1(reg1_r_ena),
+	  .r_ena1(reg1_r_ena),
   	.r_data1(r_data1),  //OUT1
 
-	.r_addr2(reg2_addr),
-	.r_ena2(reg2_r_ena),
-	.r_data2(r_data2),  //OUT2
+	  .r_addr2(reg2_addr),
+	  .r_ena2(reg2_r_ena),
+	  .r_data2(r_data2),  //OUT2
     .regs_o(regs)
   
 
 );
 
-    ysyx_210457_ID_stage ID_stage (
+    ID_stage ID_stage (
     .reset(reset),
     .IF_pc(id_pc), 
     .IF_instr(id_instr),
@@ -319,7 +319,7 @@ wire [`PC_BUS] IF_pc;
 
 );
 
-    ysyx_210457_id_ex id_ex (
+    id_ex id_ex (
     .reset(reset),
     .clock(clock),
     .id_imm(imm),
@@ -364,7 +364,7 @@ wire [`PC_BUS] IF_pc;
     
 ); 
 
-    ysyx_210457_EX_stage EX_stage (
+    EX_stage EX_stage (
     .reset(reset),
 
     .ID_pc(ex_pc),
@@ -415,7 +415,7 @@ wire [`PC_BUS] IF_pc;
     .except_type(except_type)
 );
 
-    ysyx_210457_ex_mem ex_mem (
+    ex_mem ex_mem (
     .reset(reset),
     .clock(clock),
     .ex_pc(EX_pc),
@@ -457,7 +457,7 @@ wire [`PC_BUS] IF_pc;
     .men_pc(men_pc)
 );
 
-    ysyx_210457_MEM_stage MEM_stage (
+    MEM_stage MEM_stage (
     .reset(reset),
     .time_inter(time_inter),
     .ex_w_data(mem_w_data),
@@ -480,12 +480,15 @@ wire [`PC_BUS] IF_pc;
     .ex_csr_ena(mem_csr_ena),
     .ex_except_type(mem_except_type),
 
+    .wb_csr_addr(wb_csr_addr),         //wb_csr
+    .wb_w_csr_data(wb_w_csr_data),
+    .wb_csr_ena(wb_csr_ena),
     
-    .mepc(mepc),        //csr_read
-    .mip(mip[7]),
-    .mie(mie[7]),
-    .mtvec(mtvec),
-    .mstatus(mstatus[3]),
+    .csr_mepc(mepc),        //csr_read
+    .csr_mip(mip),
+    .csr_mie(mie),
+    .csr_mtvec(mtvec),
+    .csr_mstatus(mstatus),
 
     .clint_data(clint_data),      //clint
 
@@ -494,15 +497,21 @@ wire [`PC_BUS] IF_pc;
     .mem_csr_ena(MEM_csr_ena),
     .mem_except_type(MEM_except_type),
     .new_pc(new_pc),
-    
-.mem_instr(MEM_instr),
+
+    .mem_instr(MEM_instr),
     .mem_pc(MEM_pc),
 
     .mem_w_data(MEM_w_data),
     .mem_w_ena(MEM_w_ena),
     .mem_w_addr(MEM_w_addr),
 
+    //.mem_mem_waddr(MEM_mem_waddr),     //delete for AXI
+    //.mem_mem_raddr(MEM_mem_raddr),
+    //.mem_wr(mem_wr),
+    //.mem_mem_ena(MEM_mem_ena),
+
     .mem_valid(mem_valid),
+    .mem_ready(mem_ready),
     .mem_data(mem_data),
     .mem_stor_data(MEM_stor_data),
     .mem_addr(mem_addr),
@@ -511,18 +520,19 @@ wire [`PC_BUS] IF_pc;
 );
 
 
-    ysyx_210457_mem_wb mem_wb (
+    mem_wb mem_wb (
     .clock(clock),
     .reset(reset),
     .mem_w_data(MEM_w_data),
     .mem_w_ena(MEM_w_ena),
     .mem_w_addr(MEM_w_addr),
-.mem_pc(MEM_pc),
-.mem_instr(MEM_instr),
+    .mem_pc(MEM_pc),
+    .mem_instr(MEM_instr),
     
     .mem_csr_addr(MEM_csr_addr),         //csr
     .mem_w_csr_data(MEM_w_csr_data),
     .mem_csr_ena(MEM_csr_ena),
+    .except_type(MEM_except_type),//
     .flush(flush),
     .stall(stall[1:0]),
     
@@ -531,14 +541,14 @@ wire [`PC_BUS] IF_pc;
     .wb_w_csr_data(wb_w_csr_data),
     .wb_csr_ena(wb_csr_ena),
     
-.wb_instr(wb_instr),
-.wb_pc(wb_pc),
+    .wb_instr(wb_instr),
+    .wb_pc(wb_pc),
     .wb_w_data(wb_w_data),
     .wb_w_ena(wb_w_ena),
     .wb_w_addr(wb_w_addr)
 );
 
-   ysyx_210457_WB_stage WB_stage (
+   WB_stage WB_stage (
     .reset(reset),
     .mem_w_ena(wb_w_ena),
     .mem_w_data(wb_w_data),
@@ -556,7 +566,7 @@ wire [`PC_BUS] IF_pc;
     .wb_w_addr(WB_w_addr)
 );
 
-   ysyx_210457_CSR_reg CSR_reg (
+   CSR_reg CSR_reg (
     .reset(reset),
     .clock(clock),
     .csr_r_addr(ex_csr_addr),
@@ -576,20 +586,19 @@ wire [`PC_BUS] IF_pc;
     .mie(mie),
     .mip(mip),
     .mstatus(mstatus),
+    .sstatus(sstatus),
 
-.sstatus(sstatus),
-.mcause(mcause),
-.mscratch(mscratch),
-.mcycle(mcycle),
-.minstret(minstret),
-
+    .mcause(mcause),
+    .mscratch(mscratch),
+    .mcycle(mcycle),
+    .minstret(minstret),
 
     .flush(flush)
 
 
 );
 
-    ysyx_210457_Clint Clint (
+    Clint Clint (
     .clock(clock),
     .reset(reset),
     .ex_mem_waddr(mem_mem_waddr),
@@ -598,11 +607,22 @@ wire [`PC_BUS] IF_pc;
     .ex_mem_wr(mem_mem_wr),
     .ex_mem_ena(mem_mem_ena),
 
-.clint(clint),
+    .clint(clint),
 
     .time_inter(time_inter),
     .clint_data(clint_data)
+
 );
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -645,7 +665,7 @@ always @(negedge clock) begin
     trap <= (wb_instr[6:0] == 7'h6b);      /////////////////////duo  xie  le   wb_instr
     trap_code <= regs[10][7:0];
     cycleCnt <= cycleCnt + 1;
-    instrCnt <= instrCnt + {63'h0, inst_valid};
+    instrCnt <= instrCnt + inst_valid;
   end
 end
 always @(posedge clock) begin
@@ -792,5 +812,7 @@ DifftestArchFpRegState DifftestArchFpRegState(
   .fpr_30             (0),
   .fpr_31             (0)
 );
+
+
 
 endmodule
