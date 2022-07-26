@@ -153,9 +153,9 @@ assign io_slave_rid = 0;
         .reset                          (reset),
 
         .rw_valid_i                     (AXI_vaild),
-        .rw_req_i                       (AXI_req),
+        .rw_req_i                       (0),
         .data_read_o                    (AXI_r_data),
-        .data_write_i                   (AXI_w_data),
+        .data_write_i                   (0),
         .rw_addr_i                      (2147483648),
         .rw_size_i                      (2),
         .stall                          (AXI_stall),
