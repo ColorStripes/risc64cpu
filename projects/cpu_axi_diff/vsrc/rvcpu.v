@@ -220,14 +220,14 @@ assign io_slave_rid = 0;
         .clock                          (clock),
         .reset                          (reset),
 
-        .rw_valid_i                     (1'b1),
+        .rw_valid_i                     (AXI_vaild),
         .rw_req_i                       (AXI_req),
         .data_read_o                    (AXI_r_data),
         .data_write_i                   (AXI_w_data),
         .rw_addr_i                      (AXI_addr),
         .rw_size_i                      (AXI_size),
         .stall                          (),
-        .cpu_id                         (AXI_id),
+        .cpu_id                         (3),
         .out_id                         (AXI_ret_id),
 
         .axi_aw_ready_i                 (aw_ready),
