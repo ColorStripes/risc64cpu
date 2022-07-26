@@ -201,20 +201,15 @@ assign io_slave_rid = 0;
     // );
 
 
-    // .reset(reset),
-    // .clock(clock),
-	// .rw_valid_i(AXI_vaild),     //
-    // .rw_ready_o(AXI_ready),    //stall
-    // //read
-    // .data_read_o(AXI_r_data),  //
-    // //write
-    // .data_write_i(AXI_w_data),
-    // .rw_addr_i(AXI_addr),    //
-    // .rw_size_i(AXI_size),    //
-    // .rw_req_i(AXI_req),      //
-    // //ready
-    // .cpu_id(AXI_id),
-    // .out_id(AXI_ret_id),
+    // .AXI_ret_id(AXI_ret_id),
+    // .AXI_r_data(AXI_r_data),
+    // .AXI_addr(AXI_addr),
+    // .AXI_w_data(AXI_w_data),
+    // .AXI_size(AXI_size),
+    // .AXI_id(AXI_id),    
+    // .AXI_vaild(AXI_vaild),
+    // .AXI_ready(AXI_ready),
+    // .AXI_req(AXI_req) 
 
    ysyx_210457_axi_rw u_axi_rw (
         .clock                          (clock),
@@ -224,7 +219,7 @@ assign io_slave_rid = 0;
         .rw_req_i                       (AXI_req),
         .data_read_o                    (AXI_r_data),
         .data_write_i                   (AXI_w_data),
-        .rw_addr_i                      (AXI_addr),
+        .rw_addr_i                      (2147483648),
         .rw_size_i                      (AXI_size),
         .stall                          (),
         .cpu_id                         (3),
