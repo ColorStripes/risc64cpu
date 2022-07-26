@@ -141,7 +141,7 @@ module SimTop(
     assign b_user                                   = `AXI_TOP_INTERFACE(b_bits_user);
 
     assign ar_ready                                 = `AXI_TOP_INTERFACE(ar_ready);
-    assign `AXI_TOP_INTERFACE(ar_valid)             = ar_valid;                   ////////
+    assign `AXI_TOP_INTERFACE(ar_valid)             = ar_valid;                   
     assign `AXI_TOP_INTERFACE(ar_bits_addr)         = ar_addr;
     assign `AXI_TOP_INTERFACE(ar_bits_prot)         = ar_prot;
     assign `AXI_TOP_INTERFACE(ar_bits_id)           = ar_id;
