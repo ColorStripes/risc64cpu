@@ -70,7 +70,7 @@ assign arbiter_if_valid = axi_fetch_ready;
 
 
 
-wire axi_mem_ready = (AXI_ret_id == 11) ? AXI_ready : 1'b0;
+wire axi_mem_ready = (AXI_ret_id == 2'b11) ? AXI_ready : 1'b0;
 wire ex_to_axi_valid = ex_valid & !arbiter_mem_valid;
 assign arbiter_ex_ready = arbiter_mem_valid & mem_ready;
 // always @(posedge clock) begin
