@@ -109,8 +109,8 @@ module AXI4 # (
                 case (r_state)
                     R_STATE_IDLE:begin r_state <= R_STATE_ADDR; end
                     R_STATE_ADDR: if (ar_hs)    r_state <= R_STATE_READ;
-                    R_STATE_READ: if (r_done) begin r_state <= R_STATE_VOID; end   
-                    R_STATE_VOID:begin r_state <= R_STATE_IDLE; end
+                    R_STATE_READ: if (r_done) begin r_state <= R_STATE_IDLE; end   
+                    //R_STATE_VOID:begin r_state <= R_STATE_IDLE; end
                     default:;
                 endcase
             end
