@@ -3,6 +3,16 @@
 
 module ysyx_22040931_MEM(
 
+
+    //woshou
+    input wire ex_gi_valid,
+    input wire mem_gi_ready,
+    output wire to_mem_valid,
+    output wire to_ex_ready,
+    //arb woshou
+    input wire arbiter_mem_valid,
+    input wire arbiter_ex_ready,
+
     input wire w_ena_i,
     input wire [`ysyx_22040931_REG_BUS] w_addr_i,
     input wire [`ysyx_22040931_DATA_BUS] w_data_i,
@@ -35,8 +45,12 @@ module ysyx_22040931_MEM(
 
 );
 
+assign to_mem_valid = mem_ena_i ? (ex_gi_valid & arbiter_mem_valid) : ex_gi_valid;
+assign to_ex_ready = mem_ena_i ? (mem_gi_ready & arbiter_ex_ready) : mem_gi_ready;
+//liushui
 assign pc_o = pc_i;
 assign instr_o = instr;
+
 
     assign w_ena = w_ena_i;
     assign w_addr = w_addr_i;

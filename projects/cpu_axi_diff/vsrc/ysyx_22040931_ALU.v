@@ -42,8 +42,8 @@ assign num2_sw = num2[31 : 0];
     `ysyx_22040931_DIVW  ,  {1'b1, 1'b1, 1'b1}
     });
 
-    assign alu_valid = d_m_ena[1] ? div_valid : 1'b1;
-    assign alu_ready = d_m_ena[1] ? div_ready : 1'b1;
+    assign alu_valid = (d_m_ena[1] & id_valid) ? div_valid : 1'b1;
+    assign alu_ready = (d_m_ena[1] & id_valid) ? div_ready : 1'b1;
 
     wire [`ysyx_22040931_DATA_BUS] quotient, remainder;
     wire div_valid, div_ready;

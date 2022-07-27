@@ -65,10 +65,10 @@ assign instr_o = instr;
     ysyx_22040931_ALU ysyx_22040931_ALU(
     .reset(reset),
     .clock(clock),
+    .id_valid(id_gi_valid),
+    .ex_ready(ex_gi_ready),
     .alu_valid(alu_valid),
     .alu_ready(alu_ready),
-    .ex_ready(ex_gi_ready),
-    .id_valid(id_gi_valid),
 
     .num1(data1),
     .num2(data2),

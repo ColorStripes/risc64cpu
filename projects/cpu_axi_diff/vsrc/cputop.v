@@ -325,7 +325,7 @@ ex_mem ex_mem(
     .stall(),
     //wo shou
     .id_valid(to_ex_valid),
-    .mem_ready(arbiter_ex_ready),
+    .mem_ready(to_ex_ready),
     .ex_ready(ex_ready),
     .ex_valid(ex_valid),
     //liushuixian
@@ -378,6 +378,15 @@ wire [`ysyx_22040931_PC_BUS]  MEM_pc;
 
 ysyx_22040931_MEM ysyx_22040931_MEM(
 
+    //woshou
+    .ex_gi_valid(ex_valid),
+    .mem_gi_ready(mem_ready),
+    .to_mem_valid(to_mem_valid),
+    .to_ex_ready(to_ex_ready),
+    //arb woshou
+    .arbiter_mem_valid(arbiter_mem_valid),
+    .arbiter_ex_ready(arbiter_ex_ready),
+    //regfile
     .w_ena_i(MEM_w_ena),
     .w_addr_i(MEM_w_addr),
     .w_data_i(MEM_w_data),
@@ -408,6 +417,10 @@ ysyx_22040931_MEM ysyx_22040931_MEM(
     .pc_o(mem_pc)
 
 );
+//mem woshou
+wire to_mem_valid;
+wire to_ex_ready;
+
 
 wire mem_w_ena;
 wire [`ysyx_22040931_REG_BUS] mem_w_addr;
@@ -427,7 +440,7 @@ mem_wb mem_wb(
     .flush(),
     .stall(),
     //wo shou
-    .ex_valid(arbiter_mem_valid),
+    .ex_valid(to_mem_valid),
     //input wire wb_ready,
     .mem_ready(mem_ready),
     .mem_valid(mem_valid),
