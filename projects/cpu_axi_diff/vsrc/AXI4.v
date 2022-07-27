@@ -77,7 +77,7 @@ module AXI4 # (
 
     // ------------------State Machine------------------
     parameter [1:0] W_STATE_IDLE = 2'b00, W_STATE_ADDR = 2'b01, W_STATE_WRITE = 2'b10, W_STATE_RESP = 2'b11;
-    parameter [1:0] R_STATE_IDLE = 2'b00, R_STATE_ADDR = 2'b01, R_STATE_READ  = 2'b10;
+    parameter [1:0] R_STATE_IDLE = 2'b00, R_STATE_ADDR = 2'b01, R_STATE_READ  = 2'b10, R_STATE_VOID = 2'b11;
     reg [1:0] w_state, r_state;
     wire w_state_idle = w_state == W_STATE_IDLE, w_state_addr = w_state == W_STATE_ADDR, w_state_write = w_state == W_STATE_WRITE, w_state_resp = w_state == W_STATE_RESP;
     wire r_state_idle = r_state == R_STATE_IDLE, r_state_addr = r_state == R_STATE_ADDR, r_state_read  = r_state == R_STATE_READ;
@@ -108,9 +108,9 @@ module AXI4 # (
             if (r_valid) begin
                 case (r_state)
                     R_STATE_IDLE:begin r_state <= R_STATE_ADDR; end
-                    //R_STATE_VOID:begin r_state <= R_STATE_ADDR; end               
                     R_STATE_ADDR: if (ar_hs)    r_state <= R_STATE_READ;
-                    R_STATE_READ: if (r_done) begin r_state <= R_STATE_IDLE; end   
+                    R_STATE_READ: if (r_done) begin r_state <= R_STATE_VOID; end   
+                    R_STATE_VOID:begin r_state <= R_STATE_IDLE; end
                     default:;
                 endcase
             end
