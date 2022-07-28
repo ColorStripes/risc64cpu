@@ -33,21 +33,22 @@ module ysyx_22040931_Itype(
         4'b0001,  {out4,1'b0}
     });
     
-    ysyx_22040931_MuxD #(14, 10, 14) Itype1 (out1, chose1, 14'b0000_0000_000000, {
-    `ysyx_22040931_addi,    {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_ADD,  `ysyx_22040931_MNO,    1'b0},
-    `ysyx_22040931_addiw,   {1'b1,`ysyx_22040931_Short,`ysyx_22040931_ADD,  `ysyx_22040931_MNO,    1'b0},
-    `ysyx_22040931_andi,    {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_AND,  `ysyx_22040931_MNO,    1'b0},
-    `ysyx_22040931_ld,      {1'b1,`ysyx_22040931_LOAD, `ysyx_22040931_ADD,  `ysyx_22040931_R_EIG,  1'b0},
-    `ysyx_22040931_lw,      {1'b1,`ysyx_22040931_LOAD, `ysyx_22040931_ADD,  `ysyx_22040931_R_FOR,  1'b0},
-    `ysyx_22040931_lh,      {1'b1,`ysyx_22040931_LOAD, `ysyx_22040931_ADD,  `ysyx_22040931_R_DOU,  1'b0},
-    `ysyx_22040931_lb,      {1'b1,`ysyx_22040931_LOAD, `ysyx_22040931_ADD,  `ysyx_22040931_R_ONE,  1'b0},
-    `ysyx_22040931_lwu,     {1'b1,`ysyx_22040931_LOAD, `ysyx_22040931_ADD,  `ysyx_22040931_R_FORU, 1'b0},
-    `ysyx_22040931_lhu,     {1'b1,`ysyx_22040931_LOAD, `ysyx_22040931_ADD,  `ysyx_22040931_R_DOUU, 1'b0},
-    `ysyx_22040931_lbu,     {1'b1,`ysyx_22040931_LOAD, `ysyx_22040931_ADD,  `ysyx_22040931_R_ONEU, 1'b0},
-    `ysyx_22040931_xori,    {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_XOR,  `ysyx_22040931_MNO,    1'b0},
-    `ysyx_22040931_jalr,    {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_JUMP, `ysyx_22040931_MNO,    1'b1},
-    `ysyx_22040931_ori,     {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_OR,   `ysyx_22040931_MNO,    1'b0},
-    `ysyx_22040931_sltiu,   {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_COMU, `ysyx_22040931_MNO,    1'b0}
+    ysyx_22040931_MuxD #(15, 10, 14) Itype1 (out1, chose1, 14'b0000_0000_000000, {
+    `ysyx_22040931_addi,    {1'b1,`ysyx_22040931_Arith,  `ysyx_22040931_ADD,  `ysyx_22040931_MNO,    1'b0},
+    `ysyx_22040931_addiw,   {1'b1,`ysyx_22040931_Short,  `ysyx_22040931_ADD,  `ysyx_22040931_MNO,    1'b0},
+    `ysyx_22040931_andi,    {1'b1,`ysyx_22040931_Arith,  `ysyx_22040931_AND,  `ysyx_22040931_MNO,    1'b0},
+    `ysyx_22040931_ld,      {1'b1,`ysyx_22040931_LOAD,   `ysyx_22040931_ADD,  `ysyx_22040931_R_EIG,  1'b0},
+    `ysyx_22040931_lw,      {1'b1,`ysyx_22040931_LOAD,   `ysyx_22040931_ADD,  `ysyx_22040931_R_FOR,  1'b0},
+    `ysyx_22040931_lh,      {1'b1,`ysyx_22040931_LOAD,   `ysyx_22040931_ADD,  `ysyx_22040931_R_DOU,  1'b0},
+    `ysyx_22040931_lb,      {1'b1,`ysyx_22040931_LOAD,   `ysyx_22040931_ADD,  `ysyx_22040931_R_ONE,  1'b0},
+    `ysyx_22040931_lwu,     {1'b1,`ysyx_22040931_LOAD,   `ysyx_22040931_ADD,  `ysyx_22040931_R_FORU, 1'b0},
+    `ysyx_22040931_lhu,     {1'b1,`ysyx_22040931_LOAD,   `ysyx_22040931_ADD,  `ysyx_22040931_R_DOUU, 1'b0},
+    `ysyx_22040931_lbu,     {1'b1,`ysyx_22040931_LOAD,   `ysyx_22040931_ADD,  `ysyx_22040931_R_ONEU, 1'b0},
+    `ysyx_22040931_xori,    {1'b1,`ysyx_22040931_Arith,  `ysyx_22040931_XOR,  `ysyx_22040931_MNO,    1'b0},
+    `ysyx_22040931_jalr,    {1'b1,`ysyx_22040931_Arith,  `ysyx_22040931_JUMP, `ysyx_22040931_MNO,    1'b1},
+    `ysyx_22040931_ori,     {1'b1,`ysyx_22040931_Arith,  `ysyx_22040931_OR,   `ysyx_22040931_MNO,    1'b0},
+    `ysyx_22040931_slti,    {1'b1,`ysyx_22040931_Arith,  `ysyx_22040931_COM,  `ysyx_22040931_MNO,    1'b0},
+    `ysyx_22040931_sltiu,   {1'b1,`ysyx_22040931_Arith,  `ysyx_22040931_COMU, `ysyx_22040931_MNO,    1'b0}
   });
 
 
@@ -59,9 +60,8 @@ module ysyx_22040931_Itype(
 
 
 
-    ysyx_22040931_MuxD #(4, 17, 13) Itype3 (out3, chose3, 13'b0000_0000_00000, {
+    ysyx_22040931_MuxD #(3, 17, 13) Itype3 (out3, chose3, 13'b0000_0000_00000, {
     `ysyx_22040931_slliw,   {1'b1,`ysyx_22040931_Short, `ysyx_22040931_SHILW, `ysyx_22040931_MNO},
-    `ysyx_22040931_slti,    {1'b1,`ysyx_22040931_Arith, `ysyx_22040931_COM,   `ysyx_22040931_MNO},
     `ysyx_22040931_sraiw,   {1'b1,`ysyx_22040931_Arith, `ysyx_22040931_SRAW,  `ysyx_22040931_MNO},
     `ysyx_22040931_srliw,   {1'b1,`ysyx_22040931_Arith, `ysyx_22040931_SHIRW, `ysyx_22040931_MNO}
   });

@@ -157,12 +157,13 @@
 `define ysyx_22040931_xori    10'b100_0010011
 `define ysyx_22040931_jalr    10'b000_1100111 
 `define ysyx_22040931_ori     10'b110_0010011
-`define ysyx_22040931_sltiu   10'b011_0010011     
+`define ysyx_22040931_slti    10'b010_0010011
+`define ysyx_22040931_sltiu   10'b011_0010011  
 `define ysyx_22040931_slli    16'b000000_001_0010011 
 `define ysyx_22040931_srai    16'b010000_101_0010011
 `define ysyx_22040931_srli    16'b000000_101_0010011     
 `define ysyx_22040931_slliw   17'b0000000_001_0011011
-`define ysyx_22040931_slti    17'b0000000_010_0010011
+
 `define ysyx_22040931_sraiw   17'b0100000_101_0011011 
 `define ysyx_22040931_srliw   17'b0000000_101_0011011
 
