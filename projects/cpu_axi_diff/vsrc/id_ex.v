@@ -62,7 +62,7 @@ assign id_valid = id_now_valid;
         if(reset == 1'b1) begin
             id_now_valid <= 0;
         end
-        else if(id_ready) begin
+        else if(id_ready | nop) begin
             id_now_valid <= if_valid;
         end
     end
