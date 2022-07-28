@@ -111,15 +111,17 @@ ysyx_22040931_ID ysyx_22040931_ID(
     .pc_i(ID_pc),
     .instr(ID_instr),
     //bypass
+    .ex_valid(to_ex_valid), //
     .ex_w_ena(ex_w_ena),
     .ex_w_addr(ex_w_addr),
     .ex_w_data(ex_w_data),
+    .mem_valid(to_mem_valid), //
     .mem_w_ena(mem_w_ena),
     .mem_w_addr(mem_w_addr),
     .mem_w_data(mem_w_data),
     //load hazard
     .ex_mem_ena(EX_mem_ena),
-    .ex_mem_wr(EX_mem_ena),
+    .ex_mem_wr(EX_mem_wr),
     //pre
     .pre_jump(ID_pre_jump),
     .pre_branch(ID_pre_branch),
