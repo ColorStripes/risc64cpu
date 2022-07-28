@@ -264,7 +264,7 @@ module AXI4 # (
     // ------------------Read Transaction------------------
 
     // Read address channel signals
-    assign axi_ar_valid_o   = r_state_addr & ~w_valid;
+    assign axi_ar_valid_o   = r_state_addr;// & ~w_valid;
     assign axi_ar_addr_o    = rw_addr_i;
     assign axi_ar_id_o      = axi_id;
     assign axi_ar_len_o     = axi_len;
@@ -272,7 +272,7 @@ module AXI4 # (
     assign axi_ar_burst_o   = `AXI_BURST_TYPE_INCR;
 
     // Read data channel signals
-    assign axi_r_ready_o    = r_state_read & ~w_valid;
+    assign axi_r_ready_o    = r_state_read;// & ~w_valid;
 
     wire [AXI_DATA_WIDTH-1:0] axi_r_data_l  = (axi_r_data_i & mask_l) >> aligned_offset_l;
     wire [AXI_DATA_WIDTH-1:0] axi_r_data_h  = (axi_r_data_i & mask_h) << aligned_offset_h;
