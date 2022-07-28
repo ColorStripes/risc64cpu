@@ -62,8 +62,8 @@ module ysyx_22040931_Itype(
 
     ysyx_22040931_MuxD #(3, 17, 13) Itype3 (out3, chose3, 13'b0000_0000_00000, {
     `ysyx_22040931_slliw,   {1'b1,`ysyx_22040931_Short, `ysyx_22040931_SHILW, `ysyx_22040931_MNO},
-    `ysyx_22040931_sraiw,   {1'b1,`ysyx_22040931_Arith, `ysyx_22040931_SRAW,  `ysyx_22040931_MNO},
-    `ysyx_22040931_srliw,   {1'b1,`ysyx_22040931_Arith, `ysyx_22040931_SHIRW, `ysyx_22040931_MNO}
+    `ysyx_22040931_sraiw,   {1'b1,`ysyx_22040931_Short, `ysyx_22040931_SRAW,  `ysyx_22040931_MNO},
+    `ysyx_22040931_srliw,   {1'b1,`ysyx_22040931_Short, `ysyx_22040931_SHIRW, `ysyx_22040931_MNO}
   });
 
     ysyx_22040931_MuxD #(2, 18, 13) Itype4 (out4, chose4, 13'b0000_0000_00000, {
