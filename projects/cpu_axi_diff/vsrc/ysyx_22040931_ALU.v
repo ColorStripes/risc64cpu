@@ -66,34 +66,67 @@ assign num2_sw = num2[31 : 0];
     );
 
 
-//MUL
-    wire [3 : 0] m_m_sign;
-    ysyx_22040931_MuxD #(5, `ysyx_22040931_ALU, 4) M_M_ENA (m_m_sign, op, {1'b0, 1'b0, 1'b0, 1'b0}, {  //{w, ena, sign_ed, sign_or}
-    `ysyx_22040931_MUL   ,  {1'b0, 1'b1, 1'b1, 1'b1},
-    `ysyx_22040931_MULH  ,  {1'b0, 1'b1, 1'b1, 1'b1},
-    `ysyx_22040931_MULHSU,  {1'b0, 1'b1, 1'b1, 1'b0},
-    `ysyx_22040931_MULHU ,  {1'b0, 1'b1, 1'b0, 1'b0},
-    `ysyx_22040931_MULW  ,  {1'b1, 1'b1, 1'b1, 1'b1}
-    });
+// //MUL
+//     wire [3 : 0] m_m_sign;
+//     ysyx_22040931_MuxD #(5, `ysyx_22040931_ALU, 4) M_M_ENA (m_m_sign, op, {1'b0, 1'b0, 1'b0, 1'b0}, {  //{w, ena, sign_ed, sign_or}
+//     `ysyx_22040931_MUL   ,  {1'b0, 1'b1, 1'b1, 1'b1},
+//     `ysyx_22040931_MULH  ,  {1'b0, 1'b1, 1'b1, 1'b1},
+//     `ysyx_22040931_MULHSU,  {1'b0, 1'b1, 1'b1, 1'b0},
+//     `ysyx_22040931_MULHU ,  {1'b0, 1'b1, 1'b0, 1'b0},
+//     `ysyx_22040931_MULW  ,  {1'b1, 1'b1, 1'b1, 1'b1}
+//     });
 
-    wire [`ysyx_22040931_DATA_BUS] result_hi, result_lo;
-    multiplier multiplier(
+//     wire [`ysyx_22040931_DATA_BUS] result_hi, result_lo;
+//     multiplier multiplier(
 
-    .mulw(m_m_sign[3]),
-    .mulena(m_m_sign[2]),
-    .mul_signed(m_m_sign[1]),
-    .mul_signor(m_m_sign[0]),
-    .multiplicand(num1),
-    .multiplier(num2),
-
-
-    .result_hi(result_hi),
-    .result_lo(result_lo)
-);
+//     .mulw(m_m_sign[3]),
+//     .mulena(m_m_sign[2]),
+//     .mul_signed(m_m_sign[1]),
+//     .mul_signor(m_m_sign[0]),
+//     .multiplicand(num1),
+//     .multiplier(num2),
 
 
+//     .result_hi(result_hi),
+//     .result_lo(result_lo)
+// );
 
-//ALU
+
+
+// //ALU
+//     ysyx_22040931_MuxD #(29, `ysyx_22040931_ALU, 64) ALU (out, op, `ysyx_22040931_ZERO_NUM, {
+//     `ysyx_22040931_ADD   ,  num1 + num2,
+//     `ysyx_22040931_SUB   ,  num1 - num2,
+//     `ysyx_22040931_AND   ,  num1 & num2,
+//     `ysyx_22040931_XOR   ,  num1 ^ num2,
+//     `ysyx_22040931_OR    ,  num1 | num2,
+//     `ysyx_22040931_COM   ,  {63'b0, {num1 - num2}[63]},
+//     `ysyx_22040931_COMU  ,  {63'b0, {{1'b0, num1} - {1'b0, num2}}[64]},
+//     `ysyx_22040931_SHIL  ,  num1 << num2[5 : 0],
+//     `ysyx_22040931_SHIR  ,  num1 >> num2[5 : 0],
+//     `ysyx_22040931_SRA   ,  num1_s >>> num2[5 : 0],
+//     `ysyx_22040931_SHILW ,  num1 << num2[4 : 0],
+//     `ysyx_22040931_SRAW  ,  {{32{num1_sw[31]}} , {num1_sw >>> num2[4 : 0]}},
+//     `ysyx_22040931_SHIRW ,  {{32{1'b0}} , {num1[31 : 0] >> num2[4 : 0]}},
+//     `ysyx_22040931_PC    ,  num2 + pc,
+//     `ysyx_22040931_SORT  ,  num1 + imm,
+//     `ysyx_22040931_JUMP  ,  pc + 4,
+//     `ysyx_22040931_REMW  ,  remainder,
+//     `ysyx_22040931_REMUW ,  remainder,
+//     `ysyx_22040931_REMU  ,  remainder,
+//     `ysyx_22040931_REM   ,  remainder,
+//     `ysyx_22040931_MUL   ,  result_lo, 
+//     `ysyx_22040931_MULH  ,  result_hi,
+//     `ysyx_22040931_MULHSU,  result_hi,
+//     `ysyx_22040931_MULHU ,  result_hi,
+//     `ysyx_22040931_MULW  ,  result_lo,
+//     `ysyx_22040931_DIV   ,  quotient,
+//     `ysyx_22040931_DIVU  ,  quotient,
+//     `ysyx_22040931_DIVUW ,  quotient,     
+//     `ysyx_22040931_DIVW  ,  quotient
+//     });
+
+
     ysyx_22040931_MuxD #(29, `ysyx_22040931_ALU, 64) ALU (out, op, `ysyx_22040931_ZERO_NUM, {
     `ysyx_22040931_ADD   ,  num1 + num2,
     `ysyx_22040931_SUB   ,  num1 - num2,
@@ -115,49 +148,16 @@ assign num2_sw = num2[31 : 0];
     `ysyx_22040931_REMUW ,  remainder,
     `ysyx_22040931_REMU  ,  remainder,
     `ysyx_22040931_REM   ,  remainder,
-    `ysyx_22040931_MUL   ,  result_lo, 
-    `ysyx_22040931_MULH  ,  result_hi,
-    `ysyx_22040931_MULHSU,  result_hi,
-    `ysyx_22040931_MULHU ,  result_hi,
-    `ysyx_22040931_MULW  ,  result_lo,
+    `ysyx_22040931_MUL   ,  num1_s * num2_s,
+    `ysyx_22040931_MULH  ,  (num1_s * num2_s) >> 64,
+    `ysyx_22040931_MULHSU,  (num1_s * num2) >> 64,
+    `ysyx_22040931_MULHU ,  (num1 * num2) >> 64,
+    `ysyx_22040931_MULW  ,  {32'b0, (num1_sw * num2_sw)},
     `ysyx_22040931_DIV   ,  quotient,
     `ysyx_22040931_DIVU  ,  quotient,
     `ysyx_22040931_DIVUW ,  quotient,     
     `ysyx_22040931_DIVW  ,  quotient
     });
-
-
-    // ysyx_22040931_MuxD #(29, `ysyx_22040931_ALU, 64) ALU (out, op, `ysyx_22040931_ZERO_NUM, {
-    // `ysyx_22040931_ADD   ,  num1 + num2,
-    // `ysyx_22040931_SUB   ,  num1 - num2,
-    // `ysyx_22040931_AND   ,  num1 & num2,
-    // `ysyx_22040931_XOR   ,  num1 ^ num2,
-    // `ysyx_22040931_OR    ,  num1 | num2,
-    // `ysyx_22040931_COM   ,  {63'b0, {num1 - num2}[63]},
-    // `ysyx_22040931_COMU  ,  {63'b0, {{1'b0, num1} - {1'b0, num2}}[64]},
-    // `ysyx_22040931_SHIL  ,  num1 << num2[5 : 0],
-    // `ysyx_22040931_SHIR  ,  num1 >> num2[5 : 0],
-    // `ysyx_22040931_SRA   ,  num1_s >>> num2[5 : 0],
-    // `ysyx_22040931_SHILW ,  num1 << num2[4 : 0],
-    // `ysyx_22040931_SRAW  ,  {{32{num1_sw[31]}} , {num1_sw >>> num2[4 : 0]}},
-    // `ysyx_22040931_SHIRW ,  {{32{1'b0}} , {num1[31 : 0] >> num2[4 : 0]}},
-    // `ysyx_22040931_PC    ,  num2 + pc,
-    // `ysyx_22040931_SORT  ,  num1 + imm,
-    // `ysyx_22040931_JUMP  ,  pc + 4,
-    // `ysyx_22040931_REMW  ,  remainder,
-    // `ysyx_22040931_REMUW ,  remainder,
-    // `ysyx_22040931_REMU  ,  remainder,
-    // `ysyx_22040931_REM   ,  remainder,
-    // `ysyx_22040931_MUL   ,  num1_s * num2_s,
-    // `ysyx_22040931_MULH  ,  (num1_s * num2_s) >> 64,
-    // `ysyx_22040931_MULHSU,  (num1_s * num2) >> 64,
-    // `ysyx_22040931_MULHU ,  (num1 * num2) >> 64,
-    // `ysyx_22040931_MULW  ,  {32'b0, (num1_sw * num2_sw)},
-    // `ysyx_22040931_DIV   ,  quotient,
-    // `ysyx_22040931_DIVU  ,  quotient,
-    // `ysyx_22040931_DIVUW ,  quotient,     
-    // `ysyx_22040931_DIVW  ,  quotient
-    // });
 
 
 endmodule
