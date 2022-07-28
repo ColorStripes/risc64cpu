@@ -513,11 +513,12 @@ reg [31 : 0] inter;
 reg [63 : 0] MEM_except_type_f;
 
 
-wire inst_valid = ((WB_pc != `ysyx_22040931_ZERO_PC) | (WB_instr != 0)) && (inter != 32'h7b) ;
+wire inst_valid = ((WB_pc != `ysyx_22040931_ZERO_PC) | (WB_instr != 0));// && (inter != 32'h7b) ;
 //wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2) | (wb_instr == 32'h00063783) | (wb_instr == 32'h00f63023);
 //wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2) | (wb_instr == 32'h0007b483) | (wb_instr == 32'h00f73023);
 ////wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2) | (clint) ;
 ////wire cause = (MEM_except_type == 64'h4);
+wire skip = (WB_instr == 32'h7b);
      initial begin
       if(inter == 32'h7b) begin
          $display("%s",regs[10]);
@@ -573,7 +574,7 @@ DifftestInstrCommit DifftestInstrCommit(
   .valid              (cmt_valid),
   .pc                 (cmt_pc),
   .instr              (cmt_inst),
-  .skip               (0),                       //fffffffffffffffffffffffffffffff
+  .skip               (skip),                       //fffffffffffffffffffffffffffffff
   .special            (0),
   .isRVC              (0),
   .scFailed           (0),
