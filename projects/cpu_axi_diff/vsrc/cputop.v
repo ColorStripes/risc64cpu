@@ -134,6 +134,7 @@ ysyx_22040931_ID ysyx_22040931_ID(
     .instr_o(id_instr),
     .pc_o(id_pc),    
     //branch
+    .if_valid(if_valid),
     .branch(branch),
     .mux_pc(mux_pc),
     .jumptype(jumptype),

@@ -36,6 +36,7 @@ module ysyx_22040931_ID(
     output wire [`ysyx_22040931_PC_BUS] pc_o,
     output wire [`ysyx_22040931_INST_BUS] instr_o,   
     //branch
+    input wire if_valid,
     output wire [`ysyx_22040931_PC_BUS] branch,      //////////////////////////////////
     output wire mux_pc,
     output wire [1 : 0] jumptype,
@@ -101,8 +102,20 @@ assign error_pre = (pre_jump != mux_pc) ? 1'b1 : (pre_branch != branch) ? mux_pc
     assign bbranch = pc_i + imm;
     assign jbranch = bbranch;
 
+    reg [`ysyx_22040931_PC_BUS] branch_reg;
+    always @(posedge clock) begin
+        if(reset) begin
+            branch_reg <= `ysyx_22040931_ZERO_PC;
+        end
+        else if(if_valid) begin
+            branch_reg <= branch_now;
+        end
+    end
+    assign branch = if_valid ? branch_now : branch_reg;    //AXI
+
+    wire [`ysyx_22040931_PC_BUS] branch_now;
     ysyx_22040931_MuxD #(3, 3, 64)  branch_mux (
-        branch,
+        branch_now,
         ztype,
         `ysyx_22040931_ZERO_PC,
         {
