@@ -521,7 +521,7 @@ wire inst_valid = ((WB_pc != `ysyx_22040931_ZERO_PC) | (WB_instr != 0));// && (i
 wire skip = (WB_instr == 32'h7b);
      initial begin
       if(inter == 32'h7b) begin
-         $display("%s",regs[10]);
+         $fwrite("0x8000_0001",regs[10]);
       end
      end
 
