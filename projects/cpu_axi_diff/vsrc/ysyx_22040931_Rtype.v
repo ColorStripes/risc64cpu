@@ -24,7 +24,7 @@ module ysyx_22040931_Rtype(
     `ysyx_22040931_sra,    {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_SRA},
     `ysyx_22040931_sraw,   {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_SRAW},
     `ysyx_22040931_srl,    {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_SHIR},
-    `ysyx_22040931_srlw,   {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_SHIRW},
+    `ysyx_22040931_srlw,   {1'b1,`ysyx_22040931_Short,`ysyx_22040931_SHIRW},
     `ysyx_22040931_sub,    {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_SUB},
     `ysyx_22040931_subw,   {1'b1,`ysyx_22040931_Short,`ysyx_22040931_SUB},
     `ysyx_22040931_xor,    {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_XOR},
