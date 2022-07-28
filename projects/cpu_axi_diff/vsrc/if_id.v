@@ -37,7 +37,7 @@ assign if_valid = if_now_valid;
         if(reset == 1'b1) begin
             if_now_valid <= 0;
         end
-        else if(if_ready | stall) begin
+        else if(if_ready) begin
             if_now_valid <= pc_valid;
         end
     end
