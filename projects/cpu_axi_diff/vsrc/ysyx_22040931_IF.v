@@ -66,8 +66,8 @@ predictor predictor(
 
 
 wire [`ysyx_22040931_PC_BUS] pc_i;
-assign pc_i = error_pre ? (id_jump ? id_branch : id_pc + 4) : (pre_jump ? pre_branch : if_pc + 4);
-
+//assign pc_i = error_pre ? (id_jump ? id_branch : id_pc + 4) : (pre_jump ? pre_branch : if_pc + 4);
+assign pc_i = error_pre ? (id_jump ? id_branch : id_pc + 4) :  if_pc + 4;
 
 
 ysyx_22040931_PC ysyx_22040931_PC(
