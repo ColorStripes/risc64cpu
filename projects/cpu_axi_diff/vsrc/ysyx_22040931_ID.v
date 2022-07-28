@@ -111,7 +111,7 @@ assign error_pre = (pre_jump != mux_pc) ? 1'b1 : (pre_branch != branch) ? mux_pc
             branch_reg <= branch_now;
         end
     end
-    assign branch = if_valid ? branch_now : branch_now;    //AXI
+    assign branch = if_valid ? branch_now : branch_reg;    //AXI
 
     wire [`ysyx_22040931_PC_BUS] branch_now;
     ysyx_22040931_MuxD #(3, 3, 64)  branch_mux (
