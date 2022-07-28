@@ -513,11 +513,16 @@ reg [31 : 0] inter;
 reg [63 : 0] MEM_except_type_f;
 
 
-wire inst_valid = ((WB_pc != `ysyx_22040931_ZERO_PC) | (WB_instr != 0)); //&& ~(inter != 32'h0) ;
+wire inst_valid = ((WB_pc != `ysyx_22040931_ZERO_PC) | (WB_instr != 0)) && (inter != 32'h7b) ;
 //wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2) | (wb_instr == 32'h00063783) | (wb_instr == 32'h00f63023);
 //wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2) | (wb_instr == 32'h0007b483) | (wb_instr == 32'h00f73023);
 ////wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2) | (clint) ;
 ////wire cause = (MEM_except_type == 64'h4);
+     initial begin
+      if(inter == 32'h7b) begin
+         $display("%s",regs[10]);
+      end
+     end
 
 always @(negedge clock) begin
   if (reset) begin
