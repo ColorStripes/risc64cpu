@@ -520,9 +520,9 @@ wire inst_valid = ((WB_pc != `ysyx_22040931_ZERO_PC) | (WB_instr != 0));// && (i
 ////wire cause = (MEM_except_type == 64'h4);
 wire skip = (WB_instr == 32'h7b);
      initial begin
-      //if(WB_instr == 32'h7b) begin
+      if(WB_instr == 32'h7b) begin
          $monitor("wcao************%s\n",regs[10]);
-      //end
+      end
      end
 
 always @(negedge clock) begin
