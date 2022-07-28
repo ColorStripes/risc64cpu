@@ -55,7 +55,7 @@ module ysyx_22040931_Itype(
     ysyx_22040931_MuxD #(3, 16, 13) Itype2 (out2, chose2, 13'b0000_0000_00000, {
     `ysyx_22040931_slli,    {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_SHIL,`ysyx_22040931_MNO},
     `ysyx_22040931_srai,    {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_SRA,`ysyx_22040931_MNO},
-    `ysyx_22040931_srli,    {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_SHIR,`ysyx_22040931_MNO}
+    `ysyx_22040931_srli,    {1'b1,`ysyx_22040931_Short,`ysyx_22040931_SHIR,`ysyx_22040931_MNO}
   });
 
 
