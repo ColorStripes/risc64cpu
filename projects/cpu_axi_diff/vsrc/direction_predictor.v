@@ -23,14 +23,14 @@ module direction_predictor(
     wire [`ysyx_22040931_HASH_WIDTH-1 : 0] hash;
     assign hash = pc[33 : 26] + pc[25 : 18] + pc[17 : 10] + pc[9 : 2];
     wire [`ysyx_22040931_HASH_WIDTH-1 : 0] pht_index;
-    assign pht_index = pc[`ysyx_22040931_HASH_WIDTH+3 : 4] ^ BHT[hash];///////////
+    assign pht_index = pc[`ysyx_22040931_HASH_WIDTH+2 : 3] ^ BHT[hash];///////////
 
 
 
     wire [`ysyx_22040931_HASH_WIDTH-1 : 0] id_hash;
     assign id_hash = id_pc[33 : 26] + id_pc[25 : 18] + id_pc[17 : 10] + id_pc[9 : 2];
     wire [`ysyx_22040931_HASH_WIDTH-1 : 0] id_pht_index;
-    assign id_pht_index = id_pc[`ysyx_22040931_HASH_WIDTH+3 : 4] ^ BHT[id_hash]; ///////
+    assign id_pht_index = id_pc[`ysyx_22040931_HASH_WIDTH+2 : 3] ^ BHT[id_hash]; ///////
 
 
     integer i,j;
