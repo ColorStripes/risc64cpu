@@ -18,7 +18,7 @@ module ysyx_22040931_Rtype(
     `ysyx_22040931_addw,   {1'b1,`ysyx_22040931_Short,`ysyx_22040931_ADD},
     `ysyx_22040931_and,    {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_AND},
     `ysyx_22040931_sll,    {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_SHIL},
-    `ysyx_22040931_sllw,   {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_SHILW},
+    `ysyx_22040931_sllw,   {1'b1,`ysyx_22040931_Short,`ysyx_22040931_SHILW},
     `ysyx_22040931_slt,    {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_COM},
     `ysyx_22040931_sltu,   {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_COMU},
     `ysyx_22040931_sra,    {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_SRA},
