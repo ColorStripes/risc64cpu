@@ -27,7 +27,8 @@ module target_predictor(
     wire [1 : 0] jumptype;
     assign jumptype = {BTB1[btb_index]}[1 : 0];
     assign hit = ({BTB1[btb_index]}[`ysyx_22040931_BTB_WIDTH-1 : `ysyx_22040931_BTB_WIDTH-32] == pc[31 : 0]) ? 1'b1 : 1'b0;
-    assign branch = ({BTB1[btb_index]}[1 : 0] == 2'b11) ? RAS[ras_index - 1] : {BTB1[btb_index]}[`ysyx_22040931_BTB_WIDTH-33 : 2];
+    //assign branch = ({BTB1[btb_index]}[1 : 0] == 2'b11) ? RAS[ras_index - 1] : {BTB1[btb_index]}[`ysyx_22040931_BTB_WIDTH-33 : 2];
+    assign branch = pc + 4;
 
     integer i,j;
     always@(posedge clock) begin
