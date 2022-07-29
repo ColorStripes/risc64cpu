@@ -19,7 +19,7 @@ module arbiter (
 
 
 
-    output reg [`ysyx_22040931_INST_BUS] if_data,
+    output reg [`ysyx_22040931_DATA_BUS] if_data,
     input wire [`ysyx_22040931_PC_BUS] if_addr,
     input wire [1 : 0] if_size,
     input wire if_req,
@@ -102,7 +102,7 @@ assign arbiter_mem_valid = axi_mem_ready;
 //         end
 //     end
 // end
-assign if_data = AXI_r_data[31 : 0];
+assign if_data = AXI_r_data;//[31 : 0];
 assign mem_data = AXI_r_data;
 
 

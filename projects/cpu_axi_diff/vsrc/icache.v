@@ -18,14 +18,16 @@ module icache #(
     output wire icache_if_valid,
     input wire if_ready,
     //arbiter
+    input wire arbiter_to_icache_valid,  //if_valid
     output wire to_arbiter_pc_valid, 
     output wire to_arbiter_if_ready,
 
-
-    input wire [31 : 0] address,
+    //read
+    input wire [`ysyx_22040931_PC_BUS] address,
+    input wire [`ysyx_22040931_DATA_BUS] arbiter_data,
 
     output wire hit,
-    output wire [63 : 0] data,
+    output wire [`ysyx_22040931_DATA_BUS] data,
     
 );
 
@@ -97,7 +99,7 @@ module icache #(
 
 
     //replacement
-    reg age;
+    reg age;   //1 is 0 has
     always @(posedge clock) begin
         if(reset) begin
             age <= 0;
@@ -108,6 +110,20 @@ module icache #(
     end
 
     //not hit
+    assign to_arbiter_if_ready = if_ready;
+    assign to_arbiter_pc_valid = !hit;
+    //write from axi to cache
+    always @(posedge clock) begin
+        if(arbiter_to_icache_valid) begin
+            if(age) begin
+                TAG_RAM_WAY1[index] <= {1'b1, tag};
+            end
+            else begin
+                TAG_RAM_WAY0[index] <= {1'b1, tag};
+                DATA_BLOCK_WAY0[index] <= arbiter_data;//
+            end
+        end
+    end
 
 
 
