@@ -29,8 +29,8 @@ module divider(
     //1
     wire [63 : 0] abs_dividend, abs_divisor;
     wire quotient_signed, remainder_signed;
-    assign abs_dividend = div_signed ? (dividend[63] ? ~dividend+1 : dividend) : dividend; 
-    assign abs_divisor =  div_signed ? (divisor[63]  ? ~divisor+1  : divisor)  : divisor;
+    assign abs_dividend = div_signed ? (w ? (dividend[31] ? ~dividend+1 : dividend) : (dividend[63] ? ~dividend+1 : dividend)) : dividend; 
+    assign abs_divisor =  div_signed ? (w ? (divisor[31] ? ~divisor+1 : divisor) : (divisor[63] ? ~divisor+1  : divisor)) : divisor;
     assign quotient_signed = divisor[63] ^ dividend[63];  //1- 0+
     assign remainder_signed = dividend[63];
 
