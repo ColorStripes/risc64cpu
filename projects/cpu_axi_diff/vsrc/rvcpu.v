@@ -249,7 +249,7 @@ assign io_slave_rid = 0;
 wire [`ysyx_22040931_CACHE_LINE] arbiter_data;
 
 //AXI
-wire [`ysyx_22040931_DATA_BUS] AXI_r_data;
+wire [`ysyx_22040931_CACHE_LINE] AXI_r_data;
 wire [`ysyx_22040931_PC_BUS]   AXI_addr;
 wire [`ysyx_22040931_DATA_BUS] AXI_w_data;
 //wire [1 : 0] AXI_size;

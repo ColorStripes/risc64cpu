@@ -8,7 +8,7 @@
 `define D_NUMLOG  10
 
 //ICACHE
-`define ysyx_22040931_CACHE_LINE 255 : 0
+`define ysyx_22040931_CACHE_LINE 127 : 0
 
 
 //forcase
