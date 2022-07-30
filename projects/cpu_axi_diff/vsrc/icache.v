@@ -61,6 +61,7 @@ module icache #(
         end
     end
 
+    wire [21 : 0] test = TAG_RAM_WAY0[0];
     //hit
     wire way0_hit = ((TAG_RAM_WAY0[index] == tag) & TAG_RAM_WAY0[index][I_TAG]); 
     wire way1_hit = ((TAG_RAM_WAY1[index] == tag) & TAG_RAM_WAY1[index][I_TAG]);
