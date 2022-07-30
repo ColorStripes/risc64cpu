@@ -64,7 +64,7 @@ module icache #(
     wire [21 : 0] test = TAG_RAM_WAY0[index];
     wire test2 = TAG_RAM_WAY0[index][I_TAG-1];
     //hit
-    wire way0_hit = ((TAG_RAM_WAY0[index] == tag) && TAG_RAM_WAY0[index][I_TAG-1]); 
+    wire way0_hit = ((TAG_RAM_WAY0[index] == tag)); //&& TAG_RAM_WAY0[index][I_TAG-1]); 
     wire way1_hit = ((TAG_RAM_WAY1[index] == tag) && TAG_RAM_WAY1[index][I_TAG-1]);
     assign hit = way0_hit | way1_hit;
     //icache valid
