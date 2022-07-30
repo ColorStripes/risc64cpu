@@ -32,17 +32,17 @@ module icache #(
     
 );
 
-    wire [I_TAG-1 : 0]    tag    = address[I_TAG-1 + I_OFFSET+I_INDEX : I_OFFSET+I_INDEX];
+    wire [I_TAG-1 : 0]    tag    = address[I_TAG-1 + I_OFFSET+I_INDEX : I_OFFSET+I_INDEX]; //[31 : 10]  22bit
     wire [I_INDEX-1 : 0]  index  = address[I_INDEX-1 + I_OFFSET : I_OFFSET];
     wire [I_OFFSET-1 : 0] offset = address[I_OFFSET-1 : 0];
 
     //WAY0
-    reg [I_TAG-1 : 0] TAG_RAM_WAY0[0 : TAG_RAM_NUM-1];               //{1'valid, 21tag}
+    reg [I_TAG : 0] TAG_RAM_WAY0[0 : TAG_RAM_NUM-1];               //{1'valid, 22tag}
     //reg [DATA_RAM_WIDTH-1 : 0] DATA_BLOCK_WAY0[0 : DATA_RAM_NUM-1];
     wire [DATA_RAM_WIDTH-1 : 0] DATA_WAY0;
     S011HD1P_X32Y2D128 DATA_BLOCK_WAY0(DATA_WAY0, clock, !pc_valid, wen0, index, arbiter_data);
     //WAY1
-    reg [I_TAG-1 : 0] TAG_RAM_WAY1[0 : TAG_RAM_NUM-1];               //{1'valid, 21tag}
+    reg [I_TAG : 0] TAG_RAM_WAY1[0 : TAG_RAM_NUM-1];               //{1'valid, 22tag}
     //reg [DATA_RAM_WIDTH-1 : 0] DATA_BLOCK_WAY1[0 : DATA_RAM_NUM-1];
     wire [DATA_RAM_WIDTH-1 : 0] DATA_WAY1;
     S011HD1P_X32Y2D128 DATA_BLOCK_WAY1(DATA_WAY1, clock, !pc_valid, wen1, index, arbiter_data);
@@ -62,9 +62,9 @@ module icache #(
     end
 
     wire [21 : 0] test = TAG_RAM_WAY0[index][I_TAG-1 : 0];
-    wire test2 = TAG_RAM_WAY0[index][I_TAG-1];
+    wire test2 = TAG_RAM_WAY0[index][I_TAG];
     //hit
-    wire way0_hit = (TAG_RAM_WAY0[index][I_TAG-2 : 0] == tag);//TAG_RAM_WAY0[index][I_TAG-1]; //() && 
+    wire way0_hit = (TAG_RAM_WAY0[index][I_TAG-1 : 0] == tag);//TAG_RAM_WAY0[index][I_TAG]; //() && 
     wire way1_hit = ((TAG_RAM_WAY1[index][I_TAG-2 : 0] == tag) && TAG_RAM_WAY1[index][I_TAG-1]);
     assign hit = way0_hit | way1_hit;
     //icache valid
