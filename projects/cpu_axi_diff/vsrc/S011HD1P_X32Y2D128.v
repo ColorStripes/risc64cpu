@@ -19,11 +19,12 @@ reg [Bits-1:0] ram [0:Word_Depth-1];
 always @(posedge CLK) begin
     if(!CEN && !WEN) begin
         ram[A] <= D;
+        test <= 5;
     end
     Q <= !CEN && WEN ? ram[A] : {4{$random}};
 end
 
-wire [`ysyx_22040931_CACHE_LINE] test = ram[0];
+reg [`ysyx_22040931_CACHE_LINE] test;
 
 
 endmodule
