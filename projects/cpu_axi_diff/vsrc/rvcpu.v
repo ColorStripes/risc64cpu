@@ -300,7 +300,7 @@ cputop cputop(
     //if
     .instr(icache_data[31 : 0]), //
     //mem
-    .momory_data(mem_data),
+    .momory_data(arbiter_data[63 : 0]),
     
 
     //if
