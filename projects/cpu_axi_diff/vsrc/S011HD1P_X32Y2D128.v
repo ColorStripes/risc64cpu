@@ -23,4 +23,7 @@ always @(posedge CLK) begin
     Q <= !CEN && WEN ? ram[A] : {4{$random}};
 end
 
+wire [`ysyx_22040931_CACHE_LINE] test = ram[0];
+
+
 endmodule
