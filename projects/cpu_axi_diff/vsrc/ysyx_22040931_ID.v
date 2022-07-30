@@ -66,26 +66,26 @@ assign instr_o = instr;
 assign jumptype = (ztype == `ysyx_22040931_Bt) ? 2'b01 : (ztype == `ysyx_22040931_Jt) ? 2'b10 : ((ztype == `ysyx_22040931_It) && mux_pc) ? 2'b11 : 2'b00;
 assign error_pre = (pre_jump != mux_pc) ? 1'b1 : (pre_branch != branch) ? mux_pc : 1'b0;
 
-//assign nop = mux_pc;
-reg [31 : 0] r_count;
-reg [31 : 0] count;
-always @(posedge clock) begin
-    if(reset == 1'b1) begin
-        count <= 0;
-        r_count <= 0;
-    end
-    else begin
-        if(~error_pre && (jumptype != 0)) begin
-            r_count <= r_count + 1;
-        end
-        if(jumptype != 0) begin
-            count <= count + 1;
-        end
-    end
-end
-    initial begin
-        $monitor("%d/%d 正确率:%d  \n",r_count, count,  r_count*100 / count );
-    end
+// //assign nop = mux_pc;
+// reg [31 : 0] r_count;
+// reg [31 : 0] count;
+// always @(posedge clock) begin
+//     if(reset == 1'b1) begin
+//         count <= 0;
+//         r_count <= 0;
+//     end
+//     else begin
+//         if(~error_pre && (jumptype != 0)) begin
+//             r_count <= r_count + 1;
+//         end
+//         if(jumptype != 0) begin
+//             count <= count + 1;
+//         end
+//     end
+// end
+//     initial begin
+//         $monitor("%d/%d 正确率:%d  \n",r_count, count,  r_count*100 / count );
+//     end
 
     wire [2 : 0]     ztype;
     wire 		    r_ena1;
