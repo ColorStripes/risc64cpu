@@ -48,7 +48,7 @@ module icache #(
     S011HD1P_X32Y2D128 DATA_BLOCK_WAY1(DATA_WAY1, clock, 1, wen1, index, arbiter_data);
 
     wire [DATA_RAM_WIDTH-1 : 0] DATA_TEST;
-    S011HD1P_X32Y2D128 TTTTTT(.Q(DATA_TEST), clock, 0, 0, 0, 128'b111);
+    S011HD1P_X32Y2D128 TTTTTT(.Q(DATA_TEST), .CLK(clock), .CEN(0), .WEN(0), .A(0), .D(128'b111));
 
     //valid <= 0;
     integer i;

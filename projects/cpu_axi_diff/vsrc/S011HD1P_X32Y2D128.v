@@ -8,7 +8,7 @@ parameter Bits = 128;
 parameter Word_Depth = 64;
 parameter Add_Width = 6;
 
-output  reg [Bits-1:0]      Q;
+output  reg [Bits-1:0]    Q;
 input                   CLK;
 input                   CEN;
 input                   WEN;
