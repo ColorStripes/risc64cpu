@@ -188,7 +188,8 @@ module AXI4 # (
     
 
 
-    wire [3 : 0] out_id_nxt = (axi_r_valid_i) ? axi_r_id_i : (axi_b_valid_i) ? axi_b_id_i : 0;
+    //wire [3 : 0] out_id_nxt = (axi_r_valid_i) ? axi_r_id_i : (axi_b_valid_i) ? axi_b_id_i : 0;
+    wire [3 : 0] out_id_nxt = (axi_b_valid_i) ? axi_b_id_i : (axi_r_valid_i) ? axi_r_id_i : 0;
     always @(posedge clock) begin
         if (reset) begin
             out_id <= 0;

@@ -159,9 +159,9 @@ assign io_slave_rid = 0;
     .data_read_o(AXI_r_data),  //
     //write
     .data_write_i(AXI_w_data),
-    .rw_addr_i(AXI_addr),    //
-    .rw_size_i(2'b11),    //
-    .rw_req_i(AXI_req),      //
+    .rw_addr_i(AXI_addr),     //
+    .rw_size_i(2'b11),       //
+    .rw_req_i(AXI_req),     //
     //ready
     .cpu_id(AXI_id),
     .out_id(AXI_ret_id),
