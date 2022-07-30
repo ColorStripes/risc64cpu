@@ -2,7 +2,7 @@
 `include "defines.v"
 
 module AXI4 # (
-    parameter RW_DATA_WIDTH     = 64,
+    parameter RW_DATA_WIDTH     = 128,
     parameter AXI_DATA_WIDTH    = 64,
     parameter AXI_ADDR_WIDTH    = 32,
     parameter AXI_ID_WIDTH      = 4
@@ -152,7 +152,7 @@ module AXI4 # (
     // ------------------Process Data------------------
     localparam ALIGNED_WIDTH = $clog2(AXI_DATA_WIDTH / 8);
     localparam OFFSET_WIDTH  = $clog2(AXI_DATA_WIDTH);
-    localparam AXI_SIZE      = $clog2(AXI_DATA_WIDTH / 8);    /////////////brust
+    localparam AXI_SIZE      = $clog2(AXI_DATA_WIDTH / 8);          /////////////brust
     localparam MASK_WIDTH    = AXI_DATA_WIDTH * 2;
     localparam TRANS_LEN     = RW_DATA_WIDTH / AXI_DATA_WIDTH;
     localparam BLOCK_TRANS   = TRANS_LEN > 1 ? 1'b1 : 1'b0;
@@ -169,7 +169,7 @@ module AXI4 # (
                                 | ({4{size_d}} & {4'b111})
                                 ;
     wire overstep           = {{addr_op1 + addr_op2} & 4'b1000} != 0;
-    wire [7:0] axi_len      = aligned ? TRANS_LEN - 1 : {{7{1'b0}}, overstep};    
+    wire [7:0] axi_len      = 8'b1;  
     wire [2:0] axi_size     = AXI_SIZE[2:0];                     ///////////////brust
     
     wire [OFFSET_WIDTH-1:0] aligned_offset    = {{OFFSET_WIDTH-ALIGNED_WIDTH{1'b0}}, {rw_addr_i[ALIGNED_WIDTH-1:0]}};
@@ -242,10 +242,11 @@ module AXI4 # (
 
     // Write data channel signals
     assign axi_w_valid_o    = w_state_write;
-    assign axi_w_strb_o     = (size_b) ? {{AXI_DATA_WIDTH/8-1{1'b0}}, 1'b1} << aligned_offset : 
-                              (size_h) ? {{AXI_DATA_WIDTH/8-2{1'b0}}, 2'b11} << aligned_offset :
-                              (size_w) ? {{AXI_DATA_WIDTH/8-4{1'b0}}, 4'b1111} << aligned_offset :
-                              (size_d) ? {8'b11111111} << aligned_offset : {AXI_DATA_WIDTH/8-0{1'b0}};
+    assign axi_w_strb_o     = 8'b11111111;
+                            //   (size_b) ? {{AXI_DATA_WIDTH/8-1{1'b0}}, 1'b1} << aligned_offset : 
+                            //   (size_h) ? {{AXI_DATA_WIDTH/8-2{1'b0}}, 2'b11} << aligned_offset :
+                            //   (size_w) ? {{AXI_DATA_WIDTH/8-4{1'b0}}, 4'b1111} << aligned_offset :
+                            //   (size_d) ? {8'b11111111} << aligned_offset : {AXI_DATA_WIDTH/8-0{1'b0}};
 
 
     assign  axi_w_data_o  = (data_write_i & mask_l) ;
@@ -264,7 +265,7 @@ module AXI4 # (
     // ------------------Read Transaction------------------
 
     // Read address channel signals
-    assign axi_ar_valid_o   = r_state_addr;// & ~w_valid;
+    assign axi_ar_valid_o   = r_state_addr;
     assign axi_ar_addr_o    = rw_addr_i;
     assign axi_ar_id_o      = axi_id;
     assign axi_ar_len_o     = axi_len;
@@ -272,7 +273,7 @@ module AXI4 # (
     assign axi_ar_burst_o   = `AXI_BURST_TYPE_INCR;
 
     // Read data channel signals
-    assign axi_r_ready_o    = r_state_read;// & ~w_valid;
+    assign axi_r_ready_o    = r_state_read;
 
     wire [AXI_DATA_WIDTH-1:0] axi_r_data_l  = (axi_r_data_i & mask_l) >> aligned_offset_l;
     wire [AXI_DATA_WIDTH-1:0] axi_r_data_h  = (axi_r_data_i & mask_h) << aligned_offset_h;

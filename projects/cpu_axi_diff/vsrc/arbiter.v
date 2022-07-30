@@ -19,25 +19,26 @@ module arbiter (
 
 
 
-    output reg [`ysyx_22040931_DATA_BUS] if_data,
+    
     input wire [`ysyx_22040931_PC_BUS] if_addr,
-    input wire [1 : 0] if_size,
+    //input wire [1 : 0] if_size,
     input wire if_req,
 
-    output reg [`ysyx_22040931_DATA_BUS] mem_data,
+    
     input wire [`ysyx_22040931_DATA_BUS] mem_stor_data,
     input wire [`ysyx_22040931_PC_BUS] mem_addr,
-    input wire [1 : 0] mem_size,
+    //input wire [1 : 0] mem_size,
     input wire mem_req,
 
+    output wire [`ysyx_22040931_CACHE_LINE] arbiter_data,
 
 
     //AXI
     input wire [3 : 0] AXI_ret_id,
-    input wire [`ysyx_22040931_DATA_BUS] AXI_r_data,
+    input wire [`ysyx_22040931_CACHE_LINE] AXI_r_data,
     output reg [`ysyx_22040931_PC_BUS]   AXI_addr,
     output reg [`ysyx_22040931_DATA_BUS] AXI_w_data,
-    output reg [1 : 0] AXI_size,
+    //output reg [1 : 0] AXI_size,
     output reg [3 : 0] AXI_id,    
     output reg AXI_vaild,
     input wire AXI_ready,
@@ -102,20 +103,19 @@ assign arbiter_mem_valid = axi_mem_ready;
 //         end
 //     end
 // end
-assign if_data = AXI_r_data;//[31 : 0];
-assign mem_data = AXI_r_data;
 
 
 
 
 
-assign AXI_size = ex_to_axi_valid ? mem_size : if_size;
+
+//assign AXI_size = ex_to_axi_valid ? mem_size : if_size;
 assign AXI_addr = ex_to_axi_valid ? mem_addr : if_addr;
 assign AXI_id = ex_to_axi_valid ? 4'b0011 : 4'b0001;
 assign AXI_req = ex_to_axi_valid ? mem_req : if_req;
 assign AXI_vaild = ex_to_axi_valid | pc_to_axi_valid;
 assign AXI_w_data = mem_stor_data;
-
+assign arbiter_data = AXI_r_data;
 
 
 

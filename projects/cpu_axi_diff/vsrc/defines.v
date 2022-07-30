@@ -7,11 +7,9 @@
 `define D_NUM  1024
 `define D_NUMLOG  10
 
-// //ICACHE
-// `define I_TAG 21
-// `define I_INDEX 6
-// `define I_OFFSET 5
-// `define TAG_RAM_NUM 64
+//ICACHE
+`define ysyx_22040931_CACHE_LINE 255 : 0
+
 
 //forcase
 `define ysyx_22040931_PHT_SIZE  256     //1<<`ysyx_22040931_BHT_WIDTH
