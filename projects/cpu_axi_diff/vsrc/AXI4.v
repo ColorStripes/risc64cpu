@@ -249,7 +249,7 @@ module AXI4 # (
                             //   (size_d) ? {8'b11111111} << aligned_offset : {AXI_DATA_WIDTH/8-0{1'b0}};
 
     
-    assign  axi_w_data_o  = data_write_i[63 : 0];
+    assign  axi_w_data_o  = (data_write_i & mask);
     //wire [AXI_DATA_WIDTH-1:0] axi_w_data_h  = (data_write_i & mask_h) ;
 
 
