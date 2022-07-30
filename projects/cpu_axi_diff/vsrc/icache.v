@@ -40,15 +40,13 @@ module icache #(
     reg [I_TAG : 0] TAG_RAM_WAY0[0 : TAG_RAM_NUM-1];               //{1'valid, 21tag}
     //reg [DATA_RAM_WIDTH-1 : 0] DATA_BLOCK_WAY0[0 : DATA_RAM_NUM-1];
     wire [DATA_RAM_WIDTH-1 : 0] DATA_WAY0;
-    //S011HD1P_X32Y2D128 DATA_BLOCK_WAY0(DATA_WAY0, clock, !pc_valid, wen0, index, arbiter_data);
+    S011HD1P_X32Y2D128 DATA_BLOCK_WAY0(DATA_WAY0, clock, !pc_valid, wen0, index, arbiter_data);
     //WAY1
     reg [I_TAG : 0] TAG_RAM_WAY1[0 : TAG_RAM_NUM-1];               //{1'valid, 21tag}
     //reg [DATA_RAM_WIDTH-1 : 0] DATA_BLOCK_WAY1[0 : DATA_RAM_NUM-1];
     wire [DATA_RAM_WIDTH-1 : 0] DATA_WAY1;
-    //S011HD1P_X32Y2D128 DATA_BLOCK_WAY1(DATA_WAY1, clock, 1, wen1, index, arbiter_data);
+    S011HD1P_X32Y2D128 DATA_BLOCK_WAY1(DATA_WAY1, clock, !pc_valid, wen1, index, arbiter_data);
 
-    wire [DATA_RAM_WIDTH-1 : 0] DATA_TEST;
-    S011HD1P_X32Y2D128 TTTTTT(.Q(DATA_TEST), .CLK(clock), .CEN(wen0), .WEN(wen0), .A(0), .D(128'b111));
 
 
 

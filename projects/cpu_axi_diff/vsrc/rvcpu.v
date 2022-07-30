@@ -264,7 +264,7 @@ wire [3 : 0] AXI_id;
 
 icache icache(
     .reset(reset),
-    .clock(reset),
+    .clock(clock),
     //woshou
     .pc_valid(pc_valid),          //zhitong
     .icache_pc_ready(icache_pc_ready),  //to cpu
