@@ -248,12 +248,16 @@ module AXI4 # (
                             //   (size_w) ? {{AXI_DATA_WIDTH/8-4{1'b0}}, 4'b1111} << aligned_offset :
                             //   (size_d) ? {8'b11111111} << aligned_offset : {AXI_DATA_WIDTH/8-0{1'b0}};
 
-
-    assign  axi_w_data_o  = (data_write_i & mask_l) ;
+    
+    assign  axi_w_data_o  = data_write_i[63 : 0];
     //wire [AXI_DATA_WIDTH-1:0] axi_w_data_h  = (data_write_i & mask_h) ;
 
 
-    assign axi_w_last_o = axi_w_valid_o;
+    assign axi_w_last_o = w_last;
+    reg w_last;
+    always @(posedge clock) begin
+        w_last <= axi_w_valid_o;
+    end
 
     //Write respond channel signals
     assign axi_b_ready_o    = w_state_resp & w_valid;//
