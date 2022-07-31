@@ -123,7 +123,7 @@ assign arbiter_data = AXI_r_data;
 
 reg mem_control;
 always @(posedge clock) begin
-    if(AXI_ready) begin
+    if(AXI_ready | (ex_to_axi_valid & !pc_to_axi_valid)) begin
         mem_control <= ex_to_axi_valid;
     end
 end
