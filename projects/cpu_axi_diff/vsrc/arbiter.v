@@ -110,15 +110,23 @@ assign arbiter_mem_valid = axi_mem_ready;
 
 
 //assign AXI_size = ex_to_axi_valid ? mem_size : if_size;
-assign AXI_addr = ex_to_axi_valid ? mem_addr : if_addr;
-assign AXI_id = ex_to_axi_valid ? 4'b0011 : 4'b0001;
-assign AXI_req = ex_to_axi_valid ? mem_req : if_req;
-assign AXI_vaild = ex_to_axi_valid | pc_to_axi_valid;
+assign AXI_addr = mem_control ? mem_addr : if_addr;
+assign AXI_id = mem_control ? 4'b0011 : 4'b0001;
+assign AXI_req = mem_control ? mem_req : if_req;
+assign AXI_vaild = mem_control ? ex_to_axi_valid : pc_to_axi_valid;
 assign AXI_w_data = mem_stor_data;
 assign arbiter_data = AXI_r_data;
 
 
 
+
+
+reg mem_control;
+always @(posedge clock) begin
+    if(AXI_ready) begin
+        mem_control <= ex_to_axi_valid;
+    end
+end
 
 
 endmodule
