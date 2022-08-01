@@ -79,7 +79,7 @@ Disassembly of section .text:
     800000f4:	ff00b703          	ld	a4,-16(ra)
     800000f8:	ff0103b7          	lui	t2,0xff010
     800000fc:	f013839b          	addiw	t2,t2,-255
-    80000100:	01039393          	slli	t2,t2,0x10
+    80000100:	01039393         	slli	t2,t2,0x10
     80000104:	f0138393          	addi	t2,t2,-255 # ffffffffff00ff01 <_end+0xffffffff7f006f01>
     80000108:	01039393          	slli	t2,t2,0x10
     8000010c:	f0038393          	addi	t2,t2,-256
