@@ -85,7 +85,7 @@ module icache #(
         if(reset) begin
             old_index <= 0;
         end
-        else if(hit) begin
+        else begin //if(hit) begin
             old_index <= index;
         end
     end
