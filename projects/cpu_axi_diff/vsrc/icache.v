@@ -68,7 +68,7 @@ module icache #(
     wire way1_hit = ((TAG_RAM_WAY1[index][I_TAG-1 : 0] == tag) && TAG_RAM_WAY1[index][I_TAG]);
     assign hit = way0_hit | way1_hit;
     //icache valid
-    assign icache_if_valid = hit & hit_reg;
+    assign icache_if_valid = hit & hit_reg & (old_index == index);
     assign icache_pc_ready = icache_if_valid & if_ready;
     reg hit_reg;
     always @(posedge clock) begin
@@ -79,6 +79,18 @@ module icache #(
             hit_reg <= hit;
         end
     end
+
+    reg [I_INDEX-1 : 0] old_index;
+    always @(posedge clock) begin
+        if(reset) begin
+            old_index <= 0;
+        end
+        else if(hit) begin
+            old_index <= index;
+        end
+    end
+
+
 
     // wire [DATA_RAM_WIDTH-1 : 0] cache_data = way0_hit ? DATA_BLOCK_WAY0[index] : 
     //                                          way1_hit ? DATA_BLOCK_WAY1[index] : `ysyx_22040931_ZERO_NUM;
