@@ -13,7 +13,7 @@ module ysyx_210457_Clint (
     input wire ex_mem_wr,
     input wire ex_mem_ena,
 
-output reg clint,
+    output reg clint,
 
     output reg time_inter,
     output reg [`REG_BUS] clint_data
