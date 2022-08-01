@@ -165,7 +165,7 @@ module icache #(
     wire wen3 = !(arbiter_to_icache_valid & (age == 2'b11));
 
     always @(posedge clock) begin
-        if(arbiter_to_icache_valid) begin
+        //if(arbiter_to_icache_valid) begin
             if(!wen0) begin
                 TAG_RAM_WAY0[index] <= {1'b1, tag};
                 //DATA_BLOCK_WAY1[index] <= arbiter_data;
@@ -182,7 +182,7 @@ module icache #(
                 TAG_RAM_WAY3[index] <= {1'b1, tag};
                 //DATA_BLOCK_WAY0[index] <= arbiter_data;   //
             end
-        end
+        //end
     end
 
 
