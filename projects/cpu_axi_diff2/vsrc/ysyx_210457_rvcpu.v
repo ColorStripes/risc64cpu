@@ -495,7 +495,7 @@ wire [`PC_BUS] IF_pc;
     .mem_except_type(MEM_except_type),
     .new_pc(new_pc),
     
-.mem_instr(MEM_instr),
+    .mem_instr(MEM_instr),
     .mem_pc(MEM_pc),
 
     .mem_w_data(MEM_w_data),
@@ -598,7 +598,7 @@ wire [`PC_BUS] IF_pc;
     .ex_mem_wr(mem_mem_wr),
     .ex_mem_ena(mem_mem_ena),
 
-.clint(clint),
+    .clint(clint),
 
     .time_inter(time_inter),
     .clint_data(clint_data)

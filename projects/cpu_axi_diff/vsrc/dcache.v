@@ -46,18 +46,18 @@ module dcache #(
 
 
     //WAY0
-    wire [DATA_RAM_WIDTH-1 : 0] DATA_WAY0,  DATA_WAY1, DATA_WAY2, DATA_WAY3;
+    wire [DATA_RAM_WIDTH-1 : 0] DATA_WAY0, DATA_WAY1, DATA_WAY2, DATA_WAY3;
     reg [D_TAG : 0] TAG_RAM_WAY0[0 : TAG_RAM_NUM-1];               //{1'dirty, 22tag}
-    S011HD1P_X32Y2D128_BW DATA_BLOCK_WAY0(DATA_WAY0, clock, !pc_valid, wen0, mask, index, arbiter_data);
+    S011HD1P_X32Y2D128_BW DATA_BLOCK_WAY0(DATA_WAY0, clock, !ex_valid, wen0, wmask, index, wdata);
     //WAY1
     reg [D_TAG : 0] TAG_RAM_WAY1[0 : TAG_RAM_NUM-1];               //{1'dirty, 22tag}
-    S011HD1P_X32Y2D128_BW DATA_BLOCK_WAY1(DATA_WAY1, clock, !pc_valid, wen1, mask, index, arbiter_data);
+    S011HD1P_X32Y2D128_BW DATA_BLOCK_WAY1(DATA_WAY1, clock, !ex_valid, wen1, wmask, index, wdata);
     //WAY2
     reg [D_TAG : 0] TAG_RAM_WAY2[0 : TAG_RAM_NUM-1];               //{1'dirty, 22tag}
-    S011HD1P_X32Y2D128_BW DATA_BLOCK_WAY2(DATA_WAY2, clock, !pc_valid, wen2, mask, index, arbiter_data);
+    S011HD1P_X32Y2D128_BW DATA_BLOCK_WAY2(DATA_WAY2, clock, !ex_valid, wen2, wmask, index, wdata);
     //WAY3
     reg [D_TAG : 0] TAG_RAM_WAY3[0 : TAG_RAM_NUM-1];               //{1'dirty, 22tag}
-    S011HD1P_X32Y2D128_BW DATA_BLOCK_WAY3(DATA_WAY3, clock, !pc_valid, wen3, mask, index, arbiter_data);
+    S011HD1P_X32Y2D128_BW DATA_BLOCK_WAY3(DATA_WAY3, clock, !ex_valid, wen3, wmask, index, wdata);
 
     //dirty <= 0;
     integer i;
@@ -80,6 +80,7 @@ module dcache #(
     wire way3_hit = (TAG_RAM_WAY3[index][I_TAG-1 : 0] == tag);
     assign hit = way0_hit | way1_hit | way2_hit | way3_hit;
     //dcache valid
+    //wire hit_now = hit & hit_reg;
     assign dcache_mem_valid = hit & hit_reg & (old_index == index);
     assign dcache_ex_ready = dcache_mem_valid & mem_ready;
     reg hit_reg;
@@ -110,7 +111,7 @@ module dcache #(
                                              way3_hit ? DATA_WAY3 :
                                              `ysyx_22040931_ZERO_NUM;
 
-
+    //wire [`ysyx_22040931_DATA_BUS] rdata;
     ysyx_22040931_Mux #(16, 4, 64) DATA (data, offset, {
         4'b0000,  cache_data[63 : 0],
         4'b0001,  cache_data[71 : 8],
@@ -130,41 +131,30 @@ module dcache #(
         4'b1111,  {56'h0, cache_data[127 : 120]}
     });
 
+
     //write  way0_hit==wen
     //data
     wire [DATA_RAM_WIDTH-1 : 0] need_mask;
-    ysyx_22040931_Mux #(16, 2, 64) MASK (need_mask, offset, {
+    ysyx_22040931_Mux #(4, 2, 128) MASK (need_mask, mem_size, {
         2'b00,  128'hffffffffffffffff_ffffffffffffff00,
         2'b01,  128'hffffffffffffffff_ffffffffffff0000,
         2'b10,  128'hffffffffffffffff_ffffffff00000000,
         2'b11,  128'hffffffffffffffff_0000000000000000,
     });
-    wire mask = need_mask << {address[3 : 0], 3'b000};
-
-    write_read
-
+    wire [DATA_RAM_WIDTH-1 : 0] mask = need_mask << {address[3 : 0], 3'b000};
+    wire [DATA_RAM_WIDTH-1 : 0] cache_sort_data = address[3] ? {stor_data, 64'h0} : {64'h0, stor_data};
 
 
-    //not hit
-    //write
-    assign axi_stor_data = stor_data;
-    assign aix_wr = write_read;
-    //address
-    assign axi_address = {address[63 : 4], 4'b0};
-    //not hit
-    assign to_arbiter_mem_ready = mem_ready;
-    assign to_arbiter_ex_valid = !hit & ex_valid;
-
+    wire dirty0 = (write_read & hit & way0_hit) ? 1 : TAG_RAM_WAY0[index][D_TAG];
+    wire dirty1 = (write_read & hit & way1_hit) ? 1 : TAG_RAM_WAY1[index][D_TAG];
+    wire dirty2 = (write_read & hit & way2_hit) ? 1 : TAG_RAM_WAY2[index][D_TAG];
+    wire dirty3 = (write_read & hit & way3_hit) ? 1 : TAG_RAM_WAY3[index][D_TAG];
     always @(posedge clock) begin
-        if(arbiter_to_icache_valid) begin
-            
-        end
+        TAG_RAM_WAY0[index][D_TAG] <= dirty0;
+        TAG_RAM_WAY1[index][D_TAG] <= dirty1;
+        TAG_RAM_WAY2[index][D_TAG] <= dirty2;
+        TAG_RAM_WAY3[index][D_TAG] <= dirty3;
     end
-    
-
-
-
-
 
     //replacement age
     reg [1 : 0] age;   //1 is 0 has  //age[1] way12 age[0] 1 or 2
@@ -182,33 +172,98 @@ module dcache #(
             age[0] <= 0;
         end
     end
-
-
+    wire choose_way0 = (age == 2'b00);
+    wire choose_way1 = (age == 2'b01);
+    wire choose_way2 = (age == 2'b10);
+    wire choose_way3 = (age == 2'b11);
     //address
-    assign axi_address = {address[63 : 4], 4'b0};
+    wire [`ysyx_22040931_PC_BUS] rep_address;
+    assign rep_address = choose_way0 ? {TAG_RAM_WAY0[index][D_TAG-1 : 0], index, 4'b0} : 
+                         choose_way1 ? {TAG_RAM_WAY1[index][D_TAG-1 : 0], index, 4'b0} :
+                         choose_way2 ? {TAG_RAM_WAY2[index][D_TAG-1 : 0], index, 4'b0} : 
+                         choose_way3 ? {TAG_RAM_WAY3[index][D_TAG-1 : 0], index, 4'b0} : `ysyx_22040931_ZERO_PC;
+
+
+
+
+     
+    
+
+
+    
     //not hit
     assign to_arbiter_mem_ready = mem_ready;
     assign to_arbiter_ex_valid = !hit & ex_valid;
+    //cache ena
+    wire [DATA_RAM_WIDTH-1 : 0] wdata = hit ? cache_sort_data : 
+                                              write_read ? (mask & arbiter_data | cache_sort_data) : arbiter_data;
+    wire [DATA_RAM_WIDTH-1 : 0] wmask = hit ? mask : 128'h0000000000000000_0000000000000000;
+    wire wen0 = hit ? !write_read : rwen0;
+    wire wen1 = hit ? !write_read : rwen1;
+    wire wen2 = hit ? !write_read : rwen2;
+    wire wen3 = hit ? !write_read : rwen3;
+    
+
+
+
+
+
+    //not hit
+    assign to_arbiter_mem_ready = mem_ready;
+    assign to_arbiter_ex_valid = !hit & ex_valid;
+    //is_dirty
+    wire is_dirty0 = TAG_RAM_WAY0[index][D_TAG] & !hit & choose_way0;
+    wire is_dirty1 = TAG_RAM_WAY1[index][D_TAG] & !hit & choose_way1;
+    wire is_dirty2 = TAG_RAM_WAY2[index][D_TAG] & !hit & choose_way2;
+    wire is_dirty3 = TAG_RAM_WAY3[index][D_TAG] & !hit & choose_way3;
+    wire is_dirty = is_dirty0 | is_dirty1 | is_dirty2 | is_dirty3;
+    //axi ena
+    //address
+    assign axi_address =  is_dirty ? rep_address : {address[63 : 4], 4'b0};
+    assign aix_wr = is_dirty;
+    assign axi_stor_data = is_dirty0 ? DATA_WAY0 : 
+                           is_dirty1 ? DATA_WAY1 : 
+                           is_dirty2 ? DATA_WAY2 : 
+                           is_dirty3 ? DATA_WAY3 : 
+                           128'h0;
+
+    reg cache_ready;
+    always @(posedge clock) begin
+        if(reset) begin
+            cache_ready <= 0;
+        end
+        if(is_dirty & arbiter_to_icache_valid) begin
+            cache_ready <= cache_ready ^ 1;  //+1
+        end
+    end
+    wire ready = is_dirty ? cache_ready : 1;
+    
+    
+
+
+
+
+
+
+
     //write from axi to cache
-    wire wen0 = !(arbiter_to_icache_valid & (age == 2'b00));
-    wire wen1 = !(arbiter_to_icache_valid & (age == 2'b01));
-    wire wen2 = !(arbiter_to_icache_valid & (age == 2'b10));
-    wire wen3 = !(arbiter_to_icache_valid & (age == 2'b11));
+    wire rwen0 = !(arbiter_to_icache_valid & ready & choose_way0);
+    wire rwen1 = !(arbiter_to_icache_valid & ready & choose_way1);
+    wire rwen2 = !(arbiter_to_icache_valid & ready & choose_way2);
+    wire rwen3 = !(arbiter_to_icache_valid & ready & choose_way3);
 
     always @(posedge clock) begin
-        if(arbiter_to_icache_valid) begin
-            if(!wen0) begin
-                TAG_RAM_WAY0[index] <= {1'b1, tag};
-            end
-            if(!wen1) begin
-                TAG_RAM_WAY1[index] <= {1'b1, tag};
-            end
-            if(!wen2) begin
-                TAG_RAM_WAY2[index] <= {1'b1, tag};
-            end
-            if(!wen3) begin
-                TAG_RAM_WAY3[index] <= {1'b1, tag};
-            end
+        if(!rwen0) begin
+            TAG_RAM_WAY0[index] <= {1'b0, tag};
+        end
+        if(!rwen1) begin
+            TAG_RAM_WAY1[index] <= {1'b0, tag};
+        end
+        if(!rwen2) begin
+            TAG_RAM_WAY2[index] <= {1'b0, tag};
+        end
+        if(!rwen3) begin
+            TAG_RAM_WAY3[index] <= {1'b0, tag};
         end
     end
 

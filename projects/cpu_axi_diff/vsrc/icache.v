@@ -64,10 +64,10 @@ module icache #(
     always @(posedge clock) begin
         if(reset) begin
             for(i = 0; i < TAG_RAM_NUM; i = i + 1) begin
-                TAG_RAM_WAY0[i][I_TAG-1] <= 1'b0;
-                TAG_RAM_WAY1[i][I_TAG-1] <= 1'b0;
-                TAG_RAM_WAY2[i][I_TAG-1] <= 1'b0;
-                TAG_RAM_WAY3[i][I_TAG-1] <= 1'b0;
+                TAG_RAM_WAY0[i][I_TAG] <= 1'b0;
+                TAG_RAM_WAY1[i][I_TAG] <= 1'b0;
+                TAG_RAM_WAY2[i][I_TAG] <= 1'b0;
+                TAG_RAM_WAY3[i][I_TAG] <= 1'b0;
             end
         end
     end
@@ -165,24 +165,22 @@ module icache #(
     wire wen3 = !(arbiter_to_icache_valid & (age == 2'b11));
 
     always @(posedge clock) begin
-        //if(arbiter_to_icache_valid) begin
-            if(!wen0) begin
-                TAG_RAM_WAY0[index] <= {1'b1, tag};
-                //DATA_BLOCK_WAY1[index] <= arbiter_data;
-            end
-            if(!wen1) begin
-                TAG_RAM_WAY1[index] <= {1'b1, tag};
-                //DATA_BLOCK_WAY0[index] <= arbiter_data;   //
-            end
-            if(!wen2) begin
-                TAG_RAM_WAY2[index] <= {1'b1, tag};
-                //DATA_BLOCK_WAY0[index] <= arbiter_data;   //
-            end
-            if(!wen3) begin
-                TAG_RAM_WAY3[index] <= {1'b1, tag};
-                //DATA_BLOCK_WAY0[index] <= arbiter_data;   //
-            end
-        //end
+        if(!wen0) begin
+            TAG_RAM_WAY0[index] <= {1'b1, tag};
+            //DATA_BLOCK_WAY1[index] <= arbiter_data;
+        end
+        if(!wen1) begin
+            TAG_RAM_WAY1[index] <= {1'b1, tag};
+            //DATA_BLOCK_WAY0[index] <= arbiter_data;   //
+        end
+        if(!wen2) begin
+            TAG_RAM_WAY2[index] <= {1'b1, tag};
+            //DATA_BLOCK_WAY0[index] <= arbiter_data;   //
+        end
+        if(!wen3) begin
+            TAG_RAM_WAY3[index] <= {1'b1, tag};
+            //DATA_BLOCK_WAY0[index] <= arbiter_data;   //
+        end
     end
 
 
