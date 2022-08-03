@@ -114,10 +114,10 @@ module dcache #(
     //                   //read-read              //same index but write-read
     wire next_notvalid = (old_index == index) & 
                          (old_write_read == write_read) &
-                          (old_way0_hit == way0_hit);// & 
-    //                      (old_way1_hit == way1_hit) & 
-    //                      (old_way2_hit == way2_hit) & 
-    //                      (old_way3_hit == way3_hit);
+                         (old_way0_hit == way0_hit) & 
+                         (old_way1_hit == way1_hit) & 
+                         (old_way2_hit == way2_hit) & 
+                         (old_way3_hit == way3_hit);
 
     //read
     wire [DATA_RAM_WIDTH-1 : 0] cache_data = way0_hit ? DATA_WAY0 : 
