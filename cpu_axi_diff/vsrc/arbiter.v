@@ -21,11 +21,13 @@ module arbiter (
 
     
     input wire [`ysyx_22040931_PC_BUS] if_addr,
+    //input wire [1 : 0] if_size,
     input wire if_req,
 
     
-    input wire [`ysyx_22040931_CACHE_LINE] mem_stor_data,
+    input wire [`ysyx_22040931_DATA_BUS] mem_stor_data,
     input wire [`ysyx_22040931_PC_BUS] mem_addr,
+    //input wire [1 : 0] mem_size,
     input wire mem_req,
 
     output wire [`ysyx_22040931_CACHE_LINE] arbiter_data,
@@ -35,13 +37,15 @@ module arbiter (
     input wire [3 : 0] AXI_ret_id,
     input wire [`ysyx_22040931_CACHE_LINE] AXI_r_data,
     output reg [`ysyx_22040931_PC_BUS]   AXI_addr,
-    output reg [`ysyx_22040931_CACHE_LINE] AXI_w_data,
+    output reg [`ysyx_22040931_DATA_BUS] AXI_w_data,
+    //output reg [1 : 0] AXI_size,
     output reg [3 : 0] AXI_id,    
     output reg AXI_vaild,
     input wire AXI_ready,
     output reg AXI_req
 
 
+    
 );
 
 

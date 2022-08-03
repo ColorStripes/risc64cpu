@@ -61,7 +61,7 @@ module AXI4 # (
     wire w_trans    = rw_req_i == `REQ_WRITE;
     wire r_trans    = rw_req_i == `REQ_READ;
     wire w_valid    = rw_valid_i & w_trans;                               
-    wire r_valid    = rw_valid_i & r_trans;
+    wire r_valid    = rw_valid_i & r_trans;//) || (w_valid & ~r_state_read);   ///////////
 
     // handshake
     wire aw_hs      = axi_aw_ready_i & axi_aw_valid_o;
@@ -157,37 +157,38 @@ module AXI4 # (
     localparam TRANS_LEN     = RW_DATA_WIDTH / AXI_DATA_WIDTH;
     localparam BLOCK_TRANS   = TRANS_LEN > 1 ? 1'b1 : 1'b0;
 
-    //wire aligned            = BLOCK_TRANS | rw_addr_i[ALIGNED_WIDTH-1:0] == 0;
+    wire aligned            = BLOCK_TRANS | rw_addr_i[ALIGNED_WIDTH-1:0] == 0;
     wire size_b             = rw_size_i == `SIZE_B;
     wire size_h             = rw_size_i == `SIZE_H;
     wire size_w             = rw_size_i == `SIZE_W;
     wire size_d             = rw_size_i == `SIZE_D;
-    // wire [3:0] addr_op1     = {{4-ALIGNED_WIDTH{1'b0}}, rw_addr_i[ALIGNED_WIDTH-1:0]};
-    // wire [3:0] addr_op2     = ({4{size_b}} & {4'b0})
-    //                             | ({4{size_h}} & {4'b1})
-    //                             | ({4{size_w}} & {4'b11})
-    //                             | ({4{size_d}} & {4'b111})
-    //                             ;
-    // wire overstep           = {{addr_op1 + addr_op2} & 4'b1000} != 0;
+    wire [3:0] addr_op1     = {{4-ALIGNED_WIDTH{1'b0}}, rw_addr_i[ALIGNED_WIDTH-1:0]};
+    wire [3:0] addr_op2     = ({4{size_b}} & {4'b0})
+                                | ({4{size_h}} & {4'b1})
+                                | ({4{size_w}} & {4'b11})
+                                | ({4{size_d}} & {4'b111})
+                                ;
+    wire overstep           = {{addr_op1 + addr_op2} & 4'b1000} != 0;
     wire [7:0] axi_len      = 8'b1;  
     wire [2:0] axi_size     = AXI_SIZE[2:0];                     ///////////////brust
     
-    // wire [OFFSET_WIDTH-1:0] aligned_offset    = {{OFFSET_WIDTH-ALIGNED_WIDTH{1'b0}}, {rw_addr_i[ALIGNED_WIDTH-1:0]}};
-    // wire [OFFSET_WIDTH-1:0] aligned_offset_l    = {{OFFSET_WIDTH-ALIGNED_WIDTH{1'b0}}, {rw_addr_i[ALIGNED_WIDTH-1:0]}} << 3;
-    // wire [OFFSET_WIDTH-1:0] aligned_offset_h    = 6'd32 - aligned_offset_l;
-    // wire [MASK_WIDTH-1:0] mask                  = (({MASK_WIDTH{size_b}} & {{MASK_WIDTH-8{1'b0}}, 8'hff})
-    //                                                 | ({MASK_WIDTH{size_h}} & {{MASK_WIDTH-16{1'b0}}, 16'hffff})
-    //                                                 | ({MASK_WIDTH{size_w}} & {{MASK_WIDTH-32{1'b0}}, 32'hffffffff})
-    //                                                 | ({MASK_WIDTH{size_d}} & {{MASK_WIDTH-64{1'b0}}, 64'hffffffff_ffffffff})
-    //                                                 ) << aligned_offset_l;
-    // wire [AXI_DATA_WIDTH-1:0] mask_l            = mask[AXI_DATA_WIDTH-1:0];
-    // wire [AXI_DATA_WIDTH-1:0] mask_h            = mask[MASK_WIDTH-1:AXI_DATA_WIDTH];
+    wire [OFFSET_WIDTH-1:0] aligned_offset    = {{OFFSET_WIDTH-ALIGNED_WIDTH{1'b0}}, {rw_addr_i[ALIGNED_WIDTH-1:0]}};
+    wire [OFFSET_WIDTH-1:0] aligned_offset_l    = {{OFFSET_WIDTH-ALIGNED_WIDTH{1'b0}}, {rw_addr_i[ALIGNED_WIDTH-1:0]}} << 3;
+    wire [OFFSET_WIDTH-1:0] aligned_offset_h    = 6'd32 - aligned_offset_l;
+    wire [MASK_WIDTH-1:0] mask                  = (({MASK_WIDTH{size_b}} & {{MASK_WIDTH-8{1'b0}}, 8'hff})
+                                                    | ({MASK_WIDTH{size_h}} & {{MASK_WIDTH-16{1'b0}}, 16'hffff})
+                                                    | ({MASK_WIDTH{size_w}} & {{MASK_WIDTH-32{1'b0}}, 32'hffffffff})
+                                                    | ({MASK_WIDTH{size_d}} & {{MASK_WIDTH-64{1'b0}}, 64'hffffffff_ffffffff})
+                                                    ) << aligned_offset_l;
+    wire [AXI_DATA_WIDTH-1:0] mask_l            = mask[AXI_DATA_WIDTH-1:0];
+    wire [AXI_DATA_WIDTH-1:0] mask_h            = mask[MASK_WIDTH-1:AXI_DATA_WIDTH];
 
     wire [AXI_ID_WIDTH-1:0] axi_id              = {cpu_id[AXI_ID_WIDTH-1 : 0]};
 
     
 
 
+    //wire [3 : 0] out_id_nxt = (axi_r_valid_i) ? axi_r_id_i : (axi_b_valid_i) ? axi_b_id_i : 0;
     wire [3 : 0] out_id_nxt = (axi_b_valid_i) ? axi_b_id_i : (axi_r_valid_i) ? axi_r_id_i : 0;
     always @(posedge clock) begin
         if (reset) begin
@@ -243,17 +244,25 @@ module AXI4 # (
     // Write data channel signals
     assign axi_w_valid_o    = w_state_write;
     assign axi_w_strb_o     = 8'b11111111;
+                            //   (size_b) ? {{AXI_DATA_WIDTH/8-1{1'b0}}, 1'b1} << aligned_offset : 
+                            //   (size_h) ? {{AXI_DATA_WIDTH/8-2{1'b0}}, 2'b11} << aligned_offset :
+                            //   (size_w) ? {{AXI_DATA_WIDTH/8-4{1'b0}}, 4'b1111} << aligned_offset :
+                            //   (size_d) ? {8'b11111111} << aligned_offset : {AXI_DATA_WIDTH/8-0{1'b0}};
 
-    assign axi_w_data_o = w_last ? data_write_i[127 : 64] : data_write_i[63 : 0];
+    
+    assign  axi_w_data_o  = (data_write_i & mask);
+    //wire [AXI_DATA_WIDTH-1:0] axi_w_data_h  = (data_write_i & mask_h) ;
+
+
     assign axi_w_last_o = w_last;
-
     reg w_last;
     always @(posedge clock) begin
         w_last <= axi_w_valid_o;
     end
 
     //Write respond channel signals
-    assign axi_b_ready_o    = w_state_resp & w_valid;
+    assign axi_b_ready_o    = w_state_resp & w_valid;//
+
 
 
 
@@ -271,11 +280,8 @@ module AXI4 # (
     // Read data channel signals
     assign axi_r_ready_o    = r_state_read;
 
-    // wire [AXI_DATA_WIDTH-1:0] axi_r_data_l  = (axi_r_data_i & mask_l) >> aligned_offset_l;
-    // wire [AXI_DATA_WIDTH-1:0] axi_r_data_h  = (axi_r_data_i & mask_h) << aligned_offset_h;
-
-
-
+    wire [AXI_DATA_WIDTH-1:0] axi_r_data_l  = (axi_r_data_i & mask_l) >> aligned_offset_l;
+    wire [AXI_DATA_WIDTH-1:0] axi_r_data_h  = (axi_r_data_i & mask_h) << aligned_offset_h;
 
     genvar i;
     generate
@@ -285,26 +291,20 @@ module AXI4 # (
                     data_read_o[i*AXI_DATA_WIDTH+:AXI_DATA_WIDTH] <= 0;
                 end
                 else if (axi_r_ready_o & axi_r_valid_i) begin
-                    // if (~aligned & overstep) begin
-                    //     if (len[0]) begin
-                    //         data_read_o[AXI_DATA_WIDTH-1:0] <= data_read_o[AXI_DATA_WIDTH-1:0] | axi_r_data_h;
-                    //     end
-                    //     else begin
-                   
-                    //     end
-                    // end
-                    if (len == i) begin
-                        data_read_o[i*AXI_DATA_WIDTH+:AXI_DATA_WIDTH] <= axi_r_data_i;
+                    if (~aligned & overstep) begin
+                        if (len[0]) begin
+                            data_read_o[AXI_DATA_WIDTH-1:0] <= data_read_o[AXI_DATA_WIDTH-1:0] | axi_r_data_h;
+                        end
+                        else begin
+                            data_read_o[AXI_DATA_WIDTH-1:0] <= axi_r_data_l;
+                        end
                     end
-                    else begin
-                        data_read_o[AXI_DATA_WIDTH-1:0] <= axi_r_data_i;
+                    else if (len == i) begin
+                        data_read_o[i*AXI_DATA_WIDTH+:AXI_DATA_WIDTH] <= axi_r_data_l;
                     end
                 end
             end
         end
     endgenerate
-
-
-
 
 endmodule

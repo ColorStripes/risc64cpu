@@ -213,19 +213,21 @@ assign io_slave_rid = 0;
     .arbiter_if_valid(arbiter_if_valid),
     .if_ready(to_arbiter_if_ready),
     //woshou
-    .ex_valid(to_arbiter_ex_valid),                     //zhitong
+    .ex_valid(ex_valid),                     //zhitong
     .arbiter_ex_ready(arbiter_ex_ready),     //to cpu
     .arbiter_mem_valid(arbiter_mem_valid),
-    .mem_ready(to_arbiter_mem_ready),
+    .mem_ready(mem_ready),
     
 
     //if_Data
     .if_addr(icache_address),
+    //.if_size(if_size),  ///
     .if_req(if_req),    ///
     //mem_Data
-    .mem_stor_data(axi_stor_data),
-    .mem_addr(axi_address),
-    .mem_req(axi_wr),
+    .mem_stor_data(mem_stor_data),
+    .mem_addr(mem_addr),
+    //.mem_size(mem_size),
+    .mem_req(mem_req),
     //arb_data
     .arbiter_data(arbiter_data),
 
@@ -236,6 +238,7 @@ assign io_slave_rid = 0;
     .AXI_r_data(AXI_r_data),
     .AXI_addr(AXI_addr),
     .AXI_w_data(AXI_w_data),
+    //.AXI_size(AXI_size),
     .AXI_id(AXI_id),    
     .AXI_vaild(AXI_vaild),
     .AXI_ready(AXI_ready),
@@ -249,54 +252,13 @@ wire [`ysyx_22040931_CACHE_LINE] arbiter_data;
 wire [`ysyx_22040931_CACHE_LINE] AXI_r_data;
 wire [`ysyx_22040931_PC_BUS]   AXI_addr;
 wire [`ysyx_22040931_DATA_BUS] AXI_w_data;
+//wire [1 : 0] AXI_size;
 wire AXI_vaild;
 wire AXI_ready;
 wire AXI_req; 
 wire [3 : 0] AXI_ret_id;
 wire [3 : 0] AXI_id;  
 
-
-dcache dcache(
-    .reset(reset),
-    .clock(clock),
-    //woshou
-    .ex_valid(ex_valid),          //zhitong
-    .dcache_ex_ready(dcache_ex_ready),  //to cpu
-    .dcache_mem_valid(dcache_mem_valid),
-    .mem_ready(mem_ready),
-    //arbiter
-    .arbiter_to_icache_valid(arbiter_mem_valid),  //mem_valid
-    .to_arbiter_ex_valid(to_arbiter_ex_valid), 
-    .to_arbiter_mem_ready(to_arbiter_mem_ready),
-
-
-    //cpu
-    .write_read(mem_req),
-    .mem_size(mem_size),
-    .stor_data(mem_stor_data),
-    .address(mem_addr),
-    //data
-    .arbiter_data(arbiter_data),
-
-    .hit(),
-    .data(dcache_data),
-    //axi
-    .axi_wr(axi_wr),
-    .axi_stor_data(axi_stor_data),
-    .axi_address(axi_address)
-    
-);
-
-wire dcache_ex_ready;
-wire dcache_mem_valid;
-wire to_arbiter_ex_valid;
-wire to_arbiter_mem_ready;
-//
-wire axi_wr;
-wire [`ysyx_22040931_PC_BUS] axi_address;
-wire [`ysyx_22040931_CACHE_LINE] axi_stor_data;
-//
-wire [`ysyx_22040931_DATA_BUS] dcache_data;
 
 
 
@@ -338,7 +300,7 @@ cputop cputop(
     //if
     .instr(icache_data[31 : 0]), //
     //mem
-    .momory_data(dcache_data),
+    .momory_data(arbiter_data[63 : 0]),
     
 
     //if
@@ -355,9 +317,9 @@ cputop cputop(
     .mem_addr(mem_addr),
     .mem_stor_data(mem_stor_data),
     //woshou
-    .arbiter_ex_ready(dcache_ex_ready),
+    .arbiter_ex_ready(arbiter_ex_ready),
     .mem_ena(ex_valid),         //ena & valid
-    .arbiter_mem_valid(dcache_mem_valid),
+    .arbiter_mem_valid(arbiter_mem_valid),
     .mem_ready(mem_ready)
 
 );

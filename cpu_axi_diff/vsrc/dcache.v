@@ -14,8 +14,8 @@ module dcache #(
     input wire clock,
     //woshou
     input wire ex_valid,          //zhitong
-    output wire dcache_ex_ready,  //to cpu
-    output wire dcache_mem_valid,
+    output wire icache_ex_ready,  //to cpu
+    output wire icache_mem_valid,
     input wire mem_ready,
     //arbiter
     input wire arbiter_to_icache_valid,  //if_valid
@@ -35,12 +35,12 @@ module dcache #(
     output wire [`ysyx_22040931_DATA_BUS] data,
     //axi
     output wire axi_wr,
-    output wire [`ysyx_22040931_CACHE_LINE] axi_stor_data,
+    output wire [`ysyx_22040931_DATA_BUS] axi_stor_data,
     output wire [`ysyx_22040931_PC_BUS] axi_address
     
 );
 
-    wire [D_TAG-1 : 0]    tag    = address[D_TAG-1 + D_OFFSET+D_INDEX : D_OFFSET+D_INDEX]; //[31 : 10]  22bit
+    wire [D_TAG-1 : 0]    tag    = address[D_TAG-1 + D_OFFSET+I_INDEX : D_OFFSET+D_INDEX]; //[31 : 10]  22bit
     wire [D_INDEX-1 : 0]  index  = address[D_INDEX-1 + D_OFFSET : D_OFFSET];
     wire [D_OFFSET-1 : 0] offset = address[D_OFFSET-1 : 0];
 
@@ -138,7 +138,7 @@ module dcache #(
         2'b00,  128'hffffffffffffffff_ffffffffffffff00,
         2'b01,  128'hffffffffffffffff_ffffffffffff0000,
         2'b10,  128'hffffffffffffffff_ffffffff00000000,
-        2'b11,  128'hffffffffffffffff_0000000000000000
+        2'b11,  128'hffffffffffffffff_0000000000000000,
     });
     wire [DATA_RAM_WIDTH-1 : 0] mask = need_mask << {address[3 : 0], 3'b000};
     wire [DATA_RAM_WIDTH-1 : 0] cache_sort_data = address[3] ? {stor_data, 64'h0} : {64'h0, stor_data};
