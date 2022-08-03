@@ -48,16 +48,16 @@ module dcache #(
     //WAY0
     wire [DATA_RAM_WIDTH-1 : 0] DATA_WAY0, DATA_WAY1, DATA_WAY2, DATA_WAY3;
     reg [D_TAG : 0] TAG_RAM_WAY0[0 : TAG_RAM_NUM-1];               //{1'dirty, 22tag}
-    S011HD1P_X32Y2D128_BW DATA_BLOCK_WAY0(DATA_WAY0, clock, !ex_valid, wen0, wmask, index, wdata);
+    S011HD1P_X32Y2D128_BW DATA_BLOCK_WAY0(DATA_WAY0, clock, 0, wen0, wmask, index, wdata);
     //WAY1
     reg [D_TAG : 0] TAG_RAM_WAY1[0 : TAG_RAM_NUM-1];               //{1'dirty, 22tag}
-    S011HD1P_X32Y2D128_BW DATA_BLOCK_WAY1(DATA_WAY1, clock, !ex_valid, wen1, wmask, index, wdata);
+    S011HD1P_X32Y2D128_BW DATA_BLOCK_WAY1(DATA_WAY1, clock, 0, wen1, wmask, index, wdata);
     //WAY2
     reg [D_TAG : 0] TAG_RAM_WAY2[0 : TAG_RAM_NUM-1];               //{1'dirty, 22tag}
-    S011HD1P_X32Y2D128_BW DATA_BLOCK_WAY2(DATA_WAY2, clock, !ex_valid, wen2, wmask, index, wdata);
+    S011HD1P_X32Y2D128_BW DATA_BLOCK_WAY2(DATA_WAY2, clock, 0, wen2, wmask, index, wdata);
     //WAY3
     reg [D_TAG : 0] TAG_RAM_WAY3[0 : TAG_RAM_NUM-1];               //{1'dirty, 22tag}
-    S011HD1P_X32Y2D128_BW DATA_BLOCK_WAY3(DATA_WAY3, clock, !ex_valid, wen3, wmask, index, wdata);
+    S011HD1P_X32Y2D128_BW DATA_BLOCK_WAY3(DATA_WAY3, clock, 0, wen3, wmask, index, wdata);
 
     //dirty <= 0;
     integer i;
