@@ -140,12 +140,12 @@ module dcache #(
     //data
     wire [DATA_RAM_WIDTH-1 : 0] need_mask;
     ysyx_22040931_Mux #(4, 2, 128) MASK (need_mask, mem_size, {
-        2'b00,  128'hffffffffffffffff_ffffffffffffff00,
-        2'b01,  128'hffffffffffffffff_ffffffffffff0000,
-        2'b10,  128'hffffffffffffffff_ffffffff00000000,
-        2'b11,  128'hffffffffffffffff_0000000000000000
+        2'b00,  128'h0000000000000000_00000000000000ff,
+        2'b01,  128'h0000000000000000_000000000000ffff,
+        2'b10,  128'h0000000000000000_00000000ffffffff,
+        2'b11,  128'h0000000000000000_ffffffffffffffff
     });
-    wire [DATA_RAM_WIDTH-1 : 0] mask = need_mask << {address[3 : 0], 3'b000};
+    wire [DATA_RAM_WIDTH-1 : 0] mask = ~(need_mask << {address[3 : 0], 3'b000});
     wire [DATA_RAM_WIDTH-1 : 0] cache_sort_data = address[3] ? {stor_data, 64'h0} : {64'h0, stor_data};
 
 
