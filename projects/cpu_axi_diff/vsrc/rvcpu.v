@@ -248,7 +248,7 @@ wire [`ysyx_22040931_CACHE_LINE] arbiter_data;
 //AXI
 wire [`ysyx_22040931_CACHE_LINE] AXI_r_data;
 wire [`ysyx_22040931_PC_BUS]   AXI_addr;
-wire [`ysyx_22040931_DATA_BUS] AXI_w_data;
+wire [`ysyx_22040931_CACHE_LINE] AXI_w_data;
 wire AXI_vaild;
 wire AXI_ready;
 wire AXI_req; 
