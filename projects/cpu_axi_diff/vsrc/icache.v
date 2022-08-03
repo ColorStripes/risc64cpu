@@ -108,7 +108,11 @@ module icache #(
     end
 
     //RAM da yi pa  
-    wire next_notvalid = (old_index == index) & (old_way0_hit == way0_hit) & (old_way1_hit == way1_hit) & (old_way2_hit == way2_hit) & (old_way3_hit == way3_hit);
+    wire next_notvalid = (old_index == index) & 
+                         (old_way0_hit == way0_hit) & 
+                         (old_way1_hit == way1_hit) & 
+                         (old_way2_hit == way2_hit) & 
+                         (old_way3_hit == way3_hit);
 
 
     // wire [DATA_RAM_WIDTH-1 : 0] cache_data = way0_hit ? DATA_BLOCK_WAY0[index] : 

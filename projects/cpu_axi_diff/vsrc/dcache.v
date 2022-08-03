@@ -80,7 +80,7 @@ module dcache #(
     wire way3_hit = (TAG_RAM_WAY3[index][D_TAG-1 : 0] == tag);
     assign hit = way0_hit | way1_hit | way2_hit | way3_hit;
     //dcache valid
-    assign dcache_mem_valid = write_read ? hit | (arbiter_to_icache_valid & ready) : hit & hit_reg & !next_notvalid;
+    assign dcache_mem_valid = write_read ? hit | (arbiter_to_icache_valid & ready) : hit & hit_reg & next_notvalid;
     assign dcache_ex_ready = dcache_mem_valid & mem_ready;
     reg hit_reg;
     always @(posedge clock) begin
@@ -110,10 +110,10 @@ module dcache #(
         end
     end
 
-    wire next_notvalid = (old_index != index) | (old_write_read != write_read);
-                      //read-read              //same index but write-read
-    // wire next_notvalid = (old_index == index) & 
-    //                      (old_write_read == write_read) &
+    // wire next_notvalid = (old_index != index) | (old_write_read != write_read);
+    //                   //read-read              //same index but write-read
+    wire next_notvalid = (old_index == index) & 
+                         (old_write_read == write_read); //&
     //                      (old_way0_hit == way0_hit) & 
     //                      (old_way1_hit == way1_hit) & 
     //                      (old_way2_hit == way2_hit) & 
