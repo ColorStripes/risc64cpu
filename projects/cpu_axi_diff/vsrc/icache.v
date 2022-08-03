@@ -80,7 +80,7 @@ module icache #(
     wire way3_hit = (TAG_RAM_WAY3[index][I_TAG : 0] == {1'b1, tag});
     assign hit = way0_hit | way1_hit | way2_hit | way3_hit;
     //icache valid
-    assign icache_if_valid = hit & hit_reg & (old_index == index);
+    assign icache_if_valid = hit & hit_reg & (old_index == index) & (old_way0_hit == way0_hit) & (old_way1_hit == way1_hit) & (old_way2_hit == way2_hit) & (old_way3_hit == way3_hit);
     assign icache_pc_ready = icache_if_valid & if_ready;
     reg hit_reg;
     always @(posedge clock) begin
@@ -93,12 +93,17 @@ module icache #(
     end
 
     reg [I_INDEX-1 : 0] old_index;
+    reg old_way0_hit, old_way1_hit, old_way2_hit, old_way3_hit;
     always @(posedge clock) begin
         if(reset) begin
             old_index <= 0;
         end
         else begin //if(hit) begin
             old_index <= index;
+            old_way0_hit <= way0_hit;
+            old_way1_hit <= way1_hit;
+            old_way2_hit <= way2_hit;
+            old_way3_hit <= way3_hit;
         end
     end
 
