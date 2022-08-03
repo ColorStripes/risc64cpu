@@ -52,10 +52,10 @@ assign pc_o = pc_i;
 assign instr_o = instr;
 
 
-    assign w_ena = w_ena_i;
+    assign w_ena = w_ena_i & ex_gi_valid;  //ena & valid
     assign w_addr = w_addr_i;
 
-    assign mem_ena = mem_ena_i;
+    assign mem_ena = mem_ena_i & ex_gi_valid; //ena & valid
     assign mem_wr = mem_wr_i;
     assign mem_addr = mem_addr_i;
 
