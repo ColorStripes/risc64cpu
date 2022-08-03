@@ -154,7 +154,7 @@ module AXI4 # (
     localparam OFFSET_WIDTH  = $clog2(AXI_DATA_WIDTH);
     localparam AXI_SIZE      = $clog2(AXI_DATA_WIDTH / 8);          /////////////brust
     localparam MASK_WIDTH    = AXI_DATA_WIDTH * 2;
-    localparam TRANS_LEN     = RW_DATA_WIDTH / AXI_DATA_WIDTH;
+    localparam TRANS_LEN     = RW_DATA_WIDTH / AXI_DATA_WIDTH ;
     localparam BLOCK_TRANS   = TRANS_LEN > 1 ? 1'b1 : 1'b0;
 
     //wire aligned            = BLOCK_TRANS | rw_addr_i[ALIGNED_WIDTH-1:0] == 0;
@@ -293,7 +293,7 @@ module AXI4 # (
                    
                     //     end
                     // end
-                    if (len == TRANS_LEN) begin
+                    if (len == TRANS_LEN-1) begin
                         data_read_o[TRANS_LEN*AXI_DATA_WIDTH-1:AXI_DATA_WIDTH] <= axi_r_data_i;
                     end
                     else begin
