@@ -277,12 +277,12 @@ module AXI4 # (
 
 
 
-    genvar i;
-    generate
-        for (i = 0; i < TRANS_LEN; i = i+1) begin : genbit
+    //genvar i;
+    //generate
+        //for (i = 0; i < TRANS_LEN; i = i+1) begin : genbit
             always @(posedge clock) begin
                 if (reset) begin
-                    data_read_o[i*AXI_DATA_WIDTH+:AXI_DATA_WIDTH] <= 0;
+                    data_read_o <= 0;
                 end
                 else if (axi_r_ready_o & axi_r_valid_i) begin
                     // if (~aligned & overstep) begin
@@ -293,16 +293,16 @@ module AXI4 # (
                    
                     //     end
                     // end
-                    if (len == i) begin
-                        data_read_o[i*AXI_DATA_WIDTH+:AXI_DATA_WIDTH] <= axi_r_data_i;
+                    if (len == TRANS_LEN) begin
+                        data_read_o[TRANS_LEN*AXI_DATA_WIDTH-1:AXI_DATA_WIDTH] <= axi_r_data_i;
                     end
                     else begin
                         data_read_o[AXI_DATA_WIDTH-1:0] <= axi_r_data_i;
                     end
                 end
             end
-        end
-    endgenerate
+        //end
+    //endgenerate
 
 
 
