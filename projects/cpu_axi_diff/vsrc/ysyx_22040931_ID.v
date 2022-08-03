@@ -13,11 +13,11 @@ module ysyx_22040931_ID(
     input wire [`ysyx_22040931_PC_BUS] pc_i,
     input wire [`ysyx_22040931_INST_BUS] instr,
     //bypass
-    input wire ex_valid,
+
     input wire ex_w_ena,
     input wire [`ysyx_22040931_REG_BUS] ex_w_addr,
     input wire [`ysyx_22040931_DATA_BUS] ex_w_data,
-    input wire mem_valid,
+
     input wire mem_w_ena,
     input wire [`ysyx_22040931_REG_BUS] mem_w_addr,
     input wire [`ysyx_22040931_DATA_BUS] mem_w_data,
