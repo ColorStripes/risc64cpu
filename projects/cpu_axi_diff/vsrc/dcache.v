@@ -105,7 +105,7 @@ module dcache #(
         end
     end
 
-    wire next_notvalid = (old_index ^ index) | (old_write_read ^ write_read);
+    wire next_notvalid = (old_index != index) | (old_write_read != write_read);
                       //read-read              //same index but write-read
 
     //read
