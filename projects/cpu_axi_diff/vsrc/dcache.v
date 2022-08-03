@@ -80,7 +80,7 @@ module dcache #(
     wire way3_hit = (TAG_RAM_WAY3[index][D_TAG-1 : 0] == tag);
     assign hit = way0_hit | way1_hit | way2_hit | way3_hit;
     //dcache valid
-    assign dcache_mem_valid = write_read ? hit : hit & hit_reg & (old_index == index);
+    assign dcache_mem_valid = write_read ? hit | (arbiter_to_icache_valid & ready) : hit & hit_reg & !next_notvalid;
     assign dcache_ex_ready = dcache_mem_valid & mem_ready;
     reg hit_reg;
     always @(posedge clock) begin
@@ -93,15 +93,20 @@ module dcache #(
     end
 
     reg [D_INDEX-1 : 0] old_index;
+    reg old_write_read;
     always @(posedge clock) begin
         if(reset) begin
             old_index <= 0;
+            old_write_read <= 0;
         end
         else begin 
             old_index <= index;
+            old_write_read <= write_read;
         end
     end
 
+    wire next_notvalid = (old_index ^ index) | (old_write_read ^ write_read);
+                      //read-read              //same index but write-read
 
     //read
     wire [DATA_RAM_WIDTH-1 : 0] cache_data = way0_hit ? DATA_WAY0 : 
@@ -194,19 +199,16 @@ module dcache #(
     wire [DATA_RAM_WIDTH-1 : 0] wdata = hit ? cache_sort_data : 
                                               write_read ? (mask & arbiter_data | cache_sort_data) : arbiter_data;
     wire [DATA_RAM_WIDTH-1 : 0] wmask = hit ? mask : 128'h0000000000000000_0000000000000000;
-    wire wen0 = hit ? !write_read : rwen0;
-    wire wen1 = hit ? !write_read : rwen1;
-    wire wen2 = hit ? !write_read : rwen2;
-    wire wen3 = hit ? !write_read : rwen3;
+    wire wen0 = way0_hit ? !write_read : rwen0;
+    wire wen1 = way1_hit ? !write_read : rwen1;
+    wire wen2 = way2_hit ? !write_read : rwen2;
+    wire wen3 = way3_hit ? !write_read : rwen3;
     
 
 
 
 
 
-    //not hit
-    assign to_arbiter_mem_ready = mem_ready;
-    assign to_arbiter_ex_valid = !hit & ex_valid;
     //is_dirty
     wire is_dirty0 = TAG_RAM_WAY0[index][D_TAG] & !hit & choose_way0;
     wire is_dirty1 = TAG_RAM_WAY1[index][D_TAG] & !hit & choose_way1;
