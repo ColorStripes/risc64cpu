@@ -186,10 +186,10 @@ assign error_pre = (pre_jump != mux_pc) ? 1'b1 : (pre_branch != branch) ? mux_pc
 
     //read bypass
     wire need_ex1, need_ex2, need_mem1, need_mem2;
-    assign need_ex1 = (ex_w_addr == r_addr1) ? ((ex_w_addr == 5'b00000) ? 1'b0 : ex_w_ena & r_ena1 & ex_valid) : 1'b0;
-    assign need_ex2 = (ex_w_addr == r_addr2) ? ((ex_w_addr == 5'b00000) ? 1'b0 : ex_w_ena & r_ena2 & ex_valid) : 1'b0;
-    assign need_mem1 = (mem_w_addr == r_addr1) ? ((mem_w_addr == 5'b00000) ? 1'b0 : mem_w_ena & r_ena1 & mem_valid) : 1'b0;
-    assign need_mem2 = (mem_w_addr == r_addr2) ? ((mem_w_addr == 5'b00000) ? 1'b0 : mem_w_ena & r_ena2 & mem_valid) : 1'b0;
+    assign need_ex1 = (ex_w_addr == r_addr1) ? ((ex_w_addr == 5'b00000) ? 1'b0 : ex_w_ena & r_ena1) : 1'b0;
+    assign need_ex2 = (ex_w_addr == r_addr2) ? ((ex_w_addr == 5'b00000) ? 1'b0 : ex_w_ena & r_ena2) : 1'b0;
+    assign need_mem1 = (mem_w_addr == r_addr1) ? ((mem_w_addr == 5'b00000) ? 1'b0 : mem_w_ena & r_ena1) : 1'b0;
+    assign need_mem2 = (mem_w_addr == r_addr2) ? ((mem_w_addr == 5'b00000) ? 1'b0 : mem_w_ena & r_ena2) : 1'b0;
 
     ysyx_22040931_MuxD #(5, 4, 64) reg_data1 (data1, {r_ena1, ~r_ena1, need_ex1, need_mem1}, `ysyx_22040931_ZERO_NUM, {
         4'b1000,  r_data1,
