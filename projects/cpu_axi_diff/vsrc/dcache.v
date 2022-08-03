@@ -113,8 +113,8 @@ module dcache #(
     // wire next_notvalid = (old_index != index) | (old_write_read != write_read);
     //                   //read-read              //same index but write-read
     wire next_notvalid = (old_index == index) & 
-                         (old_write_read == write_read); //&
-    //                      (old_way0_hit == way0_hit) & 
+                         (old_write_read == write_read) &
+                          (old_way0_hit == way0_hit);// & 
     //                      (old_way1_hit == way1_hit) & 
     //                      (old_way2_hit == way2_hit) & 
     //                      (old_way3_hit == way3_hit);
