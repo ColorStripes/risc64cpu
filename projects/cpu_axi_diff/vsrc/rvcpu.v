@@ -340,7 +340,7 @@ wire icache_if_valid;
 wire to_arbiter_pc_valid;
 wire to_arbiter_if_ready;
 
-wire hhh = (AXI_addr == 64'h800049E0) && (!AXI_req);reg hhhh;
+wire hhh = (AXI_addr == 64'h800049E0) && (!AXI_req) && (AXI_ready);reg hhhh;
 always @(posedge clock) begin
    if(hhh) begin
     hhhh <= hhhh + 1;
