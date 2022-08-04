@@ -44,7 +44,7 @@ module dcache #(
 
     always @(posedge clock) begin
         if(!write_read && ({address[63 : 4],4'b0} == 64'h800049E0) && (~mask[111 : 96] != 16'h0)) begin
-            $display("reat,mask:%h,maskkk:%h, cyc:%h\n",mask,~mask[111 : 96],c);
+            $display("reat,mask:%h,maskkk:%h, cyc:%d\n",mask,~mask[111 : 96],c);
         end
     end
 
