@@ -44,13 +44,13 @@ module dcache #(
 
     always @(posedge clock) begin
         if(!write_read && ({address[63 : 4],4'b0} == 64'h800049E0) && (~mask[111 : 96] != 16'h0)) begin
-            $display("reat,mask:%h,maskkk:%h, cyc:%d\n",mask,~mask[111 : 96],c);
+            //$display("reat,mask:%h,maskkk:%h, cyc:%d\n",mask,~mask[111 : 96],c);
         end
     end
 
     always @(posedge clock) begin
         if(write_read && ({address[63 : 4],4'b0} == 64'h800049E0) && (~mask[111 : 96] != 16'h0)) begin
-            $display("write:%h,mask:%h,maskkk:%h, cyc:%d\n",cache_sort_data, mask,~mask[111 : 96],c);
+            //$display("write:%h,mask:%h,maskkk:%h, cyc:%d\n",cache_sort_data, mask,~mask[111 : 96],c);
         end
     end
 
@@ -279,7 +279,7 @@ module dcache #(
 
     always @(posedge clock) begin
         if(!rwen0) begin
-            TAG_RAM_WAY0[index] <= {write_read, tag};
+            TAG_RAM_WAY0[index] <= {write_read, tag};   //write is dirty
         end
         if(!rwen1) begin
             TAG_RAM_WAY1[index] <= {write_read, tag};

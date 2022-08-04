@@ -291,7 +291,7 @@ dcache dcache(
 
 always @(posedge clock) begin
 if(hhh) begin
-  $display("data:%h\n",arbiter_data);
+  //$display("data:%h\n",arbiter_data);
 end
   
 end

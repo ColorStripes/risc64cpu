@@ -553,7 +553,7 @@ end
 
 always @(posedge clock) begin
 if(hhhh) begin
-  $display("pc:%h,,cyc:%d\n",MEM_pc,cycleCnt);
+  //$display("pc:%h,,cyc:%d\n",MEM_pc,cycleCnt);
 end
   
 end
