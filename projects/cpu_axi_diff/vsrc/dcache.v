@@ -10,6 +10,8 @@ module dcache #(
     parameter DATA_RAM_WIDTH= 128
 
 )(
+    input wire hhhh,////////////////////////////
+
     input wire reset,
     input wire clock,
     //woshou
@@ -39,6 +41,15 @@ module dcache #(
     output wire [`ysyx_22040931_PC_BUS] axi_address
     
 );
+
+    always @(posedge clock) begin
+        if(hhhh) begin
+            $display("%h,,%h",cache_sort_data, wdata);
+        end
+    end
+
+
+
 
     wire [D_TAG-1 : 0]    tag    = address[D_TAG-1 + D_OFFSET+D_INDEX : D_OFFSET+D_INDEX]; //[31 : 10]  22bit
     wire [D_INDEX-1 : 0]  index  = address[D_INDEX-1 + D_OFFSET : D_OFFSET];

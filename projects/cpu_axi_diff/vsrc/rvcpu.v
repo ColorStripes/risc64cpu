@@ -257,6 +257,7 @@ wire [3 : 0] AXI_id;
 
 
 dcache dcache(
+    .hhhh(hhh),
     .reset(reset),
     .clock(clock),
     //woshou
