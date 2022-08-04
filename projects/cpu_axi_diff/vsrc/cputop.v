@@ -533,7 +533,7 @@ always @(negedge clock) begin
 	  regs_diff <= regs;
 
 
-    trap <= (WB_instr[6:0] == 7'h6b) | (hhhh);      /////////////////////duo  xie  le   wb_instr
+    trap <= (WB_instr[6:0] == 7'h6b);      /////////////////////duo  xie  le   wb_instr
     trap_code <= regs[10][7:0];
     cycleCnt <= cycleCnt + 1;
     instrCnt <= instrCnt + {63'h0, inst_valid};
@@ -549,6 +549,10 @@ end
 //       inter = 32'd7;
 //   end
 // end
+
+always @(hhhh) begin
+  $display("pc:%lh,,cyc:%ld\n",MEM_pc,cycleCnt);
+end
 
 
 DifftestArchEvent DifftestArchEvent (
