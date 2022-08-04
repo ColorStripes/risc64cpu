@@ -48,6 +48,11 @@ module dcache #(
         end
     end
 
+    always @(posedge clock) begin
+        if(write_read && ({address[63 : 4],4'b0} == 64'h800049E0) && (~mask[111 : 96] != 16'h0)) begin
+            $display("write:%h,mask:%h,maskkk:%h, cyc:%d\n",cache_sort_data, mask,~mask[111 : 96],c);
+        end
+    end
 
 
 
