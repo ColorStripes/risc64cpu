@@ -43,8 +43,8 @@ module dcache #(
 );
 
     always @(posedge clock) begin
-        if(hhhh) begin
-            $display("%h,,%h",cache_sort_data, wdata);
+        if(!write_read && (mask == ~128'h0000ffff00000000_0000000000000000)) begin
+            $display("reat\n");
         end
     end
 
