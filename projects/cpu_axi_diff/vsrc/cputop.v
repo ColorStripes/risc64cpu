@@ -2,6 +2,7 @@
 `include "defines.v"
 
 module cputop(
+  output wire [63:0] c,
     input wire reset,
     input wire clock,
     //if
@@ -556,7 +557,7 @@ if(hhhh) begin
 end
   
 end
-
+assign c = cycleCnt;
 
 DifftestArchEvent DifftestArchEvent (
     .clock(clock),	    // 时钟

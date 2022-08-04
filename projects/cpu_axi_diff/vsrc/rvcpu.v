@@ -257,6 +257,7 @@ wire [3 : 0] AXI_id;
 
 
 dcache dcache(
+    .c(c),
     .hhhh(hhh),
     .reset(reset),
     .clock(clock),
@@ -345,7 +346,9 @@ always @(posedge clock) begin
     hhhh <= hhhh + 1;
    end
 end
+wire [63 : 0] c;
 cputop cputop(
+    .c(c),
     .reset(reset),
     .clock(clock),
     //if

@@ -11,7 +11,7 @@ module dcache #(
 
 )(
     input wire hhhh,////////////////////////////
-
+    input wire [63 : 0] c,
     input wire reset,
     input wire clock,
     //woshou
@@ -44,7 +44,7 @@ module dcache #(
 
     always @(posedge clock) begin
         if(!write_read && ({address[63 : 4],4'b0} == 64'h800049E0) && (~mask[111 : 96] != 16'h0)) begin
-            $display("reat,mask:%h,maskkk:%h\n",mask,~mask[111 : 96]);
+            $display("reat,mask:%h,maskkk:%h, cyc:%h\n",mask,~mask[111 : 96],c);
         end
     end
 
