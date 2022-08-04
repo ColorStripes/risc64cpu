@@ -345,7 +345,7 @@ cputop cputop(
     //mem
     .momory_data(dcache_data),
     
-    .hhhh(hhhh),
+    .hhhh(hhh),
 
     //if
     .pc(pc),
