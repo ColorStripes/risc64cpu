@@ -331,7 +331,12 @@ wire icache_if_valid;
 wire to_arbiter_pc_valid;
 wire to_arbiter_if_ready;
 
-wire hhhh = (AXI_addr == 64'h800049E0) && (AXI_req);
+wire hhh = (AXI_addr == 64'h800049E0) && (AXI_req);reg hhhh;
+always @(posedge clock) begin
+   if(hhh) begin
+    hhhh <= hhhh + 1;
+   end
+end
 cputop cputop(
     .reset(reset),
     .clock(clock),
