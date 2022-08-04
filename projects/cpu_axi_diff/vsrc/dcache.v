@@ -279,16 +279,16 @@ module dcache #(
 
     always @(posedge clock) begin
         if(!rwen0) begin
-            TAG_RAM_WAY0[index] <= {1'b0, tag};
+            TAG_RAM_WAY0[index] <= {write_read, tag};
         end
         if(!rwen1) begin
-            TAG_RAM_WAY1[index] <= {1'b0, tag};
+            TAG_RAM_WAY1[index] <= {write_read, tag};
         end
         if(!rwen2) begin
-            TAG_RAM_WAY2[index] <= {1'b0, tag};
+            TAG_RAM_WAY2[index] <= {write_read, tag};
         end
         if(!rwen3) begin
-            TAG_RAM_WAY3[index] <= {1'b0, tag};
+            TAG_RAM_WAY3[index] <= {write_read, tag};
         end
     end
 
