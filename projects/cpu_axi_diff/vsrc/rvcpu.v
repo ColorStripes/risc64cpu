@@ -287,6 +287,13 @@ dcache dcache(
     
 );
 
+always @(posedge clock) begin
+if(hhh) begin
+  $display("data:%h\n",arbiter_data);
+end
+  
+end
+
 wire dcache_ex_ready;
 wire dcache_mem_valid;
 wire to_arbiter_ex_valid;
