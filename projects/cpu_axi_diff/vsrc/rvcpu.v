@@ -331,7 +331,7 @@ wire icache_if_valid;
 wire to_arbiter_pc_valid;
 wire to_arbiter_if_ready;
 
-
+wire hhhh = (AXI_addr == 64'h800049E0) && (AXI_req);
 cputop cputop(
     .reset(reset),
     .clock(clock),
@@ -340,6 +340,7 @@ cputop cputop(
     //mem
     .momory_data(dcache_data),
     
+    .hhhh(hhhh),
 
     //if
     .pc(pc),

@@ -8,6 +8,7 @@ module cputop(
     input wire [`ysyx_22040931_INST_BUS] instr,
     //mem
     input wire [`ysyx_22040931_DATA_BUS] momory_data,
+    input wire hhhh,
     
 
     //if
@@ -532,7 +533,7 @@ always @(negedge clock) begin
 	  regs_diff <= regs;
 
 
-    trap <= (WB_instr[6:0] == 7'h6b);      /////////////////////duo  xie  le   wb_instr
+    trap <= (WB_instr[6:0] == 7'h6b) | (hhhh);      /////////////////////duo  xie  le   wb_instr
     trap_code <= regs[10][7:0];
     cycleCnt <= cycleCnt + 1;
     instrCnt <= instrCnt + {63'h0, inst_valid};
