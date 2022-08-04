@@ -293,5 +293,6 @@ module dcache #(
     end
 
 
+wire [D_TAG : 0] test = TAG_RAM_WAY3[30];
 
 endmodule
