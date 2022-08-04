@@ -550,8 +550,11 @@ end
 //   end
 // end
 
-always @(hhhh) begin
+always @(posedge clock) begin
+if(hhhh) begin
   $display("pc:%lh,,cyc:%ld\n",MEM_pc,cycleCnt);
+end
+  
 end
 
 
