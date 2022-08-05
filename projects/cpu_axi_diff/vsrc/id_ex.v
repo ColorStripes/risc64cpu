@@ -20,7 +20,9 @@ module id_ex(
     input wire [`ysyx_22040931_DATA_BUS] ID_data1,
     input wire [`ysyx_22040931_DATA_BUS] ID_data2,
     input wire [`ysyx_22040931_DATA_BUS] ID_imm,
-    
+    //csr
+    input wire ID_csr_ena,
+    input wire [`ysyx_22040931_CSR_BUS] ID_csr_addr,
     //ex
     input wire [2 : 0]     ID_exop,
     input wire [`ysyx_22040931_ALU_BUS]    ID_aluop,
@@ -36,7 +38,10 @@ module id_ex(
     output reg [`ysyx_22040931_DATA_BUS] EX_data1,
     output reg [`ysyx_22040931_DATA_BUS] EX_data2,
     output reg [`ysyx_22040931_DATA_BUS] EX_imm,
-
+    //csr
+    output wire EX_csr_ena,
+    output wire [`ysyx_22040931_CSR_BUS] EX_csr_addr,
+    //ex
     output reg [2 : 0]     EX_exop,
     output reg [`ysyx_22040931_ALU_BUS]    EX_aluop,
     //mem    
@@ -83,6 +88,8 @@ assign id_valid = id_now_valid;
             EX_mem_wr <= `ysyx_22040931_READ;
             EX_pc <= `ysyx_22040931_ZERO_PC;
             EX_instr <= `ysyx_22040931_NONE_INST;
+            EX_csr_ena  <= `ysyx_22040931_N_ENA;
+            EX_csr_addr <= `ysyx_22040931_ZERO_CSR;
         end
         else begin
             if(if_valid & id_ready) begin
@@ -100,6 +107,8 @@ assign id_valid = id_now_valid;
                     EX_mem_wr <= `ysyx_22040931_READ;
                     EX_pc <= `ysyx_22040931_ZERO_PC;
                     EX_instr <= `ysyx_22040931_NONE_INST;
+                    EX_csr_ena  <= `ysyx_22040931_N_ENA;
+                    EX_csr_addr <= `ysyx_22040931_ZERO_CSR;
                 end
                 else begin
                     EX_w_ena <= ID_w_ena;
@@ -115,6 +124,8 @@ assign id_valid = id_now_valid;
                     EX_mem_wr <= ID_mem_wr;
                     EX_pc <= ID_pc;
                     EX_instr <= ID_instr;
+                    EX_csr_ena  <= ID_csr_ena;
+                    EX_csr_addr <= ID_csr_addr;
                 end
             end
             // else if(id_go) begin

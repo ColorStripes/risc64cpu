@@ -13,7 +13,7 @@ module ysyx_22040931_ALU(
     input wire [`ysyx_22040931_DATA_BUS] num2,
     input wire [`ysyx_22040931_DATA_BUS] imm,
     input wire [`ysyx_22040931_PC_BUS]    pc,
-    input wire [`ysyx_22040931_ALU_BUS] op,
+    input wire [`ysyx_22040931_ALU_BUS]   op,
 
 
     output wire [`ysyx_22040931_DATA_BUS] out
@@ -94,7 +94,7 @@ assign num2_sw = num2[31 : 0];
 
 
 // //ALU
-//     ysyx_22040931_MuxD #(29, `ysyx_22040931_ALU, 64) ALU (out, op, `ysyx_22040931_ZERO_NUM, {
+//     ysyx_22040931_MuxD #(31, `ysyx_22040931_ALU, 64) ALU (out, op, `ysyx_22040931_ZERO_NUM, {
 //     `ysyx_22040931_ADD   ,  num1 + num2,
 //     `ysyx_22040931_SUB   ,  num1 - num2,
 //     `ysyx_22040931_AND   ,  num1 & num2,
@@ -123,11 +123,13 @@ assign num2_sw = num2[31 : 0];
 //     `ysyx_22040931_DIV   ,  quotient,
 //     `ysyx_22040931_DIVU  ,  quotient,
 //     `ysyx_22040931_DIVUW ,  quotient,     
-//     `ysyx_22040931_DIVW  ,  quotient
+//     `ysyx_22040931_DIVW  ,  quotient,
+//     `ysyx_22040931_ANOR  ,  num1 &~ num2,
+//     `ysyx_22040931_NUM1  ,  num1
 //     });
 
 
-    ysyx_22040931_MuxD #(29, `ysyx_22040931_ALU, 64) ALU (out, op, `ysyx_22040931_ZERO_NUM, {
+    ysyx_22040931_MuxD #(31, `ysyx_22040931_ALU, 64) ALU (out, op, `ysyx_22040931_ZERO_NUM, {
     `ysyx_22040931_ADD   ,  num1 + num2,
     `ysyx_22040931_SUB   ,  num1 - num2,
     `ysyx_22040931_AND   ,  num1 & num2,
@@ -156,7 +158,9 @@ assign num2_sw = num2[31 : 0];
     `ysyx_22040931_DIV   ,  quotient,
     `ysyx_22040931_DIVU  ,  quotient,
     `ysyx_22040931_DIVUW ,  quotient,     
-    `ysyx_22040931_DIVW  ,  quotient
+    `ysyx_22040931_DIVW  ,  quotient,
+    `ysyx_22040931_ANOR  ,  num1 &~ num2,
+    `ysyx_22040931_NUM1  ,  num1
     });
 
 

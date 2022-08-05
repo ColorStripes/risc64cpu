@@ -18,11 +18,19 @@ module mem_wb(
     input wire          MEM_w_ena,
     input wire [`ysyx_22040931_REG_BUS] MEM_w_addr,
     input wire [`ysyx_22040931_DATA_BUS] MEM_w_data,
+    //csr
+    input wire          MEM_csr_w_ena,
+    input wire [`ysyx_22040931_REG_BUS] MEM_csr_w_addr,
+    input wire [`ysyx_22040931_DATA_BUS] MEM_csr_w_data,
 
 
     output reg          WB_w_ena,
     output reg [`ysyx_22040931_REG_BUS]  WB_w_addr,
     output reg [`ysyx_22040931_DATA_BUS] WB_w_data,
+    //csr
+    output wire          WB_csr_w_ena,
+    output wire [`ysyx_22040931_REG_BUS] WB_csr_w_addr,
+    output wire [`ysyx_22040931_DATA_BUS] WB_csr_w_data,
     //liushuixian
     output reg [`ysyx_22040931_INST_BUS] WB_instr,
     output reg [`ysyx_22040931_PC_BUS] WB_pc
@@ -54,6 +62,9 @@ assign mem_valid = mem_now_valid;
             WB_w_data <= `ysyx_22040931_ZERO_NUM;
             WB_pc <= `ysyx_22040931_ZERO_PC;
             WB_instr <= `ysyx_22040931_NONE_INST;
+            WB_csr_w_ena  <= `ysyx_22040931_N_ENA;
+            WB_csr_w_addr <= `ysyx_22040931_ZERO_CSR;
+            WB_csr_w_data <= `ysyx_22040931_ZERO_NUM;
         end
         else begin
             if(ex_valid & mem_ready) begin
@@ -62,9 +73,13 @@ assign mem_valid = mem_now_valid;
                 WB_w_data <= MEM_w_data;
                 WB_pc <= MEM_pc;
                 WB_instr <= MEM_instr;
+                WB_csr_w_ena  <= MEM_csr_w_ena ;
+                WB_csr_w_addr <= MEM_csr_w_addr;
+                WB_csr_w_data <= MEM_csr_w_data;
             end
             else if(mem_go) begin
                 WB_w_ena <= `ysyx_22040931_N_ENA;
+                WB_csr_w_ena  <= `ysyx_22040931_N_ENA;
                 //WB_w_addr <= `ysyx_22040931_ZERO_REG;
                 //WB_w_data <= `ysyx_22040931_ZERO_NUM;
                 WB_pc <= `ysyx_22040931_ZERO_PC;
@@ -72,5 +87,6 @@ assign mem_valid = mem_now_valid;
             end
         end
     end
+
 
 endmodule

@@ -14,7 +14,7 @@ module ysyx_22040931_Utype(
 
     ysyx_22040931_MuxD #(2, 7, 10) Utype (out, chose, 10'b0000_0000_00, {
     `ysyx_22040931_auipc,  {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_PC},
-    `ysyx_22040931_lui,    {1'b1,`ysyx_22040931_LUI  ,`ysyx_22040931_NO}
+    `ysyx_22040931_lui,    {1'b1,`ysyx_22040931_Lui  ,`ysyx_22040931_NO}
     });
 
     assign aluop = out[5 : 0];

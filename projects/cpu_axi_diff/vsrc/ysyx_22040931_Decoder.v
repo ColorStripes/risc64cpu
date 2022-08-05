@@ -7,6 +7,9 @@ module ysyx_22040931_Decoder(
     input wire [`ysyx_22040931_DATA_BUS] r_data1,
     input wire [`ysyx_22040931_DATA_BUS] r_data2,
 
+    output wire csr_ena,
+    output wire [`ysyx_22040931_CSR_BUS] csr_addr,
+
 	output wire 		   w_ena,
 	output wire [4 : 0]   w_addr,//
     output wire 		  r_ena1,
@@ -32,24 +35,28 @@ module ysyx_22040931_Decoder(
     wire rtype;
     wire jtype;
     wire btype;
+    wire ctype;
 
-    wire [2 : 0] r_exop,  i_exop, s_exop, u_exop, j_exop, b_exop;
-    wire [`ysyx_22040931_ALU_BUS] r_aluop,i_aluop,s_aluop,u_aluop,j_aluop, b_aluop;    
+    wire [2 : 0]                  r_exop,  i_exop,  s_exop,  u_exop,  j_exop,  b_exop,  c_exop;
+    wire [`ysyx_22040931_ALU_BUS] r_aluop, i_aluop, s_aluop, u_aluop, j_aluop, b_aluop, c_aluop;    
     wire ijump,bjump,jjump;
 
     assign w_addr = instr[11 : 7];
     assign r_addr1 = instr[19 : 15];
     assign r_addr2 = instr[24 : 20];
 
+    assign csr_ena = ctype;
+    assign csr_addr = instr[31 : 20];
+    
     assign mem_ena = (memrop != 3'b000) ?  1'b1 : (memwop == 3'b000) ? 1'b0 : 1'b1 ;
     assign mem_wr  = (memwop == 3'b000) ?  1'b0 : 1'b1 ;
 
     assign ztype[2] = itype | stype | btype | jtype;
     assign ztype[1] = itype | stype | utype | rtype;
-    assign ztype[0] = itype | btype | utype;
+    assign ztype[0] = itype | btype | utype | ctype;
 
-    
-    ysyx_22040931_MuxD #(6, 3, 12) opt_mux ({w_ena, r_ena1, r_ena2, exop, aluop}, 
+    wire cena; //Ctype is not always read reg1;
+    ysyx_22040931_MuxD #(7, 3, 12) opt_mux ({w_ena, r_ena1, r_ena2, exop, aluop}, 
                                         ztype, 
                              12'b0000_0000_00, 
     {
@@ -59,14 +66,14 @@ module ysyx_22040931_Decoder(
         `ysyx_22040931_St,    {1'b0, 1'b1, 1'b1, s_exop, s_aluop},
         `ysyx_22040931_Bt,    {1'b0, 1'b1, 1'b1, b_exop, b_aluop},
         `ysyx_22040931_Jt,    {1'b1, 1'b0, 1'b0, j_exop, j_aluop},
-        `ysyx_22040931_Ut,    {1'b1, 1'b1, 1'b0, u_exop, u_aluop}
-            
+        `ysyx_22040931_Ut,    {1'b1, 1'b1, 1'b0, u_exop, u_aluop},
+        `ysyx_22040931_Ct,    {1'b1, cena, 1'b0, c_exop, c_aluop}    
     });
 
 
     ysyx_22040931_MuxD #(3, 3, 1) jump_mux (         jump, 
-                                         ztype, 
-                                         1'b0, 
+                                                    ztype, 
+                                                    1'b0, 
     {
 
         `ysyx_22040931_It,    ijump, 
@@ -81,5 +88,7 @@ module ysyx_22040931_Decoder(
     ysyx_22040931_Btype ysyx_22040931_Btype (instr[6 : 0], instr[14 : 12], r_data1, r_data2, bjump, b_aluop, b_exop, btype);
     ysyx_22040931_Jtype ysyx_22040931_Jtype (instr[6 : 0], jjump, j_aluop, j_exop, jtype);
     ysyx_22040931_Utype ysyx_22040931_Utype (instr[6 : 0], u_aluop, u_exop, utype);
+    ysyx_22040931_Ctype ysyx_22040931_Ctype (instr[6 : 0], instr[14 : 12], c_aluop, cena, c_exop, ctype);
+
 
 endmodule

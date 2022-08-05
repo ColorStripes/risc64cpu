@@ -16,6 +16,10 @@ module ysyx_22040931_MEM(
     input wire w_ena_i,
     input wire [`ysyx_22040931_REG_BUS] w_addr_i,
     input wire [`ysyx_22040931_DATA_BUS] w_data_i,
+    //csr
+    input wire csr_w_ena_i,
+    input wire [`ysyx_22040931_CSR_BUS] csr_w_addr_i,
+    input wire [`ysyx_22040931_DATA_BUS] csr_w_data_i,
     //mem
     input wire [2 : 0]   memwop,
     input wire [2 : 0]   memrop,
@@ -33,6 +37,10 @@ module ysyx_22040931_MEM(
     output wire w_ena,
     output wire [`ysyx_22040931_REG_BUS] w_addr,
     output wire [`ysyx_22040931_DATA_BUS] w_data,
+    //csr
+    output wire csr_w_ena,
+    output wire [`ysyx_22040931_CSR_BUS] csr_w_addr,
+    output wire [`ysyx_22040931_DATA_BUS] csr_w_data,
     //mem
     output wire [1 : 0]       memop,//
     output wire             mem_ena,
@@ -54,6 +62,10 @@ assign instr_o = instr;
 
     assign w_ena = w_ena_i & ex_gi_valid;  //ena & valid
     assign w_addr = w_addr_i;
+    
+    assign csr_w_ena = csr_w_ena_i;
+    assign csr_w_addr = csr_w_addr_i;
+    assign csr_w_data = csr_w_data_i;
 
     assign mem_ena = mem_ena_i & ex_gi_valid; //ena & valid
     assign mem_wr = mem_wr_i;

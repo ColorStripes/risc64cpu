@@ -13,7 +13,6 @@ module ysyx_22040931_ID(
     input wire [`ysyx_22040931_PC_BUS] pc_i,
     input wire [`ysyx_22040931_INST_BUS] instr,
     //bypass
-
     input wire ex_w_ena,
     input wire [`ysyx_22040931_REG_BUS] ex_w_addr,
     input wire [`ysyx_22040931_DATA_BUS] ex_w_data,
@@ -46,6 +45,10 @@ module ysyx_22040931_ID(
     output wire [`ysyx_22040931_REG_BUS] w_addr,
     output wire [`ysyx_22040931_DATA_BUS] data1,
     output wire [`ysyx_22040931_DATA_BUS] data2,
+    //CSR
+    output wire csr_ena,
+    output wire [`ysyx_22040931_CSR_BUS] csr_addr,
+
     //ex
     output wire mem_ena,
     output wire mem_wr,
@@ -130,6 +133,8 @@ assign error_pre = (pre_jump != mux_pc) ? 1'b1 : (pre_branch != branch) ? mux_pc
     .instr(instr),
     .r_data1(data1),
     .r_data2(data2),
+    .csr_ena(csr_ena),
+    .csr_addr(csr_addr),
 	.w_ena(w_ena),
 	.w_addr(w_addr),
     .r_ena1(r_ena1),
@@ -193,7 +198,7 @@ assign error_pre = (pre_jump != mux_pc) ? 1'b1 : (pre_branch != branch) ? mux_pc
 
     ysyx_22040931_MuxD #(5, 4, 64) reg_data1 (data1, {r_ena1, ~r_ena1, need_ex1, need_mem1}, `ysyx_22040931_ZERO_NUM, {
         4'b1000,  r_data1,
-        4'b0100,  imm,
+        4'b0100,  {59'b0, r_addr1},     ////
         4'b1010,  ex_w_data,
         4'b1011,  ex_w_data,
         4'b1001,  mem_w_data

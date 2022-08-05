@@ -18,6 +18,10 @@ module ex_mem(
     input wire         EX_w_ena,
     input wire [`ysyx_22040931_REG_BUS] EX_w_addr,
     input wire [`ysyx_22040931_DATA_BUS] EX_w_data,
+    //csr
+    input wire EX_csr_w_ena,
+    input wire [`ysyx_22040931_CSR_BUS] EX_csr_w_addr,
+    input wire [`ysyx_22040931_DATA_BUS] EX_csr_w_data,
     //mem
     input wire [2 : 0]   EX_memwop,
     input wire [2 : 0]   EX_memrop,
@@ -26,10 +30,14 @@ module ex_mem(
     input wire [`ysyx_22040931_MEM_BUS] EX_mem_addr,
     input wire [`ysyx_22040931_DATA_BUS] EX_mem_data,
 
-
+    //regfile
     output reg          MEM_w_ena,
     output reg [`ysyx_22040931_REG_BUS] MEM_w_addr,
     output reg [`ysyx_22040931_DATA_BUS] MEM_w_data,
+    //csr
+    output wire MEM_csr_w_ena,
+    output wire [`ysyx_22040931_CSR_BUS] MEM_csr_w_addr,
+    output wire [`ysyx_22040931_DATA_BUS] MEM_csr_w_data,
     //mem
     output reg [2 : 0]   MEM_memwop,
     output reg [2 : 0]   MEM_memrop,
@@ -76,6 +84,9 @@ assign ex_valid = ex_now_valid;
             MEM_mem_stor_data <= `ysyx_22040931_ZERO_NUM;
             MEM_pc <= `ysyx_22040931_ZERO_PC;
             MEM_instr <= `ysyx_22040931_NONE_INST;
+            MEM_csr_w_ena  <= `ysyx_22040931_N_ENA;
+            MEM_csr_w_addr <= `ysyx_22040931_ZERO_CSR;
+            MEM_csr_w_data <= `ysyx_22040931_ZERO_NUM;
         end
         else begin
             if(id_valid & ex_ready) begin
@@ -90,6 +101,9 @@ assign ex_valid = ex_now_valid;
                 MEM_mem_stor_data <= EX_mem_data;
                 MEM_pc <= EX_pc;
                 MEM_instr <= EX_instr;
+                MEM_csr_w_ena  <= EX_csr_w_ena ;
+                MEM_csr_w_addr <= EX_csr_w_addr;
+                MEM_csr_w_data <= EX_csr_w_data;
             end
             // else if(ex_go) begin
             //     MEM_w_ena <= `ysyx_22040931_N_ENA;
@@ -105,6 +119,13 @@ assign ex_valid = ex_now_valid;
             //     MEM_instr <= `ysyx_22040931_NONE_INST;
             // end
         end 
+    end
+
+    always @(posedge clock) begin
+        if(EX_instr == 32'h7b) begin
+        $write("%c",MEM_w_data);
+        $fflush();
+        end
     end
 
 endmodule

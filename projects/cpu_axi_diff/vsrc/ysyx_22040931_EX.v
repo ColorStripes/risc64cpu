@@ -13,6 +13,15 @@ module ysyx_22040931_EX(
 
     input wire w_ena_i,
     input wire [`ysyx_22040931_REG_BUS] w_addr_i,
+    //CSR
+    input wire csr_ena,
+    input wire [`ysyx_22040931_CSR_BUS] csr_addr, //write
+    input wire [`ysyx_22040931_DATA_BUS] csr_r_data,
+    //mem bypass
+    input wire mem_csr_w_ena,
+    input wire [`ysyx_22040931_CSR_BUS] mem_csr_w_addr, 
+    input wire [`ysyx_22040931_DATA_BUS] mem_csr_w_data, 
+    //liushui
     input wire [`ysyx_22040931_PC_BUS] pc_i,
     input wire [`ysyx_22040931_INST_BUS] instr,
     
@@ -21,7 +30,7 @@ module ysyx_22040931_EX(
     input wire [`ysyx_22040931_DATA_BUS] imm,
 
     input wire [2 : 0]     exop,
-    input wire [`ysyx_22040931_ALU_BUS]    aluop,
+    input wire [`ysyx_22040931_ALU_BUS]  aluop,
     //mem    
     input wire [2 : 0]   memwop_i,
     input wire [2 : 0]   memrop_i,
@@ -32,6 +41,10 @@ module ysyx_22040931_EX(
     output wire w_ena,
     output wire [`ysyx_22040931_REG_BUS] w_addr,
     output wire [`ysyx_22040931_DATA_BUS] w_data,
+    //CSR    
+    output wire csr_w_ena,
+    output wire [`ysyx_22040931_CSR_BUS] csr_w_addr,
+    output wire [`ysyx_22040931_DATA_BUS] csr_w_data,
     //mem
     output wire [2 : 0]   memwop,
     output wire [2 : 0]   memrop,
@@ -51,17 +64,24 @@ assign pc_o = pc_i;
 assign instr_o = instr;
 
 
-    assign w_ena = w_ena_i & id_gi_valid;  //ena & valid
+    assign w_ena = w_ena_i & id_gi_valid;   //ena & valid
     assign w_addr = w_addr_i;
-    assign mem_data = data2;
 
+    assign csr_w_ena = csr_ena & id_gi_valid; //ena & valid
+    assign csr_w_addr = csr_addr;
+    assign csr_w_data = csr_w_ena ? result : `ysyx_22040931_ZERO_NUM;
+
+    assign mem_data = data2;
     assign memwop = memwop_i;
     assign memrop = memrop_i;
     assign mem_ena = mem_ena_i & id_gi_valid;  //ena & valid
     assign mem_wr = mem_wr_i;
 
-    wire [`ysyx_22040931_DATA_BUS]result;
+
     wire alu_valid, alu_ready;
+    wire [`ysyx_22040931_DATA_BUS] result;
+    wire [`ysyx_22040931_DATA_BUS] csr_data = (csr_addr == mem_csr_w_addr) & mem_csr_w_ena & csr_ena ? mem_csr_w_data : csr_r_data;
+    wire [`ysyx_22040931_DATA_BUS] alu_data2 = csr_w_ena ? csr_data : data2;
     ysyx_22040931_ALU ysyx_22040931_ALU(
     .reset(reset),
     .clock(clock),
@@ -71,7 +91,7 @@ assign instr_o = instr;
     .alu_ready(alu_ready),
 
     .num1(data1),
-    .num2(data2),
+    .num2(alu_data2),
     .imm(imm),
     .pc(pc_i),
     .op(aluop),
@@ -81,14 +101,15 @@ assign instr_o = instr;
     );
 
 
-    ysyx_22040931_MuxD #(3, 3, 64)  w_data_mux (
+    ysyx_22040931_MuxD #(4, 3, 64)  w_data_mux (
         w_data,
         exop,
         `ysyx_22040931_ZERO_NUM,
         {   
             `ysyx_22040931_Arith,  result, 
             `ysyx_22040931_Short,  {{32{result[31]}}, result[31 : 0]},
-            `ysyx_22040931_LUI,    imm
+            `ysyx_22040931_Lui,    imm,
+            `ysyx_22040931_Csr,    csr_r_data
         }
     );
 
@@ -98,7 +119,7 @@ assign instr_o = instr;
         `ysyx_22040931_ZERO_PC,
         {   
             `ysyx_22040931_Stort,   result[`ysyx_22040931_MEM_BUS],
-            `ysyx_22040931_LOAD,    result[`ysyx_22040931_MEM_BUS]
+            `ysyx_22040931_Load,    result[`ysyx_22040931_MEM_BUS]
         }
     );
     
