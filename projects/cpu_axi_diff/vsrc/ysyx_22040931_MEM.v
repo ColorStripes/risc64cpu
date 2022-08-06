@@ -29,6 +29,8 @@ module ysyx_22040931_MEM(
     input wire [`ysyx_22040931_MEM_BUS] mem_addr_i,
     input wire [`ysyx_22040931_DATA_BUS] mem_stor_data_i,
     input wire [`ysyx_22040931_DATA_BUS] mem_return_data,   //
+    //except
+    input wire [`ysyx_22040931_EXCEPT_BUS] except_i,
     
     //liushuixian
     input wire [`ysyx_22040931_PC_BUS] pc_i,
@@ -48,6 +50,8 @@ module ysyx_22040931_MEM(
     output wire              mem_wr,
     output wire [`ysyx_22040931_MEM_BUS] mem_addr,
     output wire [`ysyx_22040931_DATA_BUS] mem_stor_data,//
+    //except
+    output wire [`ysyx_22040931_EXCEPT_BUS] except,
     //liushuixian
     output wire [`ysyx_22040931_INST_BUS] instr_o,
     output wire [`ysyx_22040931_PC_BUS] pc_o
@@ -180,7 +184,8 @@ CLINT  CLINT(
     .clint_data(clint_data)
 
 );
-wire clint;
 
+wire clint;
+assign except = clint ? `ysyx_22040931_INTER | except_i : except_i;
 
 endmodule

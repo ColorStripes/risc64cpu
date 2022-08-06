@@ -29,6 +29,8 @@ module ex_mem(
     input wire           EX_mem_wr,    
     input wire [`ysyx_22040931_MEM_BUS] EX_mem_addr,
     input wire [`ysyx_22040931_DATA_BUS] EX_mem_data,
+    //except
+    input wire [`ysyx_22040931_EXCEPT_BUS] EX_except,
 
     //regfile
     output reg          MEM_w_ena,
@@ -45,6 +47,8 @@ module ex_mem(
     output reg           MEM_mem_wr,
     output reg [`ysyx_22040931_MEM_BUS]  MEM_mem_addr,
     output reg [`ysyx_22040931_DATA_BUS] MEM_mem_stor_data,
+    //except
+    output wire [`ysyx_22040931_EXCEPT_BUS] MEM_except,
     //liushuixian
     output reg [`ysyx_22040931_INST_BUS] MEM_instr,
     output reg [`ysyx_22040931_PC_BUS]  MEM_pc
@@ -87,6 +91,7 @@ assign ex_valid = ex_now_valid;
             MEM_csr_w_ena  <= `ysyx_22040931_N_ENA;
             MEM_csr_w_addr <= `ysyx_22040931_ZERO_CSR;
             MEM_csr_w_data <= `ysyx_22040931_ZERO_NUM;
+            MEM_except <= `ysyx_22040931_NO_EXCEPT;
         end
         else begin
             if(id_valid & ex_ready) begin
@@ -104,6 +109,7 @@ assign ex_valid = ex_now_valid;
                 MEM_csr_w_ena  <= EX_csr_w_ena ;
                 MEM_csr_w_addr <= EX_csr_w_addr;
                 MEM_csr_w_data <= EX_csr_w_data;
+                MEM_except <= EX_except;
             end
             // else if(ex_go) begin
             //     MEM_w_ena <= `ysyx_22040931_N_ENA;

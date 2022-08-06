@@ -18,13 +18,15 @@ module ysyx_22040931_IF(
     input wire [1 : 0] id_jumptype,
     input wire [`ysyx_22040931_PC_BUS] id_pc,
     input wire [`ysyx_22040931_PC_BUS] id_branch,
+    //except
+    input wire now_except,
+    input wire [`ysyx_22040931_PC_BUS] mtvec_pc,
 
 
 
     //forecase
     output wire pre_jump,
     output wire [`ysyx_22040931_PC_BUS] pre_branch,
-   
     
     output wire [`ysyx_22040931_PC_BUS]   if_pc
     //output wire [`ysyx_22040931_INST_BUS] instr
@@ -66,7 +68,8 @@ predictor predictor(
 
 
 wire [`ysyx_22040931_PC_BUS] pc_i;
-assign pc_i = error_pre ? (id_jump ? id_branch : id_pc + 4) : (pre_jump ? pre_branch : if_pc + 4);
+assign pc_i = now_except ? mtvec_pc :
+              error_pre  ? (id_jump ? id_branch : id_pc + 4) : (pre_jump ? pre_branch : if_pc + 4);
 
 
 ysyx_22040931_PC ysyx_22040931_PC(

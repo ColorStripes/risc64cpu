@@ -20,6 +20,7 @@ module ysyx_22040931_Decoder(
     output wire mem_ena,
     output wire mem_wr,
 
+    output wire [`ysyx_22040931_EXCEPT_BUS] except,
     output wire [2 : 0]    ztype,
     output wire [2 : 0]     exop,
     output wire [`ysyx_22040931_ALU_BUS]    aluop,    
@@ -83,7 +84,7 @@ module ysyx_22040931_Decoder(
     });
 
     ysyx_22040931_Rtype ysyx_22040931_Rtype (instr[6 : 0], instr[14 : 12], instr[31 : 25], r_aluop, r_exop, rtype);
-    ysyx_22040931_Itype ysyx_22040931_Itype (instr[6 : 0], instr[14 : 12], instr[20], instr[31 : 25], ijump, memrop, i_aluop, i_exop, itype);
+    ysyx_22040931_Itype ysyx_22040931_Itype (instr[6 : 0], instr[14 : 12], instr[24 : 20], instr[31 : 25], except, ijump, memrop, i_aluop, i_exop, itype);
     ysyx_22040931_Stype ysyx_22040931_Stype (instr[6 : 0], instr[14 : 12], memwop, s_aluop, s_exop, stype);
     ysyx_22040931_Btype ysyx_22040931_Btype (instr[6 : 0], instr[14 : 12], r_data1, r_data2, bjump, b_aluop, b_exop, btype);
     ysyx_22040931_Jtype ysyx_22040931_Jtype (instr[6 : 0], jjump, j_aluop, j_exop, jtype);

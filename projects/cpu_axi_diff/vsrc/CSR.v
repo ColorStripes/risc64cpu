@@ -6,6 +6,9 @@ module CSR(
     input wire reset,
     input wire clock,
     input wire valid,
+    //except
+    input wire [`ysyx_22040931_EXCEPT_BUS] except,
+    input wire [`ysyx_22040931_PC_BUS] except_pc,
 
     input wire csr_w_ena,
     input wire [`ysyx_22040931_CSR_BUS] csr_w_addr,
@@ -58,7 +61,7 @@ module CSR(
     assign csr_mscratch = (csr_w_addr == `mscratch) & csr_w_ena ? csr_w_data : mscratch;
     assign csr_mepc     = (csr_w_addr == `mepc    ) & csr_w_ena ? csr_w_data : mepc    ;
     assign csr_mcause   = (csr_w_addr == `mcause  ) & csr_w_ena ? csr_w_data : mcause  ;
-    assign csr_mip      = (csr_w_addr == `mip     ) & csr_w_ena ? csr_w_data : mip     ;
+    assign csr_mip      = (csr_w_addr == `mip     ) & csr_w_ena ? {mip[63 : 4], csr_w_data[3 : 0]} : mip  ;
     assign csr_mcycle   = (csr_w_addr == `mcycle  ) & csr_w_ena ? csr_w_data : mcycle+1;
     assign csr_minstret = (csr_w_addr == `minstret) & csr_w_ena ? csr_w_data : valid ? minstret+1 : minstret;
     assign csr_sstatus  = (csr_w_addr == `sstatus ) & csr_w_ena ? {(csr_w_data[13] & csr_w_data[14]) | (csr_w_data[15] & csr_w_data[16]), csr_w_data[62 : 0]} : sstatus ;
@@ -132,6 +135,30 @@ module CSR(
     //         end
     //     end
     // end
+
+    wire inter  = (except == `ysyx_22040931_INTER ) ? 1'b1 : 1'b0;
+    wire ecall  = (except == `ysyx_22040931_ECALL ) ? 1'b1 : 1'b0;
+    wire ebreak = (except == `ysyx_22040931_EBREAK) ? 1'b1 : 1'b0;
+    wire mret   = (except == `ysyx_22040931_MRET  ) ? 1'b1 : 1'b0;
+                                                    
+    assign csr_mstatus  = inter | ecall | ebreak ? {mstatus[63 : 13], 2'b11, mstatus[10 : 7], mstatus[3], mstatus[5 : 4], 1'b0, mstatus[2 : 0]} :
+                          mret ? {mstatus[63 : 13], 2'b00, mstatus[10 : 7], 1'b1, mstatus[5 : 4], mstatus[7], mstatus[2 : 0]} :
+                          (csr_w_addr == `mstatus ) & csr_w_ena ? {(csr_w_data[13] & csr_w_data[14]) | (csr_w_data[15] & csr_w_data[16]), csr_w_data[62 : 0]} : mstatus ;
+    assign csr_mie      = (csr_w_addr == `mie     ) & csr_w_ena ? csr_w_data : mie     ;
+    assign csr_mtvec    = (csr_w_addr == `mtvec   ) & csr_w_ena ? csr_w_data : mtvec   ;
+    assign csr_mscratch = (csr_w_addr == `mscratch) & csr_w_ena ? csr_w_data : mscratch;
+    assign csr_mepc     = inter | ecall | ebreak | mret ? except_pc :
+                          (csr_w_addr == `mepc    ) & csr_w_ena ? csr_w_data : mepc    ;
+    assign csr_mcause   = inter ? {1'b1, 63'h7} :
+                          ecall ? {1'b0, 59'h0, 4'b1011} :
+                          ebreak ? {1'b0, 59'h0, 4'b0011} :
+                          (csr_w_addr == `mcause  ) & csr_w_ena ? csr_w_data : mcause  ;
+    assign csr_mip      = inter ? {mip[63 : 8], 1'b0, mip[6 : 0]} :
+                          (csr_w_addr == `mip     ) & csr_w_ena ? csr_w_data : mip     ;
+    assign csr_mcycle   = (csr_w_addr == `mcycle  ) & csr_w_ena ? csr_w_data : mcycle+1;
+    assign csr_minstret = (csr_w_addr == `minstret) & csr_w_ena ? csr_w_data : valid ? minstret+1 : minstret;
+    assign csr_sstatus  = (csr_w_addr == `sstatus ) & csr_w_ena ? {(csr_w_data[13] & csr_w_data[14]) | (csr_w_data[15] & csr_w_data[16]), csr_w_data[62 : 0]} : sstatus ;
+
 
 
 

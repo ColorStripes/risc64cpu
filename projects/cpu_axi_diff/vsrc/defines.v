@@ -173,8 +173,9 @@
 `define ysyx_22040931_sraiw   17'b0100000_101_0011011 
 `define ysyx_22040931_srliw   17'b0000000_101_0011011
 
-`define ysyx_22040931_ecall   18'b0000000_0_000_1110011
-`define ysyx_22040931_ebreak  18'b0000000_1_000_1110011 
+`define ysyx_22040931_ecall   22'b0000000_00000_000_1110011
+`define ysyx_22040931_ebreak  22'b0000000_00001_000_1110011 
+`define ysyx_22040931_mret    22'b0011000_00010_000_1110011 
 
 //S
 `define ysyx_22040931_sd  10'b011_0100011
@@ -242,8 +243,13 @@
 `define mtime    64'h200bff8
 `define TIME     64'd02000
 
-
-
+//exception
+`define ysyx_22040931_EXCEPT_BUS 6 : 0
+`define ysyx_22040931_NO_EXCEPT 7'b0000_000
+`define ysyx_22040931_ECALL  7'b0000_001
+`define ysyx_22040931_EBREAK 7'b0000_010
+`define ysyx_22040931_MRET   7'b0000_100
+`define ysyx_22040931_INTER  7'b1000_000
 
 
 

@@ -36,6 +36,8 @@ module ysyx_22040931_EX(
     input wire [2 : 0]   memrop_i,
     input wire          mem_ena_i,
     input wire           mem_wr_i,
+    //except
+    input wire [`ysyx_22040931_EXCEPT_BUS] except_i,
     
     //regfile
     output wire w_ena,
@@ -52,6 +54,8 @@ module ysyx_22040931_EX(
     output wire           mem_wr,    
     output wire [`ysyx_22040931_MEM_BUS] mem_addr,
     output wire [`ysyx_22040931_DATA_BUS] mem_data,
+    //except
+    output wire [`ysyx_22040931_EXCEPT_BUS] except,
     //liushuixian
     output wire [`ysyx_22040931_INST_BUS] instr_o,
     output wire [`ysyx_22040931_PC_BUS] pc_o
@@ -77,6 +81,7 @@ assign instr_o = instr;
     assign mem_ena = mem_ena_i & id_gi_valid;  //ena & valid
     assign mem_wr = mem_wr_i;
 
+    assign except = except_i;
 
     wire alu_valid, alu_ready;
     wire [`ysyx_22040931_DATA_BUS] result;

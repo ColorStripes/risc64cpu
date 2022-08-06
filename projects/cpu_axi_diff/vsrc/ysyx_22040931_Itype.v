@@ -4,13 +4,13 @@
 module ysyx_22040931_Itype(
     input wire [6 : 0] opcode,
     input wire [2 : 0] opcode_3,
-    input wire         opcode_1,
+    input wire [4 : 0] opcode_5,
     input wire [6 : 0] opcode_7,
     
-
+    output wire [`ysyx_22040931_EXCEPT_BUS] except,////
     output wire              jump,
     output wire [2 : 0]    memrop,
-    output wire [`ysyx_22040931_ALU_BUS]    aluop,
+    output wire [`ysyx_22040931_ALU_BUS]  aluop,
     output wire [2 : 0]     exop,
     output wire            itype
 );
@@ -19,18 +19,18 @@ module ysyx_22040931_Itype(
     wire [13 : 0] out1;
     wire [12 : 0] out2;
     wire [12 : 0] out3;
-    wire [12 : 0] out4;
+    wire [19 : 0] out4;
 
     wire [9 : 0]  chose1 = {opcode_3, opcode};
     wire [15 : 0] chose2 = {opcode_7[6 : 1], opcode_3, opcode};
     wire [16 : 0] chose3 = {opcode_7, opcode_3, opcode};
-    wire [17 : 0] chose4 = {opcode_7, opcode_1, opcode_3, opcode};
+    wire [21 : 0] chose4 = {opcode_7, opcode_5, opcode_3, opcode};
 
     ysyx_22040931_MuxD #(4, 4, 14) Itype (out, {out1[13], out2[12], out3[12], out4[12]}, 14'b0000_0000_000000, {
         4'b1000,  out1,
         4'b0100,  {out2,1'b0},
         4'b0010,  {out3,1'b0},
-        4'b0001,  {out4,1'b0}
+        4'b0001,  {out4[19 : 7],1'b0}
     });
     
     ysyx_22040931_MuxD #(15, 10, 14) Itype1 (out1, chose1, 14'b0000_0000_000000, {
@@ -54,7 +54,7 @@ module ysyx_22040931_Itype(
 
     ysyx_22040931_MuxD #(3, 16, 13) Itype2 (out2, chose2, 13'b0000_0000_00000, {
     `ysyx_22040931_slli,    {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_SHIL,`ysyx_22040931_MNO},
-    `ysyx_22040931_srai,    {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_SRA,`ysyx_22040931_MNO},
+    `ysyx_22040931_srai,    {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_SRA, `ysyx_22040931_MNO},
     `ysyx_22040931_srli,    {1'b1,`ysyx_22040931_Arith,`ysyx_22040931_SHIR,`ysyx_22040931_MNO}
   });
 
@@ -66,9 +66,10 @@ module ysyx_22040931_Itype(
     `ysyx_22040931_srliw,   {1'b1,`ysyx_22040931_Short, `ysyx_22040931_SHIRW, `ysyx_22040931_MNO}
   });
 
-    ysyx_22040931_MuxD #(2, 18, 13) Itype4 (out4, chose4, 13'b0000_0000_00000, {
-    `ysyx_22040931_ecall,   {1'b1,`ysyx_22040931_System,`ysyx_22040931_NO,    `ysyx_22040931_MNO},
-    `ysyx_22040931_ebreak,  {1'b1,`ysyx_22040931_System,`ysyx_22040931_NO,    `ysyx_22040931_MNO}
+    ysyx_22040931_MuxD #(2, 22, 20) Itype4 (out4, chose4, 20'b0000_0000_00000_0000000, {
+    `ysyx_22040931_ecall,   {1'b1,`ysyx_22040931_System, `ysyx_22040931_NO, `ysyx_22040931_MNO, `ysyx_22040931_ECALL },
+    `ysyx_22040931_ebreak,  {1'b1,`ysyx_22040931_System, `ysyx_22040931_NO, `ysyx_22040931_MNO, `ysyx_22040931_EBREAK},
+    `ysyx_22040931_mret,    {1'b1,`ysyx_22040931_System, `ysyx_22040931_NO, `ysyx_22040931_MNO, `ysyx_22040931_MRET  }
     });
 
     assign jump = out[0];
@@ -76,5 +77,6 @@ module ysyx_22040931_Itype(
     assign aluop = out[9 : 4];
     assign exop = out[12 : 10];
     assign itype = out[13];
+    assign except = out4[`ysyx_22040931_EXCEPT_BUS];
 
 endmodule

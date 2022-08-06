@@ -52,6 +52,9 @@ ysyx_22040931_IF ysyx_22040931_IF(
     .id_jumptype(jumptype),
     .id_pc(id_pc),
     .id_branch(branch),
+    //except
+    .now_except(now_except),
+    .mtvec_pc(csr_mtvec),
     
     .pre_jump(pre_jump),
     .pre_branch(pre_branch),
@@ -153,6 +156,8 @@ ysyx_22040931_ID ysyx_22040931_ID(
     .aluop(id_aluop),    
     .memwop(id_memwop),
     .memrop(id_memrop),
+    //except
+    .except(id_except),
 
     .regs(regs)
 
@@ -188,6 +193,8 @@ wire [2 : 0]     id_exop;
 wire [`ysyx_22040931_ALU_BUS]    id_aluop;    
 wire [2 : 0]   id_memwop;
 wire [2 : 0]   id_memrop;
+//except
+wire [`ysyx_22040931_EXCEPT_BUS] id_except;
 
 //id valid <-> ready
 wire id_ready;
@@ -224,6 +231,7 @@ id_ex id_ex(
     .ID_memrop(id_memrop),
     .ID_mem_ena(id_mem_ena),
     .ID_mem_wr(id_mem_wr),
+    .ID_except(id_except),
 
 
     .EX_w_ena(EX_w_ena),
@@ -242,6 +250,7 @@ id_ex id_ex(
     .EX_memrop(EX_memrop),
     .EX_mem_ena(EX_mem_ena),
     .EX_mem_wr(EX_mem_wr),
+    .EX_except(EX_except),
 
     .EX_instr(EX_instr),
     .EX_pc(EX_pc)
@@ -263,49 +272,11 @@ wire [2 : 0]   EX_memwop;
 wire [2 : 0]   EX_memrop;
 wire          EX_mem_ena;
 wire           EX_mem_wr;
+//except
+wire [`ysyx_22040931_EXCEPT_BUS] EX_except;
 wire [`ysyx_22040931_INST_BUS] EX_instr;
 wire [`ysyx_22040931_PC_BUS] EX_pc;
 
-
-wire valid = (WB_instr != 0) & mem_valid;
-//CSR_reg
-CSR CSR(
-
-    .reset(reset),
-    .clock(clock),
-    .valid(valid),
-
-    .csr_w_ena(WB_csr_w_ena),
-    .csr_w_addr(WB_csr_w_addr),
-    .csr_w_data(WB_csr_w_data),
-    
-    .csr_r_ena(id_valid & EX_csr_ena),
-    .csr_r_addr(EX_csr_addr),
-    .csr_r_data(csr_r_data),
-    
-  
-    .csr_mstatus (csr_mstatus ),
-    .csr_mie     (csr_mie     ),
-    .csr_mtvec   (csr_mtvec   ),
-    .csr_mscratch(csr_mscratch),
-    .csr_mepc    (csr_mepc    ),
-    .csr_mcause  (csr_mcause  ),
-    .csr_mip     (csr_mip     ),
-    .csr_mcycle  (csr_mcycle  ),          
-    .csr_minstret(csr_minstret), 
-    .csr_sstatus (csr_sstatus )  
-);
-wire [`ysyx_22040931_DATA_BUS] csr_r_data;
-wire [`ysyx_22040931_DATA_BUS] csr_mstatus ;
-wire [`ysyx_22040931_DATA_BUS] csr_mie     ;
-wire [`ysyx_22040931_DATA_BUS] csr_mtvec   ;
-wire [`ysyx_22040931_DATA_BUS] csr_mscratch;
-wire [`ysyx_22040931_DATA_BUS] csr_mepc    ;
-wire [`ysyx_22040931_DATA_BUS] csr_mcause  ;
-wire [`ysyx_22040931_DATA_BUS] csr_mip     ;
-wire [`ysyx_22040931_DATA_BUS] csr_mcycle  ;          
-wire [`ysyx_22040931_DATA_BUS] csr_minstret; 
-wire [`ysyx_22040931_DATA_BUS] csr_sstatus ;
 
 
 ysyx_22040931_EX ysyx_22040931_EX(
@@ -341,6 +312,8 @@ ysyx_22040931_EX ysyx_22040931_EX(
     .memrop_i(EX_memrop),
     .mem_ena_i(EX_mem_ena),
     .mem_wr_i(EX_mem_wr),
+    //except
+    .except_i(EX_except),
     
 
     //regfile
@@ -358,6 +331,8 @@ ysyx_22040931_EX ysyx_22040931_EX(
     .mem_wr(ex_mem_wr),    
     .mem_addr(ex_mem_addr),
     .mem_data(ex_mem_data),
+    //except
+    .except(ex_except),
     //liushuixian
     .instr_o(ex_instr),
     .pc_o(ex_pc)
@@ -383,6 +358,8 @@ wire          ex_mem_ena;
 wire           ex_mem_wr;    
 wire [`ysyx_22040931_MEM_BUS] ex_mem_addr;
 wire [`ysyx_22040931_DATA_BUS] ex_mem_data;
+//except
+wire [`ysyx_22040931_EXCEPT_BUS] ex_except;
 //liushuixian
 wire [`ysyx_22040931_INST_BUS] ex_instr;
 wire [`ysyx_22040931_PC_BUS] ex_pc;
@@ -420,6 +397,8 @@ ex_mem ex_mem(
     .EX_mem_wr(ex_mem_wr),    
     .EX_mem_addr(ex_mem_addr),
     .EX_mem_data(ex_mem_data),
+    //except
+    .EX_except(ex_except),
 
 
     .MEM_w_ena(MEM_w_ena),
@@ -436,6 +415,8 @@ ex_mem ex_mem(
     .MEM_mem_wr(MEM_mem_wr),
     .MEM_mem_addr(MEM_mem_addr),
     .MEM_mem_stor_data(MEM_mem_stor_data),
+    //except
+    .MEM_except(MEM_except),
     //liushuixian
     .MEM_instr(MEM_instr),
     .MEM_pc(MEM_pc)
@@ -457,6 +438,8 @@ wire           MEM_mem_ena;
 wire           MEM_mem_wr;
 wire [`ysyx_22040931_MEM_BUS]  MEM_mem_addr;
 wire [`ysyx_22040931_DATA_BUS] MEM_mem_stor_data;
+//except
+wire [`ysyx_22040931_EXCEPT_BUS] MEM_except;
 //liushuixian
 wire [`ysyx_22040931_INST_BUS] MEM_instr;
 wire [`ysyx_22040931_PC_BUS]  MEM_pc;
@@ -488,7 +471,9 @@ ysyx_22040931_MEM ysyx_22040931_MEM(
     .mem_wr_i(MEM_mem_wr),
     .mem_addr_i(MEM_mem_addr),
     .mem_stor_data_i(MEM_mem_stor_data),
-    .mem_return_data(momory_data),               
+    .mem_return_data(momory_data),   
+    //except
+    .except_i(MEM_except),           
     //liushuixian
     .pc_i(MEM_pc),
     .instr(MEM_instr),
@@ -507,6 +492,8 @@ ysyx_22040931_MEM ysyx_22040931_MEM(
     .mem_wr(mem_wr),
     .mem_addr(mem_addr),
     .mem_stor_data(mem_stor_data),//
+    //except
+    .except(mem_except),
     //liushuixian
     .instr_o(mem_instr),
     .pc_o(mem_pc)
@@ -524,6 +511,8 @@ wire [`ysyx_22040931_DATA_BUS] mem_w_data;
 wire mem_csr_w_ena;
 wire [`ysyx_22040931_CSR_BUS] mem_csr_w_addr;
 wire [`ysyx_22040931_DATA_BUS] mem_csr_w_data;
+//except
+wire [`ysyx_22040931_EXCEPT_BUS] mem_except;
 //liushuixian
 wire [`ysyx_22040931_PC_BUS] mem_pc;
 wire [`ysyx_22040931_INST_BUS] mem_instr;
@@ -550,15 +539,21 @@ mem_wb mem_wb(
     .MEM_w_ena(mem_w_ena),
     .MEM_w_addr(mem_w_addr),
     .MEM_w_data(mem_w_data),
+    //except
+    .MEM_except(mem_except),
     //csr
     .MEM_csr_w_ena(mem_csr_w_ena),
     .MEM_csr_w_addr(mem_csr_w_addr),
     .MEM_csr_w_data(mem_csr_w_data),
+    
 
 
+    //regfile
     .WB_w_ena(WB_w_ena),
     .WB_w_addr(WB_w_addr),
     .WB_w_data(WB_w_data),
+    //except
+    .WB_except(WB_except),
     //csr
     .WB_csr_w_ena(WB_csr_w_ena),
     .WB_csr_w_addr(WB_csr_w_addr),
@@ -576,6 +571,8 @@ wire [`ysyx_22040931_DATA_BUS] WB_w_data;
 wire          WB_csr_w_ena;
 wire [`ysyx_22040931_REG_BUS]  WB_csr_w_addr;
 wire [`ysyx_22040931_DATA_BUS] WB_csr_w_data;
+//except
+wire [`ysyx_22040931_EXCEPT_BUS] WB_except;
 //liushuixian
 wire [`ysyx_22040931_PC_BUS] WB_pc;
 wire [`ysyx_22040931_INST_BUS] WB_instr;
@@ -588,18 +585,70 @@ ysyx_22040931_WB ysyx_22040931_WB(
     .w_ena_i(WB_w_ena),
     .w_addr_i(WB_w_addr),
     .w_data_i(WB_w_data),
+    //except
+    .except(WB_except),
     //liushuixian
     .pc_i(WB_pc),
     
 
     .w_ena(wb_w_ena),
     .w_addr(wb_w_addr),
-    .w_data(wb_w_data)
+    .w_data(wb_w_data),
+    //except
+    .now_except(now_except)
 );
 
 wire wb_w_ena;
 wire [4 : 0] wb_w_addr;
 wire [`ysyx_22040931_DATA_BUS] wb_w_data;
+//except
+wire now_except;
+
+
+//CSR_reg
+wire valid = (WB_instr != 0) & mem_valid;
+CSR CSR(
+    .reset(reset),
+    .clock(clock),
+    .valid(valid),
+    //except
+    .except(WB_except),
+
+    .csr_w_ena(WB_csr_w_ena),
+    .csr_w_addr(WB_csr_w_addr),
+    .csr_w_data(WB_csr_w_data),
+    
+    .csr_r_ena(id_valid & EX_csr_ena),
+    .csr_r_addr(EX_csr_addr),
+    .csr_r_data(csr_r_data),
+    
+  
+    .csr_mstatus (csr_mstatus ),
+    .csr_mie     (csr_mie     ),
+    .csr_mtvec   (csr_mtvec   ),
+    .csr_mscratch(csr_mscratch),
+    .csr_mepc    (csr_mepc    ),
+    .csr_mcause  (csr_mcause  ),
+    .csr_mip     (csr_mip     ),
+    .csr_mcycle  (csr_mcycle  ),          
+    .csr_minstret(csr_minstret), 
+    .csr_sstatus (csr_sstatus )  
+);
+wire [`ysyx_22040931_DATA_BUS] csr_r_data;
+wire [`ysyx_22040931_DATA_BUS] csr_mstatus ;
+wire [`ysyx_22040931_DATA_BUS] csr_mie     ;
+wire [`ysyx_22040931_DATA_BUS] csr_mtvec   ;
+wire [`ysyx_22040931_DATA_BUS] csr_mscratch;
+wire [`ysyx_22040931_DATA_BUS] csr_mepc    ;
+wire [`ysyx_22040931_DATA_BUS] csr_mcause  ;
+wire [`ysyx_22040931_DATA_BUS] csr_mip     ;
+wire [`ysyx_22040931_DATA_BUS] csr_mcycle  ;          
+wire [`ysyx_22040931_DATA_BUS] csr_minstret; 
+wire [`ysyx_22040931_DATA_BUS] csr_sstatus ;
+
+
+
+
 
 
 

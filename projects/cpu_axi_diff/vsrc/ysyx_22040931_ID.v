@@ -2,10 +2,9 @@
 `include "defines.v"
 
 module ysyx_22040931_ID(
-
-    //regfile
     input wire reset,
     input wire clock,
+    //regfile
     input wire w_ena_i,
     input wire [`ysyx_22040931_REG_BUS] w_addr_i,
     input wire [`ysyx_22040931_DATA_BUS] w_data_i,
@@ -57,6 +56,9 @@ module ysyx_22040931_ID(
     output wire [`ysyx_22040931_ALU_BUS]    aluop,    
     output wire [2 : 0]   memwop,
     output wire [2 : 0]   memrop,
+
+    //except
+    output wire [`ysyx_22040931_EXCEPT_BUS] except,
 
     //difftest
     output wire [`ysyx_22040931_DATA_BUS] regs[0 : 31]
@@ -133,6 +135,7 @@ assign error_pre = (pre_jump != mux_pc) ? 1'b1 : (pre_branch != branch) ? mux_pc
     .instr(instr),
     .r_data1(data1),
     .r_data2(data2),
+
     .csr_ena(csr_ena),
     .csr_addr(csr_addr),
 	.w_ena(w_ena),
@@ -143,8 +146,9 @@ assign error_pre = (pre_jump != mux_pc) ? 1'b1 : (pre_branch != branch) ? mux_pc
     .r_addr2(r_addr2),
     .mem_ena(mem_ena),
     .mem_wr(mem_wr),
-    .ztype(ztype),
 
+    .except(except),
+    .ztype(ztype),
     .exop(exop),
     .aluop(aluop),    
     .memwop(memwop),

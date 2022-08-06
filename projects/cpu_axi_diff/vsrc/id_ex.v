@@ -31,6 +31,7 @@ module id_ex(
     input wire [2 : 0]   ID_memrop,
     input wire          ID_mem_ena,
     input wire           ID_mem_wr,
+    input wire [`ysyx_22040931_EXCEPT_BUS] ID_except,
 
 
     output reg          EX_w_ena,
@@ -49,6 +50,7 @@ module id_ex(
     output reg [2 : 0]   EX_memrop,
     output reg          EX_mem_ena,
     output reg           EX_mem_wr,
+    output reg [`ysyx_22040931_EXCEPT_BUS] EX_except,
 
     output reg [`ysyx_22040931_INST_BUS] EX_instr,
     output reg [`ysyx_22040931_PC_BUS] EX_pc
@@ -90,6 +92,7 @@ assign id_valid = id_now_valid;
             EX_instr <= `ysyx_22040931_NONE_INST;
             EX_csr_ena  <= `ysyx_22040931_N_ENA;
             EX_csr_addr <= `ysyx_22040931_ZERO_CSR;
+            EX_except <= `ysyx_22040931_NO_EXCEPT;
         end
         else begin
             if(if_valid & id_ready) begin
@@ -109,6 +112,7 @@ assign id_valid = id_now_valid;
                     EX_instr <= `ysyx_22040931_NONE_INST;
                     EX_csr_ena  <= `ysyx_22040931_N_ENA;
                     EX_csr_addr <= `ysyx_22040931_ZERO_CSR;
+                    EX_except <= `ysyx_22040931_NO_EXCEPT;
                 end
                 else begin
                     EX_w_ena <= ID_w_ena;
@@ -126,6 +130,7 @@ assign id_valid = id_now_valid;
                     EX_instr <= ID_instr;
                     EX_csr_ena  <= ID_csr_ena;
                     EX_csr_addr <= ID_csr_addr;
+                    EX_except <= ID_except;
                 end
             end
             // else if(id_go) begin
