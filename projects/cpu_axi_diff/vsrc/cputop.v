@@ -463,7 +463,8 @@ wire [`ysyx_22040931_PC_BUS]  MEM_pc;
 
 
 ysyx_22040931_MEM ysyx_22040931_MEM(
-
+    .reset(reset),
+    .clock(clock),
     //woshou
     .ex_gi_valid(ex_valid),
     .mem_gi_ready(mem_ready),
@@ -487,7 +488,7 @@ ysyx_22040931_MEM ysyx_22040931_MEM(
     .mem_wr_i(MEM_mem_wr),
     .mem_addr_i(MEM_mem_addr),
     .mem_stor_data_i(MEM_mem_stor_data),
-    .mem_data(momory_data),               
+    .mem_return_data(momory_data),               
     //liushuixian
     .pc_i(MEM_pc),
     .instr(MEM_instr),
@@ -754,20 +755,20 @@ DifftestCSRState DifftestCSRState(
   .clock              (clock),
   .coreid             (0),
   .priviledgeMode     (3),  //M
-  .mstatus            (0),
-  .sstatus            (0),
-  .mepc               (0),
+  .mstatus            (csr_mstatus),
+  .sstatus            (csr_sstatus),
+  .mepc               (csr_mepc),
   .sepc               (0),
   .mtval              (0),
   .stval              (0),
-  .mtvec              (0),
+  .mtvec              (csr_mtvec),
   .stvec              (0),
-  .mcause             (0),
+  .mcause             (csr_mcause),
   .scause             (0),
   .satp               (0),
-  .mip                (0),
-  .mie                (0),
-  .mscratch           (0),
+  .mip                (csr_mip),
+  .mie                (csr_mie),
+  .mscratch           (csr_mscratch),
   .sscratch           (0),
   .mideleg            (0),
   .medeleg            (0)

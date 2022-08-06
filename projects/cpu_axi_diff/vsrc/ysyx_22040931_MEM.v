@@ -2,7 +2,8 @@
 `include "defines.v"
 
 module ysyx_22040931_MEM(
-
+    input wire reset,
+    input wire clock,
 
     //woshou
     input wire ex_gi_valid,
@@ -27,7 +28,7 @@ module ysyx_22040931_MEM(
     input wire           mem_wr_i,
     input wire [`ysyx_22040931_MEM_BUS] mem_addr_i,
     input wire [`ysyx_22040931_DATA_BUS] mem_stor_data_i,
-    input wire [`ysyx_22040931_DATA_BUS] mem_data,
+    input wire [`ysyx_22040931_DATA_BUS] mem_return_data,   //
     
     //liushuixian
     input wire [`ysyx_22040931_PC_BUS] pc_i,
@@ -53,8 +54,8 @@ module ysyx_22040931_MEM(
 
 );
 
-assign to_mem_valid = mem_ena_i ? (ex_gi_valid & arbiter_mem_valid) : ex_gi_valid;
-assign to_ex_ready = mem_ena_i ? (mem_gi_ready & arbiter_ex_ready) : mem_gi_ready;
+assign to_mem_valid = mem_ena ? (ex_gi_valid & arbiter_mem_valid) : ex_gi_valid;
+assign to_ex_ready  = mem_ena ? (mem_gi_ready & arbiter_ex_ready) : mem_gi_ready;
 //liushui
 assign pc_o = pc_i;
 assign instr_o = instr;
@@ -67,7 +68,8 @@ assign instr_o = instr;
     assign csr_w_addr = csr_w_addr_i;
     assign csr_w_data = csr_w_data_i;
 
-    assign mem_ena = mem_ena_i & ex_gi_valid; //ena & valid
+    wire ena = mem_ena_i & ex_gi_valid;
+    assign mem_ena = ena & !clint_ena; //ena & valid
     assign mem_wr = mem_wr_i;
     assign mem_addr = mem_addr_i;
 
@@ -91,6 +93,7 @@ assign instr_o = instr;
         }
     );
 
+    wire [`ysyx_22040931_DATA_BUS] mem_data = clint_ena ? clint_data : mem_return_data; 
     ysyx_22040931_MuxD #(7, 3, 64)  mem_r_data_mux (
         mem_r_data,
         memrop,
@@ -160,6 +163,24 @@ assign instr_o = instr;
             {`ysyx_22040931_W_FOR, 1'b1},  {mem_stor_data_i[31 : 0], 32'b0}
         }
     );
+
+
+wire [`ysyx_22040931_DATA_BUS] clint_data;
+wire clint_ena = (mem_addr_i == 64'h2000000) | (mem_addr_i == 64'h2004000) | (mem_addr_i == 64'h200bff8) ? ena : 1'b0;
+CLINT  CLINT(
+    .reset(reset),
+    .clock(clock),
+    .mem_wr(mem_wr_i),
+    .clint_ena(clint_ena),
+    .mem_addr(mem_addr_i),
+    .stor_data(mem_stor_data_i),
+
+
+    .time_inter(clint),
+    .clint_data(clint_data)
+
+);
+wire clint;
 
 
 endmodule
