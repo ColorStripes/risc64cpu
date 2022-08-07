@@ -7,7 +7,7 @@ module CSR(
     input wire clock,
     input wire valid,
     //except
-    input wire mem_valid,
+    input wire wb_ready,
     input wire [`ysyx_22040931_EXCEPT_BUS] except,
     input wire [`ysyx_22040931_PC_BUS] except_pc,
     output wire [`ysyx_22040931_PC_BUS] handle_pc,
@@ -100,10 +100,10 @@ module CSR(
 
 
 
-    wire inter  = (except == `ysyx_22040931_INTER ) ? mem_valid : 1'b0;
-    wire ecall  = (except == `ysyx_22040931_ECALL ) ? mem_valid : 1'b0;
-    wire ebreak = (except == `ysyx_22040931_EBREAK) ? mem_valid : 1'b0;
-    wire mret   = (except == `ysyx_22040931_MRET  ) ? mem_valid : 1'b0;
+    wire inter  = (except == `ysyx_22040931_INTER ) ? wb_ready : 1'b0;
+    wire ecall  = (except == `ysyx_22040931_ECALL ) ? wb_ready : 1'b0;
+    wire ebreak = (except == `ysyx_22040931_EBREAK) ? wb_ready : 1'b0;
+    wire mret   = (except == `ysyx_22040931_MRET  ) ? wb_ready : 1'b0;
                                                     
     assign csr_mstatus  = (inter | ecall | ebreak) ? {mstatus[63 : 13], 2'b11, mstatus[10 : 8], mstatus[3], mstatus[6 : 4], 1'b0, mstatus[2 : 0]} :
                           mret ? {mstatus[63 : 13], 2'b00, mstatus[10 : 8], 1'b1, mstatus[6 : 4], mstatus[7], mstatus[2 : 0]} :

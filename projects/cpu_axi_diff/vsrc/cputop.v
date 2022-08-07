@@ -621,7 +621,7 @@ CSR CSR(
     .clock(clock),
     .valid(valid),
     //except
-    .mem_valid(wb_ready),
+    .wb_ready(wb_ready),
     .except(WB_except),
     .except_pc(WB_pc),
     .handle_pc(handle_pc),
