@@ -690,7 +690,8 @@ wire inst_valid = ((WB_pc != `ysyx_22040931_ZERO_PC) | (WB_instr != 0)) & wb_rea
 //wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2) | (wb_instr == 32'h0007b483) | (wb_instr == 32'h00f73023);
 ////wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2) | (clint) ;
 ////wire cause = (MEM_except_type == 64'h4);
-wire skip = (WB_instr == 32'h7b);
+wire skip = (WB_instr == 32'h7b) | (WB_csr_w_addr == 12'hb00);
+wire now_clint = mem_except[6];
 
 always @(negedge clock) begin
   if (reset) begin
@@ -734,7 +735,7 @@ assign c = cycleCnt;
 DifftestArchEvent DifftestArchEvent (
     .clock(clock),	    // 时钟
     .coreid(0),		    // cpu id，单核时固定为0
-    .intrNO(0),		   // 中断号，非0时产生中断。产生中断的时钟周期中，DifftestInstrCommit提交的valid需为0
+    .intrNO(now_clint),		   // 中断号，非0时产生中断。产生中断的时钟周期中，DifftestInstrCommit提交的valid需为0
     .cause(0),			// 异常号，ecall时不需要考虑
     .exceptionPC(cmt_pc),	// 产生异常时的PC
     .exceptionInst(cmt_inst)	// 产生异常时的指令

@@ -89,7 +89,7 @@ module ysyx_22040931_Decoder(
     ysyx_22040931_Btype ysyx_22040931_Btype (instr[6 : 0], instr[14 : 12], r_data1, r_data2, bjump, b_aluop, b_exop, btype);
     ysyx_22040931_Jtype ysyx_22040931_Jtype (instr[6 : 0], jjump, j_aluop, j_exop, jtype);
     ysyx_22040931_Utype ysyx_22040931_Utype (instr[6 : 0], u_aluop, u_exop, utype);
-    ysyx_22040931_Ctype ysyx_22040931_Ctype (instr[6 : 0], instr[14 : 12], c_aluop, cena, c_exop, ctype);
+    ysyx_22040931_Ctype ysyx_22040931_Ctype (instr[6 : 0], instr[14 : 12], c_aluop, c_exop, cena, ctype);
 
 
 endmodule

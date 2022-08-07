@@ -192,7 +192,7 @@ CLINT  CLINT(
 );
 
 wire clint;
-assign except = clint & mie & mip & mstatus ? `ysyx_22040931_INTER | except_i : except_i;
+assign except = (mie & mstatus) & (clint | mip) ? `ysyx_22040931_INTER | except_i : except_i;
                                               //& to_mem_valid
 
 endmodule

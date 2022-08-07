@@ -241,7 +241,7 @@
 `define msip     64'h2000000
 `define mtimecmp 64'h2004000
 `define mtime    64'h200bff8
-`define TIME     64'd00000
+`define TIME     64'd00002
 
 //exception
 `define ysyx_22040931_EXCEPT_BUS 6 : 0
