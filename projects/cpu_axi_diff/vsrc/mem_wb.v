@@ -8,7 +8,7 @@ module mem_wb(
     input wire stall,
     //wo shou
     input wire ex_valid,
-    //input wire wb_ready,
+    input wire wb_ready,
     output wire mem_ready,
     output wire mem_valid,
     //liushuixian
@@ -22,7 +22,7 @@ module mem_wb(
     input wire [`ysyx_22040931_EXCEPT_BUS] MEM_except,
     //csr
     input wire          MEM_csr_w_ena,
-    input wire [`ysyx_22040931_REG_BUS] MEM_csr_w_addr,
+    input wire [`ysyx_22040931_CSR_BUS] MEM_csr_w_addr,
     input wire [`ysyx_22040931_DATA_BUS] MEM_csr_w_data,
 
     
@@ -34,7 +34,7 @@ module mem_wb(
     output wire [`ysyx_22040931_EXCEPT_BUS] WB_except,
     //csr
     output wire          WB_csr_w_ena,
-    output wire [`ysyx_22040931_REG_BUS] WB_csr_w_addr,
+    output wire [`ysyx_22040931_CSR_BUS] WB_csr_w_addr,
     output wire [`ysyx_22040931_DATA_BUS] WB_csr_w_data,
     //liushuixian
     output reg [`ysyx_22040931_INST_BUS] WB_instr,
@@ -47,8 +47,8 @@ module mem_wb(
 reg mem_now_valid;
 wire mem_go;
 assign mem_go = ~stall;
-assign mem_ready = mem_go;   //当前时钟不是有效数据，或者当前已经处理完这个周期的活
-assign mem_valid = mem_now_valid;
+assign mem_ready = mem_go & wb_ready;   //当前时钟不是有效数据，或者当前已经处理完这个周期的活
+assign mem_valid = mem_now_valid & ~flush;
 
     always@(posedge clock) begin
         if(reset == 1'b1) begin
@@ -72,6 +72,17 @@ assign mem_valid = mem_now_valid;
             WB_csr_w_data <= `ysyx_22040931_ZERO_NUM;
             WB_except <= `ysyx_22040931_NO_EXCEPT;
         end
+        else if(flush) begin
+            WB_w_ena <= `ysyx_22040931_N_ENA;
+            WB_w_addr <= `ysyx_22040931_ZERO_REG;
+            WB_w_data <= `ysyx_22040931_ZERO_NUM;
+            WB_pc <= `ysyx_22040931_ZERO_PC;
+            WB_instr <= `ysyx_22040931_NONE_INST;
+            WB_csr_w_ena  <= `ysyx_22040931_N_ENA;
+            WB_csr_w_addr <= `ysyx_22040931_ZERO_CSR;
+            WB_csr_w_data <= `ysyx_22040931_ZERO_NUM;
+            WB_except <= `ysyx_22040931_NO_EXCEPT;
+        end
         else begin
             if(ex_valid & mem_ready) begin
                 WB_w_ena <= MEM_w_ena;
@@ -84,14 +95,14 @@ assign mem_valid = mem_now_valid;
                 WB_csr_w_data <= MEM_csr_w_data;
                 WB_except <= MEM_except;
             end
-            else if(mem_go) begin
+            else if(mem_ready) begin
                 WB_w_ena <= `ysyx_22040931_N_ENA;
                 WB_csr_w_ena  <= `ysyx_22040931_N_ENA;
                 //WB_w_addr <= `ysyx_22040931_ZERO_REG;
                 //WB_w_data <= `ysyx_22040931_ZERO_NUM;
                 WB_pc <= `ysyx_22040931_ZERO_PC;
                 WB_instr <= `ysyx_22040931_NONE_INST;
-                WB_except <= `ysyx_22040931_NO_EXCEPT;
+                //WB_except <= `ysyx_22040931_NO_EXCEPT;
             end
         end
     end

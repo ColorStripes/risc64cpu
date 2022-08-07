@@ -31,6 +31,12 @@ module ysyx_22040931_MEM(
     input wire [`ysyx_22040931_DATA_BUS] mem_return_data,   //
     //except
     input wire [`ysyx_22040931_EXCEPT_BUS] except_i,
+    input wire now_except,
+    //inter    
+    input wire mie,
+    input wire mip,
+    input wire mstatus,
+
     
     //liushuixian
     input wire [`ysyx_22040931_PC_BUS] pc_i,
@@ -72,7 +78,7 @@ assign instr_o = instr;
     assign csr_w_addr = csr_w_addr_i;
     assign csr_w_data = csr_w_data_i;
 
-    wire ena = mem_ena_i & ex_gi_valid;
+    wire ena = mem_ena_i & !now_except & ex_gi_valid;
     assign mem_ena = ena & !clint_ena; //ena & valid
     assign mem_wr = mem_wr_i;
     assign mem_addr = mem_addr_i;
@@ -186,6 +192,7 @@ CLINT  CLINT(
 );
 
 wire clint;
-assign except = clint ? `ysyx_22040931_INTER | except_i : except_i;
+assign except = clint & mie & mip & mstatus ? `ysyx_22040931_INTER | except_i : except_i;
+                                              //& to_mem_valid
 
 endmodule

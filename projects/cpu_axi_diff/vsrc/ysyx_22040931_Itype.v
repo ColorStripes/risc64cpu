@@ -66,11 +66,11 @@ module ysyx_22040931_Itype(
     `ysyx_22040931_srliw,   {1'b1,`ysyx_22040931_Short, `ysyx_22040931_SHIRW, `ysyx_22040931_MNO}
   });
 
-    ysyx_22040931_MuxD #(2, 22, 20) Itype4 (out4, chose4, 20'b0000_0000_00000_0000000, {
+    ysyx_22040931_MuxD #(3, 22, 20) Itype4 (out4, chose4, 20'b0000_0000_00000_0000000, {
     `ysyx_22040931_ecall,   {1'b1,`ysyx_22040931_System, `ysyx_22040931_NO, `ysyx_22040931_MNO, `ysyx_22040931_ECALL },
     `ysyx_22040931_ebreak,  {1'b1,`ysyx_22040931_System, `ysyx_22040931_NO, `ysyx_22040931_MNO, `ysyx_22040931_EBREAK},
     `ysyx_22040931_mret,    {1'b1,`ysyx_22040931_System, `ysyx_22040931_NO, `ysyx_22040931_MNO, `ysyx_22040931_MRET  }
-    });
+  });
 
     assign jump = out[0];
     assign memrop = out[3 : 1];

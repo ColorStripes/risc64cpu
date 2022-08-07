@@ -54,7 +54,7 @@ ysyx_22040931_IF ysyx_22040931_IF(
     .id_branch(branch),
     //except
     .now_except(now_except),
-    .mtvec_pc(csr_mtvec),
+    .handle_pc(handle_pc),
     
     .pre_jump(pre_jump),
     .pre_branch(pre_branch),
@@ -77,7 +77,7 @@ wire if_valid;
 if_id if_id(
     .reset(reset),
     .clock(clock),
-    .flush(),
+    .flush(flush),
     .stall(load_stall),         ////////////////
     .nop(error_pre),            ////////////////
     //wo shou
@@ -203,7 +203,7 @@ wire id_valid;
 id_ex id_ex(
     .reset(reset),
     .clock(clock),
-    .flush(),     //记得flush与各级使能相与 p71
+    .flush(flush),     //记得flush与各级使能相与 p71
     .stall(),
     .nop(load_stall),
     //wo shou
@@ -372,7 +372,7 @@ wire ex_valid;
 ex_mem ex_mem(
     .reset(reset),
     .clock(clock),
-    .flush(),
+    .flush(flush),
     .stall(),
     //wo shou
     .id_valid(to_ex_valid),
@@ -473,7 +473,12 @@ ysyx_22040931_MEM ysyx_22040931_MEM(
     .mem_stor_data_i(MEM_mem_stor_data),
     .mem_return_data(momory_data),   
     //except
-    .except_i(MEM_except),           
+    .except_i(MEM_except),
+    .now_except(now_except),     //mem_ena is unvalid   
+    //inter
+    .mip(csr_mip[7]),
+    .mie(csr_mie[7]),
+    .mstatus(csr_mstatus[3]),        
     //liushuixian
     .pc_i(MEM_pc),
     .instr(MEM_instr),
@@ -519,17 +524,17 @@ wire [`ysyx_22040931_INST_BUS] mem_instr;
 
 
 //mem valid <-> ready
-//wire mem_ready;
 wire mem_valid;
+wire wb_ready;
 
 mem_wb mem_wb(
     .reset(reset),
     .clock(clock),
-    .flush(),
-    .stall(),
+    .flush(flush),
+    .stall(), 
     //wo shou
     .ex_valid(to_mem_valid),
-    //input wire wb_ready,
+    .wb_ready(wb_ready),        //flush is always exist   //wb_READY
     .mem_ready(mem_ready),
     .mem_valid(mem_valid),
     //liushuixian
@@ -569,7 +574,7 @@ wire [`ysyx_22040931_REG_BUS]  WB_w_addr;
 wire [`ysyx_22040931_DATA_BUS] WB_w_data;
 //csr
 wire          WB_csr_w_ena;
-wire [`ysyx_22040931_REG_BUS]  WB_csr_w_addr;
+wire [`ysyx_22040931_CSR_BUS]  WB_csr_w_addr;
 wire [`ysyx_22040931_DATA_BUS] WB_csr_w_data;
 //except
 wire [`ysyx_22040931_EXCEPT_BUS] WB_except;
@@ -581,12 +586,15 @@ wire [`ysyx_22040931_INST_BUS] WB_instr;
 // assign difftest_instr = WB_instr;
 
 ysyx_22040931_WB ysyx_22040931_WB(
-
+    .wb_ready(wb_ready),
+    //regfile
     .w_ena_i(WB_w_ena),
     .w_addr_i(WB_w_addr),
     .w_data_i(WB_w_data),
     //except
     .except(WB_except),
+    .arbiter_if_valid(arbiter_if_valid),
+    .flush(flush),
     //liushuixian
     .pc_i(WB_pc),
     
@@ -603,6 +611,7 @@ wire [4 : 0] wb_w_addr;
 wire [`ysyx_22040931_DATA_BUS] wb_w_data;
 //except
 wire now_except;
+wire flush;
 
 
 //CSR_reg
@@ -612,7 +621,10 @@ CSR CSR(
     .clock(clock),
     .valid(valid),
     //except
+    .mem_valid(wb_ready),
     .except(WB_except),
+    .except_pc(WB_pc),
+    .handle_pc(handle_pc),
 
     .csr_w_ena(WB_csr_w_ena),
     .csr_w_addr(WB_csr_w_addr),
@@ -621,8 +633,10 @@ CSR CSR(
     .csr_r_ena(id_valid & EX_csr_ena),
     .csr_r_addr(EX_csr_addr),
     .csr_r_data(csr_r_data),
+
     
-  
+    
+
     .csr_mstatus (csr_mstatus ),
     .csr_mie     (csr_mie     ),
     .csr_mtvec   (csr_mtvec   ),
@@ -646,6 +660,7 @@ wire [`ysyx_22040931_DATA_BUS] csr_mcycle  ;
 wire [`ysyx_22040931_DATA_BUS] csr_minstret; 
 wire [`ysyx_22040931_DATA_BUS] csr_sstatus ;
 
+wire [`ysyx_22040931_PC_BUS] handle_pc;
 
 
 
@@ -670,7 +685,7 @@ reg [31 : 0] inter;
 reg [63 : 0] MEM_except_type_f;
 
 
-wire inst_valid = ((WB_pc != `ysyx_22040931_ZERO_PC) | (WB_instr != 0));// && (inter != 32'h7b) ;
+wire inst_valid = ((WB_pc != `ysyx_22040931_ZERO_PC) | (WB_instr != 0)) & wb_ready;// && (inter != 32'h7b) ;
 //wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2) | (wb_instr == 32'h00063783) | (wb_instr == 32'h00f63023);
 //wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2) | (wb_instr == 32'h0007b483) | (wb_instr == 32'h00f73023);
 ////wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2) | (clint) ;
@@ -691,7 +706,7 @@ always @(negedge clock) begin
 	  regs_diff <= regs;
 
 
-    trap <= (WB_instr[6:0] == 7'h6b);// | (WB_pc == 64'h80000090);      /////////////////////duo  xie  le   wb_instr
+    trap <= (WB_instr[6:0] == 7'h6b);// | (WB_csr_w_addr == 12'hb00);// | (WB_pc == 64'h80000090);      /////////////////////duo  xie  le   wb_instr
     trap_code <= regs[10][7:0];
     cycleCnt <= cycleCnt + 1;
     instrCnt <= instrCnt + {63'h0, inst_valid};

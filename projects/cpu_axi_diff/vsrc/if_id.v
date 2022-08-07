@@ -31,19 +31,25 @@ reg if_now_valid;
 wire if_go;
 assign if_go = ~stall;
 assign if_ready = if_go & id_ready;   //当前时钟不是有效数据，或者当前已经处理完这个周期的活
-assign if_valid = if_now_valid;
+assign if_valid = if_now_valid & ~flush;
 
     always@(posedge clock) begin
         if(reset == 1'b1) begin
             if_now_valid <= 0;
         end
         else if(if_ready) begin
-            if_now_valid <= pc_valid;
+            if_now_valid <= pc_valid ;
         end
     end
 
     always @(posedge clock) begin
         if(reset == 1'b1) begin
+            ID_pc <= `ysyx_22040931_ZERO_PC;
+            ID_instr <= `ysyx_22040931_NONE_INST;
+            ID_pre_jump <= 1'b0;
+            ID_pre_branch <= `ysyx_22040931_ZERO_PC;
+        end
+        else if(flush) begin
             ID_pc <= `ysyx_22040931_ZERO_PC;
             ID_instr <= `ysyx_22040931_NONE_INST;
             ID_pre_jump <= 1'b0;

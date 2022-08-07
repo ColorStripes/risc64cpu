@@ -64,7 +64,7 @@ wire ex_go;
 assign ex_go = ~stall;
 
 assign ex_ready = ex_go & mem_ready;   //当前时钟不是有效数据，或者当前已经处理完这个周期的活
-assign ex_valid = ex_now_valid;
+assign ex_valid = ex_now_valid & ~flush;
 
     always@(posedge clock) begin
         if(reset == 1'b1) begin
@@ -78,6 +78,22 @@ assign ex_valid = ex_now_valid;
 
     always @(posedge clock) begin
         if(reset == 1'b1) begin
+            MEM_w_ena <= `ysyx_22040931_N_ENA;
+            MEM_w_addr <= `ysyx_22040931_ZERO_REG;
+            MEM_memwop <= `ysyx_22040931_MNO;
+            MEM_memrop <= `ysyx_22040931_MNO;
+            MEM_mem_ena <= `ysyx_22040931_N_ENA;
+            MEM_mem_wr <= `ysyx_22040931_READ;
+            MEM_mem_addr <= `ysyx_22040931_ZERO_NUM;
+            MEM_mem_stor_data <= `ysyx_22040931_ZERO_NUM;
+            MEM_pc <= `ysyx_22040931_ZERO_PC;
+            MEM_instr <= `ysyx_22040931_NONE_INST;
+            MEM_csr_w_ena  <= `ysyx_22040931_N_ENA;
+            MEM_csr_w_addr <= `ysyx_22040931_ZERO_CSR;
+            MEM_csr_w_data <= `ysyx_22040931_ZERO_NUM;
+            MEM_except <= `ysyx_22040931_NO_EXCEPT;
+        end
+        else if(flush) begin
             MEM_w_ena <= `ysyx_22040931_N_ENA;
             MEM_w_addr <= `ysyx_22040931_ZERO_REG;
             MEM_memwop <= `ysyx_22040931_MNO;
