@@ -500,6 +500,7 @@ ysyx_22040931_MEM ysyx_22040931_MEM(
     //except
     .except(mem_except),
     //liushuixian
+    .clint_ena_o(clint_ena_o),
     .instr_o(mem_instr),
     .pc_o(mem_pc)
 
@@ -521,7 +522,7 @@ wire [`ysyx_22040931_EXCEPT_BUS] mem_except;
 //liushuixian
 wire [`ysyx_22040931_PC_BUS] mem_pc;
 wire [`ysyx_22040931_INST_BUS] mem_instr;
-
+wire clint_ena_o;
 
 //mem valid <-> ready
 wire mem_valid;
@@ -540,6 +541,7 @@ mem_wb mem_wb(
     //liushuixian
     .MEM_pc(mem_pc),
     .MEM_instr(mem_instr),
+    .clint_ena_i(clint_ena_o),
     //regfile 
     .MEM_w_ena(mem_w_ena),
     .MEM_w_addr(mem_w_addr),
@@ -564,10 +566,11 @@ mem_wb mem_wb(
     .WB_csr_w_addr(WB_csr_w_addr),
     .WB_csr_w_data(WB_csr_w_data),
     //liushuixian
+    .clint_ena_o(clint_ena_n),
     .WB_instr(WB_instr),
     .WB_pc(WB_pc)
 );
-
+wire clint_ena_n;
 
 wire          WB_w_ena;
 wire [`ysyx_22040931_REG_BUS]  WB_w_addr;
@@ -685,13 +688,16 @@ reg [31 : 0] inter;
 reg [63 : 0] MEM_except_type_f;
 
 
-wire inst_valid = ((WB_pc != `ysyx_22040931_ZERO_PC) | (WB_instr != 0)) & wb_ready;// && (inter != 32'h7b) ;
+wire inst_valid = ((WB_pc != `ysyx_22040931_ZERO_PC) | (WB_instr != 0)) & wb_ready & !WB_except[6];// && (inter != 32'h7b) ;
 //wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2) | (wb_instr == 32'h00063783) | (wb_instr == 32'h00f63023);
 //wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2) | (wb_instr == 32'h0007b483) | (wb_instr == 32'h00f73023);
 ////wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2) | (clint) ;
 ////wire cause = (MEM_except_type == 64'h4);
-wire skip = (WB_instr == 32'h7b) | (WB_csr_w_addr == 12'hb00);
-wire now_clint = mem_except[6];
+wire skip = (WB_instr == 32'h7b) | (WB_csr_w_addr == 12'hb00) | clint_ena_n;
+            // | (WB_instr == 64'hff86b683)  | (WB_instr == 64'hff873703) 
+            // | (WB_instr == 64'h00d7b023)
+            // | (WB_instr == 64'h00e7b023);
+wire [31 : 0] now_clint = WB_except[6] & wb_ready ? 32'h7 : 32'h0;
 
 always @(negedge clock) begin
   if (reset) begin

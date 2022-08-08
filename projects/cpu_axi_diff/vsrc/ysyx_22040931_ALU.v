@@ -159,7 +159,7 @@ assign num2_sw = num2[31 : 0];
     `ysyx_22040931_DIVU  ,  quotient,
     `ysyx_22040931_DIVUW ,  quotient,     
     `ysyx_22040931_DIVW  ,  quotient,
-    `ysyx_22040931_ANOR  ,  num1 &~ num2,
+    `ysyx_22040931_ANOR  ,  ~num1 & num2,
     `ysyx_22040931_NUM1  ,  num1
     });
 

@@ -64,14 +64,14 @@ wire ex_go;
 assign ex_go = ~stall;
 
 assign ex_ready = ex_go & mem_ready;   //当前时钟不是有效数据，或者当前已经处理完这个周期的活
-assign ex_valid = ex_now_valid & ~flush;
+assign ex_valid = ex_now_valid ;
 
     always@(posedge clock) begin
         if(reset == 1'b1) begin
             ex_now_valid <= 0;
         end
         else if(ex_ready) begin
-            ex_now_valid <= id_valid;
+            ex_now_valid <= id_valid & ~flush;
         end
     end
 

@@ -201,7 +201,7 @@ module AXI4 # (
 
 
     wire rw_ready_nxt = trans_done;
-    wire rw_ready_en      = trans_done | rw_ready_o;
+    wire rw_ready_en  = trans_done | rw_ready_o;
     always @(posedge clock) begin
         if (reset) begin
             rw_ready_o <= 0;

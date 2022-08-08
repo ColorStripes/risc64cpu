@@ -100,7 +100,7 @@ module CSR(
 
 
 
-    wire inter  = (except == `ysyx_22040931_INTER ) ? wb_ready : 1'b0;
+    wire inter  = (except[6]) ? wb_ready : 1'b0;
     wire ecall  = (except == `ysyx_22040931_ECALL ) ? wb_ready : 1'b0;
     wire ebreak = (except == `ysyx_22040931_EBREAK) ? wb_ready : 1'b0;
     wire mret   = (except == `ysyx_22040931_MRET  ) ? wb_ready : 1'b0;
@@ -120,9 +120,12 @@ module CSR(
     assign csr_mip      = (csr_w_addr == `mip     ) & csr_w_ena ? csr_w_data : mip;//{mip[63 : 8], inter, mip[6 : 0]};
     assign csr_mcycle   = (csr_w_addr == `mcycle  ) & csr_w_ena ? csr_w_data : mcycle+1;
     assign csr_minstret = (csr_w_addr == `minstret) & csr_w_ena ? csr_w_data : valid ? minstret+1 : minstret;
-    assign csr_sstatus  = (csr_w_addr == `sstatus ) & csr_w_ena ? {(csr_w_data[13] & csr_w_data[14]) | (csr_w_data[15] & csr_w_data[16]), csr_w_data[62 : 0]} : sstatus ;
+    assign csr_sstatus  = csr_w_ena ? (csr_w_addr == `mstatus ) ? {(csr_w_data[13] & csr_w_data[14]) | (csr_w_data[15] & csr_w_data[16]), 46'h0, csr_w_data[16 : 13], 13'h0} :
+                                      (csr_w_addr == `sstatus ) ? {(csr_w_data[13] & csr_w_data[14]) | (csr_w_data[15] & csr_w_data[16]), csr_w_data[62 : 0]} : sstatus 
+                                      : sstatus;
 
 
     assign handle_pc = mret ? csr_mepc : csr_mtvec;
+
 
 endmodule

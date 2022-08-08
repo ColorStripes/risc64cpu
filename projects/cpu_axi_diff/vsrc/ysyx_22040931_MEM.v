@@ -59,6 +59,7 @@ module ysyx_22040931_MEM(
     //except
     output wire [`ysyx_22040931_EXCEPT_BUS] except,
     //liushuixian
+    output wire clint_ena_o,
     output wire [`ysyx_22040931_INST_BUS] instr_o,
     output wire [`ysyx_22040931_PC_BUS] pc_o
 
@@ -69,22 +70,22 @@ assign to_ex_ready  = mem_ena ? (mem_gi_ready & arbiter_ex_ready) : mem_gi_ready
 //liushui
 assign pc_o = pc_i;
 assign instr_o = instr;
+assign clint_ena_o = clint_ena;
 
-
-    assign w_ena = w_ena_i & ex_gi_valid;  //ena & valid
+    assign w_ena = w_ena_i & ex_gi_valid & !now_clint;  //ena & valid
     assign w_addr = w_addr_i;
     
-    assign csr_w_ena = csr_w_ena_i;
+    assign csr_w_ena = csr_w_ena_i & ex_gi_valid & !now_clint;
     assign csr_w_addr = csr_w_addr_i;
     assign csr_w_data = csr_w_data_i;
 
-    wire ena = mem_ena_i & !now_except & ex_gi_valid;
-    assign mem_ena = ena & !clint_ena; //ena & valid
+    wire ena = mem_ena_i & !now_except & ex_gi_valid & !now_clint;
+    assign mem_ena = ena & !clint_ena ; //ena & valid
     assign mem_wr = mem_wr_i;
     assign mem_addr = mem_addr_i;
 
     wire [`ysyx_22040931_DATA_BUS] mem_r_data;
-    assign w_data = (mem_ena & ~mem_wr) ? mem_r_data : w_data_i;
+    assign w_data = (mem_ena & ~mem_wr) | clint_ena ? mem_r_data : w_data_i;
 
     wire [2 : 0] memwrop;
     assign memwrop = mem_wr_i ? memwop : memrop;
@@ -192,7 +193,20 @@ CLINT  CLINT(
 );
 
 wire clint;
-assign except = (mie & mstatus) & (clint | mip) ? `ysyx_22040931_INTER | except_i : except_i;
+wire now_clint = (mie & mstatus) & (clint | mip) ? old_handshake & !is_nop : 1'b0;
+assign except = now_clint ? `ysyx_22040931_INTER : except_i;
                                               //& to_mem_valid
+
+reg old_handshake;                    //next load/store can clint
+always @(posedge clock) begin
+    if(reset) begin
+        old_handshake <= 0;
+    end
+    else begin
+        old_handshake <= to_mem_valid & to_ex_ready;
+    end
+end
+
+wire is_nop = (instr == 32'h0) ? 1'b1 : 1'b0;
 
 endmodule
