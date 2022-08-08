@@ -2,14 +2,12 @@
 `include "defines.v"
 
 module cputop(
-  output wire [63:0] c,
     input wire reset,
     input wire clock,
     //if
     input wire [`ysyx_22040931_INST_BUS] instr,
     //mem
     input wire [`ysyx_22040931_DATA_BUS] momory_data,
-    input wire hhhh,
     
 
     //if
@@ -500,7 +498,7 @@ ysyx_22040931_MEM ysyx_22040931_MEM(
     //except
     .except(mem_except),
     //liushuixian
-    .clint_ena_o(clint_ena_o),
+    .clint_ena_o(clint_ena_o),    //////////////////////////////////////
     .instr_o(mem_instr),
     .pc_o(mem_pc)
 
@@ -719,24 +717,6 @@ always @(negedge clock) begin
     instrCnt <= instrCnt + {63'h0, inst_valid};
   end
 end
-// always @(posedge clock) begin
-//        MEM_except_type_f <= MEM_except_type;
-// end
-
-// always @(*) begin
-//   inter = 32'b0;
-//   if((mcause[2 : 0] == 3'h7) && (MEM_except_type_f == 64'h1)) begin
-//       inter = 32'd7;
-//   end
-// end
-
-always @(posedge clock) begin
-if(hhhh) begin
-  //$display("pc:%h,,cyc:%d\n",MEM_pc,cycleCnt);
-end
-  
-end
-assign c = cycleCnt;
 
 DifftestArchEvent DifftestArchEvent (
     .clock(clock),	    // 时钟

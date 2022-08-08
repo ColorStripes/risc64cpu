@@ -10,8 +10,6 @@ module dcache #(
     parameter DATA_RAM_WIDTH= 128
 
 )(
-    input wire hhhh,////////////////////////////
-    input wire [63 : 0] c,
     input wire reset,
     input wire clock,
     //woshou
@@ -41,20 +39,6 @@ module dcache #(
     output wire [`ysyx_22040931_PC_BUS] axi_address
     
 );
-
-    always @(posedge clock) begin
-        if(!write_read && ({address[63 : 4],4'b0} == 64'h800049E0) && (~mask[111 : 96] != 16'h0)) begin
-            //$display("reat,mask:%h,maskkk:%h, cyc:%d\n",mask,~mask[111 : 96],c);
-        end
-    end
-
-    always @(posedge clock) begin
-        if(write_read && ({address[63 : 4],4'b0} == 64'h800049E0) && (~mask[111 : 96] != 16'h0)) begin
-            //$display("write:%h,mask:%h,maskkk:%h, cyc:%d\n",cache_sort_data, mask,~mask[111 : 96],c);
-        end
-    end
-
-
 
     wire [D_TAG-1 : 0]    tag    = address[D_TAG-1 + D_OFFSET+D_INDEX : D_OFFSET+D_INDEX]; //[31 : 10]  22bit
     wire [D_INDEX-1 : 0]  index  = address[D_INDEX-1 + D_OFFSET : D_OFFSET];

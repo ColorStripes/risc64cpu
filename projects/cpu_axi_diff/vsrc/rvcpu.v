@@ -257,8 +257,6 @@ wire [3 : 0] AXI_id;
 
 
 dcache dcache(
-    .c(c),
-    .hhhh(hhh),
     .reset(reset),
     .clock(clock),
     //woshou
@@ -288,13 +286,6 @@ dcache dcache(
     .axi_address(axi_address)
     
 );
-
-always @(posedge clock) begin
-if(hhh) begin
-  //$display("data:%h\n",arbiter_data);
-end
-  
-end
 
 wire dcache_ex_ready;
 wire dcache_mem_valid;
@@ -340,23 +331,14 @@ wire icache_if_valid;
 wire to_arbiter_pc_valid;
 wire to_arbiter_if_ready;
 
-wire hhh = (AXI_addr == 64'h800049E0) && (!AXI_req) && (AXI_ready);reg hhhh;
-always @(posedge clock) begin
-   if(hhh) begin
-    hhhh <= hhhh + 1;
-   end
-end
-wire [63 : 0] c;
+
 cputop cputop(
-    .c(c),
     .reset(reset),
     .clock(clock),
     //if
     .instr(icache_data[31 : 0]), //
     //mem
     .momory_data(dcache_data),
-    
-    .hhhh(hhh),
 
     //if
     .pc(pc),
