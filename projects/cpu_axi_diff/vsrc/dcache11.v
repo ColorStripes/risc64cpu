@@ -1,11 +1,11 @@
-//2022.8.8 xuxin
+//2022.7.29 xuxin
 `include "defines.v"
 
 module dcache #(
-    parameter D_TAG         = 21,
-    parameter D_INDEX       = 7,
+    parameter D_TAG         = 22,
+    parameter D_INDEX       = 6,
     parameter D_OFFSET      = 4,
-    parameter TAG_RAM_NUM   = 128,
+    parameter TAG_RAM_NUM   = 64,
     parameter DATA_RAM_NUM  = 64,
     parameter DATA_RAM_WIDTH= 128
 
@@ -48,23 +48,26 @@ module dcache #(
     //WAY0
     wire [DATA_RAM_WIDTH-1 : 0] DATA_WAY0, DATA_WAY1, DATA_WAY2, DATA_WAY3;
     reg [D_TAG : 0] TAG_RAM_WAY0[0 : TAG_RAM_NUM-1];               //{1'dirty, 22tag}
-    DCACHE_RAM DATA_BLOCK_WAY0(DATA_WAY0, clock, 0, wen0, wmask, index, wdata);
+    S011HD1P_X32Y2D128_BW DATA_BLOCK_WAY0(DATA_WAY0, clock, 0, wen0, wmask, index, wdata);
     //WAY1
     reg [D_TAG : 0] TAG_RAM_WAY1[0 : TAG_RAM_NUM-1];               //{1'dirty, 22tag}
-    DCACHE_RAM DATA_BLOCK_WAY1(DATA_WAY1, clock, 0, wen1, wmask, index, wdata);
-
+    S011HD1P_X32Y2D128_BW DATA_BLOCK_WAY1(DATA_WAY1, clock, 0, wen1, wmask, index, wdata);
+    //WAY2
+    reg [D_TAG : 0] TAG_RAM_WAY2[0 : TAG_RAM_NUM-1];               //{1'dirty, 22tag}
+    S011HD1P_X32Y2D128_BW DATA_BLOCK_WAY2(DATA_WAY2, clock, 0, wen2, wmask, index, wdata);
+    //WAY3
+    reg [D_TAG : 0] TAG_RAM_WAY3[0 : TAG_RAM_NUM-1];               //{1'dirty, 22tag}
+    S011HD1P_X32Y2D128_BW DATA_BLOCK_WAY3(DATA_WAY3, clock, 0, wen3, wmask, index, wdata);
 
     //dirty <= 0;
     integer i;
     always @(posedge clock) begin
         if(reset) begin
-            for(i = 0; i < 64; i = i + 1) begin
+            for(i = 0; i < TAG_RAM_NUM; i = i + 1) begin
                 TAG_RAM_WAY0[i][D_TAG] <= 1'b0;
                 TAG_RAM_WAY1[i][D_TAG] <= 1'b0;
-            end
-            for(i = 64; i < TAG_RAM_NUM; i = i + 1) begin
-                TAG_RAM_WAY0[i][D_TAG] <= 1'b0;
-                TAG_RAM_WAY1[i][D_TAG] <= 1'b0;
+                TAG_RAM_WAY2[i][D_TAG] <= 1'b0;
+                TAG_RAM_WAY3[i][D_TAG] <= 1'b0;
             end
         end
     end
@@ -73,7 +76,9 @@ module dcache #(
     //hit
     wire way0_hit = (TAG_RAM_WAY0[index][D_TAG-1 : 0] == tag);
     wire way1_hit = (TAG_RAM_WAY1[index][D_TAG-1 : 0] == tag);
-    assign hit = way0_hit | way1_hit;
+    wire way2_hit = (TAG_RAM_WAY2[index][D_TAG-1 : 0] == tag);
+    wire way3_hit = (TAG_RAM_WAY3[index][D_TAG-1 : 0] == tag);
+    assign hit = way0_hit | way1_hit | way2_hit | way3_hit;
     //dcache valid
     assign dcache_mem_valid = write_read ? hit | (arbiter_to_icache_valid & ready) : hit & hit_reg & next_notvalid;
     assign dcache_ex_ready = dcache_mem_valid & mem_ready;
@@ -89,7 +94,7 @@ module dcache #(
 
     reg [D_INDEX-1 : 0] old_index;
     reg old_write_read;
-    reg old_way0_hit, old_way1_hit;
+    reg old_way0_hit, old_way1_hit, old_way2_hit, old_way3_hit;
     always @(posedge clock) begin
         if(reset) begin
             old_index <= 0;
@@ -100,6 +105,8 @@ module dcache #(
             old_write_read <= write_read;
             old_way0_hit <= way0_hit;
             old_way1_hit <= way1_hit;
+            old_way2_hit <= way2_hit;
+            old_way3_hit <= way3_hit;
         end
     end
 
@@ -107,11 +114,15 @@ module dcache #(
     wire next_notvalid = (old_index == index) & 
                          (old_write_read == write_read) &
                          (old_way0_hit == way0_hit) & 
-                         (old_way1_hit == way1_hit);
+                         (old_way1_hit == way1_hit) & 
+                         (old_way2_hit == way2_hit) & 
+                         (old_way3_hit == way3_hit);
 
     //read
     wire [DATA_RAM_WIDTH-1 : 0] cache_data = way0_hit ? DATA_WAY0 : 
                                              way1_hit ? DATA_WAY1 : 
+                                             way2_hit ? DATA_WAY2 :
+                                             way3_hit ? DATA_WAY3 :
                                              `ysyx_22040931_ZERO_NUM;
 
     //wire [`ysyx_22040931_DATA_BUS] rdata;
@@ -150,28 +161,41 @@ module dcache #(
 
     wire dirty0 = (write_read & hit & way0_hit) ? 1 : TAG_RAM_WAY0[index][D_TAG];
     wire dirty1 = (write_read & hit & way1_hit) ? 1 : TAG_RAM_WAY1[index][D_TAG];
+    wire dirty2 = (write_read & hit & way2_hit) ? 1 : TAG_RAM_WAY2[index][D_TAG];
+    wire dirty3 = (write_read & hit & way3_hit) ? 1 : TAG_RAM_WAY3[index][D_TAG];
     always @(posedge clock) begin
         TAG_RAM_WAY0[index][D_TAG] <= dirty0;
         TAG_RAM_WAY1[index][D_TAG] <= dirty1;
+        TAG_RAM_WAY2[index][D_TAG] <= dirty2;
+        TAG_RAM_WAY3[index][D_TAG] <= dirty3;
     end
 
     //replacement age
-    reg age;   //1 is 0 has  //age[1] way12 age[0] 1 or 2
+    reg [1 : 0] age;   //1 is 0 has  //age[1] way12 age[0] 1 or 2
     always @(posedge clock) begin
-        if(way0_hit) begin
-            age <= 1;
+        if(way0_hit | way1_hit) begin
+            age[1] <= 1;
         end
-        if(way1_hit) begin
-            age <= 0;
+        if(way2_hit | way3_hit) begin
+            age[1] <= 0;
+        end
+        if(way0_hit | way2_hit) begin
+            age[0] <= 1;
+        end
+        if(way1_hit | way3_hit) begin
+            age[0] <= 0;
         end
     end
     wire choose_way0 = (age == 2'b00);
     wire choose_way1 = (age == 2'b01);
+    wire choose_way2 = (age == 2'b10);
+    wire choose_way3 = (age == 2'b11);
     //address
     wire [`ysyx_22040931_PC_BUS] rep_address;
     assign rep_address = choose_way0 ? {TAG_RAM_WAY0[index][D_TAG-1 : 0], index, 4'b0} : 
                          choose_way1 ? {TAG_RAM_WAY1[index][D_TAG-1 : 0], index, 4'b0} :
-                          `ysyx_22040931_ZERO_PC;
+                         choose_way2 ? {TAG_RAM_WAY2[index][D_TAG-1 : 0], index, 4'b0} : 
+                         choose_way3 ? {TAG_RAM_WAY3[index][D_TAG-1 : 0], index, 4'b0} : `ysyx_22040931_ZERO_PC;
 
 
 
@@ -187,6 +211,8 @@ module dcache #(
     wire [DATA_RAM_WIDTH-1 : 0] wmask = hit ? mask : 128'h0000000000000000_0000000000000000;
     wire wen0 = way0_hit ? !write_read : rwen0;
     wire wen1 = way1_hit ? !write_read : rwen1;
+    wire wen2 = way2_hit ? !write_read : rwen2;
+    wire wen3 = way3_hit ? !write_read : rwen3;
     
 
 
@@ -196,14 +222,17 @@ module dcache #(
     //is_dirty
     wire is_dirty0 = TAG_RAM_WAY0[index][D_TAG] & !hit & choose_way0;
     wire is_dirty1 = TAG_RAM_WAY1[index][D_TAG] & !hit & choose_way1;
-
-    wire is_dirty = is_dirty0 | is_dirty1;
+    wire is_dirty2 = TAG_RAM_WAY2[index][D_TAG] & !hit & choose_way2;
+    wire is_dirty3 = TAG_RAM_WAY3[index][D_TAG] & !hit & choose_way3;
+    wire is_dirty = is_dirty0 | is_dirty1 | is_dirty2 | is_dirty3;
     //axi ena
     //address
     assign axi_wr = !ready;
     assign axi_address = ready ? {address[63 : 4], 4'b0} : rep_address;
     assign axi_stor_data = is_dirty0 ? DATA_WAY0 : 
                            is_dirty1 ? DATA_WAY1 : 
+                           is_dirty2 ? DATA_WAY2 : 
+                           is_dirty3 ? DATA_WAY3 : 
                            128'h0;
 
     reg cache_ready;
@@ -218,9 +247,18 @@ module dcache #(
     wire ready = is_dirty ? cache_ready : 1;
     
     
+
+
+
+
+
+
+
     //write from axi to cache
     wire rwen0 = !(arbiter_to_icache_valid & ready & choose_way0);
     wire rwen1 = !(arbiter_to_icache_valid & ready & choose_way1);
+    wire rwen2 = !(arbiter_to_icache_valid & ready & choose_way2);
+    wire rwen3 = !(arbiter_to_icache_valid & ready & choose_way3);
 
     always @(posedge clock) begin
         if(!rwen0) begin
@@ -229,8 +267,15 @@ module dcache #(
         if(!rwen1) begin
             TAG_RAM_WAY1[index] <= {write_read, tag};
         end
+        if(!rwen2) begin
+            TAG_RAM_WAY2[index] <= {write_read, tag};
+        end
+        if(!rwen3) begin
+            TAG_RAM_WAY3[index] <= {write_read, tag};
+        end
     end
 
 
+wire [D_TAG : 0] test = TAG_RAM_WAY3[30];
 
 endmodule
