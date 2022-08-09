@@ -187,6 +187,12 @@ Usage: ./emu [OPTION...]
 
 通过测试的用例，将打印`PASS`。测试失败的用例，打印`FAIL`并生成对应的log文件，可以查看log文件来调试，也可以另外开启波形输出来调试。
 
+# 乘除法指令测试
+```
+# 接入AXI总线的情况下使用"non-output/cpu-tests"和"non-output/riscv-tests"目录下的bin进行回归测试
+./build.sh -e cpu_axi_diff -b -r "custom-output/cpu-tests" -m "WITH_DRAMSIM3=1"
+```
+
 # 扩展
 
 [一生一芯官网](https://oscpu.github.io/ysyx/)

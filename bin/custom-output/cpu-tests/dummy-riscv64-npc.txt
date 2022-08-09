@@ -1,0 +1,30 @@
+
+/home/xu/ysyx-workbench/am-kernels/tests/cpu-tests/build/dummy-riscv64-npc.elf:     file format elf64-littleriscv
+
+
+Disassembly of section .text:
+
+0000000080000000 <_start>:
+    80000000:	00000413          	li	s0,0
+    80000004:	00009117          	auipc	sp,0x9
+    80000008:	ffc10113          	addi	sp,sp,-4 # 80009000 <_end>
+    8000000c:	020000ef          	jal	ra,8000002c <_trm_init>
+
+0000000080000010 <main>:
+    80000010:	00000513          	li	a0,0
+    80000014:	00008067          	ret
+
+0000000080000018 <halt>:
+    80000018:	ff010113          	addi	sp,sp,-16
+    8000001c:	00113423          	sd	ra,8(sp)
+    80000020:	00050513          	mv	a0,a0
+    80000024:	02c000ef          	jal	ra,80000050 <halt_code>
+    80000028:	0000006f          	j	80000028 <halt+0x10>
+
+000000008000002c <_trm_init>:
+    8000002c:	ff010113          	addi	sp,sp,-16
+    80000030:	00000517          	auipc	a0,0x0
+    80000034:	01850513          	addi	a0,a0,24 # 80000048 <mainargs>
+    80000038:	00113423          	sd	ra,8(sp)
+    8000003c:	fd5ff0ef          	jal	ra,80000010 <main>
+    80000040:	fd9ff0ef          	jal	ra,80000018 <halt>

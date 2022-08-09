@@ -700,7 +700,7 @@ reg [63 : 0] MEM_except_type_f;
 
 
 wire inst_valid = ((WB_pc != `ysyx_22040931_ZERO_PC) | (WB_instr != 0)) & wb_ready & !WB_except[6];// && (inter != 32'h7b) ;
-wire skip = (WB_instr == 32'h7b) | (WB_csr_w_addr == 12'hb00) | clint_ena_n;
+wire skip = (WB_instr == 32'h7b) | ((wb_csr_w_addr == 12'hb00) && (wb_csr_w_ena == 1)) | clint_ena_n;
 wire [31 : 0] now_clint = WB_except[6] & wb_ready ? 32'h7 : 32'h0;
 
 always @(negedge clock) begin
