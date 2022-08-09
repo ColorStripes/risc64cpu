@@ -5,7 +5,6 @@
 module ysyx_22040931_ALU(
     input wire reset,
     input wire clock,
-    input wire flush,
     input wire id_valid,
     input wire ex_ready,
     output wire alu_valid,
@@ -51,7 +50,6 @@ assign num2_sw = num2[31 : 0];
     divider divider(
     .clock(clock),
     .reset(reset),
-    .flush(flush),
     .id_valid(id_valid),
     .ex_ready(ex_ready),
     .div_valid(div_valid),

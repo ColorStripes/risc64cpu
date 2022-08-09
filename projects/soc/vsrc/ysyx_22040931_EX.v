@@ -5,7 +5,6 @@
 module ysyx_22040931_EX(
     input wire reset,
     input wire clock,
-    input wire flush,
     //handshake
     input wire id_gi_valid,
     input wire ex_gi_ready,
@@ -91,7 +90,6 @@ assign instr_o = instr;
     ysyx_22040931_ALU ysyx_22040931_ALU(
     .reset(reset),
     .clock(clock),
-    .flush(flush),
     .id_valid(id_gi_valid),
     .ex_ready(ex_gi_ready),
     .alu_valid(alu_valid),

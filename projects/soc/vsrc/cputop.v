@@ -279,7 +279,6 @@ wire [`ysyx_22040931_PC_BUS] EX_pc;
 ysyx_22040931_EX ysyx_22040931_EX(
     .reset(reset),
     .clock(clock),
-    .flush(flush),
     .id_gi_valid(id_valid),
     .ex_gi_ready(ex_ready),
     .to_ex_valid(to_ex_valid),

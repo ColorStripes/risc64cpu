@@ -4,7 +4,6 @@
 module divider(
     input wire reset,
     input wire clock,
-    input wire flush,
     //handshake
     input wire id_valid,
     input wire ex_ready,
@@ -90,15 +89,12 @@ module divider(
 
     ////4
     wire div = (id_valid && ~div_valid && (count == 0) ) ? div_ena : 1'b0; //start
-    assign div_ready = (div_valid & ex_ready) | flush;
+    assign div_ready = div_valid & ex_ready;
 
     //count
     wire [6 : 0] start_count = w ? 7'd33 : 7'd1;
     always @(posedge clock) begin
         if(reset == 1) begin
-            count <= 0;
-        end
-        else if(flush) begin
             count <= 0;
         end
         else if(div) begin
