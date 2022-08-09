@@ -45,67 +45,19 @@ module arbiter (
 );
 
 
-
+//IF
 wire axi_fetch_ready = (AXI_ret_id == 1) ? AXI_ready : 1'b0;
 wire pc_to_axi_valid = pc_valid & !arbiter_if_valid;
-assign arbiter_pc_ready = arbiter_if_valid & if_ready;
-// always @(posedge clock) begin
-//     if(reset) begin
-//         arbiter_if_valid <= 0;
-//     end
-//     else begin
-//         if(axi_fetch_ready) begin           //
-//             arbiter_if_valid <= 1;
-//         end
-//         if(arbiter_pc_ready) begin
-//             arbiter_if_valid <= 0;
-//         end
-//     end
-// end
 assign arbiter_if_valid = axi_fetch_ready;
+assign arbiter_pc_ready = arbiter_if_valid & if_ready;
 
-
-
-
+//MEM
 wire axi_mem_ready = (AXI_ret_id == 3) ? AXI_ready : 1'b0;
 wire ex_to_axi_valid = ex_valid & !arbiter_mem_valid;
-assign arbiter_ex_ready = arbiter_mem_valid & mem_ready;
-// always @(posedge clock) begin
-//     if(reset) begin
-//         arbiter_mem_valid <= 0;
-//     end
-//     else begin
-//         if(axi_mem_ready) begin              //
-//             arbiter_mem_valid <= 1;
-//         end
-//         if(arbiter_ex_ready) begin
-//             arbiter_mem_valid <= 0;
-//         end
-//     end
-// end
 assign arbiter_mem_valid = axi_mem_ready;
-// //READ
-// always @(posedge clock) begin
-//     if(reset) begin
-//         if_data <= 0;
-//         mem_data <= 0;
-//     end
-//     else begin
-//         if(axi_mem_ready) begin
-//             mem_data <= AXI_r_data;
-//         end
-//         if(axi_fetch_ready) begin
-//             if_data <= AXI_r_data[31 : 0];
-//         end
-//     end
-// end
+assign arbiter_ex_ready = arbiter_mem_valid & mem_ready;
 
-
-
-
-
-
-//assign AXI_size = ex_to_axi_valid ? mem_size : if_size;
+//AXI
 assign AXI_addr = mem_control ? mem_addr : if_addr;
 assign AXI_id = mem_control ? 4'b0011 : 4'b0001;
 assign AXI_req = mem_control ? mem_req : if_req;
@@ -114,9 +66,7 @@ assign AXI_w_data = mem_stor_data;
 assign arbiter_data = AXI_r_data;
 
 
-
-
-
+//control_arb
 reg mem_control;
 always @(posedge clock) begin
     if(AXI_ready | (ex_to_axi_valid & !pc_to_axi_valid)) begin   //pc is not valid but ex valid: control to ex

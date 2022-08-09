@@ -1,25 +1,7 @@
 `timescale 1ns / 1ps
-//ROM
-`define ROM_NUM  1024
-`define ROM_NUMLOG  10
-
-//DTAT_MEM
-`define D_NUM  1024
-`define D_NUMLOG  10
 
 //CACHE
 `define ysyx_22040931_CACHE_LINE 127 : 0
-
-//forcase
-`define ysyx_22040931_PHT_SIZE  256     //1<<`ysyx_22040931_BHT_WIDTH
-`define ysyx_22040931_BHT_WIDTH  8      //ysyx_22040931_HASH_WIDTH
-`define ysyx_22040931_BHT_SIZE  256     //1<<`ysyx_22040931_HASH_WIDTH
-`define ysyx_22040931_HASH_WIDTH 8      //
-//
-`define ysyx_22040931_BTB_WIDTH 98       //
-`define ysyx_22040931_BTB_SIZE 256
-`define ysyx_22040931_RAS_INDEX 4
-`define ysyx_22040931_RAS_SIZE 16
 
 `define ysyx_22040931_ALU        6
 `define ysyx_22040931_ALU_BUS    5 : 0

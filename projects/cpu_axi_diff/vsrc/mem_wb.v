@@ -43,8 +43,6 @@ module mem_wb(
     output reg [`ysyx_22040931_PC_BUS] WB_pc
 );
 
-//assign wb_valid = ~stall;
-//assign mem_ready = wb_valid & wb_ready;
 
 reg mem_now_valid;
 wire mem_go;

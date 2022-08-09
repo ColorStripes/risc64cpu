@@ -86,6 +86,4 @@ assign eighth_f30[1:0] = c[29:28];
 ///////////////eighth///////////////
 csa csa30 (.in (eighth_f30                ),  .cout (cout),   .s  (s));
 
-///////////////output///////////////
-//assign cout_group = c;
 endmodule

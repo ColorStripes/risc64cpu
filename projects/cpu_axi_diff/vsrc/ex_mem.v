@@ -57,8 +57,7 @@ module ex_mem(
 
 
 
-//assign mem_valid = ~stall;
-//assign ex_ready = mem_valid & mem_ready;
+
 reg ex_now_valid;
 wire ex_go;
 assign ex_go = ~stall;
@@ -127,19 +126,6 @@ assign ex_valid = ex_now_valid ;
                 MEM_csr_w_data <= EX_csr_w_data;
                 MEM_except <= EX_except;
             end
-            // else if(ex_go) begin
-            //     MEM_w_ena <= `ysyx_22040931_N_ENA;
-            //     MEM_w_addr <= `ysyx_22040931_ZERO_REG;
-            //     MEM_w_data <= `ysyx_22040931_ZERO_NUM;
-            //     MEM_memwop <= `ysyx_22040931_MNO;
-            //     MEM_memrop <= `ysyx_22040931_MNO;
-            //     MEM_mem_ena <= `ysyx_22040931_N_ENA;
-            //     MEM_mem_wr <= `ysyx_22040931_READ;
-            //     MEM_mem_addr <= `ysyx_22040931_ZERO_NUM;
-            //     MEM_mem_stor_data <= `ysyx_22040931_ZERO_NUM;
-            //     MEM_pc <= `ysyx_22040931_ZERO_PC;
-            //     MEM_instr <= `ysyx_22040931_NONE_INST;
-            // end
         end 
     end
 

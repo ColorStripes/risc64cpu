@@ -56,8 +56,7 @@ module id_ex(
     output reg [`ysyx_22040931_PC_BUS] EX_pc
 );
 
-//assign ex_valid = ~stall;
-//assign id_ready = ex_valid & ex_ready;
+
 
 wire id_go;
 reg id_now_valid;
@@ -151,21 +150,6 @@ assign id_valid = id_now_valid ;
                     EX_except <= ID_except;
                 end
             end
-            // else if(id_go) begin
-            //     EX_w_ena <= `ysyx_22040931_N_ENA;
-            //     EX_w_addr <= `ysyx_22040931_ZERO_REG;
-            //     EX_data1 <= `ysyx_22040931_ZERO_NUM;
-            //     EX_data2 <= `ysyx_22040931_ZERO_NUM;
-            //     EX_imm <= `ysyx_22040931_ZERO_NUM;
-            //     EX_exop <= `ysyx_22040931_No;
-            //     EX_aluop <= `ysyx_22040931_NO;
-            //     EX_memwop <= `ysyx_22040931_MNO;
-            //     EX_memrop <= `ysyx_22040931_MNO;
-            //     EX_mem_ena <= `ysyx_22040931_N_ENA;
-            //     EX_mem_wr <= `ysyx_22040931_READ;
-            //     EX_pc <= `ysyx_22040931_ZERO_PC;
-            //     EX_instr <= `ysyx_22040931_NONE_INST;
-            // end
         end
     end
 

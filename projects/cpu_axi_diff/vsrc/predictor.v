@@ -6,10 +6,12 @@ module predictor(
     input wire clock,
     input wire pc_ready,
     input wire nop,
-    input wire [`ysyx_22040931_PC_BUS] id_branch,
-    input wire [1 : 0] id_jumptype,
+    
     input wire id_jump,
+    input wire [1 : 0] id_jumptype,
+    input wire [`ysyx_22040931_PC_BUS] id_branch,
     input wire [`ysyx_22040931_PC_BUS] id_pc,
+    
     input wire [`ysyx_22040931_PC_BUS] pc,
 
     

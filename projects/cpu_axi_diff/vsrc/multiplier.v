@@ -17,7 +17,7 @@ module multiplier(
 
 wire [64 : 0] multiplicand_s, multiplier_s;
 assign multiplicand_s = mulena ? (mulw ? (mul_signed ? {{33{multiplicand[31]}}, multiplicand[31 : 0]} : {33'b0, multiplicand[31 : 0]}) : 
-                                        (mul_signed ? {multiplicand[63], multiplicand} : {1'b0, multiplicand}))
+                                         (mul_signed ? {multiplicand[63], multiplicand} : {1'b0, multiplicand}))
                                :  65'h0;
 assign multiplier_s   = mulena ? (mulw ? (mul_signor ? {{33{multiplier[31]}}, multiplier[31 : 0]} : {33'b0, multiplier[31 : 0]}) : 
                                          (mul_signor ? {multiplier[63], multiplier} : {1'b0, multiplier}))

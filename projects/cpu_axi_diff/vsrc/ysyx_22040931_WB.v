@@ -9,18 +9,26 @@ module ysyx_22040931_WB(
     input wire w_ena_i,
     input wire [`ysyx_22040931_REG_BUS] w_addr_i,
     input wire [`ysyx_22040931_DATA_BUS] w_data_i,
+    //CSR
+    input wire csr_w_ena_i,
+    input wire [`ysyx_22040931_CSR_BUS] csr_w_addr_i,
+    input wire [`ysyx_22040931_DATA_BUS] csr_w_data_i,
     //except
     input wire [`ysyx_22040931_EXCEPT_BUS] except,
     input wire arbiter_if_valid,
-    output wire flush,
     //liushuixian
     input wire [`ysyx_22040931_PC_BUS] pc_i,
     
-
+    //regfile
     output wire w_ena,
     output wire [`ysyx_22040931_REG_BUS] w_addr,
     output wire [`ysyx_22040931_DATA_BUS] w_data,
+    //CSR
+    output wire csr_w_ena,
+    output wire [`ysyx_22040931_CSR_BUS] csr_w_addr,
+    output wire [`ysyx_22040931_DATA_BUS] csr_w_data,
     //except
+    output wire flush,
     output wire now_except
 );
 
@@ -29,6 +37,9 @@ module ysyx_22040931_WB(
     assign w_addr = w_addr_i;
     assign w_data = w_data_i;
 
+    assign csr_w_ena = csr_w_ena_i;
+    assign csr_w_addr = csr_w_addr_i;
+    assign csr_w_data = csr_w_data_i;
 
 
 

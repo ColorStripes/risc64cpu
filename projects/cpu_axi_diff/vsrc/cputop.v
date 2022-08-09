@@ -127,7 +127,6 @@ ysyx_22040931_ID ysyx_22040931_ID(
 
 
     //load hazard and mux_pc
-    //.nop(nop),
     .load_stall(load_stall),
     //liushuixian
     .instr_o(id_instr),
@@ -589,9 +588,13 @@ wire [`ysyx_22040931_INST_BUS] WB_instr;
 ysyx_22040931_WB ysyx_22040931_WB(
     .wb_ready(wb_ready),
     //regfile
-    .w_ena_i(WB_w_ena),
+    .w_ena_i(WB_w_ena & mem_valid),
     .w_addr_i(WB_w_addr),
     .w_data_i(WB_w_data),
+    //csr
+    .csr_w_ena_i(WB_csr_w_ena & mem_valid),
+    .csr_w_addr_i(WB_csr_w_addr),
+    .csr_w_data_i(WB_csr_w_data),
     //except
     .except(WB_except),
     .arbiter_if_valid(arbiter_if_valid),
@@ -599,17 +602,26 @@ ysyx_22040931_WB ysyx_22040931_WB(
     //liushuixian
     .pc_i(WB_pc),
     
-
+    //regfile
     .w_ena(wb_w_ena),
     .w_addr(wb_w_addr),
     .w_data(wb_w_data),
+    //csr
+    .csr_w_ena(wb_csr_w_ena),
+    .csr_w_addr(wb_csr_w_addr),
+    .csr_w_data(wb_csr_w_data),
     //except
     .now_except(now_except)
 );
 
+//regfile
 wire wb_w_ena;
-wire [4 : 0] wb_w_addr;
+wire [`ysyx_22040931_REG_BUS] wb_w_addr;
 wire [`ysyx_22040931_DATA_BUS] wb_w_data;
+//csr
+wire wb_csr_w_ena;
+wire [`ysyx_22040931_CSR_BUS] wb_csr_w_addr;
+wire [`ysyx_22040931_DATA_BUS] wb_csr_w_data;
 //except
 wire now_except;
 wire flush;
@@ -627,9 +639,9 @@ CSR CSR(
     .except_pc(WB_pc),
     .handle_pc(handle_pc),
 
-    .csr_w_ena(WB_csr_w_ena),
-    .csr_w_addr(WB_csr_w_addr),
-    .csr_w_data(WB_csr_w_data),
+    .csr_w_ena(wb_csr_w_ena),
+    .csr_w_addr(wb_csr_w_addr),
+    .csr_w_data(wb_csr_w_data),
     
     .csr_r_ena(id_valid & EX_csr_ena),
     .csr_r_addr(EX_csr_addr),
@@ -687,14 +699,7 @@ reg [63 : 0] MEM_except_type_f;
 
 
 wire inst_valid = ((WB_pc != `ysyx_22040931_ZERO_PC) | (WB_instr != 0)) & wb_ready & !WB_except[6];// && (inter != 32'h7b) ;
-//wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2) | (wb_instr == 32'h00063783) | (wb_instr == 32'h00f63023);
-//wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2) | (wb_instr == 32'h0007b483) | (wb_instr == 32'h00f73023);
-////wire skip = (wb_instr == 32'h7b) | (wb_csr_addr == 12'hb00) | (MEM_except_type == 64'h2) | (clint) ;
-////wire cause = (MEM_except_type == 64'h4);
 wire skip = (WB_instr == 32'h7b) | (WB_csr_w_addr == 12'hb00) | clint_ena_n;
-            // | (WB_instr == 64'hff86b683)  | (WB_instr == 64'hff873703) 
-            // | (WB_instr == 64'h00d7b023)
-            // | (WB_instr == 64'h00e7b023);
 wire [31 : 0] now_clint = WB_except[6] & wb_ready ? 32'h7 : 32'h0;
 
 always @(negedge clock) begin

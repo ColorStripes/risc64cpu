@@ -25,8 +25,7 @@ module if_id(
     output reg [`ysyx_22040931_INST_BUS] ID_instr
 );
 
-//assign id_valid =  ~stall;
-/////assign if_ready = id_valid & id_ready;
+
 reg if_now_valid;
 wire if_go;
 assign if_go = ~stall | flush;
@@ -70,12 +69,6 @@ assign if_valid = if_now_valid;
                     ID_pre_branch <= IF_pre_branch;
                 end 
             end
-            // else if(if_go) begin
-            //     ID_pc <= `ysyx_22040931_ZERO_PC;
-            //     ID_instr <= `ysyx_22040931_NONE_INST;
-            //     ID_pre_jump <= 1'b0;
-            //     ID_pre_branch <= `ysyx_22040931_ZERO_PC;
-            // end
         end
     end
 
