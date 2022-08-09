@@ -206,13 +206,12 @@ assign io_slave_rid = 0;
     arbiter arbiter (
     .reset(reset),
     .clock(clock),
-    .flush(),
-    //woshou
+    //handshake
     .pc_valid(to_arbiter_pc_valid),                     //zhitong
     .arbiter_pc_ready(arbiter_pc_ready),      //to cpu
     .arbiter_if_valid(arbiter_if_valid),
     .if_ready(to_arbiter_if_ready),
-    //woshou
+    //handshake
     .ex_valid(to_arbiter_ex_valid),                     //zhitong
     .arbiter_ex_ready(arbiter_ex_ready),     //to cpu
     .arbiter_mem_valid(arbiter_mem_valid),
@@ -259,7 +258,7 @@ wire [3 : 0] AXI_id;
 dcache dcache(
     .reset(reset),
     .clock(clock),
-    //woshou
+    //handshake
     .ex_valid(ex_valid),          //zhitong
     .dcache_ex_ready(dcache_ex_ready),  //to cpu
     .dcache_mem_valid(dcache_mem_valid),
@@ -303,7 +302,7 @@ wire [`ysyx_22040931_DATA_BUS] dcache_data;
 icache icache(
     .reset(reset),
     .clock(clock),
-    //woshou
+    //handshake
     .pc_valid(pc_valid),          //zhitong
     .icache_pc_ready(icache_pc_ready),  //to cpu
     .icache_if_valid(icache_if_valid),
@@ -342,7 +341,7 @@ cputop cputop(
 
     //if
     .pc(pc),
-    //woshou
+    //handshake
     .arbiter_pc_ready(icache_pc_ready),
     .fetch_enb(pc_valid),
     .arbiter_if_valid(icache_if_valid),
@@ -353,7 +352,7 @@ cputop cputop(
     .mem_wr(mem_req),
     .mem_addr(mem_addr),
     .mem_stor_data(mem_stor_data),
-    //woshou
+    //handshake
     .arbiter_ex_ready(dcache_ex_ready),
     .mem_ena(ex_valid),         //ena & valid
     .arbiter_mem_valid(dcache_mem_valid),
@@ -365,12 +364,10 @@ cputop cputop(
 //if
 wire [`ysyx_22040931_INST_BUS] instr;
 wire [`ysyx_22040931_PC_BUS] pc;
-// wire [1 : 0] if_size;
-// assign if_size = 2'b10;
 wire if_req;
 assign if_req = 1'b0;
 
-//woshou
+//handshake
 wire arbiter_pc_ready;
 wire pc_valid;
 wire arbiter_if_valid;
@@ -383,7 +380,7 @@ wire [1 : 0]       mem_size;
 wire               mem_req;
 wire [`ysyx_22040931_MEM_BUS] mem_addr;
 wire [`ysyx_22040931_DATA_BUS] mem_stor_data;
-//woshou
+//handshake
 wire arbiter_ex_ready;
 wire ex_valid;            //ena & valid
 wire arbiter_mem_valid;

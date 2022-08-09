@@ -3,7 +3,7 @@
 
 module ysyx_22040931_WB(
 
-    //woshou
+    //handshake
     output wire wb_ready,
     //regfile
     input wire w_ena_i,

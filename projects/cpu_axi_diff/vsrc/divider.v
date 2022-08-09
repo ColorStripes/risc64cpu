@@ -4,7 +4,7 @@
 module divider(
     input wire reset,
     input wire clock,
-    //woshou
+    //handshake
     input wire id_valid,
     input wire ex_ready,
     output reg div_valid,

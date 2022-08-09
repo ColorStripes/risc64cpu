@@ -5,8 +5,7 @@
 module arbiter (
     input reset,
     input clock,
-    input flush,
-    //woshou
+    //handshake
     input wire pc_valid,          //zhitong
     output wire arbiter_pc_ready, //to cpu
     output reg arbiter_if_valid,

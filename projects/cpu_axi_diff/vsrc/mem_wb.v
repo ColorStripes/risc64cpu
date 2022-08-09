@@ -96,9 +96,9 @@ assign mem_valid = mem_now_valid ;
                 WB_except <= MEM_except;
                 clint_ena_o <= clint_ena_i;
             end
-            else if(mem_ready) begin
-                WB_w_ena <= `ysyx_22040931_N_ENA;
-                WB_csr_w_ena  <= `ysyx_22040931_N_ENA;
+            else if(!ex_valid) begin
+                //WB_w_ena <= `ysyx_22040931_N_ENA;
+                //WB_csr_w_ena  <= `ysyx_22040931_N_ENA;
                 //WB_w_addr <= `ysyx_22040931_ZERO_REG;
                 //WB_w_data <= `ysyx_22040931_ZERO_NUM;
                 WB_pc <= `ysyx_22040931_ZERO_PC;

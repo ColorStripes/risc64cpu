@@ -5,7 +5,7 @@
 module ysyx_22040931_EX(
     input wire reset,
     input wire clock,
-    //woshou
+    //handshake
     input wire id_gi_valid,
     input wire ex_gi_ready,
     output wire to_ex_valid,

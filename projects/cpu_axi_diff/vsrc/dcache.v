@@ -12,7 +12,7 @@ module dcache #(
 )(
     input wire reset,
     input wire clock,
-    //woshou
+    //handshake
     input wire ex_valid,          //zhitong
     output wire dcache_ex_ready,  //to cpu
     output wire dcache_mem_valid,

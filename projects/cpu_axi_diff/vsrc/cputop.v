@@ -12,7 +12,7 @@ module cputop(
 
     //if
     output wire [`ysyx_22040931_PC_BUS] pc,
-    //woshou
+    //handshake
     input wire arbiter_pc_ready,
     output wire fetch_enb,
     input wire arbiter_if_valid,
@@ -23,7 +23,7 @@ module cputop(
     output wire              mem_wr,
     output wire [`ysyx_22040931_MEM_BUS] mem_addr,
     output wire [`ysyx_22040931_DATA_BUS] mem_stor_data,
-    //woshou
+    //handshake
     input wire arbiter_ex_ready,
     output wire mem_ena,  //ena & valid
     input wire arbiter_mem_valid,
@@ -335,7 +335,7 @@ ysyx_22040931_EX ysyx_22040931_EX(
     .pc_o(ex_pc)
 
 );
-//ex woshou
+//ex handshake
 wire to_ex_valid;
 wire to_id_ready;
 
@@ -445,12 +445,12 @@ wire [`ysyx_22040931_PC_BUS]  MEM_pc;
 ysyx_22040931_MEM ysyx_22040931_MEM(
     .reset(reset),
     .clock(clock),
-    //woshou
+    //handshake
     .ex_gi_valid(ex_valid),
     .mem_gi_ready(mem_ready),
     .to_mem_valid(to_mem_valid),
     .to_ex_ready(to_ex_ready),
-    //arb woshou
+    //arb handshake
     .arbiter_mem_valid(arbiter_mem_valid),
     .arbiter_ex_ready(arbiter_ex_ready),
     //regfile
@@ -502,7 +502,7 @@ ysyx_22040931_MEM ysyx_22040931_MEM(
     .pc_o(mem_pc)
 
 );
-//mem woshou
+//mem handshake
 wire to_mem_valid;
 wire to_ex_ready;
 
@@ -797,16 +797,6 @@ DifftestTrapEvent DifftestTrapEvent(
 );
 
 
-// csr_mstatus  
-// csr_mie      
-// csr_mtvec    
-// csr_mscratch 
-// csr_mepc     
-// csr_mcause   
-// csr_mip      
-// csr_mcycle   
-// csr_minstret 
-// csr_sstatus  
 DifftestCSRState DifftestCSRState(
   .clock              (clock),
   .coreid             (0),

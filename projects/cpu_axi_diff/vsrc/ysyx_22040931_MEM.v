@@ -5,12 +5,12 @@ module ysyx_22040931_MEM(
     input wire reset,
     input wire clock,
 
-    //woshou
+    //handshake
     input wire ex_gi_valid,
     input wire mem_gi_ready,
     output wire to_mem_valid,
     output wire to_ex_ready,
-    //arb woshou
+    //arb handshake
     input wire arbiter_mem_valid,
     input wire arbiter_ex_ready,
 

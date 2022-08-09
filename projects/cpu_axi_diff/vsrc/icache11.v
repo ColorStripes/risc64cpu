@@ -12,7 +12,7 @@ module icache #(
 )(
     input wire reset,
     input wire clock,
-    //woshou
+    //handshake
     input wire pc_valid,          //zhitong
     output wire icache_pc_ready,  //to cpu
     output wire icache_if_valid,
