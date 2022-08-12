@@ -53,7 +53,7 @@ module ysyx_22040931_ID(
     output wire mem_wr,
     output wire [`ysyx_22040931_DATA_BUS] imm,
     output wire [2 : 0]     exop,
-    output wire [`ysyx_22040931_ALU_BUS]    aluop,    
+    output wire [`ysyx_22040931_ALU_BUS]  aluop,    
     output wire [2 : 0]   memwop,
     output wire [2 : 0]   memrop,
 

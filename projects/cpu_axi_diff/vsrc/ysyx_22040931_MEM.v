@@ -195,7 +195,6 @@ CLINT  CLINT(
 wire clint;
 wire now_clint = (mie & mstatus) & (clint | mip) ? old_handshake & !is_nop : 1'b0;
 assign except = now_clint ? `ysyx_22040931_INTER : except_i;
-                                              //& to_mem_valid
 
 reg old_handshake;                    //next load/store can clint
 always @(posedge clock) begin

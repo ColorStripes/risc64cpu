@@ -91,8 +91,8 @@ module AXI4 # (
             if (w_valid) begin
                 case (w_state)
                     W_STATE_IDLE: begin w_state <= W_STATE_ADDR;   end              
-                    W_STATE_ADDR:  if (aw_hs)   w_state <= W_STATE_WRITE;
-                    W_STATE_WRITE: if (w_done)  w_state <= W_STATE_RESP;
+                    W_STATE_ADDR:  if (aw_hs) begin  w_state <= W_STATE_WRITE; end
+                    W_STATE_WRITE: if (w_done) begin w_state <= W_STATE_RESP;  end
                     W_STATE_RESP:  if (b_hs) begin w_state <= W_STATE_IDLE;  end   
                 endcase
             end
@@ -108,46 +108,13 @@ module AXI4 # (
             if (r_valid) begin
                 case (r_state)
                     R_STATE_IDLE:begin r_state <= R_STATE_ADDR; end
-                    R_STATE_ADDR: if (ar_hs)    r_state <= R_STATE_READ;
+                    R_STATE_ADDR: if (ar_hs)  begin  r_state <= R_STATE_READ; end
                     R_STATE_READ: if (r_done) begin r_state <= R_STATE_IDLE; end   
-                    //R_STATE_VOID:begin r_state <= R_STATE_IDLE; end
                     default:;
                 endcase
             end
         end
     end
-
-
-// always @(posedge clock) begin
-//     if(reset) begin
-//         stall <= 1'b0;
-//     end
-//     else if (w_valid) begin
-//         case (w_state)
-//             W_STATE_IDLE: begin  stall <= 1'b1; end              
-//             W_STATE_RESP: begin 
-//                 if (b_hs) begin 
-//                     stall <= 1'b0; 
-//                 end 
-//             end
-//             default: begin end   
-//         endcase
-//     end
-//     else if (rw_req_i) begin
-//         stall <= ~axi_b_valid_i;
-//     end
-//     if (r_valid) begin
-//         case (r_state)
-//             R_STATE_IDLE:begin  stall <= 1'b1; end
-//             R_STATE_READ: if (r_done) begin  stall <= 1'b0; end   
-//             default:begin  end
-//         endcase
-//     end
-//     else if (~rw_req_i) begin
-//         stall <= ~axi_r_valid_i;
-//     end
-// end
-
 
     // ------------------Process Data------------------
     localparam ALIGNED_WIDTH = $clog2(AXI_DATA_WIDTH / 8);
@@ -157,32 +124,13 @@ module AXI4 # (
     localparam TRANS_LEN     = RW_DATA_WIDTH / AXI_DATA_WIDTH ;
     localparam BLOCK_TRANS   = TRANS_LEN > 1 ? 1'b1 : 1'b0;
 
-    //wire aligned            = BLOCK_TRANS | rw_addr_i[ALIGNED_WIDTH-1:0] == 0;
     wire size_b             = rw_size_i == `SIZE_B;
     wire size_h             = rw_size_i == `SIZE_H;
     wire size_w             = rw_size_i == `SIZE_W;
     wire size_d             = rw_size_i == `SIZE_D;
-    // wire [3:0] addr_op1     = {{4-ALIGNED_WIDTH{1'b0}}, rw_addr_i[ALIGNED_WIDTH-1:0]};
-    // wire [3:0] addr_op2     = ({4{size_b}} & {4'b0})
-    //                             | ({4{size_h}} & {4'b1})
-    //                             | ({4{size_w}} & {4'b11})
-    //                             | ({4{size_d}} & {4'b111})
-    //                             ;
-    // wire overstep           = {{addr_op1 + addr_op2} & 4'b1000} != 0;
+
     wire [7:0] axi_len      = 8'b1;  
     wire [2:0] axi_size     = AXI_SIZE[2:0];                     ///////////////brust
-    
-    // wire [OFFSET_WIDTH-1:0] aligned_offset    = {{OFFSET_WIDTH-ALIGNED_WIDTH{1'b0}}, {rw_addr_i[ALIGNED_WIDTH-1:0]}};
-    // wire [OFFSET_WIDTH-1:0] aligned_offset_l    = {{OFFSET_WIDTH-ALIGNED_WIDTH{1'b0}}, {rw_addr_i[ALIGNED_WIDTH-1:0]}} << 3;
-    // wire [OFFSET_WIDTH-1:0] aligned_offset_h    = 6'd32 - aligned_offset_l;
-    // wire [MASK_WIDTH-1:0] mask                  = (({MASK_WIDTH{size_b}} & {{MASK_WIDTH-8{1'b0}}, 8'hff})
-    //                                                 | ({MASK_WIDTH{size_h}} & {{MASK_WIDTH-16{1'b0}}, 16'hffff})
-    //                                                 | ({MASK_WIDTH{size_w}} & {{MASK_WIDTH-32{1'b0}}, 32'hffffffff})
-    //                                                 | ({MASK_WIDTH{size_d}} & {{MASK_WIDTH-64{1'b0}}, 64'hffffffff_ffffffff})
-    //                                                 ) << aligned_offset_l;
-    // wire [AXI_DATA_WIDTH-1:0] mask_l            = mask[AXI_DATA_WIDTH-1:0];
-    // wire [AXI_DATA_WIDTH-1:0] mask_h            = mask[MASK_WIDTH-1:AXI_DATA_WIDTH];
-
     wire [AXI_ID_WIDTH-1:0] axi_id              = {cpu_id[AXI_ID_WIDTH-1 : 0]};
 
     
@@ -198,8 +146,6 @@ module AXI4 # (
         end
     end
 
-
-
     wire rw_ready_nxt = trans_done;
     wire rw_ready_en  = trans_done | rw_ready_o;
     always @(posedge clock) begin
@@ -211,8 +157,6 @@ module AXI4 # (
         end
     end
  
-
-
 
 
     // ------------------Number of transmission------------------
@@ -271,38 +215,21 @@ module AXI4 # (
     // Read data channel signals
     assign axi_r_ready_o    = r_state_read;
 
-    // wire [AXI_DATA_WIDTH-1:0] axi_r_data_l  = (axi_r_data_i & mask_l) >> aligned_offset_l;
-    // wire [AXI_DATA_WIDTH-1:0] axi_r_data_h  = (axi_r_data_i & mask_h) << aligned_offset_h;
 
-
-
-
-    //genvar i;
-    //generate
-        //for (i = 0; i < TRANS_LEN; i = i+1) begin : genbit
-            always @(posedge clock) begin
-                if (reset) begin
-                    data_read_o <= 0;
+        always @(posedge clock) begin
+            if (reset) begin
+                data_read_o <= 0;
+            end
+            else if (axi_r_ready_o & axi_r_valid_i) begin
+                if (len == TRANS_LEN-1) begin
+                    data_read_o[TRANS_LEN*AXI_DATA_WIDTH-1:AXI_DATA_WIDTH] <= axi_r_data_i;
                 end
-                else if (axi_r_ready_o & axi_r_valid_i) begin
-                    // if (~aligned & overstep) begin
-                    //     if (len[0]) begin
-                    //         data_read_o[AXI_DATA_WIDTH-1:0] <= data_read_o[AXI_DATA_WIDTH-1:0] | axi_r_data_h;
-                    //     end
-                    //     else begin
-                   
-                    //     end
-                    // end
-                    if (len == TRANS_LEN-1) begin
-                        data_read_o[TRANS_LEN*AXI_DATA_WIDTH-1:AXI_DATA_WIDTH] <= axi_r_data_i;
-                    end
-                    else begin
-                        data_read_o[AXI_DATA_WIDTH-1:0] <= axi_r_data_i;
-                    end
+                else begin
+                    data_read_o[AXI_DATA_WIDTH-1:0] <= axi_r_data_i;
                 end
             end
-        //end
-    //endgenerate
+        end
+
 
 
 
