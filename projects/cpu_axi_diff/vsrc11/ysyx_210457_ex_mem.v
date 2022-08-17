@@ -85,11 +85,6 @@ module ysyx_210457_ex_mem (
             mem_w_csr_data <= `ZERO_WORD;
             mem_except_type <= `ZERO_WORD;
         end
-        
-
-
-
-
         else if(stall[1] & ~stall[0]) begin
                 mem_w_data <= `ZERO_WORD;
                 mem_w_ena <= 1'b0;
@@ -124,10 +119,7 @@ module ysyx_210457_ex_mem (
                 mem_w_csr_data <= ex_w_csr_data;
                 mem_csr_ena <= ex_csr_ena;
                 mem_except_type <= ex_except_type;
-                
-    
             end  
-            
         end
 
     end
