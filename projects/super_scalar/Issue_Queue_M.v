@@ -3,8 +3,8 @@
 
 module Issue_Queue_M#(
     parameter QUEUE_NUM = 8,
-    parameter QUEUE_WID = 23,  //{6D, 1dv, 6SL, 1lv, 6SR, 1rv,    , 1lready, 1rready,  1I}
-    parameter QUEUE_IND = 3 //{Dest_0, SrcL_0, SrcL_ena_0, SrcR_0, SrcR_ena_0}
+    parameter QUEUE_WID = 23,  //{6D, 1dv, 6SL, 1lv, 6SR, 1rv, 1lready, 1rready, 1I}
+    parameter QUEUE_IND = 3
 )(
     input wire reset,
     input wire clock,
@@ -40,6 +40,8 @@ module Issue_Queue_M#(
     output wire [`PRF_BUS] SrcR_1_o,
 
     input wire [`PRF_BUS] tag0,
+    input wire [`PRF_BUS] tag1,
+    input wire [`PRF_BUS] tag2,
 
 
     output wire is_full_0,
@@ -48,8 +50,8 @@ module Issue_Queue_M#(
     output wire is_full_1,
     output wire is_empty_1,
 
-    input wire Issue[QUEUE_NUM-1],         ///////////////////////
-    output wire Request[QUEUE_NUM-1],      ///////////////////////
+    input wire [QUEUE_NUM-1 : 0] Issue,         ///////////////////////
+    output wire [QUEUE_NUM-1 : 0] Request,      ///////////////////////
 
 );
 
@@ -139,19 +141,28 @@ module Issue_Queue_M#(
 
 
     //----------------------------------Wake_up---------------------------------------------- 
-    wire RdyL[QUEUE_NUM-1], RdyR[QUEUE_NUM-1];
+    wire RdyL[0 : QUEUE_NUM-1], RdyR[0 : QUEUE_NUM-1];
     genvar r;
     generate
     for(r = 0; r < QUEUE_NUM; r=r+1) begin
         assign Request[r] = !Issue_Queue[r][0] & (!Issue_Queue[r][10] | Issue_Queue[r][2]) & (!Issue_Queue[r][3] | Issue_Queue[r][1]);
-        assign RdyL[r] = (Issue_Queue[r][16 : 11] == tag0); 
-        assign RdyR[r] = (Issue_Queue[r][ 9 :  4] == tag0);
+        assign RdyL[r] = (Issue_Queue[r][16 : 11] == tag0) | (Issue_Queue[r][16 : 11] == tag1) | (Issue_Queue[r][16 : 11] == tag2); 
+        assign RdyR[r] = (Issue_Queue[r][ 9 :  4] == tag0) | (Issue_Queue[r][ 9 :  4] == tag1) | (Issue_Queue[r][ 9 :  4] == tag2);
 
         always @(posedge clock) begin
             Issue_Queue[r][2 : 0] <= {RdyL[r], RdyR[r], Issue[r]};
         end
     end
     endgenerate
+
+    //----------------------------------Select-----------------------------------------
+    assign ridx_0 = Request[0] ? 0 : Request[1] ? 1 : Request[2] ? 2 : Request[3] ? 3 :
+                    Request[4] ? 4 : Request[5] ? 5 : Request[6] ? 6 : 7; 
+    assign ridx_1 = Request[0] & (ridx_0 != 0) ? 0 : Request[1] & (ridx_0 != 1) ? 1 : Request[2] & (ridx_0 != 2) ? 2 : Request[3] & (ridx_0 != 3) ? 3 :
+                    Request[4] & (ridx_0 != 4) ? 4 : Request[5] & (ridx_0 != 5) ? 5 : Request[6] & (ridx_0 != 6) ? 6 : 7; 
+
+    assign ren_0 = !{{1'b0, Request} - 1}[QUEUE_NUM];
+    assign ren_1 = !{{1'b0, Request} - 2}[QUEUE_NUM];
 
 
 
