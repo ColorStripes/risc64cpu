@@ -192,6 +192,8 @@ Usage: ./emu [OPTION...]
 # 接入AXI总线的情况下使用"non-output/cpu-tests"和"non-output/riscv-tests"目录下的bin进行回归测试
 ./build.sh -e cpu_axi_diff -b -r "custom-output/cpu-tests" -m "WITH_DRAMSIM3=1"
 ```
+# mario
+./build.sh -e cpu_axi_diff -d -b -s -a "-i custom-output/mario/fceux-mario.bin" -m "WITH_DRAMSIM3=1"
 
 # 扩展
 
